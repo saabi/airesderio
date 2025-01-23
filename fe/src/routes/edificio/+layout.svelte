@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Carousel from '$lib/Carousel.svelte';
+    import Carousel from '$lib/ClientOnlyCarousel.svelte';
 	import type { Snippet } from 'svelte';
 
     let { children } = $props();
