@@ -1,5 +1,24 @@
-<header>
-	<img src="/aires-de-rio.svg" alt="Aires del Río" />
+<script>
+    let { minHeight = 80, maxHeight = 200 } = $props();
+    let headerHeight = $state(maxHeight); // Initial header height in pixels
+    
+    function updateHeaderHeight() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        headerHeight = Math.max(minHeight, maxHeight - scrollTop);
+    }
+    
+    $effect(() => {
+        window.addEventListener('scroll', updateHeaderHeight);
+        updateHeaderHeight(); // Set initial height
+        
+        return () => {
+            window.removeEventListener('scroll', updateHeaderHeight);
+        };
+    });
+</script>
+
+<header class="header" style="height: {headerHeight}px;">
+	<img src="/aires-de-rio.svg" alt="Aires de Río" />
 	<nav>
 		<a href="/">Home</a>
 		<a href="/edificio">Edificio</a>
@@ -10,19 +29,33 @@
 
 <style>
     header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        min-height: min-content;
         display: grid;
         grid-template-columns: max-content 1fr;
-        align-items: first baseline;
+        align-items: end;
         justify-items: start;
         background-color: #CCC;
         padding: 2rem 1rem 0.5rem 1rem;
     }
+
     nav {
         display: flex;
         gap: 1rem;
         justify-content: space-evenly;
+        align-items: end;
         width: 100%;
+        height: 100%;
         font-size: 1.2rem;
         font-weight: 500;
+    }
+
+    img {
+        height: 100%;
+        padding-bottom: 4px;
     }
 </style>
