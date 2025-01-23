@@ -4,7 +4,7 @@
 CURRENT_COMMIT=$(git rev-parse HEAD)
 
 # Pull updates
-git pull origin branch_name
+git pull origin dev
 
 # Build the app
 npm run build
