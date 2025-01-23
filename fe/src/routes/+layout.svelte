@@ -3,12 +3,13 @@
 	// import { i18n } from '$lib/i18n';
 	// import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	let { children } = $props();
+	const maxHeight = 200;
 </script>
 
 
-<Header />
+<Header {maxHeight} />
 <!-- <ParaglideJS {i18n}> -->
-<main>
+<main style="--header-height: {maxHeight}px">
 	{@render children()}
 </main>
 <!-- </ParaglideJS> -->
@@ -16,5 +17,6 @@
 <style>
 	main {
 		padding: 1rem;
+		margin-top: var(--header-height);
 	}
 </style>
