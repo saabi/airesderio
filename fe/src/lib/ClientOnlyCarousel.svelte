@@ -1,13 +1,13 @@
 <script lang="ts">
     import { browser } from '$app/environment';
-    import Carousel from './Carousel.svelte';
+    import Carousel from './Carousel2.svelte';
     import type { Snippet } from 'svelte';
     
     let { slides, height } = $props<{slides: Snippet[], height: string}>();
 </script>
 
 {#if browser}
-    <Carousel {slides} {height} />
+    <Carousel {slides}  />
 {:else}
     <!-- Server-side fallback -->
     <div style="height: {height}">
