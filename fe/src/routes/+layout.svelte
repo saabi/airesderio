@@ -18,5 +18,6 @@
 	main {
 		padding: 1rem;
 		margin-top: var(--header-height);
+		background-color: #eee;
 	}
 </style>
