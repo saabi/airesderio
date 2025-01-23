@@ -15,6 +15,11 @@ html, body, #app {
 	For the color correction filters to work properly across browsers,
 	the background must be set to a color.
 	*/
+	background-color: white;
+}
+body {
+	max-width: 80em;
+	margin: 0 auto;
 }
 
 h1, h2, h3, h4, h5, h6 {
