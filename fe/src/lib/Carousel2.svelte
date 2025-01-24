@@ -1,8 +1,12 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
   
-    let { slides } = $props<{ slides: Snippet[] }>();
+    let { slides = [], autoplayInterval = 5000 } = $props<{ 
+      slides: Snippet[],
+      autoplayInterval?: number 
+    }>();
     let currentIndex = $state<number>(0);
+    let autoplayTimer: number | undefined;
     
     function next(): void {
       currentIndex = (currentIndex + 1) % slides.length;
@@ -15,7 +19,24 @@
     function goTo(index: number): void {
       if (index >= 0 && index < slides.length) currentIndex = index;
     }
-  </script>
+
+    function startAutoplay(): void {
+      stopAutoplay(); // Clear any existing timer
+      autoplayTimer = window.setInterval(next, autoplayInterval);
+    }
+
+    function stopAutoplay(): void {
+      if (autoplayTimer) {
+        window.clearInterval(autoplayTimer);
+        autoplayTimer = undefined;
+      }
+    }
+
+    $effect(() => {
+      startAutoplay();
+      return stopAutoplay;
+    });
+</script>
   
   <div class="carousel-container">
     <div class="slider-track">
