@@ -1,15 +1,20 @@
 <script>
-    let { minHeight = 80, maxHeight = 200 } = $props();
+    let { minHeight = 50, maxHeight = 120 } = $props();
     let headerHeight = $state(maxHeight); // Initial header height in pixels
+    let topPadding = $state(2.0); // Initial top padding in rem
     
     function updateHeaderHeight() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         headerHeight = Math.max(minHeight, maxHeight - scrollTop);
+        
+        // Map headerHeight from [minHeight, maxHeight] to [0.5, 2.0] rem
+        const heightRatio = (headerHeight - minHeight) / (maxHeight - minHeight);
+        topPadding = 0.5 + (heightRatio * 1.5); // 1.5 is the difference between 2.0 and 0.5
     }
     
     $effect(() => {
         window.addEventListener('scroll', updateHeaderHeight);
-        updateHeaderHeight(); // Set initial height
+        updateHeaderHeight(); // Set initial height and padding
         
         return () => {
             window.removeEventListener('scroll', updateHeaderHeight);
@@ -17,7 +22,7 @@
     });
 </script>
 
-<header class="header" style="height: {headerHeight}px;">
+<header class="header" style="height: {headerHeight}px; padding-top: {topPadding}rem;">
 	<img src="/aires-de-rio.svg" alt="Aires de Río" />
 	<nav>
 		<a href="/">Home</a>
