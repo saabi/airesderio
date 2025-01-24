@@ -1,5 +1,5 @@
 <script>
-    let { minHeight = 50, maxHeight = 120 } = $props();
+    let { minHeight = 30, maxHeight = 120 } = $props();
     let headerHeight = $state(maxHeight); // Initial header height in pixels
     let topPadding = $state(2.0); // Initial top padding in rem
     
@@ -46,6 +46,8 @@
         justify-items: start;
         background-color: #CCC;
         padding: 2rem 1rem 0.5rem 1rem;
+        max-width: 80em;
+        margin: 0 auto;
     }
 
     nav {

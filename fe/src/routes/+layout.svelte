@@ -3,7 +3,7 @@
 	// import { i18n } from '$lib/i18n';
 	// import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	let { children } = $props();
-	const maxHeight = 120;
+	const maxHeight = 140;
 </script>
 
 
