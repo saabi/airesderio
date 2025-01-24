@@ -1,5 +1,5 @@
 <script>
-    let { minHeight = 30, maxHeight = 120 } = $props();
+    let { minHeight = 20, maxHeight = 120 } = $props();
     let headerHeight = $state(maxHeight); // Initial header height in pixels
     let topPadding = $state(2.0); // Initial top padding in rem
     
@@ -23,7 +23,9 @@
 </script>
 
 <header class="header" style="height: {headerHeight}px; padding-top: {topPadding}rem;">
-	<img src="/aires-de-rio.svg" alt="Aires de Río" />
+    <div style="width: 500px; height: 100%;">
+        <img src="/aires-de-rio.svg" alt="Aires de Río" />
+    </div>
 	<nav>
 		<a href="/">Home</a>
 		<a href="/edificio">Edificio</a>
