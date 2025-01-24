@@ -4,9 +4,13 @@ Placeholding for now some tech info for those curious.
 
 ## Svelte 5 + SvelteKit
 
+The repo is [here](https://github.com/saabi/airesderio), PRs welcome.
+
 This page is built with Svelte 5 and SvelteKit. Check out the
 [SvelteKit docs](https://svelte.dev/docs/kit) for more info. It is compiled to
 static HTML and the development server can be found
 [here](http://ferreyrapons.com:4173).
 
-The repo is [here](https://github.com/saabi/airesderio), PRs welcome.
+Merges to the `dev` branch are deployed automatically to the this site.
+
+There is no production deployment yet.
