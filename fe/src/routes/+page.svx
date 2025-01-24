@@ -2,15 +2,37 @@
 
 Placeholding for now some tech info for those curious.
 
-## Svelte 5 + SvelteKit
+## Tech
 
-The repo is [here](https://github.com/saabi/airesderio), PRs welcome.
+This site leverages modern web technologies to deliver a fast, maintainable and developer-friendly experience:
 
-This page is built with Svelte 5 and SvelteKit. Check out the
-[SvelteKit docs](https://svelte.dev/docs/kit) for more info. It is compiled to
-static HTML and the development server can be found
-[here](http://ferreyrapons.com:4173).
+- [Svelte 5](https://svelte.dev) and [SvelteKit](https://svelte.dev/docs/kit) - A cutting-edge web framework that offers:
+  - Exceptional performance through compile-time optimizations
+  - Simple and intuitive component model
+  - Zero-configuration deployment options
+  - Built-in routing and server-side rendering capabilities
 
-Merges to the `dev` branch are deployed automatically to the this site.
+- Static HTML compilation - Provides several benefits:
+  - Ultra-fast page loads with no runtime overhead
+  - Excellent SEO performance
+  - Reduced server costs and complexity
+  - Robust security through static assets
 
-There is no production deployment yet.
+- Continuous Integration/Continuous Deployment (CI/CD):
+  - Automatic deployments triggered from the `dev` branch
+  - Ensures rapid iteration and testing
+  - Maintains consistent deployment process
+  - Reduces human error in releases
+
+- Content Management:
+  - [MDsveX](https://mdsvex.com/) preprocessor enables writing content in Markdown
+  - Seamlessly mix Markdown with interactive Svelte components
+  - Easy content updates without touching application code
+  - Maintains clean separation between content and presentation
+
+You can find:
+- The source code [on GitHub](https://github.com/saabi/airesderio) (PRs welcome!)
+- The development server [here](http://ferreyrapons.com:4173). Explore the links
+  to see what's done so far and to suggest improvements.
+
+Note: Production deployment is pending.
