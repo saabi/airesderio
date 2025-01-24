@@ -106,6 +106,7 @@
       display: flex;
       gap: 8px;
       z-index: 1;
+      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
     }
   
     .dot {
@@ -113,7 +114,7 @@
       height: 12px;
       border-radius: 50%;
       border: none;
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.8);
       cursor: pointer;
       padding: 0;
       transition: all 0.3s ease;
