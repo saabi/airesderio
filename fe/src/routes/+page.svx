@@ -1,10 +1,19 @@
-# What goes here?
+# Aires de Río: Exclusivos Departamentos en Santiago del Estero
 
-Placeholding for now some tech info for those curious.
+Bienvenido a Aires de Río, un innovador proyecto residencial que redefine el estándar de vida urbana en Santiago del Estero. Ofrecemos exclusivos departamentos de uno y dos dormitorios, diseñados para quienes buscan una combinación perfecta de confort, ubicación privilegiada y diseño contemporáneo.
 
-## Tech
+Explore nuestro sitio para descubrir:
+- Las características únicas de nuestros departamentos
+- Nuestra privilegiada ubicación en Av. Rivadavia
+- Las amenidades y servicios exclusivos
+- Oportunidades de inversión con beneficios fiscales
 
-This site leverages modern web technologies to deliver a fast, maintainable and developer-friendly experience:
+## Tech stack info for developers
+
+TODO: remove this section for production deployment.
+
+This site leverages modern web technologies to deliver a fast, maintainable and
+developer-friendly experience:
 
 - [Svelte 5](https://svelte.dev) and [SvelteKit](https://svelte.dev/docs/kit) - A cutting-edge web framework that offers:
   - Exceptional performance through compile-time optimizations
@@ -19,7 +28,7 @@ This site leverages modern web technologies to deliver a fast, maintainable and 
   - Robust security through static assets
 
 - Continuous Integration/Continuous Deployment (CI/CD):
-  - Automatic deployments triggered from the `dev` branch
+  - Automatic deployments triggered from the `dev` branch. Note: Production deployment is pending.
   - Ensures rapid iteration and testing
   - Maintains consistent deployment process
   - Reduces human error in releases
@@ -29,10 +38,10 @@ This site leverages modern web technologies to deliver a fast, maintainable and 
   - Seamlessly mix Markdown with interactive Svelte components
   - Easy content updates without touching application code
   - Maintains clean separation between content and presentation
+  - With MDsveX, HTML elements can be replaced with Svelte components allowing for
+    more design flexibility and interactivity.
 
 You can find:
 - The source code [on GitHub](https://github.com/saabi/airesderio) (PRs welcome!)
 - The development server [here](http://ferreyrapons.com:4173). Explore the links
   to see what's done so far and to suggest improvements.
-
-Note: Production deployment is pending.
