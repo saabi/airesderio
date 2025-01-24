@@ -1,0 +1,12 @@
+# What goes here?
+
+Placeholding for now some tech info for those curious.
+
+## Svelte 5 + SvelteKit
+
+This page is built with Svelte 5 and SvelteKit. Check out the
+[SvelteKit docs](https://svelte.dev/docs/kit) for more info. It is compiled to
+static HTML and the development server can be found
+[here](http://ferreyrapons.com:4173).
+
+The repo is [here](https://github.com/saabi/airesderio), PRs welcome.
