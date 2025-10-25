@@ -53,3 +53,126 @@
 		</button>
 	</div>
 </header>
+
+<style>
+	.site {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background: #fff;
+		border-bottom: 1px solid var(--line);
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+	}
+
+	.site__bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 12px 0;
+	}
+
+	.logo {
+		font-weight: 800;
+		color: var(--brand);
+		letter-spacing: 0.02em;
+		z-index: 1001; /* Ensure logo is above mobile nav background */
+	}
+
+	.nav__desktop {
+		display: flex;
+		gap: 18px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.nav__desktop a {
+		color: var(--brand);
+		text-decoration: none;
+		font-weight: 600;
+		border-bottom: 2px solid transparent;
+		padding: 6px 2px;
+		text-transform: uppercase;
+	}
+
+	.nav__desktop a:hover {
+		border-color: #cdb09b;
+	}
+
+	.nav__desktop a[aria-current='page'] {
+		border-color: var(--accent);
+	}
+
+	.nav-toggle {
+		display: none; /* Hidden by default */
+		background: none;
+		border: none;
+		cursor: pointer;
+		z-index: 1001;
+		padding: 5px;
+	}
+
+	.nav-toggle .icon-bar {
+		display: block;
+		width: 24px;
+		height: 3px;
+		background-color: var(--brand);
+		margin: 5px 0;
+		transition: all 0.2s;
+	}
+
+	@media (max-width: 850px) {
+		/* Mobile Nav */
+		.nav-toggle {
+			display: block; /* Show hamburger */
+		}
+
+		.main-nav {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(255, 255, 255, 0.98);
+			-webkit-backdrop-filter: blur(5px);
+			backdrop-filter: blur(5px);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			/* Hidden by default */
+			opacity: 0;
+			visibility: hidden;
+			transition:
+				opacity 0.3s ease,
+				visibility 0.3s ease;
+		}
+
+		.main-nav.is-open {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		/* Style the X for the close button */
+		.nav-toggle.is-open .icon-bar:nth-child(1) {
+			transform: translateY(8px) rotate(45deg);
+		}
+
+		.nav-toggle.is-open .icon-bar:nth-child(2) {
+			opacity: 0;
+		}
+
+		.nav-toggle.is-open .icon-bar:nth-child(3) {
+			transform: translateY(-8px) rotate(-45deg);
+		}
+
+		.nav__desktop {
+			flex-direction: column;
+			align-items: center;
+			gap: 24px;
+		}
+
+		.nav__desktop a {
+			font-size: 1.5rem;
+		}
+	}
+</style>
