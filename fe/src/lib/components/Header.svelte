@@ -61,14 +61,14 @@
 		z-index: 50;
 		background: #fff;
 		border-bottom: 1px solid var(--line);
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+		box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.06);
 	}
 
 	.site__bar {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 12px 0;
+		padding: 0.75rem 0;
 	}
 
 	.logo {
@@ -80,7 +80,7 @@
 
 	.nav__desktop {
 		display: flex;
-		gap: 18px;
+		gap: 1.125rem;
 		list-style: none;
 		margin: 0;
 		padding: 0;
@@ -91,7 +91,7 @@
 		text-decoration: none;
 		font-weight: 600;
 		border-bottom: 2px solid transparent;
-		padding: 6px 2px;
+		padding: 0.375rem 0.125rem;
 		text-transform: uppercase;
 	}
 
@@ -109,15 +109,15 @@
 		border: none;
 		cursor: pointer;
 		z-index: 1001;
-		padding: 5px;
+		padding: 0.3125rem;
 	}
 
 	.nav-toggle .icon-bar {
 		display: block;
-		width: 24px;
+		width: 1.5rem;
 		height: 3px;
 		background-color: var(--brand);
-		margin: 5px 0;
+		margin: 0.3125rem 0;
 		transition: all 0.2s;
 	}
 
@@ -134,8 +134,8 @@
 			width: 100%;
 			height: 100%;
 			background-color: rgba(255, 255, 255, 0.98);
-			-webkit-backdrop-filter: blur(5px);
-			backdrop-filter: blur(5px);
+			-webkit-backdrop-filter: blur(0.3125rem);
+			backdrop-filter: blur(0.3125rem);
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -154,7 +154,7 @@
 
 		/* Style the X for the close button */
 		.nav-toggle.is-open .icon-bar:nth-child(1) {
-			transform: translateY(8px) rotate(45deg);
+			transform: translateY(0.5rem) rotate(45deg);
 		}
 
 		.nav-toggle.is-open .icon-bar:nth-child(2) {
@@ -162,13 +162,13 @@
 		}
 
 		.nav-toggle.is-open .icon-bar:nth-child(3) {
-			transform: translateY(-8px) rotate(-45deg);
+			transform: translateY(-0.5rem) rotate(-45deg);
 		}
 
 		.nav__desktop {
 			flex-direction: column;
 			align-items: center;
-			gap: 24px;
+			gap: 1.5rem;
 		}
 
 		.nav__desktop a {

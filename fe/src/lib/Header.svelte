@@ -23,7 +23,7 @@
 </script>
 
 <header class="header" style="height: {headerHeight}px; padding-top: {topPadding}rem;">
-    <div style="width: 500px; height: 100%;">
+    <div style="width: 31.25rem; height: 100%;">
         <img src="/aires-de-rio.svg" alt="Aires de Río" />
     </div>
 	<nav>
@@ -65,6 +65,6 @@
 
     img {
         height: 100%;
-        padding-bottom: 4px;
+        padding-bottom: 0.25rem;
     }
 </style>

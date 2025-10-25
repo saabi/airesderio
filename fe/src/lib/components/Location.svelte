@@ -64,9 +64,9 @@
 
 			const infoWindow = new window.google.maps.InfoWindow({
 				content: `
-                        <div style="padding: 8px; text-align: center;">
-                            <h3 style="margin: 0 0 4px 0; color: #6B4423; font-size: 16px;">Aires de Río</h3>
-                            <p style="margin: 0; font-size: 14px; color: #666;">Avenida Rivadavia<br>Santiago del Estero, Argentina</p>
+                        <div style="padding: 0.5rem; text-align: center;">
+                            <h3 style="margin: 0 0 0.25rem 0; color: #6B4423; font-size: 1rem;">Aires de Río</h3>
+                            <p style="margin: 0; font-size: 0.875rem; color: #666;">Avenida Rivadavia<br>Santiago del Estero, Argentina</p>
                         </div>
                     `
 			});
@@ -110,7 +110,7 @@
 
 <style>
 	.ubi {
-		margin: 26px 0;
+		margin: 1.625rem 0;
 	}
 
 	.location-block {
@@ -118,20 +118,20 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 0;
 		background: var(--brand);
-		border-radius: 10px;
+		border-radius: 0.625rem;
 		overflow: hidden;
 		border: 1px solid var(--line);
 	}
 
 	.location-text {
-		padding: 28px;
+		padding: 1.75rem;
 		color: #fff;
 	}
 
 	.location-text h3 {
 		font-size: 2.5em;
 		line-height: 1.1;
-		margin: 0 0 16px;
+		margin: 0 0 1rem;
 	}
 
 	.location-text p {
@@ -140,7 +140,7 @@
 	}
 
 	.map {
-		min-height: 400px;
+		min-height: 25rem;
 		width: 100%;
 		background-color: #e9e9e9;
 	}

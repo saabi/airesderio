@@ -27,14 +27,14 @@
 <style>
 	.welcome {
 		background: #f3f4f6;
-		border-radius: 10px;
-		padding: 18px;
+		border-radius: 0.625rem;
+		padding: 1.125rem;
 		display: block;
-		margin: 16px auto;
+		margin: 1rem auto;
 		color: #111;
 		text-align: center;
 		max-width: 60em;
-		font-size: 1.2em;
+		font-size: 1.2rem;
 		font-weight: 500;
 	}
 </style>

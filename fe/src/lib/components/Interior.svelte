@@ -15,7 +15,7 @@
 		interiores con los colores que ofrece la naturaleza a través de la inclusión de vegetación, luz
 		natural y materiales orgánicos como la madera.
 	</p>
-	<div class="interior-gallery" style="margin-top:12px">
+	<div class="interior-gallery" style="margin-top:0.75rem">
 		<figure>
 			<div class="ph" role="img" aria-label="Imagen del diseño interior - galería automática">
 				<span class="arrow"></span>
@@ -33,7 +33,7 @@
 	.interior-gallery {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 18px;
+		gap: 1.125rem;
 	}
 
 	.interior-gallery figure {
@@ -42,34 +42,34 @@
 
 	.ph {
 		background: #e9e9e9;
-		height: 260px;
-		border-radius: 8px;
+		height: 16.25rem;
+		border-radius: 0.5rem;
 		position: relative;
 	}
 
 	.ph::after {
 		content: 'FOTOS 4-9 VAN DESPLAZANDOSE HORIZONTALMENTE';
 		position: absolute;
-		left: 8px;
-		bottom: 8px;
+		left: 0.5rem;
+		bottom: 0.5rem;
 		font-size: 0.78rem;
 		background: #fff;
-		padding: 4px 6px;
-		border-radius: 6px;
+		padding: 0.25rem 0.375rem;
+		border-radius: 0.375rem;
 		border: 1px solid #ddd;
 		color: #111;
 	}
 
 	.ph .arrow {
 		position: absolute;
-		right: -44px;
+		right: -2.75rem;
 		top: 50%;
 		transform: translateY(-50%);
 		width: 0;
 		height: 0;
-		border-top: 26px solid transparent;
-		border-bottom: 26px solid transparent;
-		border-left: 44px solid #ff4444;
+		border-top: 1.625rem solid transparent;
+		border-bottom: 1.625rem solid transparent;
+		border-left: 2.75rem solid #ff4444;
 	}
 	@media (max-width: 850px) {
 		.interior-gallery {

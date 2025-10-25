@@ -10,7 +10,7 @@
     --line: #D7DADF;
     /* gris marcos del bosquejo */
     --max: 1200px;
-    --gap: 28px;
+    --gap: 1.75rem;
 }
 
 * {
@@ -33,7 +33,7 @@ body {
 .wrap {
     max-width: var(--max);
     margin: auto;
-    padding: 0 clamp(14px, 3vw, 24px)
+    padding: 0 clamp(0.875rem, 3vw, 1.5rem)
 }
 
 .vh {

@@ -38,20 +38,20 @@
 		display: grid;
 		grid-template-columns: 1.2fr 0.8fr;
 		gap: var(--gap);
-		padding: 24px 0;
+		padding: 1.5rem 0;
 		align-items: center;
 	}
 
 	.hero-img {
-		height: 450px;
+		height: 28.125rem;
 		background: url('https://placehold.co/800x600/6B4423/FFF?text=FOTO+ROTATIVA') center/cover;
-		border-radius: 8px;
+		border-radius: 0.5rem;
 	}
 
 	.hero-contact {
-		padding: 16px;
+		padding: 1rem;
 		border: 1px solid var(--line);
-		border-radius: 8px;
+		border-radius: 0.5rem;
 	}
 
 	.hero-contact h2 {
@@ -62,18 +62,18 @@
 	}
 
 	.hero-contact p {
-		margin: 0 0 16px;
+		margin: 0 0 1rem;
 		font-size: 0.9em;
 	}
 
 	.form-group {
-		margin-bottom: 12px;
+		margin-bottom: 0.75rem;
 	}
 
 	.form-group label {
 		display: block;
 		font-size: 0.85em;
-		margin-bottom: 4px;
+		margin-bottom: 0.25rem;
 		color: var(--muted);
 	}
 
@@ -81,19 +81,19 @@
 	.form-group textarea,
 	.form-group select {
 		width: 100%;
-		padding: 10px;
+		padding: 0.625rem;
 		border: 1px solid var(--line);
-		border-radius: 4px;
+		border-radius: 0.25rem;
 	}
 
 	.form-group button {
 		width: 100%;
-		padding: 12px;
+		padding: 0.75rem;
 		border: none;
 		background: var(--brand);
 		color: #fff;
 		font-weight: 600;
-		border-radius: 4px;
+		border-radius: 0.25rem;
 		cursor: pointer;
 	}
 
@@ -107,7 +107,7 @@
 		}
 
 		.hero-img {
-			height: 300px; /* Shorter hero image on mobile */
+			height: 18.75rem; /* Shorter hero image on mobile */
 		}
 	}
 </style>

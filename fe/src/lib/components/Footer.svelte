@@ -11,9 +11,9 @@
 <style>
 	footer {
 		border-top: 1px solid var(--line);
-		padding: 24px 0;
+		padding: 1.5rem 0;
 		color: #666;
 		text-align: center;
-		margin-top: 28px;
+		margin-top: 1.75rem;
 	}
 </style>

@@ -11,9 +11,9 @@
 	.boxed {
 		display: inline-block;
 		border: 3px solid var(--line);
-		border-radius: 4px;
-		padding: 8px 14px;
-		margin: 12px 0;
+		border-radius: 0.25rem;
+		padding: 0.5rem 0.875rem;
+		margin: 0.75rem 0;
 	}
 
 	.boxed .eyebrow {
@@ -25,7 +25,7 @@
 
 	.boxed .big {
 		display: block;
-		font-size: 28px;
+		font-size: 1.75rem;
 		font-weight: 800;
 		letter-spacing: 0.06em;
 	}
