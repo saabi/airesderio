@@ -70,30 +70,51 @@
 	.equip-list {
 		list-style: none;
 		padding: 0;
-		margin: 0;
+		margin: 32px 0;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 16px 24px;
+		gap: 24px 48px;
 		align-items: start;
 	}
 
 	.equip-list li {
 		display: grid;
-		grid-template-columns: 36px 1fr;
-		gap: 12px;
+		grid-template-columns: 48px 1fr;
+		gap: 16px;
 		align-items: start;
+		padding: 16px 0;
 	}
 
-	.ico {
-		width: 36px;
-		height: 36px;
-		border: 1px solid var(--line);
-		border-radius: 8px;
-		display: grid;
-		place-items: center;
-		color: #666;
-		background: #fff;
-		font-size: 1.2em;
+	.equip-list li img {
+		width: 48px;
+		height: 48px;
+		object-fit: contain;
+	}
+
+	.equip-list li span {
+		position: relative;
+		padding: 12px 0;
+		font-size: 0.95rem;
+		line-height: 1.4;
+		color: #333;
+	}
+
+	.equip-list li span::before,
+	.equip-list li span::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		height: 4px;
+		background-color: #ccc;
+	}
+
+	.equip-list li span::before {
+		top: 0;
+	}
+
+	.equip-list li span::after {
+		bottom: 0;
 	}
 
 	@media (max-width: 850px) {
