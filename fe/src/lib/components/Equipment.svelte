@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Title from './Title.svelte';
+
 	const equipmentItems = [
 		{ icon: '🖼️', svg: '/iconos-servicios/ascensores.svg', text: 'Carpintería de Aluminio Línea A30 NEW de Aluar.' },
 		{ icon: '🍳', svg: '/iconos-servicios/horno.svg', text: 'Unidades separadas de anafe y horno a gas empotrados.' },
@@ -27,10 +29,7 @@
 </script>
 
 <section id="equipados" class="equip" aria-labelledby="equipados-heading">
-	<div class="boxed">
-		<span class="eyebrow">Cómo están</span>
-		<span class="big">EQUIPADOS</span>
-	</div>
+	<Title eyebrow="Cómo están" big="EQUIPADOS" />
 	<ul class="equip-list" role="list">
 		{#each equipmentItems as item}
 			<li>

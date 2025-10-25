@@ -1,9 +1,10 @@
+<script lang="ts">
+	import Title from './Title.svelte';
+</script>
+
 <section id="planos" aria-labelledby="planos-heading">
 	<h2 id="planos-heading" class="vh">Planos</h2>
-	<div class="boxed">
-		<span class="eyebrow">Distribución y</span>
-		<span class="big">PLANOS</span>
-	</div>
+	<Title eyebrow="Distribución y" big="PLANOS" />
 	<figure>
 		<div
 			class="plan-ph"
@@ -15,27 +16,6 @@
 </section>
 
 <style>
-	.boxed {
-		display: inline-block;
-		border: 3px solid var(--line);
-		border-radius: 4px;
-		padding: 8px 14px;
-		margin: 12px 0;
-	}
-
-	.boxed .eyebrow {
-		font-size: 0.9rem;
-		letter-spacing: 0.18em;
-		color: #111;
-		display: block;
-	}
-
-	.boxed .big {
-		display: block;
-		font-size: 28px;
-		font-weight: 800;
-		letter-spacing: 0.06em;
-	}
 	.plan-ph {
 		background: #efefef;
 		height: 440px;
