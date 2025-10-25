@@ -107,3 +107,60 @@
 		></div>
 	</div>
 </section>
+
+<style>
+	.ubi {
+		margin: 26px 0;
+	}
+
+	.location-block {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0;
+		background: var(--brand);
+		border-radius: 10px;
+		overflow: hidden;
+		border: 1px solid var(--line);
+	}
+
+	.location-text {
+		padding: 28px;
+		color: #fff;
+	}
+
+	.location-text h3 {
+		font-size: 2.5em;
+		line-height: 1.1;
+		margin: 0 0 16px;
+	}
+
+	.location-text p {
+		font-size: 0.95em;
+		max-width: 65ch;
+	}
+
+	.map {
+		min-height: 400px;
+		width: 100%;
+		background-color: #e9e9e9;
+	}
+
+	@media (max-width: 850px) {
+		.location-block {
+			grid-template-columns: 1fr;
+			/* Invert order on mobile */
+			grid-template-rows: auto auto;
+		}
+		.location-text h3 {
+			font-size: 2em; /* smaller location title */
+		}
+
+		.location-block .map {
+			grid-row: 1;
+		}
+
+		.location-block .location-text {
+			grid-row: 2;
+		}
+	}
+</style>

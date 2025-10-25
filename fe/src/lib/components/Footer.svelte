@@ -7,3 +7,13 @@
 		<p><small>© {year} Aires de Río — Maqueta. Todos los derechos reservados.</small></p>
 	</div>
 </footer>
+
+<style>
+	footer {
+		border-top: 1px solid var(--line);
+		padding: 24px 0;
+		color: #666;
+		text-align: center;
+		margin-top: 28px;
+	}
+</style>

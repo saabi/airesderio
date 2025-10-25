@@ -25,3 +25,57 @@
 		</dl>
 	</aside>
 </section>
+
+<style>
+	.intro {
+		display: grid;
+		grid-template-columns: 1.08fr 0.92fr;
+		gap: 24px;
+		align-items: start;
+		padding: 24px 0;
+	}
+
+	.intro__kpis {
+		padding-left: 0;
+		display: grid;
+		gap: 10px;
+		color: #111;
+	}
+
+	.intro__kpis dl {
+		display: contents;
+	}
+
+	.intro__kpis dt {
+		display: contents;
+	}
+
+	.intro__kpis dd {
+		display: none;
+	}
+
+	.kpi strong {
+		display: block;
+		font-size: 80px;
+		font-weight: 900;
+		line-height: 1;
+		letter-spacing: 0.02em;
+	}
+
+	.kpi small {
+		display: block;
+		color: #111;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		margin-top: 4px;
+	}
+
+	@media (max-width: 850px) {
+		.intro {
+			grid-template-columns: 1fr;
+		}
+		.kpi strong {
+			font-size: 60px; /* smaller KPI numbers */
+		}
+	}
+</style>
