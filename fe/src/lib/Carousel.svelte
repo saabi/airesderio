@@ -5,9 +5,9 @@
 
 	/**
 	 * "slides": array of snippet props.
-	 * "height": CSS size, e.g. '400px', '50vh', etc.
+	 * "height": CSS size, e.g. '25rem', '50vh', etc.
 	 */
-	let { slides = [], height = '400px' }: { slides?: Snippet[]; height?: string } = $props();
+	let { slides = [], height = '25rem' }: { slides?: Snippet[]; height?: string } = $props();
 	if (!Array.isArray(slides)) slides = [];
 
 	let current = $state(0);
@@ -26,7 +26,7 @@
 
 <!--
   We use `style="--carousel-height: {height}"` to publish the height to a CSS variable,
-  and default to "400px" if not set by the user.
+  and default to "25rem" if not set by the user.
 -->
 <div class="carousel" style="--carousel-height: {height}">
 	<button class="prev-button" onclick={prev}>⬅</button>
@@ -50,9 +50,9 @@
 	.carousel {
 		/* 
 		  The user sets --carousel-height via style="--carousel-height: {height}" 
-		  or uses the fallback 400px. 
+		  or uses the fallback 25rem. 
 		*/
-		height: var(--carousel-height, 400px);
+		height: var(--carousel-height, 25rem);
 
 		position: relative;
 		width: 100%;

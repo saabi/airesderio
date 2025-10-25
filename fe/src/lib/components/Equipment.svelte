@@ -42,14 +42,14 @@
 
 <style>
 	.equip {
-		margin: 26px 0;
+		margin: 1.625rem 0;
 	}
 	.boxed {
 		display: inline-block;
 		border: 3px solid var(--line);
-		border-radius: 4px;
-		padding: 8px 14px;
-		margin: 12px 0;
+		border-radius: 0.25rem;
+		padding: 0.5rem 0.875rem;
+		margin: 0.75rem 0;
 	}
 
 	.boxed .eyebrow {
@@ -61,7 +61,7 @@
 
 	.boxed .big {
 		display: block;
-		font-size: 28px;
+		font-size: 1.75rem;
 		font-weight: 800;
 		letter-spacing: 0.06em;
 	}
@@ -69,30 +69,30 @@
 	.equip-list {
 		list-style: none;
 		padding: 0;
-		margin: 32px 0;
+		margin: 2rem 0;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 24px 48px;
+		gap: 1.5rem 3rem;
 		align-items: start;
 	}
 
 	.equip-list li {
 		display: grid;
-		grid-template-columns: 48px 1fr;
-		gap: 16px;
+		grid-template-columns: 3rem 1fr;
+		gap: 1rem;
 		align-items: start;
-		padding: 16px 0;
+		padding: 1rem 0;
 	}
 
 	.equip-list li img {
-		width: 48px;
-		height: 48px;
+		width: 3rem;
+		height: 3rem;
 		object-fit: contain;
 	}
 
 	.equip-list li span {
 		position: relative;
-		padding: 12px 0;
+		padding: 0.75rem 0;
 		font-size: 0.95rem;
 		line-height: 1.4;
 		color: #333;
@@ -104,7 +104,7 @@
 		position: absolute;
 		left: 0;
 		right: 0;
-		height: 4px;
+		height: 0.25rem;
 		background-color: #ccc;
 	}
 

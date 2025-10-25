@@ -18,8 +18,8 @@
 <style>
 	.plan-ph {
 		background: #efefef;
-		height: 440px;
-		border-radius: 8px;
+		height: 27.5rem;
+		border-radius: 0.5rem;
 		border: 1px solid var(--line);
 	}
 </style>

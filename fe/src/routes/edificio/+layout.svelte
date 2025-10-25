@@ -26,7 +26,7 @@
 {/snippet}
 
 <article>
-    <Carousel {slides} height="400px" />
+    <Carousel {slides} height="25rem" />
 	{@render children()}
 </article>
 

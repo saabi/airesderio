@@ -104,9 +104,9 @@
       background: rgba(0, 0, 0, 0.3);
       color: white;
       border: none;
-      padding: 15px;
+		padding: 0.9375rem;
       cursor: pointer;
-      font-size: 24px;
+		font-size: 1.5rem;
       border-radius: 3px;
       transition: background 0.3s ease;
       z-index: 1;
@@ -116,23 +116,23 @@
       background: rgba(0, 0, 0, 0.6);
     }
   
-    .prev { left: 10px; }
-    .next { right: 10px; }
+	.prev { left: 0.625rem; }
+	.next { right: 0.625rem; }
   
     .dots-container {
       position: absolute;
-      bottom: 15px;
+		bottom: 0.9375rem;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 8px;
+		gap: 0.5rem;
       z-index: 1;
-      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+		filter: drop-shadow(0 0.125rem 0.125rem rgba(0, 0, 0, 0.5));
     }
   
     .dot {
-      width: 12px;
-      height: 12px;
+		width: 0.75rem;
+		height: 0.75rem;
       border-radius: 50%;
       border: none;
       background: rgba(255, 255, 255, 0.8);
