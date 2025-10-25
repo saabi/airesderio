@@ -44,32 +44,11 @@
 	.equip {
 		margin: 1.625rem 0;
 	}
-	.boxed {
-		display: inline-block;
-		border: 3px solid var(--line);
-		border-radius: 0.25rem;
-		padding: 0.5rem 0.875rem;
-		margin: 0.75rem 0;
-	}
-
-	.boxed .eyebrow {
-		font-size: 0.9rem;
-		letter-spacing: 0.18em;
-		color: #111;
-		display: block;
-	}
-
-	.boxed .big {
-		display: block;
-		font-size: 1.75rem;
-		font-weight: 800;
-		letter-spacing: 0.06em;
-	}
 
 	.equip-list {
 		list-style: none;
 		padding: 0;
-		margin: 2rem 0;
+		margin:2rem 0;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 1.5rem 3rem;
@@ -79,21 +58,21 @@
 	.equip-list li {
 		display: grid;
 		grid-template-columns: 3rem 1fr;
-		gap: 1rem;
-		align-items: start;
+		gap: 3rem;
+		align-items: center;
 		padding: 1rem 0;
 	}
 
 	.equip-list li img {
-		width: 3rem;
-		height: 3rem;
+		width: 4.5rem;
+		height: 4.5rem;
 		object-fit: contain;
 	}
 
 	.equip-list li span {
 		position: relative;
 		padding: 0.75rem 0;
-		font-size: 0.95rem;
+		font-size: 1.75rem;
 		line-height: 1.4;
 		color: #333;
 	}
@@ -105,7 +84,7 @@
 		left: 0;
 		right: 0;
 		height: 0.25rem;
-		background-color: #ccc;
+		background-color: var(--line);
 	}
 
 	.equip-list li span::before {
