@@ -1,9 +1,10 @@
+<script lang="ts">
+	import Title from './Title.svelte';
+</script>
+
 <section id="interior" aria-labelledby="interior-heading">
 	<h2 id="interior-heading" class="vh">Diseño Interior</h2>
-	<div class="boxed">
-		<span class="eyebrow">Diseño</span>
-		<span class="big">INTERIOR</span>
-	</div>
+	<Title eyebrow="Diseño" big="INTERIOR" />
 	<p>
 		Ambientes generosos para unidades de un dormitorio que integran estética y funcionalidad
 		explorando tendencias contemporáneas, incorporando las nuevas tecnologías y los recursos más
@@ -29,28 +30,6 @@
 </section>
 
 <style>
-	.boxed {
-		display: inline-block;
-		border: 3px solid var(--line);
-		border-radius: 4px;
-		padding: 8px 14px;
-		margin: 12px 0;
-	}
-
-	.boxed .eyebrow {
-		font-size: 0.9rem;
-		letter-spacing: 0.18em;
-		color: #111;
-		display: block;
-	}
-
-	.boxed .big {
-		display: block;
-		font-size: 28px;
-		font-weight: 800;
-		letter-spacing: 0.06em;
-	}
-
 	.interior-gallery {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
