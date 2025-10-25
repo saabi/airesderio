@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48"><defs>
+  <style type="text/css">
+   
+    .str3 {stroke:#999999;stroke-width:75;stroke-miterlimit:38.2016}
+    .str4 {stroke:black;stroke-width:20;stroke-miterlimit:22.9256}
+    .str1 {stroke:gray;stroke-width:20;stroke-miterlimit:22.9256}
+    .str0 {stroke:#999999;stroke-width:20;stroke-miterlimit:22.9256}
+    .str5 {stroke:#B3B3B3;stroke-width:20;stroke-miterlimit:22.9256}
+    .str2 {stroke:#999999;stroke-width:61.73;stroke-miterlimit:22.9256}
+    .fil3 {fill:none}
+    .fil4 {fill:black}
+    .fil0 {fill:#999999}
+    .fil1 {fill:#B3B3B3}
+    .fil2 {fill:white}
+   
+  </style></defs><g transform="matrix(0.00889523,0,0,0.00889523,-268.524826,-34.734898)"><g><g id="_1707665288848">
+   <rect class="fil0" x="30929.66" y="8720.77" width="2925.4" height="580.27" /><rect class="fil0" x="30929.66" y="8016.17" width="2925.4" height="580.27" /><rect class="fil0" x="30929.66" y="7353" width="2925.4" height="580.27" /><g>
+    <rect class="fil0" x="31918.21" y="6923.73" width="189" height="61.82" /><rect class="fil0" x="32201.7" y="6923.73" width="189" height="61.82" /><rect class="fil0" x="32485.2" y="6923.73" width="189" height="61.82" /><rect class="fil0" x="32768.69" y="6923.73" width="189" height="61.82" /></g><path class="fil0" d="M30715.48 7021.42l216.3 0 0 -607.47 0 -0.7 0 -2.08c-0.81,-193.47 125.08,-350.32 279.37,-350.32 154.3,0 279.4,241.22 279.4,350.32 0,109.09 -2.06,48.83 -5.94,72.12l-117.87 0c6.63,-22.46 10.26,-2.03 10.26,-72.12 0,-70.1 -74.25,-207.94 -165.84,-207.94 -91.59,0 -165.83,93.09 -165.83,207.94l0 0.01 0 0 0 2.1c0.12,14.29 1.38,28.23 3.68,41.7l-3.68 0 0 566.44 4016.25 0 0 248.68 -4346.1 0 0 -248.68z" /><g>
+    <polygon class="fil0" points="31630.25,5315.01 31951.56,5315.01 31951.56,3904.89 32934.39,3904.89 32934.39,5315.01 33255.7,5315.01 33255.7,5528.29 31630.25,5528.29 " /><g>
+     <rect class="fil0" x="33339.56" y="3904.89" width="818.33" height="1623.4" /><rect class="fil0" x="34237.35" y="3904.89" width="818.33" height="1623.4" /></g><g>
+     <rect class="fil0" x="30715.48" y="3904.89" width="818.33" height="1623.4" /></g></g></g></g></g></svg>
