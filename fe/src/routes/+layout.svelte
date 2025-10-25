@@ -1,23 +1,14 @@
 <script lang="ts">
-	import Header from '$lib/Header.svelte';
-	// import { i18n } from '$lib/i18n';
-	// import { ParaglideJS } from '@inlang/paraglide-sveltekit';
-	let { children } = $props();
-	const maxHeight = 140;
+	import type { Snippet } from 'svelte';
+	import '../app.css';
+	import Header from '$lib/components/Header.svelte';
+	import Footer from '$lib/components/Footer.svelte';
+
+	let { children }: { children: Snippet } = $props();
 </script>
 
+<Header />
 
-<Header {maxHeight} />
-<!-- <ParaglideJS {i18n}> -->
-<main style="--header-height: {maxHeight}px">
-	{@render children()}
-</main>
-<!-- </ParaglideJS> -->
+{@render children()}
 
-<style>
-	main {
-		padding: 1rem;
-		margin-top: var(--header-height);
-		background-color: #eee;
-	}
-</style>
+<Footer />
