@@ -24,7 +24,8 @@
         "distancia_cuadras": "0 cuadras",
         "distancia_metros": 0,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Dirección del proyecto"
+        "fuente_direccion": "Dirección del proyecto",
+        "photos": []
       }
     },
     "transporte": {
@@ -42,7 +43,12 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 1500,
         "fotos_disponibles": 3,
-        "fuente_direccion": "Busbud Terminal Directory"
+        "fuente_direccion": "Busbud Terminal Directory",
+        "photos": [
+          "exterior.jpg",
+          "terminal-exterior-2.jpg",
+          "terminal-llegada.jpg"
+        ]
       }
     },
     "cultura_entretenimiento": {
@@ -60,7 +66,12 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 800,
         "fotos_disponibles": 3,
-        "fuente_direccion": "TripAdvisor"
+        "fuente_direccion": "TripAdvisor",
+        "photos": [
+          "centro-convenciones-argentina-ejemplo-PD.jpg",
+          "forum-exterior-ejemplo-PD.jpg",
+          "forum-interior-ejemplo-PD.jpg"
+        ]
       },
       "centro_cultural_bicentenario": {
         "nombre": "Centro Cultural del Bicentenario",
@@ -76,7 +87,10 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 1200,
         "fotos_disponibles": 1,
-        "fuente_direccion": "Sitio web oficial CCB"
+        "fuente_direccion": "Sitio web oficial CCB",
+        "photos": [
+          "centro-cultural-ejemplo-PD.jpg"
+        ]
       },
       "teatro_25_mayo": {
         "nombre": "Teatro 25 de Mayo",
@@ -92,7 +106,10 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 600,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Referencias locales"
+        "fuente_direccion": "Referencias locales",
+        "photos": [
+          "teatro-argentina-ejemplo-PD.jpg"
+        ]
       }
     },
     "infraestructura": {
@@ -110,7 +127,10 @@
         "distancia_cuadras": "más de 8 cuadras",
         "distancia_metros": 2000,
         "fotos_disponibles": 1,
-        "fuente_direccion": "Referencias geográficas"
+        "fuente_direccion": "Referencias geográficas",
+        "photos": [
+          "puente-exterior.jpg"
+        ]
       }
     },
     "lugares_historicos": {
@@ -128,7 +148,10 @@
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 300,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Referencias geográficas"
+        "fuente_direccion": "Referencias geográficas",
+        "photos": [
+          "plaza-argentina-ejemplo-PD.jpg"
+        ]
       },
       "catedral_basilica": {
         "nombre": "Catedral Basílica de Santiago del Estero",
@@ -144,7 +167,10 @@
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 300,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Referencias geográficas"
+        "fuente_direccion": "Referencias geográficas",
+        "photos": [
+          "catedral-exterior-PD.jpg"
+        ]
       },
       "casa_gobierno": {
         "nombre": "Casa de Gobierno",
@@ -160,7 +186,10 @@
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 300,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Referencias geográficas"
+        "fuente_direccion": "Referencias geográficas",
+        "photos": [
+          "casa-gobierno-argentina-ejemplo-PD.jpg"
+        ]
       }
     },
     "parques_recreacion": {
@@ -178,7 +207,10 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 1000,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Referencias locales"
+        "fuente_direccion": "Referencias locales",
+        "photos": [
+          "parque-argentino-ejemplo-PD.jpg"
+        ]
       }
     },
     "museos": {
@@ -197,7 +229,10 @@
         "distancia_metros": 1200,
         "fotos_disponibles": 0,
         "nota": "Ubicado dentro del Centro Cultural del Bicentenario",
-        "fuente_direccion": "CCB oficial"
+        "fuente_direccion": "CCB oficial",
+        "photos": [
+          "museo-argentina-ejemplo-PD.jpg"
+        ]
       },
       "museo_ciencias_naturales": {
         "nombre": "Museo de Ciencias Naturales",
@@ -214,7 +249,10 @@
         "distancia_metros": 1200,
         "fotos_disponibles": 0,
         "nota": "Ubicado dentro del Centro Cultural del Bicentenario",
-        "fuente_direccion": "CCB oficial"
+        "fuente_direccion": "CCB oficial",
+        "photos": [
+          "museo-ciencias-argentina-ejemplo-PD.jpg"
+        ]
       }
     },
     "gastronomia": {
@@ -234,7 +272,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.78,
           "lng": -64.259
-        }
+        },
+        "photos": [
+          "cafe-argentino-ejemplo.jpg"
+        ]
       },
       "dominga_resto_bar": {
         "nombre": "Dominga Resto Bar",
@@ -252,7 +293,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.782,
           "lng": -64.258
-        }
+        },
+        "photos": [
+          "restaurante-argentino-ejemplo.jpg"
+        ]
       },
       "bless": {
         "nombre": "Bless",
@@ -270,7 +314,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.779,
           "lng": -64.26
-        }
+        },
+        "photos": [
+          "establecimiento-bless-ejemplo.jpg"
+        ]
       },
       "amasijo": {
         "nombre": "Amasijo",
@@ -286,7 +333,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.781,
           "lng": -64.257
-        }
+        },
+        "photos": [
+          "restaurante-amasijo-ejemplo.jpg"
+        ]
       }
     },
     "supermercados": {
@@ -305,7 +355,10 @@
         "distancia_metros": 500,
         "fotos_disponibles": 1,
         "nota": "Imagen representativa de supermercado argentino",
-        "fuente_direccion": "Tiendeo.com.ar"
+        "fuente_direccion": "Tiendeo.com.ar",
+        "photos": [
+          "supermercado-argentino-ejemplo.jpg"
+        ]
       },
       "changomas": {
         "nombre": "Changomas",
@@ -323,7 +376,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.778,
           "lng": -64.261
-        }
+        },
+        "photos": [
+          "supermercado-changomas-ejemplo.jpg"
+        ]
       },
       "super_nataly": {
         "nombre": "Super Nataly",
@@ -339,7 +395,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.785,
           "lng": -64.255
-        }
+        },
+        "photos": [
+          "supermercado-nataly-ejemplo.jpg"
+        ]
       }
     },
     "servicios": {
@@ -357,7 +416,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.777,
           "lng": -64.258
-        }
+        },
+        "photos": [
+          "bse-pagos-ejemplo-PD.jpg"
+        ]
       },
       "farmacia_del_este": {
         "nombre": "Farmacia Del Este",
@@ -373,7 +435,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.776,
           "lng": -64.259
-        }
+        },
+        "photos": [
+          "farmacia-argentina-ejemplo-PD.jpg"
+        ]
       },
       "banco_nacion": {
         "nombre": "Banco de la Nación",
@@ -389,7 +454,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.78,
           "lng": -64.26
-        }
+        },
+        "photos": [
+          "banco-argentina-ejemplo-PD.jpg"
+        ]
       },
       "estacion_petrobras": {
         "nombre": "Estación Petrobras",
@@ -405,7 +473,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.784,
           "lng": -64.262
-        }
+        },
+        "photos": [
+          "estacion-gas-argentina-ejemplo-PD.jpg"
+        ]
       }
     },
     "vida_nocturna": {
@@ -423,7 +494,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.795,
           "lng": -64.2614
-        }
+        },
+        "photos": [
+          "bar-argentino-ejemplo-PD.jpg"
+        ]
       },
       "la_roca_pub": {
         "nombre": "La Roca Pub",
@@ -439,7 +513,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.778,
           "lng": -64.257
-        }
+        },
+        "photos": [
+          "pub-argentino-ejemplo-PD.jpg"
+        ]
       },
       "buddha_bar": {
         "nombre": "Buddha Bar",
@@ -455,7 +532,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.782,
           "lng": -64.256
-        }
+        },
+        "photos": [
+          "bar-buddha-ejemplo-PD.jpg"
+        ]
       },
       "bar_oculto": {
         "nombre": "Bar Oculto",
@@ -471,7 +551,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.779,
           "lng": -64.258
-        }
+        },
+        "photos": [
+          "bar-oculto-ejemplo-PD.jpg"
+        ]
       },
       "distrito_roca": {
         "nombre": "Distrito Roca",
@@ -487,7 +570,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.781,
           "lng": -64.259
-        }
+        },
+        "photos": [
+          "distrito-roca-ejemplo-PD.jpg"
+        ]
       },
       "cambalache": {
         "nombre": "Cambalache",
@@ -503,7 +589,10 @@
         "coordenadas_aproximadas": {
           "lat": -27.783,
           "lng": -64.26
-        }
+        },
+        "photos": [
+          "cambalache-ejemplo-PD.jpg"
+        ]
       }
     }
   },
