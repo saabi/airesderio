@@ -61,6 +61,9 @@
 	let scriptLoaded = $state(false);
 	let map: any;
 	let mapMarkers = $state<any[]>([]);
+	let openInfoWindows = $state<Set<string>>(new Set());
+	let infoWindows = $state<Map<string, any>>(new Map());
+	let isInitialLoad = $state(true);
 
 	// Load Google Maps API
 	$effect(() => {
@@ -184,6 +187,7 @@
 			}
 		});
 		mapMarkers = [];
+		// Don't clear info window state - we want to preserve which ones were open
 	}
 
 	// Create markers on the map
@@ -243,8 +247,26 @@
 					content: markerData.infoContent
 				});
 
-				marker.addListener('click', () => {
-					// Handle both Advanced Markers and regular markers
+				// Store info window reference
+				infoWindows.set(markerData.id, infoWindow);
+
+				// Add event listeners for info window open/close
+				infoWindow.addListener('closeclick', () => {
+					openInfoWindows.delete(markerData.id);
+					// Refit bounds when info window closes
+					setTimeout(() => fitBoundsToMarkers(), 100);
+				});
+
+				const openInfoWindow = () => {
+					// Close other info windows first (optional - for single info window behavior)
+					// infoWindows.forEach((iw, id) => {
+					//     if (id !== markerData.id) {
+					//         iw.close();
+					//         openInfoWindows.delete(id);
+					//     }
+					// });
+
+					// Open this info window
 					if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
 						infoWindow.open({
 							anchor: marker,
@@ -253,20 +275,21 @@
 					} else {
 						infoWindow.open(map, marker);
 					}
-				});
+					
+					openInfoWindows.add(markerData.id);
+					// Refit bounds when info window opens
+					setTimeout(() => fitBoundsToMarkers(), 100);
+				};
 
-				// Auto-open info window for main marker
-				if (isMainMarker) {
-					setTimeout(() => {
-						if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
-							infoWindow.open({
-								anchor: marker,
-								map: map
-							});
-						} else {
-							infoWindow.open(map, marker);
-						}
-					}, 500); // Small delay to ensure map is fully loaded
+				marker.addListener('click', openInfoWindow);
+
+				// Auto-open info window for main marker (only on initial load or if it was previously open)
+				if (isMainMarker && (isInitialLoad || openInfoWindows.has(markerData.id))) {
+					setTimeout(openInfoWindow, 500); // Small delay to ensure map is fully loaded
+				}
+				// Reopen info windows that were previously open (for non-main markers)
+				else if (!isMainMarker && openInfoWindows.has(markerData.id)) {
+					setTimeout(openInfoWindow, 100);
 				}
 			}
 
@@ -282,6 +305,11 @@
 		});
 
 		console.log(`Total markers created: ${mapMarkers.length}`);
+		
+		// Mark initial load as complete after first marker creation
+		if (isInitialLoad) {
+			isInitialLoad = false;
+		}
 	}
 
 	// Fit map bounds to show all visible markers
@@ -307,13 +335,16 @@
 		});
 
 		if (hasVisibleMarkers) {
-			// Add some padding around the markers
-			map.fitBounds(bounds, {
-				top: 50,
-				right: 50,
-				bottom: 50,
-				left: 50
-			});
+			// Adjust padding based on whether info windows are open
+			const hasOpenInfoWindows = openInfoWindows.size > 0;
+			const padding = {
+				top: hasOpenInfoWindows ? 80 : 50,
+				right: hasOpenInfoWindows ? 80 : 50,
+				bottom: hasOpenInfoWindows ? 120 : 50, // Extra bottom padding for info windows
+				left: hasOpenInfoWindows ? 80 : 50
+			};
+
+			map.fitBounds(bounds, padding);
 
 			// Ensure minimum zoom level (don't zoom in too much for single markers)
 			const listener = (window as any).google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
@@ -360,6 +391,22 @@
 	// Expose markers array to parent
 	export function getMarkers() {
 		return mapMarkers;
+	}
+
+	// Close all info windows
+	export function closeAllInfoWindows() {
+		infoWindows.forEach((infoWindow) => {
+			infoWindow.close();
+		});
+		openInfoWindows.clear();
+	}
+
+	// Get info window state (for debugging)
+	export function getInfoWindowState() {
+		return {
+			openWindows: Array.from(openInfoWindows),
+			totalWindows: infoWindows.size
+		};
 	}
 </script>
 
