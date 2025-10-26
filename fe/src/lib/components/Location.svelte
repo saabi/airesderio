@@ -21,6 +21,8 @@
 		categoryFilter = []
 	}: Props = $props();
 
+	// --- COMPONENT STATE VARIABLES ---
+	// @fold:start(state-vars)
 	let mapElement: HTMLDivElement;
 	let scriptLoaded = $state(false);
 	let placesData = $state<any>(null);
@@ -32,6 +34,7 @@
 	let carouselPlaceId = $state<string>('');
 	let carouselPhotos = $state<string[]>([]);
 	let carouselCurrentIndex = $state(0);
+	// @fold:end
 
 	// Category colors for markers (still needed for marker creation)
 	const categoryColors: Record<string, string> = {
@@ -94,6 +97,46 @@
 			categoryFilter = categoryFilter.filter(c => c !== category);
 		} else {
 			categoryFilter = [...categoryFilter, category];
+		}
+	}
+
+	// Fit map bounds to show all visible markers
+	function fitMapToMarkers() {
+		if (!map || markers.length === 0) return;
+
+		const bounds = new (window as any).google.maps.LatLngBounds();
+		let hasVisibleMarkers = false;
+
+		markers.forEach(marker => {
+			// Get marker position (works for both AdvancedMarkerElement and regular Marker)
+			let position;
+			if (marker instanceof (window as any).google.maps.marker?.AdvancedMarkerElement) {
+				position = marker.position;
+			} else {
+				position = marker.getPosition();
+			}
+
+			if (position) {
+				bounds.extend(position);
+				hasVisibleMarkers = true;
+			}
+		});
+
+		if (hasVisibleMarkers) {
+			// Add some padding around the markers
+			map.fitBounds(bounds, {
+				top: 50,
+				right: 50,
+				bottom: 50,
+				left: 50
+			});
+
+			// Ensure minimum zoom level (don't zoom in too much for single markers)
+			const listener = (window as any).google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+				if (map.getZoom() > 17) {
+					map.setZoom(17);
+				}
+			});
 		}
 	}
 
@@ -401,6 +444,8 @@
 			// Use untrack to prevent markers array changes from triggering this effect
 			untrack(() => {
 				createPlaceMarkers();
+				// Fit map to show all visible markers after creation
+				setTimeout(() => fitMapToMarkers(), 100);
 			});
 		}
 	});
@@ -440,6 +485,7 @@
 				markersCount={markers.length}
 				onToggleMarkers={toggleMarkers}
 				onCategoryToggle={toggleCategory}
+				onFitToView={fitMapToMarkers}
 			/>
 		</div>
 	</div>

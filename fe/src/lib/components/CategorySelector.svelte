@@ -6,6 +6,7 @@
 		markersCount: number;
 		onToggleMarkers: () => void;
 		onCategoryToggle: (category: string) => void;
+		onFitToView?: () => void;
 	}
 
 	let {
@@ -14,7 +15,8 @@
 		categoryFilter = [],
 		markersCount = 0,
 		onToggleMarkers,
-		onCategoryToggle
+		onCategoryToggle,
+		onFitToView
 	}: Props = $props();
 
 	// Category colors for different types of places (matching Location component)
@@ -62,13 +64,25 @@
 	<div class="map-legend">
 		<div class="legend-header">
 			<h4>Lugares de Interés</h4>
-			<button 
-				class="toggle-markers-btn"
-				onclick={onToggleMarkers}
-				aria-label={showPlaceMarkers ? 'Ocultar marcadores' : 'Mostrar marcadores'}
-			>
-				{showPlaceMarkers ? '👁️' : '👁️‍🗨️'}
-			</button>
+			<div class="header-buttons">
+				{#if onFitToView && markersCount > 0}
+					<button 
+						class="fit-view-btn"
+						onclick={onFitToView}
+						aria-label="Ajustar vista para mostrar todos los marcadores"
+						title="Ajustar vista"
+					>
+						🔍
+					</button>
+				{/if}
+				<button 
+					class="toggle-markers-btn"
+					onclick={onToggleMarkers}
+					aria-label={showPlaceMarkers ? 'Ocultar marcadores' : 'Mostrar marcadores'}
+				>
+					{showPlaceMarkers ? '👁️' : '👁️‍🗨️'}
+				</button>
+			</div>
 		</div>
 		
 		<div class="legend-categories">
@@ -130,7 +144,14 @@
 		font-weight: 600;
 	}
 
-	.toggle-markers-btn {
+	.header-buttons {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
+	.toggle-markers-btn,
+	.fit-view-btn {
 		background: none;
 		border: 1px solid #d1d5db;
 		border-radius: 0.25rem;
@@ -138,11 +159,29 @@
 		cursor: pointer;
 		font-size: 0.875rem;
 		transition: all 0.2s;
+		min-width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
-	.toggle-markers-btn:hover {
+	.toggle-markers-btn:hover,
+	.fit-view-btn:hover {
 		background: #f3f4f6;
 		border-color: #9ca3af;
+	}
+
+	.fit-view-btn {
+		background: #f0f9ff;
+		border-color: #0ea5e9;
+		color: #0ea5e9;
+	}
+
+	.fit-view-btn:hover {
+		background: #e0f2fe;
+		border-color: #0284c7;
+		color: #0284c7;
 	}
 
 	.legend-categories {
