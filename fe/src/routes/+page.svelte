@@ -17,7 +17,7 @@
 		</p>
 
 		<Intro />
-		<Location />
+		<Location jsonUrl="/lugares/lugares-direcciones.json" />
 		<Interior />
 		<Equipment />
 		<FloorPlans />
