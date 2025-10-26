@@ -25,7 +25,7 @@
 	// --- COMPONENT STATE VARIABLES ---
 	// @fold:start(state-vars)
 	let placesData = $state<any>(null);
-	let googleMapRef: any;
+	let googleMapRef = $state<any>(null);
 	let mapCenter = $state({ lat: -27.779686, lng: -64.258992 });
 	let mapMarkers = $state<any[]>([]);
 	let photoCarouselVisible = $state(false);
@@ -118,21 +118,35 @@
 
 	// Toggle markers visibility
 	function toggleMarkers() {
+		captureOpenInfoWindows(); // Capture before changing
 		showPlaceMarkers = !showPlaceMarkers;
+		handleFilterChange(); // Handle reopening after change
 	}
 
 	// Toggle category filter
 	function toggleCategory(category: string) {
+		captureOpenInfoWindows(); // Capture before changing
 		if (categoryFilter.includes(category)) {
 			categoryFilter = categoryFilter.filter(c => c !== category);
 		} else {
 			categoryFilter = [...categoryFilter, category];
 		}
+		handleFilterChange(); // Handle reopening after change
 	}
 
 	// Process places data into generic markers for GoogleMap component
 	function processPlacesIntoMarkers() {
-		if (!placesData) return [];
+		if (!placesData) {
+			// This is expected during initial load - data will be available after fetch completes
+			return [];
+		}
+
+		console.log('🔄 Processing places into markers:', {
+			totalCategories: Object.keys(placesData.lugares).length,
+			showPlaceMarkers: showPlaceMarkers,
+			categoryFilterLength: categoryFilter.length,
+			categoryFilter: categoryFilter
+		});
 
 		const markers: any[] = [];
 
@@ -183,7 +197,7 @@
 				// No need to create custom elements - handled by marker snippet
 
 				// Create generic marker data
-				markers.push({
+				const markerData = {
 					id: `${category}_${placeId}`,
 					position: place.coordenadas_aproximadas,
 					title: place.nombre,
@@ -192,7 +206,18 @@
 					place: place,
 					category: category,
 					placeId: placeId
-				});
+				};
+				
+				markers.push(markerData);
+				
+				if (isMainMarker) {
+					console.log('✅ MAIN MARKER ADDED TO ARRAY:', {
+						id: markerData.id,
+						title: markerData.title,
+						position: $state.snapshot(markerData.position),
+						totalMarkersNow: markers.length
+					});
+				}
 			});
 		});
 
@@ -214,6 +239,15 @@
 		}
 	}
 
+	// Handle info window close from GoogleMap component
+	function handleInfoWindowClose(markerId: string) {
+		console.log('Info window closed for marker:', markerId);
+		// No specific tracking needed - GoogleMap component handles the state
+	}
+
+	// Track which info windows should be reopened after filter changes
+	let infoWindowsToReopen = $state<string[]>([]);
+
 	// Handle map ready event
 	function handleMapReady(mapInstance: any) {
 		console.log('🗺️ Map is ready:', mapInstance);
@@ -222,10 +256,10 @@
 		setTimeout(() => {
 			const mainMarker = processedMarkers.find(m => m.isMainMarker || m.place?.es_edificio_principal);
 			if (mainMarker && googleMapRef) {
-				console.log('🏠 Auto-opening info window for main marker:', mainMarker.title);
+				console.log('🏠 Auto-opening info window for main marker:', mainMarker.title, 'ID:', mainMarker.id);
 				googleMapRef.openInfoWindow(mainMarker.id);
 			}
-		}, 500); // Wait for markers to be fully created
+		}, 1000); // Wait for markers and info windows to be fully created
 	}
 
 	// Fit map bounds using GoogleMap component
@@ -328,6 +362,38 @@
 			});
 		}
 	});
+
+	// Handle reopening info windows after filter changes
+	function handleFilterChange() {
+		if (infoWindowsToReopen.length > 0 && googleMapRef) {
+			// Wait for markers to be recreated, then reopen valid info windows
+			setTimeout(() => {
+				if (googleMapRef && processedMarkers.length > 0) {
+					const currentMarkerIds = processedMarkers.map(m => m.id);
+					const validWindowsToReopen = infoWindowsToReopen.filter((windowId: string) => 
+						currentMarkerIds.includes(windowId)
+					);
+					
+					if (validWindowsToReopen.length > 0) {
+						console.log('🔄 Reopening valid info windows after filter change:', validWindowsToReopen);
+						googleMapRef.reopenInfoWindows(validWindowsToReopen);
+					}
+					
+					// Clear the reopen list
+					infoWindowsToReopen = [];
+				}
+			}, 800); // Longer delay to ensure markers are fully created
+		}
+	}
+
+	// Capture open info windows before filter changes
+	function captureOpenInfoWindows() {
+		if (googleMapRef) {
+			const openWindows = googleMapRef.getOpenInfoWindows();
+			console.log('📋 Capturing open info windows before filter change:', openWindows);
+			infoWindowsToReopen = [...openWindows];
+		}
+	}
 </script>
 
 <section id="ubicacion" class="ubi" aria-labelledby="ubicacion-heading">
@@ -349,18 +415,20 @@
 			</p>
 		</div>
 		<div class="map-container">
-			<GoogleMap
-				bind:this={googleMapRef}
-				apiKey={GOOGLE_MAPS_API_KEY}
-				mapId="AIRES_DE_RIO_MAP"
-				center={mapCenter}
-				zoom={15}
-				markers={processedMarkers}
-				onMarkerClick={handleMarkerClick}
-				onMapReady={handleMapReady}
-				containerClass="location-map"
-				height="25rem"
-			>
+			{#if placesData && processedMarkers.length > 0}
+				<GoogleMap
+					bind:this={googleMapRef}
+					apiKey={GOOGLE_MAPS_API_KEY}
+					mapId="AIRES_DE_RIO_MAP"
+					center={mapCenter}
+					zoom={15}
+					markers={processedMarkers}
+					onMarkerClick={handleMarkerClick}
+					onMapReady={handleMapReady}
+					onInfoWindowClose={handleInfoWindowClose}
+					containerClass="location-map"
+					height="25rem"
+				>
 				{#snippet markerElement(marker)}
 					{@const isMainMarker = marker.isMainMarker || marker.place?.es_edificio_principal}
 					{@const size = isMainMarker ? 28 : 16}
@@ -519,6 +587,11 @@
 					</div>
 				{/snippet}
 			</GoogleMap>
+			{:else}
+				<div class="location-map" style="height: 25rem; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 0.5rem;">
+					<p style="color: #6b7280;">Cargando mapa...</p>
+				</div>
+			{/if}
 			
 			<CategorySelector 
 				{placesData}

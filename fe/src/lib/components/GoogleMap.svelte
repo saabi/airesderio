@@ -20,19 +20,20 @@
 		center: { lat: number; lng: number };
 		zoom?: number;
 		mapTypeId?: string;
-		
+
 		// Generic markers data
 		markers: GenericMarker[];
-		
+
 		// Snippets for marker content and appearance
 		markerElement?: Snippet<[GenericMarker]>;
 		markerInfoWindow?: Snippet<[GenericMarker]>;
-		
+
 		// Event Callbacks
 		onMarkerClick?: (marker: GenericMarker) => void;
 		onMapReady?: (map: any) => void;
 		onBoundsChanged?: () => void;
-		
+		onInfoWindowClose?: (markerId: string) => void;
+
 		// Styling
 		containerClass?: string;
 		height?: string;
@@ -50,6 +51,7 @@
 		onMarkerClick,
 		onMapReady,
 		onBoundsChanged,
+		onInfoWindowClose,
 		containerClass = '',
 		height = '25rem'
 	}: Props = $props();
@@ -110,6 +112,12 @@
 
 			map = new (window as any).google.maps.Map(mapElement, mapConfig);
 
+			console.log('🗺️ Map initialized:', {
+				mapExists: !!map,
+				markersLength: markers.length,
+				willTriggerMarkerCreation: markers.length > 0
+			});
+
 			if (onMapReady) {
 				onMapReady(map);
 			}
@@ -152,7 +160,12 @@
 
 	// Clear all markers from map
 	function clearMarkers() {
-		mapMarkers.forEach(marker => {
+		// Close all info windows before clearing markers
+		infoWindows.forEach((infoWindow) => {
+			infoWindow.close();
+		});
+		
+		mapMarkers.forEach((marker) => {
 			if (marker instanceof (window as any).google.maps.marker?.AdvancedMarkerElement) {
 				marker.map = null;
 			} else {
@@ -161,16 +174,20 @@
 		});
 		mapMarkers = [];
 		
+		// Clear ALL info window state to prevent stale reopening
+		infoWindows.clear();
+		openInfoWindows.clear();
+		
+		console.log('🧹 Cleared markers, closed info windows, and reset state');
+
 		// Clean up snippet containers that are no longer needed
-		const currentMarkerIds = new Set(markers.map(m => m.id));
-		Object.keys(snippetContainers).forEach(id => {
+		const currentMarkerIds = new Set(markers.map((m) => m.id));
+		Object.keys(snippetContainers).forEach((id) => {
 			if (!currentMarkerIds.has(id)) {
 				delete snippetContainers[id];
-				infoWindows.delete(id);
-				openInfoWindows.delete(id);
 			}
 		});
-		Object.keys(markerSnippetContainers).forEach(id => {
+		Object.keys(markerSnippetContainers).forEach((id) => {
 			if (!currentMarkerIds.has(id)) {
 				delete markerSnippetContainers[id];
 			}
@@ -185,7 +202,7 @@
 
 		console.log('Creating markers for GoogleMap:', markers.length);
 
-		markers.forEach(markerData => {
+		markers.forEach((markerData) => {
 			console.log(`🗺️ Creating marker: ${markerData.title}`, {
 				hasCustomElement: !!markerData.customElement,
 				hasSnippetContainer: !!markerSnippetContainers[markerData.id],
@@ -195,54 +212,71 @@
 			let marker;
 
 			try {
-			// Use custom element if provided, otherwise use snippet, otherwise create default
-			let markerElementDOM: HTMLElement;
-			
-			if (markerData.customElement) {
-				markerElementDOM = markerData.customElement;
-				console.log('✅ Using custom element for marker:', markerData.id);
-			} else if (markerElement) {
-				// Use the snippet container that was bound in the template
-				markerElementDOM = markerSnippetContainers[markerData.id];
-				console.log('🎨 Snippet container lookup for', markerData.id, ':', {
-					found: !!markerElementDOM,
-					element: markerElementDOM,
-					innerHTML: markerElementDOM?.innerHTML,
-					availableContainers: Object.keys(markerSnippetContainers)
-				});
-				
-				if (!markerElementDOM) {
-					console.warn('❌ Marker snippet container not found for:', markerData.id, 'Available:', Object.keys(markerSnippetContainers));
-					markerElementDOM = createDefaultMarkerElement(markerData);
+				// Use custom element if provided, otherwise use snippet, otherwise create default
+				let markerElementDOM: HTMLElement;
+
+				if (markerData.customElement) {
+					markerElementDOM = markerData.customElement;
+					console.log('✅ Using custom element for marker:', markerData.id);
+				} else if (markerElement) {
+					// Use the snippet container that was bound in the template
+					markerElementDOM = markerSnippetContainers[markerData.id];
+					console.log('🎨 Snippet container lookup for', markerData.id, ':', {
+						found: !!markerElementDOM,
+						element: markerElementDOM,
+						innerHTML: markerElementDOM?.innerHTML,
+						availableContainers: Object.keys(markerSnippetContainers)
+					});
+
+					if (!markerElementDOM) {
+						console.warn(
+							'❌ Marker snippet container not found for:',
+							markerData.id,
+							'Available:',
+							Object.keys(markerSnippetContainers)
+						);
+						markerElementDOM = createDefaultMarkerElement(markerData);
+					} else {
+						console.log(
+							'✅ Using snippet container for marker:',
+							markerData.id,
+							'Content length:',
+							markerElementDOM.innerHTML.length
+						);
+					}
 				} else {
-					console.log('✅ Using snippet container for marker:', markerData.id, 'Content length:', markerElementDOM.innerHTML.length);
+					markerElementDOM = createDefaultMarkerElement(markerData);
+					console.log('⚪ Using default element for marker:', markerData.id);
 				}
-			} else {
-				markerElementDOM = createDefaultMarkerElement(markerData);
-				console.log('⚪ Using default element for marker:', markerData.id);
-			}
-				
-				if ((window as any).google.maps.marker && (window as any).google.maps.marker.AdvancedMarkerElement) {
+
+				if (
+					(window as any).google.maps.marker &&
+					(window as any).google.maps.marker.AdvancedMarkerElement
+				) {
 					marker = new (window as any).google.maps.marker.AdvancedMarkerElement({
 						position: markerData.position,
 						map: map,
 						title: markerData.title,
 						content: markerElementDOM
 					});
-					
-				// Debug marker creation
-				console.log('🎯 MARKER CREATED:', {
-					title: markerData.title,
-					position: $state.snapshot(markerData.position),
-					markerElementDOM: markerElementDOM,
-					elementHTML: markerElementDOM.outerHTML?.substring(0, 100) + '...',
-					elementVisible: markerElementDOM.offsetWidth > 0 && markerElementDOM.offsetHeight > 0
-				});
+
+					// Debug marker creation
+					console.log('🎯 MARKER CREATED:', {
+						title: markerData.title,
+						position: $state.snapshot(markerData.position),
+						markerElementDOM: markerElementDOM,
+						elementHTML: markerElementDOM.outerHTML?.substring(0, 100) + '...',
+						elementVisible: markerElementDOM.offsetWidth > 0 && markerElementDOM.offsetHeight > 0
+					});
 				} else {
 					throw new Error('Advanced Markers not available');
 				}
 			} catch (error) {
-				console.warn('Advanced Markers not available, falling back to regular markers for:', markerData.title, error);
+				console.warn(
+					'Advanced Markers not available, falling back to regular markers for:',
+					markerData.title,
+					error
+				);
 				marker = new (window as any).google.maps.Marker({
 					position: markerData.position,
 					map: map,
@@ -262,7 +296,7 @@
 			if (markerInfoWindow) {
 				// Use the snippet container that was bound in the template
 				const infoElement = snippetContainers[markerData.id];
-				
+
 				if (infoElement) {
 					const infoWindow = new (window as any).google.maps.InfoWindow({
 						content: infoElement
@@ -273,7 +307,13 @@
 					// Event listeners for info window state
 					infoWindow.addListener('closeclick', () => {
 						openInfoWindows.delete(markerData.id);
-						setTimeout(() => fitBoundsToMarkers(), 100);
+						
+						// Notify parent component about info window close
+						if (onInfoWindowClose) {
+							onInfoWindowClose(markerData.id);
+						}
+						
+						// Don't automatically refit bounds when closing info windows
 					});
 
 					const openInfoWindow = () => {
@@ -285,7 +325,7 @@
 						} else {
 							infoWindow.open(map, marker);
 						}
-						
+
 						openInfoWindows.add(markerData.id);
 						setTimeout(() => fitBoundsToMarkers(), 100);
 					};
@@ -297,10 +337,8 @@
 						}
 					});
 
-					// Reopen previously open windows
-					if (openInfoWindows.has(markerData.id)) {
-						setTimeout(openInfoWindow, 100);
-					}
+					// Don't automatically reopen info windows - let parent component handle this
+					// This prevents empty info windows from appearing during filter changes
 				}
 			} else {
 				// No info window, just handle click
@@ -311,15 +349,20 @@
 				});
 			}
 
+			// Store marker with its ID for easy lookup
+			(marker as any).markerId = markerData.id;
 			mapMarkers.push(marker);
 			console.log(`✅ Marker successfully created and added to map: ${markerData.title}`, {
-				markerType: marker instanceof (window as any).google.maps.marker?.AdvancedMarkerElement ? 'AdvancedMarker' : 'RegularMarker',
+				markerType:
+					marker instanceof (window as any).google.maps.marker?.AdvancedMarkerElement
+						? 'AdvancedMarker'
+						: 'RegularMarker',
 				totalMarkersOnMap: mapMarkers.length
 			});
 		});
 
 		console.log(`Total markers created: ${mapMarkers.length}`);
-		
+
 		// For initial load, center map on first marker if available
 		if (isInitialLoad && markers.length > 0) {
 			const firstMarker = markers[0];
@@ -339,7 +382,7 @@
 		const bounds = new (window as any).google.maps.LatLngBounds();
 		let hasVisibleMarkers = false;
 
-		mapMarkers.forEach(marker => {
+		mapMarkers.forEach((marker) => {
 			let position;
 			if (marker instanceof (window as any).google.maps.marker?.AdvancedMarkerElement) {
 				position = marker.position;
@@ -364,15 +407,19 @@
 
 			map.fitBounds(bounds, padding);
 
-			const listener = (window as any).google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
-				if (map.getZoom() > 17) {
-					map.setZoom(17);
+			const listener = (window as any).google.maps.event.addListenerOnce(
+				map,
+				'bounds_changed',
+				() => {
+					if (map.getZoom() > 17) {
+						map.setZoom(17);
+					}
+
+					if (onBoundsChanged) {
+						onBoundsChanged();
+					}
 				}
-				
-				if (onBoundsChanged) {
-					onBoundsChanged();
-				}
-			});
+			);
 		}
 	}
 
@@ -380,7 +427,7 @@
 	$effect(() => {
 		console.log('📦 Snippet containers effect:', {
 			markersLength: markers.length,
-			markerIds: markers.map(m => m.id),
+			markerIds: markers.map((m) => m.id),
 			snippetContainersCount: Object.keys(markerSnippetContainers).length,
 			snippetContainerIds: Object.keys(markerSnippetContainers),
 			hasMarkerElement: !!markerElement
@@ -391,24 +438,26 @@
 	$effect(() => {
 		const currentMarkers = markers;
 		const currentMap = map;
-		
+
 		console.log('🗺️ GoogleMap $effect triggered:', {
 			hasMap: !!currentMap,
 			markersLength: currentMarkers.length,
-			markerIds: currentMarkers.map(m => m.id),
+			markerIds: currentMarkers.map((m) => m.id),
 			snippetContainersCount: Object.keys(markerSnippetContainers).length,
-			snippetContainerIds: Object.keys(markerSnippetContainers)
+			snippetContainerIds: Object.keys(markerSnippetContainers),
+			scriptLoaded: scriptLoaded,
+			mapElement: !!mapElement
 		});
-		
+
 		if (currentMap && currentMarkers.length > 0) {
 			console.log('🚀 Creating markers in GoogleMap...');
-			
+
 			// Wait for snippet containers to be bound
 			const checkSnippetsAndCreate = () => {
-				const expectedContainers = currentMarkers.map(m => m.id);
+				const expectedContainers = currentMarkers.map((m) => m.id);
 				const actualContainers = Object.keys(markerSnippetContainers);
-				const allBound = expectedContainers.every(id => markerSnippetContainers[id]);
-				
+				const allBound = expectedContainers.every((id) => markerSnippetContainers[id]);
+
 				console.log('📦 Snippet container check:', {
 					expected: expectedContainers,
 					actual: actualContainers,
@@ -420,7 +469,7 @@
 						innerHTML: el?.innerHTML?.substring(0, 100) + '...'
 					}))
 				});
-				
+
 				if (allBound || !markerElement) {
 					untrack(() => {
 						createMapMarkers();
@@ -431,14 +480,39 @@
 					setTimeout(checkSnippetsAndCreate, 25);
 				}
 			};
-			
+
 			// Start checking after a small delay
 			setTimeout(checkSnippetsAndCreate, 10);
 		} else {
 			console.log('⏳ Not creating markers:', {
 				noMap: !currentMap,
-				noMarkers: currentMarkers.length === 0
+				noMarkers: currentMarkers.length === 0,
+				mapExists: !!currentMap,
+				markersLength: currentMarkers.length,
+				scriptLoaded: scriptLoaded
 			});
+		}
+	});
+
+	// Additional effect to ensure markers are created when map becomes available
+	$effect(() => {
+		if (map && markers.length > 0 && mapMarkers.length === 0) {
+			console.log('🔄 Map became available, triggering marker creation:', {
+				mapExists: !!map,
+				markersLength: markers.length,
+				currentMapMarkersLength: mapMarkers.length
+			});
+			
+			// Small delay to ensure everything is ready
+			setTimeout(() => {
+				if (map && markers.length > 0) {
+					console.log('🚀 Force creating markers after map initialization');
+					untrack(() => {
+						createMapMarkers();
+						setTimeout(() => fitBoundsToMarkers(), 100);
+					});
+				}
+			}, 100);
 		}
 	});
 
@@ -464,16 +538,65 @@
 
 	export function openInfoWindow(markerId: string) {
 		const infoWindow = infoWindows.get(markerId);
-		if (infoWindow) {
-			infoWindow.open(map);
+		const marker = mapMarkers.find(m => m.markerId === markerId);
+		const infoElement = snippetContainers[markerId];
+		
+		console.log('🔍 Opening info window:', {
+			markerId: markerId,
+			infoWindowExists: !!infoWindow,
+			markerExists: !!marker,
+			infoElementExists: !!infoElement,
+			hasContent: infoElement?.innerHTML?.trim().length > 0,
+			totalInfoWindows: infoWindows.size,
+			totalMarkers: mapMarkers.length,
+			availableInfoWindows: Array.from(infoWindows.keys())
+		});
+		
+		// Prevent opening empty info windows
+		if (!infoElement || infoElement.innerHTML.trim().length === 0) {
+			console.warn('❌ Preventing empty info window from opening:', markerId);
+			return;
+		}
+		
+		if (infoWindow && marker) {
+			if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
+				infoWindow.open({
+					anchor: marker,
+					map: map
+				});
+			} else {
+				infoWindow.open(map, marker);
+			}
+			
 			openInfoWindows.add(markerId);
 			console.log('📍 Opened info window for marker:', markerId);
-			
-			// Refit bounds after opening info window
-			setTimeout(() => fitBoundsToMarkers(), 100);
+
+			// Don't automatically refit bounds when opening info windows
+			// This prevents markers from moving out of view
 		} else {
-			console.warn('Info window not found for marker:', markerId);
+			console.warn('❌ Could not open info window:', {
+				markerId: markerId,
+				infoWindowExists: !!infoWindow,
+				markerExists: !!marker,
+				availableInfoWindows: Array.from(infoWindows.keys()),
+				availableMarkers: mapMarkers.map(m => m.markerId || 'no-id')
+			});
 		}
+	}
+
+	export function getOpenInfoWindows(): string[] {
+		return Array.from(openInfoWindows);
+	}
+
+	export function reopenInfoWindows(markerIds: string[]) {
+		console.log('🔄 Reopening info windows for markers:', markerIds);
+		
+		markerIds.forEach((markerId, index) => {
+			// Stagger the reopening to avoid conflicts
+			setTimeout(() => {
+				openInfoWindow(markerId);
+			}, 100 + (index * 50));
+		});
 	}
 
 	// Cleanup on component destroy
@@ -496,7 +619,7 @@
 			</div>
 		{/each}
 	{/if}
-	
+
 	{#if markerInfoWindow}
 		{#each markers as marker (marker.id)}
 			<div bind:this={snippetContainers[marker.id]}>
