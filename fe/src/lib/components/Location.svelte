@@ -3,7 +3,7 @@
 	import { untrack } from 'svelte';
 	import PhotoCarousel from './PhotoCarousel.svelte';
 	import CategorySelector from './CategorySelector.svelte';
-	import GoogleMapGeneric from './GoogleMapGeneric.svelte';
+	import GoogleMap from './GoogleMap.svelte';
 
 	const GOOGLE_MAPS_API_KEY = 'AIzaSyAEjLiUxzFltYqAYYiIapqw9yt6O0ge2QY';
 
@@ -100,7 +100,7 @@
 		}
 	}
 
-	// Process places data into generic markers for GoogleMapGeneric component
+	// Process places data into generic markers for GoogleMap component
 	function processPlacesIntoMarkers() {
 		if (!placesData) return [];
 
@@ -211,7 +211,7 @@
 		return markerContainer;
 	}
 
-	// Handle marker click from GoogleMapGeneric component
+	// Handle marker click from GoogleMap component
 	function handleMarkerClick(marker: any) {
 		// Just log the marker click - don't automatically open photo carousel
 		// Photo carousel should only open when photo button is clicked
@@ -318,7 +318,7 @@
 			</p>
 		</div>
 		<div class="map-container">
-			<GoogleMapGeneric
+			<GoogleMap
 				bind:this={googleMapRef}
 				apiKey={GOOGLE_MAPS_API_KEY}
 				mapId="AIRES_DE_RIO_MAP"
@@ -364,7 +364,7 @@
 						</div>
 					</div>
 				{/snippet}
-			</GoogleMapGeneric>
+			</GoogleMap>
 			
 			<CategorySelector 
 				{placesData}
