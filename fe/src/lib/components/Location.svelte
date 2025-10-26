@@ -2,6 +2,7 @@
 	import { browser } from '$app/environment';
 	import { untrack } from 'svelte';
 	import PhotoCarousel from './PhotoCarousel.svelte';
+	import CategorySelector from './CategorySelector.svelte';
 
 	const GOOGLE_MAPS_API_KEY = 'AIzaSyAEjLiUxzFltYqAYYiIapqw9yt6O0ge2QY';
 
@@ -32,7 +33,7 @@
 	let carouselPhotos = $state<string[]>([]);
 	let carouselCurrentIndex = $state(0);
 
-	// Category colors for different types of places
+	// Category colors for markers (still needed for marker creation)
 	const categoryColors: Record<string, string> = {
 		edificio_principal: '#6B4423', // brown (main building)
 		transporte: '#2563eb', // blue
@@ -80,6 +81,20 @@
 		carouselPlaceId = '';
 		carouselPhotos = [];
 		carouselCurrentIndex = 0;
+	}
+
+	// Toggle markers visibility
+	function toggleMarkers() {
+		showPlaceMarkers = !showPlaceMarkers;
+	}
+
+	// Toggle category filter
+	function toggleCategory(category: string) {
+		if (categoryFilter.includes(category)) {
+			categoryFilter = categoryFilter.filter(c => c !== category);
+		} else {
+			categoryFilter = [...categoryFilter, category];
+		}
 	}
 
 	// Find the main building from JSON data
@@ -418,29 +433,14 @@
 			aria-label="Mapa del entorno mostrando la ubicación estratégica de Aires de Río en Avenida Rivadavia, Santiago del Estero"
 		></div>
 			
-			{#if showPlaceMarkers && placesData}
-				<div class="map-legend">
-					<h4>Lugares de Interés</h4>
-					<div class="legend-items">
-						{#each Object.entries(categoryColors) as [category, color]}
-							{#if placesData.lugares[category] && category !== 'edificio_principal'}
-								<div class="legend-item">
-									<div class="legend-color" style="background-color: {color}"></div>
-									<span class="legend-label">
-										{category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-									</span>
-								</div>
-							{/if}
-						{/each}
-					</div>
-					<div class="legend-stats">
-						<small>
-							{placesData.metadata.total_places - 1} lugares de interés • 
-							{markers.length} marcadores
-						</small>
-					</div>
-				</div>
-			{/if}
+			<CategorySelector 
+				{placesData}
+				{showPlaceMarkers}
+				{categoryFilter}
+				markersCount={markers.length}
+				onToggleMarkers={toggleMarkers}
+				onCategoryToggle={toggleCategory}
+			/>
 		</div>
 	</div>
 </section>
@@ -500,60 +500,6 @@
 		background-color: #e9e9e9;
 	}
 
-	.map-legend {
-		flex: 0 0 240px;
-		background: rgba(255, 255, 255, 0.95);
-		backdrop-filter: blur(10px);
-		border-left: 1px solid #e5e7eb;
-		padding: 1rem;
-		box-shadow: -2px 0 4px -1px rgba(0, 0, 0, 0.1);
-		z-index: 1000;
-		overflow-y: auto;
-	}
-
-	.map-legend h4 {
-		margin: 0 0 0.5rem 0;
-		font-size: 0.875rem;
-		font-weight: 600;
-		color: #374151;
-	}
-
-	.legend-items {
-		display: flex;
-		flex-direction: column;
-		gap: 0.375rem;
-		margin-bottom: 0.75rem;
-	}
-
-	.legend-item {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.legend-color {
-		width: 12px;
-		height: 12px;
-		border-radius: 50%;
-		flex-shrink: 0;
-	}
-
-	.legend-label {
-		font-size: 0.75rem;
-		color: #6b7280;
-		text-transform: capitalize;
-	}
-
-	.legend-stats {
-		border-top: 1px solid #e5e7eb;
-		padding-top: 0.5rem;
-		text-align: center;
-	}
-
-	.legend-stats small {
-		color: #9ca3af;
-		font-size: 0.7rem;
-	}
 
 	@media (max-width: 850px) {
 		.location-block {
@@ -583,26 +529,5 @@
 			order: 1;
 		}
 
-		.map-legend {
-			flex: none;
-			order: 2;
-			border-left: none;
-			border-top: 1px solid #e5e7eb;
-			padding: 0.75rem;
-			box-shadow: 0 -2px 4px -1px rgba(0, 0, 0, 0.1);
-		}
-
-		.map-legend h4 {
-			font-size: 0.8rem;
-		}
-
-		.legend-label {
-			font-size: 0.7rem;
-		}
-
-		.legend-color {
-			width: 10px;
-			height: 10px;
-		}
 	}
 </style>
