@@ -32,7 +32,7 @@
         "tipo": "Centro de convenciones",
         "descripcion": "Centro de convenciones y eventos culturales, antigua estación de ferrocarril",
         "coordenadas_aproximadas": {
-          "lat": -27.7950,
+          "lat": -27.795,
           "lng": -64.2614
         },
         "distancia_aproximada": "800 m del apartamento",
@@ -49,7 +49,7 @@
         "descripcion": "Centro cultural con museos y espacios de exhibición",
         "coordenadas_aproximadas": {
           "lat": -27.7833,
-          "lng": -64.2500
+          "lng": -64.25
         },
         "distancia_aproximada": "1.2 km del apartamento",
         "distancia_categoria": "CERCANO",
@@ -64,8 +64,8 @@
         "tipo": "Teatro",
         "descripcion": "Teatro principal de la ciudad, importante centro cultural",
         "coordenadas_aproximadas": {
-          "lat": -27.7950,
-          "lng": -64.2600
+          "lat": -27.795,
+          "lng": -64.26
         },
         "distancia_aproximada": "600 m del apartamento",
         "distancia_categoria": "CERCANO",
@@ -83,7 +83,7 @@
         "descripcion": "Puente histórico que conecta Santiago del Estero con La Banda sobre el Río Dulce",
         "coordenadas_aproximadas": {
           "lat": -27.7667,
-          "lng": -64.2500
+          "lng": -64.25
         },
         "distancia_aproximada": "2.0 km del apartamento",
         "distancia_categoria": "MODERADAMENTE DISTANTE",
@@ -100,7 +100,7 @@
         "tipo": "Plaza principal",
         "descripcion": "Plaza principal de la ciudad, centro histórico y social",
         "coordenadas_aproximadas": {
-          "lat": -27.7950,
+          "lat": -27.795,
           "lng": -64.2614
         },
         "distancia_aproximada": "300 m del apartamento",
@@ -116,7 +116,7 @@
         "tipo": "Catedral",
         "descripcion": "Catedral principal de la ciudad, importante sitio religioso e histórico",
         "coordenadas_aproximadas": {
-          "lat": -27.7950,
+          "lat": -27.795,
           "lng": -64.2614
         },
         "distancia_aproximada": "300 m del apartamento",
@@ -132,7 +132,7 @@
         "tipo": "Edificio gubernamental",
         "descripcion": "Sede del gobierno provincial, edificio histórico",
         "coordenadas_aproximadas": {
-          "lat": -27.7950,
+          "lat": -27.795,
           "lng": -64.2614
         },
         "distancia_aproximada": "300 m del apartamento",
@@ -150,8 +150,8 @@
         "tipo": "Parque público",
         "descripcion": "Principal parque de la ciudad, ideal para recreación y actividades al aire libre",
         "coordenadas_aproximadas": {
-          "lat": -27.7800,
-          "lng": -64.2700
+          "lat": -27.78,
+          "lng": -64.27
         },
         "distancia_aproximada": "1.0 km del apartamento",
         "distancia_categoria": "CERCANO",
@@ -169,7 +169,7 @@
         "descripcion": "Museo de arqueología y antropología, parte del Centro Cultural del Bicentenario",
         "coordenadas_aproximadas": {
           "lat": -27.7833,
-          "lng": -64.2500
+          "lng": -64.25
         },
         "distancia_aproximada": "1.2 km del apartamento",
         "distancia_categoria": "CERCANO",
@@ -186,7 +186,7 @@
         "descripcion": "Museo de ciencias naturales, parte del Centro Cultural del Bicentenario",
         "coordenadas_aproximadas": {
           "lat": -27.7833,
-          "lng": -64.2500
+          "lng": -64.25
         },
         "distancia_aproximada": "1.2 km del apartamento",
         "distancia_categoria": "CERCANO",
@@ -210,7 +210,11 @@
         "distancia_metros": 800,
         "fotos_disponibles": 1,
         "nota": "Imagen representativa de café argentino típico",
-        "fuente_direccion": "Pendiente de confirmación"
+        "fuente_direccion": "Pendiente de confirmación",
+        "coordenadas_aproximadas": {
+          "lat": -27.78,
+          "lng": -64.259
+        }
       },
       "dominga_resto_bar": {
         "nombre": "Dominga Resto Bar",
@@ -224,7 +228,11 @@
         "distancia_metros": 800,
         "fotos_disponibles": 1,
         "nota": "Imagen representativa de restaurant argentino típico",
-        "fuente_direccion": "Facebook (pendiente de confirmación)"
+        "fuente_direccion": "Facebook (pendiente de confirmación)",
+        "coordenadas_aproximadas": {
+          "lat": -27.782,
+          "lng": -64.258
+        }
       },
       "bless": {
         "nombre": "Bless",
@@ -238,7 +246,11 @@
         "distancia_metros": 800,
         "fotos_disponibles": 1,
         "nota": "Imagen representativa de establecimiento argentino típico",
-        "fuente_direccion": "Instagram @bless.sgo (pendiente de confirmación)"
+        "fuente_direccion": "Instagram @bless.sgo (pendiente de confirmación)",
+        "coordenadas_aproximadas": {
+          "lat": -27.779,
+          "lng": -64.26
+        }
       },
       "amasijo": {
         "nombre": "Amasijo",
@@ -250,7 +262,11 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 800,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.781,
+          "lng": -64.257
+        }
       }
     },
     "supermercados": {
@@ -283,7 +299,11 @@
         "distancia_metros": 3000,
         "fotos_disponibles": 1,
         "nota": "Imagen representativa de supermercado argentino",
-        "fuente_direccion": "Tiendeo.com.ar (ubicación específica pendiente)"
+        "fuente_direccion": "Tiendeo.com.ar (ubicación específica pendiente)",
+        "coordenadas_aproximadas": {
+          "lat": -27.778,
+          "lng": -64.261
+        }
       },
       "super_nataly": {
         "nombre": "Super Nataly",
@@ -295,7 +315,11 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 400,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.785,
+          "lng": -64.255
+        }
       }
     },
     "servicios": {
@@ -309,7 +333,11 @@
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 100,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.777,
+          "lng": -64.258
+        }
       },
       "farmacia_del_este": {
         "nombre": "Farmacia Del Este",
@@ -321,7 +349,11 @@
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 200,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.776,
+          "lng": -64.259
+        }
       },
       "banco_nacion": {
         "nombre": "Banco de la Nación",
@@ -333,7 +365,11 @@
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 300,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.78,
+          "lng": -64.26
+        }
       },
       "estacion_petrobras": {
         "nombre": "Estación Petrobras",
@@ -345,7 +381,11 @@
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 250,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.784,
+          "lng": -64.262
+        }
       }
     },
     "vida_nocturna": {
@@ -359,7 +399,11 @@
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 200,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.795,
+          "lng": -64.2614
+        }
       },
       "la_roca_pub": {
         "nombre": "La Roca Pub",
@@ -371,7 +415,11 @@
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 300,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.778,
+          "lng": -64.257
+        }
       },
       "buddha_bar": {
         "nombre": "Buddha Bar",
@@ -383,7 +431,11 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 600,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.782,
+          "lng": -64.256
+        }
       },
       "bar_oculto": {
         "nombre": "Bar Oculto",
@@ -395,7 +447,11 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 650,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.779,
+          "lng": -64.258
+        }
       },
       "distrito_roca": {
         "nombre": "Distrito Roca",
@@ -407,7 +463,11 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 700,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.781,
+          "lng": -64.259
+        }
       },
       "cambalache": {
         "nombre": "Cambalache",
@@ -419,7 +479,11 @@
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 750,
         "fotos_disponibles": 0,
-        "fuente_direccion": "Mapa de distancias local"
+        "fuente_direccion": "Mapa de distancias local",
+        "coordenadas_aproximadas": {
+          "lat": -27.783,
+          "lng": -64.26
+        }
       }
     }
   },
