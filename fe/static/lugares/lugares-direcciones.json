@@ -1,0 +1,440 @@
+{
+  "metadata": {
+    "title": "Lugares de Interés cerca de Aires de Río",
+    "description": "Direcciones y información de lugares cercanos al edificio Aires de Río en Santiago del Estero",
+    "apartment_reference": "Intersección de Rivadavia y Olaechea, Santiago del Estero",
+    "last_updated": "2025-10-25",
+    "total_places": 28
+  },
+  "lugares": {
+    "transporte": {
+      "terminal_omnibus": {
+        "nombre": "Terminal de Ómnibus de Santiago del Estero",
+        "direccion": "Chacabuco s/n, 4200 Santiago del Estero, Argentina",
+        "tipo": "Terminal de transporte",
+        "descripcion": "Terminal principal de ómnibus de la ciudad",
+        "coordenadas_aproximadas": {
+          "lat": -27.7833,
+          "lng": -64.2667
+        },
+        "distancia_aproximada": "1.5 km del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 1500,
+        "fotos_disponibles": 3,
+        "fuente_direccion": "Busbud Terminal Directory"
+      }
+    },
+    "cultura_entretenimiento": {
+      "forum_santiago": {
+        "nombre": "Fórum Santiago del Estero",
+        "direccion": "Av. Roca Sur 401, 4200 Santiago del Estero, Argentina",
+        "tipo": "Centro de convenciones",
+        "descripcion": "Centro de convenciones y eventos culturales, antigua estación de ferrocarril",
+        "coordenadas_aproximadas": {
+          "lat": -27.7950,
+          "lng": -64.2614
+        },
+        "distancia_aproximada": "800 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 800,
+        "fotos_disponibles": 3,
+        "fuente_direccion": "TripAdvisor"
+      },
+      "centro_cultural_bicentenario": {
+        "nombre": "Centro Cultural del Bicentenario",
+        "direccion": "Avenida Libertad 439, Santiago del Estero G4200CZE, Argentina",
+        "tipo": "Centro cultural",
+        "descripcion": "Centro cultural con museos y espacios de exhibición",
+        "coordenadas_aproximadas": {
+          "lat": -27.7833,
+          "lng": -64.2500
+        },
+        "distancia_aproximada": "1.2 km del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 1200,
+        "fotos_disponibles": 1,
+        "fuente_direccion": "Sitio web oficial CCB"
+      },
+      "teatro_25_mayo": {
+        "nombre": "Teatro 25 de Mayo",
+        "direccion": "Av. Belgrano Sur y 24 de Septiembre, Santiago del Estero",
+        "tipo": "Teatro",
+        "descripcion": "Teatro principal de la ciudad, importante centro cultural",
+        "coordenadas_aproximadas": {
+          "lat": -27.7950,
+          "lng": -64.2600
+        },
+        "distancia_aproximada": "600 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 600,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Referencias locales"
+      }
+    },
+    "infraestructura": {
+      "puente_carretero": {
+        "nombre": "Puente Carretero",
+        "direccion": "Puente Carretero, Santiago del Estero - La Banda, Argentina",
+        "tipo": "Puente histórico",
+        "descripcion": "Puente histórico que conecta Santiago del Estero con La Banda sobre el Río Dulce",
+        "coordenadas_aproximadas": {
+          "lat": -27.7667,
+          "lng": -64.2500
+        },
+        "distancia_aproximada": "2.0 km del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 2000,
+        "fotos_disponibles": 1,
+        "fuente_direccion": "Referencias geográficas"
+      }
+    },
+    "lugares_historicos": {
+      "plaza_libertad": {
+        "nombre": "Plaza Libertad",
+        "direccion": "Plaza Libertad, Centro, Santiago del Estero",
+        "tipo": "Plaza principal",
+        "descripcion": "Plaza principal de la ciudad, centro histórico y social",
+        "coordenadas_aproximadas": {
+          "lat": -27.7950,
+          "lng": -64.2614
+        },
+        "distancia_aproximada": "300 m del apartamento",
+        "distancia_categoria": "MUY CERCA",
+        "distancia_cuadras": "0-3 cuadras",
+        "distancia_metros": 300,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Referencias geográficas"
+      },
+      "catedral_basilica": {
+        "nombre": "Catedral Basílica de Santiago del Estero",
+        "direccion": "Plaza Libertad, Centro, Santiago del Estero",
+        "tipo": "Catedral",
+        "descripcion": "Catedral principal de la ciudad, importante sitio religioso e histórico",
+        "coordenadas_aproximadas": {
+          "lat": -27.7950,
+          "lng": -64.2614
+        },
+        "distancia_aproximada": "300 m del apartamento",
+        "distancia_categoria": "MUY CERCA",
+        "distancia_cuadras": "0-3 cuadras",
+        "distancia_metros": 300,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Referencias geográficas"
+      },
+      "casa_gobierno": {
+        "nombre": "Casa de Gobierno",
+        "direccion": "Plaza Libertad, Centro, Santiago del Estero",
+        "tipo": "Edificio gubernamental",
+        "descripcion": "Sede del gobierno provincial, edificio histórico",
+        "coordenadas_aproximadas": {
+          "lat": -27.7950,
+          "lng": -64.2614
+        },
+        "distancia_aproximada": "300 m del apartamento",
+        "distancia_categoria": "MUY CERCA",
+        "distancia_cuadras": "0-3 cuadras",
+        "distancia_metros": 300,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Referencias geográficas"
+      }
+    },
+    "parques_recreacion": {
+      "parque_aguirre": {
+        "nombre": "Parque Aguirre",
+        "direccion": "Av. Aguirre, Santiago del Estero",
+        "tipo": "Parque público",
+        "descripcion": "Principal parque de la ciudad, ideal para recreación y actividades al aire libre",
+        "coordenadas_aproximadas": {
+          "lat": -27.7800,
+          "lng": -64.2700
+        },
+        "distancia_aproximada": "1.0 km del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 1000,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Referencias locales"
+      }
+    },
+    "museos": {
+      "museo_arqueologico": {
+        "nombre": "Museo Arqueológico Emilio y Duncan Wagner",
+        "direccion": "Av. Libertad 439, Santiago del Estero (dentro del CCB)",
+        "tipo": "Museo",
+        "descripcion": "Museo de arqueología y antropología, parte del Centro Cultural del Bicentenario",
+        "coordenadas_aproximadas": {
+          "lat": -27.7833,
+          "lng": -64.2500
+        },
+        "distancia_aproximada": "1.2 km del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 1200,
+        "fotos_disponibles": 0,
+        "nota": "Ubicado dentro del Centro Cultural del Bicentenario",
+        "fuente_direccion": "CCB oficial"
+      },
+      "museo_ciencias_naturales": {
+        "nombre": "Museo de Ciencias Naturales",
+        "direccion": "Av. Libertad 439, Santiago del Estero (dentro del CCB)",
+        "tipo": "Museo",
+        "descripcion": "Museo de ciencias naturales, parte del Centro Cultural del Bicentenario",
+        "coordenadas_aproximadas": {
+          "lat": -27.7833,
+          "lng": -64.2500
+        },
+        "distancia_aproximada": "1.2 km del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 1200,
+        "fotos_disponibles": 0,
+        "nota": "Ubicado dentro del Centro Cultural del Bicentenario",
+        "fuente_direccion": "CCB oficial"
+      }
+    },
+    "gastronomia": {
+      "leblon_cafe": {
+        "nombre": "Leblon Café y Pastelería Artesanal",
+        "direccion": "Dirección específica no confirmada",
+        "direccion_aproximada": "Zona céntrica de Santiago del Estero",
+        "tipo": "Café y pastelería",
+        "descripcion": "Café local conocido por su pastelería artesanal",
+        "distancia_aproximada": "Radio de 2 km del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 800,
+        "fotos_disponibles": 1,
+        "nota": "Imagen representativa de café argentino típico",
+        "fuente_direccion": "Pendiente de confirmación"
+      },
+      "dominga_resto_bar": {
+        "nombre": "Dominga Resto Bar",
+        "direccion": "Dirección específica no confirmada",
+        "direccion_aproximada": "Zona céntrica de Santiago del Estero",
+        "tipo": "Restaurant y bar",
+        "descripcion": "Restaurant y bar local popular",
+        "distancia_aproximada": "Radio de 2 km del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 800,
+        "fotos_disponibles": 1,
+        "nota": "Imagen representativa de restaurant argentino típico",
+        "fuente_direccion": "Facebook (pendiente de confirmación)"
+      },
+      "bless": {
+        "nombre": "Bless",
+        "direccion": "Dirección específica no confirmada",
+        "direccion_aproximada": "Zona céntrica de Santiago del Estero",
+        "tipo": "Establecimiento gastronómico",
+        "descripcion": "Establecimiento local con presencia en Instagram (@bless.sgo)",
+        "distancia_aproximada": "Radio de 2 km del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 800,
+        "fotos_disponibles": 1,
+        "nota": "Imagen representativa de establecimiento argentino típico",
+        "fuente_direccion": "Instagram @bless.sgo (pendiente de confirmación)"
+      },
+      "amasijo": {
+        "nombre": "Amasijo",
+        "direccion": "Moreno Sur 622, Santiago del Estero",
+        "tipo": "Restaurant/Panadería",
+        "descripcion": "Restaurant y panadería local",
+        "distancia_aproximada": "800 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 800,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      }
+    },
+    "supermercados": {
+      "vea_rivadavia": {
+        "nombre": "Supermercados Vea",
+        "direccion": "Av. Rivadavia esq. Ejército Argentino s/n, Santiago del Estero",
+        "tipo": "Supermercado",
+        "descripcion": "Supermercado de la cadena Vea ubicado en esquina estratégica",
+        "coordenadas_aproximadas": {
+          "lat": -27.7833,
+          "lng": -64.2667
+        },
+        "distancia_aproximada": "500 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 500,
+        "fotos_disponibles": 1,
+        "nota": "Imagen representativa de supermercado argentino",
+        "fuente_direccion": "Tiendeo.com.ar"
+      },
+      "changomas": {
+        "nombre": "Changomas",
+        "direccion": "Dirección específica no confirmada",
+        "direccion_aproximada": "Santiago del Estero",
+        "tipo": "Supermercado",
+        "descripcion": "Supermercado de la cadena Changomas",
+        "distancia_aproximada": "Radio de 3 km del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 3000,
+        "fotos_disponibles": 1,
+        "nota": "Imagen representativa de supermercado argentino",
+        "fuente_direccion": "Tiendeo.com.ar (ubicación específica pendiente)"
+      },
+      "super_nataly": {
+        "nombre": "Super Nataly",
+        "direccion": "Rivadavia 654 y Belgrano Sur 377, Santiago del Estero",
+        "tipo": "Supermercado",
+        "descripcion": "Supermercado local con dos ubicaciones cercanas",
+        "distancia_aproximada": "400 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 400,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      }
+    },
+    "servicios": {
+      "bse_centro_pagos": {
+        "nombre": "BSE Centro de Pagos",
+        "direccion": "Olaechea 451, Santiago del Estero",
+        "tipo": "Centro de pagos",
+        "descripcion": "Centro de pagos de servicios BSE",
+        "distancia_aproximada": "100 m del apartamento",
+        "distancia_categoria": "MUY CERCA",
+        "distancia_cuadras": "0-3 cuadras",
+        "distancia_metros": 100,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      },
+      "farmacia_del_este": {
+        "nombre": "Farmacia Del Este",
+        "direccion": "Rivadavia 1, Santiago del Estero",
+        "tipo": "Farmacia",
+        "descripcion": "Farmacia local en Rivadavia",
+        "distancia_aproximada": "200 m del apartamento",
+        "distancia_categoria": "MUY CERCA",
+        "distancia_cuadras": "0-3 cuadras",
+        "distancia_metros": 200,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      },
+      "banco_nacion": {
+        "nombre": "Banco de la Nación",
+        "direccion": "Centro, Santiago del Estero",
+        "tipo": "Banco",
+        "descripcion": "Sucursal del Banco de la Nación Argentina",
+        "distancia_aproximada": "300 m del apartamento",
+        "distancia_categoria": "MUY CERCA",
+        "distancia_cuadras": "0-3 cuadras",
+        "distancia_metros": 300,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      },
+      "estacion_petrobras": {
+        "nombre": "Estación Petrobras",
+        "direccion": "Belgrano y Rivadavia, Santiago del Estero",
+        "tipo": "Estación de servicio",
+        "descripcion": "Estación de servicio Petrobras",
+        "distancia_aproximada": "250 m del apartamento",
+        "distancia_categoria": "MUY CERCA",
+        "distancia_cuadras": "0-3 cuadras",
+        "distancia_metros": 250,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      }
+    },
+    "vida_nocturna": {
+      "forum_bar": {
+        "nombre": "Forum Bar",
+        "direccion": "Alvear 500, Santiago del Estero",
+        "tipo": "Bar",
+        "descripcion": "Bar local en zona céntrica",
+        "distancia_aproximada": "200 m del apartamento",
+        "distancia_categoria": "MUY CERCA",
+        "distancia_cuadras": "0-3 cuadras",
+        "distancia_metros": 200,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      },
+      "la_roca_pub": {
+        "nombre": "La Roca Pub",
+        "direccion": "Roca y Urquiza, Santiago del Estero",
+        "tipo": "Pub",
+        "descripcion": "Pub local en la intersección de Roca y Urquiza",
+        "distancia_aproximada": "300 m del apartamento",
+        "distancia_categoria": "MUY CERCA",
+        "distancia_cuadras": "0-3 cuadras",
+        "distancia_metros": 300,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      },
+      "buddha_bar": {
+        "nombre": "Buddha Bar",
+        "direccion": "Av. Roca Sur, Santiago del Estero",
+        "tipo": "Bar",
+        "descripcion": "Bar en Avenida Roca Sur",
+        "distancia_aproximada": "600 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 600,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      },
+      "bar_oculto": {
+        "nombre": "Bar Oculto",
+        "direccion": "Av. Roca Sur, Santiago del Estero",
+        "tipo": "Bar",
+        "descripcion": "Bar en Avenida Roca Sur",
+        "distancia_aproximada": "650 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 650,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      },
+      "distrito_roca": {
+        "nombre": "Distrito Roca",
+        "direccion": "Av. Roca Sur, Santiago del Estero",
+        "tipo": "Bar/Restaurant",
+        "descripcion": "Establecimiento gastronómico en Avenida Roca Sur",
+        "distancia_aproximada": "700 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 700,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      },
+      "cambalache": {
+        "nombre": "Cambalache",
+        "direccion": "Av. Roca Sur, Santiago del Estero",
+        "tipo": "Restaurant",
+        "descripcion": "Restaurant en Avenida Roca Sur",
+        "distancia_aproximada": "750 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 750,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Mapa de distancias local"
+      }
+    }
+  },
+  "fuentes": {
+    "original_research": "https://chatgpt.com/s/dr_68fd56edaa708191987552021784a8d7",
+    "claude_artifact": "https://claude.ai/public/artifacts/3242c1d1-0ab5-496e-98fc-dd5c3b8a6731",
+    "wikimedia_commons": "https://commons.wikimedia.org",
+    "tiendeo": "https://www.tiendeo.com.ar",
+    "tripadvisor": "https://www.tripadvisor.com",
+    "ccb_oficial": "https://ccbsantiago.gob.ar"
+  },
+  "notas": {
+    "coordenadas": "Las coordenadas son aproximadas basadas en referencias geográficas de Santiago del Estero",
+    "distancias": "Las distancias son estimaciones desde la intersección de Rivadavia y Olaechea",
+    "direcciones_pendientes": "Algunas direcciones específicas requieren confirmación local",
+    "imagenes": "Todas las imágenes están organizadas en subdirectorios específicos en /static/lugares/"
+  }
+}
