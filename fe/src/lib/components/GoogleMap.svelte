@@ -8,9 +8,8 @@
 		id: string;
 		position: { lat: number; lng: number };
 		title: string;
-		isMainMarker?: boolean;
 		customElement?: HTMLElement;
-		// Allow additional properties for snippet data
+		// Allow additional properties for snippet data and styling
 		[key: string]: any;
 	}
 
@@ -25,10 +24,8 @@
 		// Generic markers data
 		markers: GenericMarker[];
 		
-		// Display Options
-		showMarkers?: boolean;
-		
-		// Snippets for marker content
+		// Snippets for marker content and appearance
+		markerElement?: Snippet<[GenericMarker]>;
 		markerInfoWindow?: Snippet<[GenericMarker]>;
 		
 		// Event Callbacks
@@ -48,7 +45,7 @@
 		zoom = 15,
 		mapTypeId = 'roadmap',
 		markers = [],
-		showMarkers = true,
+		markerElement,
 		markerInfoWindow,
 		onMarkerClick,
 		onMapReady,
@@ -68,6 +65,7 @@
 
 	// Store snippet-rendered elements
 	let snippetContainers = $state<Record<string, HTMLElement>>({});
+	let markerSnippetContainers = $state<Record<string, HTMLElement>>({});
 
 	// Load Google Maps API
 	$effect(() => {
@@ -118,11 +116,8 @@
 		}
 	});
 
-	// Create default marker element
+	// Create simple default marker element (generic fallback)
 	function createDefaultMarkerElement(marker: GenericMarker): HTMLElement {
-		const size = marker.isMainMarker ? 28 : 16;
-		const strokeWidth = marker.isMainMarker ? 4 : 2;
-
 		const markerContainer = document.createElement('div');
 		markerContainer.style.cssText = `
 			position: relative;
@@ -133,29 +128,15 @@
 
 		const markerElement = document.createElement('div');
 		markerElement.style.cssText = `
-			width: ${size}px;
-			height: ${size}px;
+			width: 16px;
+			height: 16px;
 			background-color: #6B4423;
-			border: ${strokeWidth}px solid #ffffff;
+			border: 2px solid #ffffff;
 			border-radius: 50%;
-			box-shadow: ${marker.isMainMarker ? '0 4px 8px rgba(0,0,0,0.4)' : '0 2px 4px rgba(0,0,0,0.3)'};
+			box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 			cursor: pointer;
 			transition: transform 0.2s ease;
-			${marker.isMainMarker ? 'animation: pulse 2s infinite;' : ''}
 		`;
-
-		// Add pulsing animation for main marker
-		if (marker.isMainMarker) {
-			const style = document.createElement('style');
-			style.textContent = `
-				@keyframes pulse {
-					0% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 0 #6B4423; }
-					50% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 8px rgba(107, 68, 35, 0.3); }
-					100% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 0 #6B4423; }
-				}
-			`;
-			document.head.appendChild(style);
-		}
 
 		markerElement.addEventListener('mouseenter', () => {
 			markerElement.style.transform = 'scale(1.1)';
@@ -189,6 +170,11 @@
 				openInfoWindows.delete(id);
 			}
 		});
+		Object.keys(markerSnippetContainers).forEach(id => {
+			if (!currentMarkerIds.has(id)) {
+				delete markerSnippetContainers[id];
+			}
+		});
 	}
 
 	// Create markers on the map
@@ -200,26 +186,63 @@
 		console.log('Creating markers for GoogleMap:', markers.length);
 
 		markers.forEach(markerData => {
-			if (!showMarkers && !markerData.isMainMarker) return;
+			console.log(`🗺️ Creating marker: ${markerData.title}`, {
+				hasCustomElement: !!markerData.customElement,
+				hasSnippetContainer: !!markerSnippetContainers[markerData.id],
+				position: $state.snapshot(markerData.position)
+			});
 
 			let marker;
 
 			try {
-				// Use custom element if provided, otherwise create default
-				const markerElement = markerData.customElement || createDefaultMarkerElement(markerData);
+			// Use custom element if provided, otherwise use snippet, otherwise create default
+			let markerElementDOM: HTMLElement;
+			
+			if (markerData.customElement) {
+				markerElementDOM = markerData.customElement;
+				console.log('✅ Using custom element for marker:', markerData.id);
+			} else if (markerElement) {
+				// Use the snippet container that was bound in the template
+				markerElementDOM = markerSnippetContainers[markerData.id];
+				console.log('🎨 Snippet container lookup for', markerData.id, ':', {
+					found: !!markerElementDOM,
+					element: markerElementDOM,
+					innerHTML: markerElementDOM?.innerHTML,
+					availableContainers: Object.keys(markerSnippetContainers)
+				});
+				
+				if (!markerElementDOM) {
+					console.warn('❌ Marker snippet container not found for:', markerData.id, 'Available:', Object.keys(markerSnippetContainers));
+					markerElementDOM = createDefaultMarkerElement(markerData);
+				} else {
+					console.log('✅ Using snippet container for marker:', markerData.id, 'Content length:', markerElementDOM.innerHTML.length);
+				}
+			} else {
+				markerElementDOM = createDefaultMarkerElement(markerData);
+				console.log('⚪ Using default element for marker:', markerData.id);
+			}
 				
 				if ((window as any).google.maps.marker && (window as any).google.maps.marker.AdvancedMarkerElement) {
 					marker = new (window as any).google.maps.marker.AdvancedMarkerElement({
 						position: markerData.position,
 						map: map,
 						title: markerData.title,
-						content: markerElement
+						content: markerElementDOM
 					});
+					
+				// Debug marker creation
+				console.log('🎯 MARKER CREATED:', {
+					title: markerData.title,
+					position: $state.snapshot(markerData.position),
+					markerElementDOM: markerElementDOM,
+					elementHTML: markerElementDOM.outerHTML?.substring(0, 100) + '...',
+					elementVisible: markerElementDOM.offsetWidth > 0 && markerElementDOM.offsetHeight > 0
+				});
 				} else {
 					throw new Error('Advanced Markers not available');
 				}
 			} catch (error) {
-				console.warn('Advanced Markers not available, falling back to regular markers:', error);
+				console.warn('Advanced Markers not available, falling back to regular markers for:', markerData.title, error);
 				marker = new (window as any).google.maps.Marker({
 					position: markerData.position,
 					map: map,
@@ -229,8 +252,8 @@
 						fillColor: '#6B4423',
 						fillOpacity: 0.8,
 						strokeColor: '#ffffff',
-						strokeWeight: markerData.isMainMarker ? 3 : 2,
-						scale: markerData.isMainMarker ? 12 : 8
+						strokeWeight: 2,
+						scale: 8
 					}
 				});
 			}
@@ -274,12 +297,8 @@
 						}
 					});
 
-					// Auto-open for main marker (only on initial load or if previously open)
-					if (markerData.isMainMarker && (isInitialLoad || openInfoWindows.has(markerData.id))) {
-						setTimeout(openInfoWindow, 500);
-					}
 					// Reopen previously open windows
-					else if (!markerData.isMainMarker && openInfoWindows.has(markerData.id)) {
+					if (openInfoWindows.has(markerData.id)) {
 						setTimeout(openInfoWindow, 100);
 					}
 				}
@@ -293,11 +312,22 @@
 			}
 
 			mapMarkers.push(marker);
+			console.log(`✅ Marker successfully created and added to map: ${markerData.title}`, {
+				markerType: marker instanceof (window as any).google.maps.marker?.AdvancedMarkerElement ? 'AdvancedMarker' : 'RegularMarker',
+				totalMarkersOnMap: mapMarkers.length
+			});
 		});
 
 		console.log(`Total markers created: ${mapMarkers.length}`);
 		
-		if (isInitialLoad) {
+		// For initial load, center map on first marker if available
+		if (isInitialLoad && markers.length > 0) {
+			const firstMarker = markers[0];
+			if (firstMarker && map) {
+				console.log('🎯 Centering map on first marker:', $state.snapshot(firstMarker.position));
+				map.setCenter(firstMarker.position);
+				map.setZoom(16); // Ensure good zoom level for visibility
+			}
 			isInitialLoad = false;
 		}
 	}
@@ -346,16 +376,68 @@
 		}
 	}
 
-	// Update markers when data or filters change
+	// Track snippet container binding
+	$effect(() => {
+		console.log('📦 Snippet containers effect:', {
+			markersLength: markers.length,
+			markerIds: markers.map(m => m.id),
+			snippetContainersCount: Object.keys(markerSnippetContainers).length,
+			snippetContainerIds: Object.keys(markerSnippetContainers),
+			hasMarkerElement: !!markerElement
+		});
+	});
+
+	// Update markers when data changes
 	$effect(() => {
 		const currentMarkers = markers;
-		const currentShowMarkers = showMarkers;
 		const currentMap = map;
 		
+		console.log('🗺️ GoogleMap $effect triggered:', {
+			hasMap: !!currentMap,
+			markersLength: currentMarkers.length,
+			markerIds: currentMarkers.map(m => m.id),
+			snippetContainersCount: Object.keys(markerSnippetContainers).length,
+			snippetContainerIds: Object.keys(markerSnippetContainers)
+		});
+		
 		if (currentMap && currentMarkers.length > 0) {
-			untrack(() => {
-				createMapMarkers();
-				setTimeout(() => fitBoundsToMarkers(), 100);
+			console.log('🚀 Creating markers in GoogleMap...');
+			
+			// Wait for snippet containers to be bound
+			const checkSnippetsAndCreate = () => {
+				const expectedContainers = currentMarkers.map(m => m.id);
+				const actualContainers = Object.keys(markerSnippetContainers);
+				const allBound = expectedContainers.every(id => markerSnippetContainers[id]);
+				
+				console.log('📦 Snippet container check:', {
+					expected: expectedContainers,
+					actual: actualContainers,
+					allBound: allBound,
+					containerElements: Object.entries(markerSnippetContainers).map(([id, el]) => ({
+						id,
+						exists: !!el,
+						hasContent: el?.innerHTML?.length > 0,
+						innerHTML: el?.innerHTML?.substring(0, 100) + '...'
+					}))
+				});
+				
+				if (allBound || !markerElement) {
+					untrack(() => {
+						createMapMarkers();
+						setTimeout(() => fitBoundsToMarkers(), 100);
+					});
+				} else {
+					console.log('⏳ Waiting for snippet containers to bind...');
+					setTimeout(checkSnippetsAndCreate, 25);
+				}
+			};
+			
+			// Start checking after a small delay
+			setTimeout(checkSnippetsAndCreate, 10);
+		} else {
+			console.log('⏳ Not creating markers:', {
+				noMap: !currentMap,
+				noMarkers: currentMarkers.length === 0
 			});
 		}
 	});
@@ -380,10 +462,25 @@
 		openInfoWindows.clear();
 	}
 
+	export function openInfoWindow(markerId: string) {
+		const infoWindow = infoWindows.get(markerId);
+		if (infoWindow) {
+			infoWindow.open(map);
+			openInfoWindows.add(markerId);
+			console.log('📍 Opened info window for marker:', markerId);
+			
+			// Refit bounds after opening info window
+			setTimeout(() => fitBoundsToMarkers(), 100);
+		} else {
+			console.warn('Info window not found for marker:', markerId);
+		}
+	}
+
 	// Cleanup on component destroy
 	$effect(() => {
 		return () => {
 			snippetContainers = {};
+			markerSnippetContainers = {};
 			infoWindows.clear();
 			openInfoWindows.clear();
 		};
@@ -392,6 +489,14 @@
 
 <!-- Hidden containers for snippet rendering -->
 <div style="display: none;">
+	{#if markerElement}
+		{#each markers as marker (marker.id)}
+			<div bind:this={markerSnippetContainers[marker.id]}>
+				{@render markerElement(marker)}
+			</div>
+		{/each}
+	{/if}
+	
 	{#if markerInfoWindow}
 		{#each markers as marker (marker.id)}
 			<div bind:this={snippetContainers[marker.id]}>

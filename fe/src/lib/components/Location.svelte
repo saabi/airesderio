@@ -36,29 +36,59 @@
 	let carouselCurrentIndex = $state(0);
 	// @fold:end
 
-	// Category colors for markers (still needed for marker creation)
-	const categoryColors: Record<string, string> = {
-		edificio_principal: '#6B4423', // brown (main building)
-		transporte: '#2563eb', // blue
-		cultura_entretenimiento: '#7c3aed', // purple
-		infraestructura: '#059669', // green
-		lugares_historicos: '#dc2626', // red
-		parques_recreacion: '#16a34a', // green
-		museos: '#9333ea', // purple
-		gastronomia: '#ea580c', // orange
-		supermercados: '#0891b2', // cyan
-		servicios: '#4338ca', // indigo
-		vida_nocturna: '#be185d' // pink
-	};
+	// All category data is now loaded from JSON metadata
+	let categories = $derived(placesData?.metadata?.categories || {});
+	
+	// Derived category data for backward compatibility and easy access
+	let categoryColors = $derived.by(() => {
+		const colors: Record<string, string> = {};
+		Object.entries(categories).forEach(([key, category]: [string, any]) => {
+			colors[key] = category.color || '#6B4423';
+		});
+		return colors;
+	});
+	
+	let categoryIcons = $derived.by(() => {
+		const icons: Record<string, string> = {};
+		Object.entries(categories).forEach(([key, category]: [string, any]) => {
+			icons[key] = category.icon || '';
+		});
+		return icons;
+	});
+	
+	let categoryNames = $derived.by(() => {
+		const names: Record<string, string> = {};
+		Object.entries(categories).forEach(([key, category]: [string, any]) => {
+			names[key] = category.name || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+		});
+		return names;
+	});
+	
+	// Helper function to get category data
+	function getCategoryData(category: string) {
+		return categories[category] || {
+			name: category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+			color: '#6B4423',
+			icon: ''
+		};
+	}
+
 
 	// Load places data from JSON
 	async function loadPlacesData() {
 		if (!browser || !jsonUrl) return;
 		
+		console.log('Loading places data from:', jsonUrl);
 		try {
 			const response = await fetch(jsonUrl);
 			if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 			placesData = await response.json();
+			console.log('Places data loaded successfully:', {
+				totalCategories: Object.keys(placesData.lugares).length,
+				hasMainBuilding: !!findMainBuilding(),
+				categoriesLoaded: Object.keys(placesData.metadata?.categories || {}).length,
+				categories: $state.snapshot(placesData.metadata?.categories)
+			});
 		} catch (error) {
 			console.error('Error loading places data:', error);
 		}
@@ -112,15 +142,45 @@
 
 				const isMainMarker = place.es_edificio_principal;
 				
-				// Always show main marker, check filter for others
-				if (!isMainMarker && !showPlaceMarkers) return;
-				if (!isMainMarker && categoryFilter.length > 0 && !categoryFilter.includes(category)) return;
-				
-				// Create custom marker element for places with photos
-				let customElement: HTMLElement | undefined;
-				if (place.photos && place.photos.length > 0) {
-					customElement = createMarkerWithPhotoButton(category, place, placeId, isMainMarker);
+				// Debug main marker detection
+				if (isMainMarker) {
+					console.log('🏠 MAIN MARKER FOUND:', {
+						name: place.nombre,
+						category: category,
+						coordinates: $state.snapshot(place.coordenadas_aproximadas),
+						showPlaceMarkers: showPlaceMarkers,
+						categoryFilterLength: categoryFilter.length,
+						willBeIncluded: true
+					});
 				}
+				
+				// Always show main marker, check filter for others
+				if (!isMainMarker) {
+					// Hide non-main markers if showPlaceMarkers is false
+					if (!showPlaceMarkers) {
+						console.log('Skipping non-main marker due to showPlaceMarkers=false:', place.nombre);
+			return;
+		}
+
+					// If no category filters are set, hide all non-main markers (only show main marker initially)
+					if (categoryFilter.length === 0) {
+						console.log('Skipping non-main marker - no category filters set:', place.nombre);
+			return;
+		}
+
+					// If category filters are set, only show markers in selected categories
+					if (!categoryFilter.includes(category)) {
+						console.log('Skipping non-main marker due to category filter:', place.nombre, 'category:', category);
+						return;
+					}
+				}
+				
+				// Ensure main marker is always included
+				if (isMainMarker) {
+					console.log('Including main marker:', place.nombre, 'showPlaceMarkers:', showPlaceMarkers);
+				}
+				
+				// No need to create custom elements - handled by marker snippet
 
 				// Create generic marker data
 				markers.push({
@@ -128,99 +188,44 @@
 					position: place.coordenadas_aproximadas,
 					title: place.nombre,
 					isMainMarker: isMainMarker,
-					customElement: customElement,
-					// Additional data for info window snippet
+					// Additional data for snippets
 					place: place,
 					category: category,
-					placeId: placeId,
-					categoryColor: categoryColors[category] || '#6B4423'
+					placeId: placeId
 				});
 			});
 		});
 
+		console.log(`Processed ${markers.length} markers total`);
+		const mainMarkers = markers.filter(m => m.isMainMarker);
+		console.log(`Main markers: ${mainMarkers.length}`, $state.snapshot(mainMarkers.map(m => m.title)));
+		
 		return markers;
 	}
 
-	// Create custom marker element with photo button
-	function createMarkerWithPhotoButton(category: string, place: any, placeId: string, isMainMarker: boolean = false): HTMLElement {
-		const color = categoryColors[category] || '#6B4423';
-		const size = isMainMarker ? 24 : 16;
-		const strokeWidth = isMainMarker ? 3 : 2;
-		const hasPhotos = place.photos && place.photos.length > 0;
-		
-		const markerContainer = document.createElement('div');
-		markerContainer.style.cssText = `
-			position: relative;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		`;
-		
-		const markerElement = document.createElement('div');
-		markerElement.style.cssText = `
-			width: ${size}px;
-			height: ${size}px;
-			background-color: ${color};
-			border: ${strokeWidth}px solid #ffffff;
-			border-radius: 50%;
-			box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-			cursor: pointer;
-			transition: transform 0.2s ease;
-		`;
-		
-		// Add photo button if photos are available
-		if (hasPhotos) {
-			const photoButton = document.createElement('div');
-			photoButton.innerHTML = '📷';
-			photoButton.style.cssText = `
-				position: absolute;
-				top: -8px;
-				right: -8px;
-				width: 16px;
-				height: 16px;
-				background: #ffffff;
-				border: 1px solid #e5e7eb;
-				border-radius: 50%;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-size: 8px;
-				cursor: pointer;
-				box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-				z-index: 10;
-			`;
-			
-			photoButton.addEventListener('click', (e) => {
-				e.stopPropagation();
-				openPhotoCarousel(place, category, placeId);
-			});
-			
-			markerContainer.appendChild(photoButton);
-		}
-		
-		// Add hover effect to main marker
-		markerElement.addEventListener('mouseenter', () => {
-			markerElement.style.transform = 'scale(1.1)';
-		});
-		
-		markerElement.addEventListener('mouseleave', () => {
-			markerElement.style.transform = 'scale(1)';
-		});
-		
-		markerContainer.appendChild(markerElement);
-		return markerContainer;
-	}
+	// Marker creation is now handled by snippets in GoogleMap component
 
 	// Handle marker click from GoogleMap component
 	function handleMarkerClick(marker: any) {
-		// Just log the marker click - don't automatically open photo carousel
-		// Photo carousel should only open when photo button is clicked
+		// Open info window for clicked marker
 		console.log('Marker clicked:', marker.title);
+		if (googleMapRef) {
+			googleMapRef.openInfoWindow(marker.id);
+		}
 	}
 
 	// Handle map ready event
 	function handleMapReady(mapInstance: any) {
-		console.log('Map is ready');
+		console.log('🗺️ Map is ready:', mapInstance);
+		
+		// Auto-open info window for main marker after a short delay
+		setTimeout(() => {
+			const mainMarker = processedMarkers.find(m => m.isMainMarker || m.place?.es_edificio_principal);
+			if (mainMarker && googleMapRef) {
+				console.log('🏠 Auto-opening info window for main marker:', mainMarker.title);
+				googleMapRef.openInfoWindow(mainMarker.id);
+			}
+		}, 500); // Wait for markers to be fully created
 	}
 
 	// Fit map bounds using GoogleMap component
@@ -297,6 +302,32 @@
 
 	// Process markers when places data changes
 	let processedMarkers = $derived(processPlacesIntoMarkers());
+	
+	// Debug processed markers
+	$effect(() => {
+		console.log('📊 Location: processedMarkers updated:', {
+			markersLength: processedMarkers.length,
+			hasPlacesData: !!placesData,
+			showPlaceMarkers: showPlaceMarkers,
+			categoryFilterLength: categoryFilter.length,
+			mainMarkers: processedMarkers.filter(m => m.isMainMarker).length,
+			categoriesLoaded: Object.keys(categories).length,
+			colorsLoaded: Object.keys(categoryColors).length,
+			iconsLoaded: Object.keys(categoryIcons).length,
+			sampleMainMarker: $state.snapshot(processedMarkers.find(m => m.isMainMarker))
+		});
+	});
+
+	// Debug categories loading
+	$effect(() => {
+		if (Object.keys(categories).length > 0) {
+			console.log('🎨 Categories loaded:', {
+				totalCategories: Object.keys(categories).length,
+				mainBuildingCategory: $state.snapshot(categories.edificio_principal),
+				allCategories: Object.keys(categories)
+			});
+		}
+	});
 </script>
 
 <section id="ubicacion" class="ubi" aria-labelledby="ubicacion-heading">
@@ -325,17 +356,140 @@
 				center={mapCenter}
 				zoom={15}
 				markers={processedMarkers}
-				showMarkers={showPlaceMarkers}
 				onMarkerClick={handleMarkerClick}
 				onMapReady={handleMapReady}
 				containerClass="location-map"
 				height="25rem"
 			>
+				{#snippet markerElement(marker)}
+					{@const isMainMarker = marker.isMainMarker || marker.place?.es_edificio_principal}
+					{@const size = isMainMarker ? 28 : 16}
+					{@const strokeWidth = isMainMarker ? 4 : 2}
+					{@const color = categoryColors[marker.category] || '#6B4423'}
+					{@const icon = categoryIcons[marker.category]}
+					{#if isMainMarker}
+						{console.log('🎨 RENDERING MAIN MARKER SNIPPET:', {
+							title: marker.title,
+							category: marker.category,
+							color: color,
+							icon: icon,
+							size: size,
+							categoryData: $state.snapshot(categories[marker.category]),
+							isAlwaysVisible: categories[marker.category]?.isAlwaysVisible
+						})}
+					{/if}
+					
+					<div style="position: relative; display: flex; align-items: center; justify-content: center; z-index: 1000;">
+						<div 
+							role="button"
+							tabindex="0"
+							aria-label="Map marker for {marker.title}"
+							style="
+								width: {size}px;
+								height: {size}px;
+								background-color: {color};
+								border: {strokeWidth}px solid #ffffff;
+								border-radius: 50%;
+								box-shadow: {isMainMarker ? '0 4px 8px rgba(0,0,0,0.4)' : '0 2px 4px rgba(0,0,0,0.3)'};
+								cursor: pointer;
+								transition: transform 0.2s ease;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+								font-size: {isMainMarker ? '14px' : '10px'};
+								line-height: 1;
+								font-family: Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif;
+								z-index: 1001;
+								opacity: 1;
+								visibility: visible;
+								{isMainMarker ? 'animation: pulse 2s infinite;' : ''}
+							"
+							onmouseenter={(e) => (e.target as HTMLElement).style.transform = 'scale(1.1)'}
+							onmouseleave={(e) => (e.target as HTMLElement).style.transform = 'scale(1)'}
+						>
+							{#if icon}
+								<span style="
+									font-size: {isMainMarker ? '16px' : '12px'};
+									line-height: 1;
+									font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols', sans-serif;
+									font-weight: normal;
+									font-style: normal;
+									text-rendering: optimizeLegibility;
+									-webkit-font-smoothing: antialiased;
+									-moz-osx-font-smoothing: grayscale;
+									display: inline-block;
+									vertical-align: middle;
+									color: white;
+									text-shadow: 0 0 2px rgba(0,0,0,0.5);
+								">{icon}</span>
+								{console.log('🎨 EMOJI ICON RENDERED:', {
+									title: marker.title,
+									category: marker.category,
+									icon: icon,
+									isMainMarker: isMainMarker
+								})}
+							{:else}
+								<!-- Simple fallback dot for missing icon -->
+								<span style="
+									font-size: {isMainMarker ? '12px' : '8px'};
+									line-height: 1;
+									font-family: system-ui, sans-serif;
+									font-weight: bold;
+									color: white;
+									text-shadow: 0 0 2px rgba(0,0,0,0.5);
+								">●</span>
+								{console.log('❌ NO ICON, using dot fallback:', {
+									title: marker.title,
+									category: marker.category
+								})}
+							{/if}
+						</div>
+						
+						{#if marker.place?.photos && marker.place.photos.length > 0}
+							<button 
+								type="button"
+								aria-label="View {marker.place.photos.length} photo{marker.place.photos.length > 1 ? 's' : ''} for {marker.title}"
+								style="
+									position: absolute;
+									top: -8px;
+									right: -8px;
+									width: 16px;
+									height: 16px;
+									background: #ffffff;
+									border: 1px solid #e5e7eb;
+									border-radius: 50%;
+									display: flex;
+									align-items: center;
+									justify-content: center;
+									font-size: 8px;
+									cursor: pointer;
+									box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+									z-index: 10;
+									padding: 0;
+								"
+								onclick={(e) => {
+									e.stopPropagation();
+									openPhotoCarousel(marker.place, marker.category, marker.placeId);
+								}}
+							>
+								📷
+							</button>
+						{/if}
+					</div>
+				{/snippet}
+
 				{#snippet markerInfoWindow(marker)}
 					<div class="info-window">
 						<div class="info-header">
-							<div class="category-indicator" style="background-color: {marker.categoryColor}"></div>
+							<div class="category-indicator" style="background-color: {categoryColors[marker.category] || '#6B4423'}">
+								{#if categoryIcons[marker.category]}
+									<span class="category-icon">{categoryIcons[marker.category]}</span>
+								{/if}
+							</div>
 							<h3 class="place-name">{marker.place.nombre}</h3>
+							{#if categoryNames[marker.category]}
+								<span class="category-name">({categoryNames[marker.category]})</span>
+							{/if}
 						</div>
 						
 						<div class="info-content">
@@ -370,6 +524,9 @@
 				{placesData}
 				{showPlaceMarkers}
 				{categoryFilter}
+				{categoryColors}
+				{categoryIcons}
+				{categoryNames}
 				markersCount={processedMarkers.length}
 				onToggleMarkers={toggleMarkers}
 				onCategoryToggle={toggleCategory}
@@ -470,10 +627,26 @@
 	}
 
 	:global(.category-indicator) {
-		width: 12px;
-		height: 12px;
+		width: 16px;
+		height: 16px;
 		border-radius: 50%;
 		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid rgba(255, 255, 255, 0.8);
+	}
+
+	:global(.category-icon) {
+		font-size: 8px;
+		line-height: 1;
+	}
+
+	:global(.category-name) {
+		font-size: 0.75rem;
+		color: #6b7280;
+		font-weight: 400;
+		margin-left: 0.5rem;
 	}
 
 	:global(.place-name) {
@@ -545,5 +718,18 @@
 
 	:global(.photo-button:active) {
 		background: #1d4ed8;
+	}
+
+	/* Pulse animation for main marker */
+	@keyframes -global-pulse {
+		0% { 
+			box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 0 rgba(107, 68, 35, 0.7); 
+		}
+		50% { 
+			box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 8px rgba(107, 68, 35, 0.3); 
+		}
+		100% { 
+			box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 0 rgba(107, 68, 35, 0.7); 
+		}
 	}
 </style>

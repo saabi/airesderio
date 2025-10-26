@@ -3,6 +3,9 @@
 		placesData: any;
 		showPlaceMarkers: boolean;
 		categoryFilter: string[];
+		categoryColors: Record<string, string>;
+		categoryIcons: Record<string, string>;
+		categoryNames: Record<string, string>;
 		markersCount: number;
 		onToggleMarkers: () => void;
 		onCategoryToggle: (category: string) => void;
@@ -13,51 +16,38 @@
 		placesData,
 		showPlaceMarkers = true,
 		categoryFilter = [],
+		categoryColors,
+		categoryIcons,
+		categoryNames,
 		markersCount = 0,
 		onToggleMarkers,
 		onCategoryToggle,
 		onFitToView
 	}: Props = $props();
 
-	// Category colors for different types of places (matching Location component)
-	const categoryColors: Record<string, string> = {
-		transporte: '#2563eb', // blue
-		cultura_entretenimiento: '#7c3aed', // purple
-		infraestructura: '#059669', // green
-		lugares_historicos: '#dc2626', // red
-		parques_recreacion: '#16a34a', // green
-		museos: '#9333ea', // purple
-		gastronomia: '#ea580c', // orange
-		supermercados: '#0891b2', // cyan
-		servicios: '#4338ca', // indigo
-		vida_nocturna: '#be185d' // pink
-	};
+	// Category data is now passed as props from Location component
 
-	// Category display names
-	const categoryNames: Record<string, string> = {
-		transporte: 'Transporte',
-		cultura_entretenimiento: 'Cultura y Entretenimiento',
-		infraestructura: 'Infraestructura',
-		lugares_historicos: 'Lugares Históricos',
-		parques_recreacion: 'Parques y Recreación',
-		museos: 'Museos',
-		gastronomia: 'Gastronomía',
-		supermercados: 'Supermercados',
-		servicios: 'Servicios',
-		vida_nocturna: 'Vida Nocturna'
-	};
+	// Get filtered categories (exclude categories with isAlwaysVisible: true)
+	let filteredCategories = $derived.by(() => {
+		if (!placesData) return [];
+		
+		return Object.keys(placesData.lugares).filter(category => {
+			const categoryData = placesData.metadata?.categories?.[category];
+			return !categoryData?.isAlwaysVisible;
+		});
+	});
 
-	// Get filtered categories (exclude edificio_principal)
-	let filteredCategories = $derived(placesData ? 
-		Object.keys(placesData.lugares).filter(cat => cat !== 'edificio_principal') : 
-		[]);
-
-	// Calculate total places count (excluding main building)
-	let totalPlacesCount = $derived(placesData ? 
-		Object.values(placesData.lugares)
-			.filter((_, index) => Object.keys(placesData.lugares)[index] !== 'edificio_principal')
-			.reduce((total: number, places: any) => total + Object.keys(places).length, 0) : 
-		0);
+	// Calculate total places count (excluding categories with isAlwaysVisible: true)
+	let totalPlacesCount = $derived.by(() => {
+		if (!placesData) return 0;
+		
+		return Object.entries(placesData.lugares)
+			.filter(([category]) => {
+				const categoryData = placesData.metadata?.categories?.[category];
+				return !categoryData?.isAlwaysVisible;
+			})
+			.reduce((total: number, [, places]: [string, any]) => total + Object.keys(places).length, 0);
+	});
 </script>
 
 {#if placesData && showPlaceMarkers}
@@ -96,10 +86,16 @@
 					onclick={() => onCategoryToggle(category)}
 					aria-pressed={isActive}
 				>
-					<span 
-						class="legend-color" 
-						style="background-color: {categoryColors[category] || '#6B4423'}"
-					></span>
+					<div class="legend-indicator">
+						<span 
+							class="legend-color" 
+							style="background-color: {categoryColors[category] || '#6B4423'}"
+						>
+							{#if categoryIcons[category]}
+								<span class="legend-icon">{categoryIcons[category]}</span>
+							{/if}
+						</span>
+					</div>
 					<span class="legend-text">
 						{categoryNames[category] || category}
 						<small>({placesCount})</small>
@@ -224,13 +220,30 @@
 		background: #f3f4f6;
 	}
 
+	.legend-indicator {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
 	.legend-color {
-		width: 12px;
-		height: 12px;
+		width: 18px;
+		height: 18px;
 		border-radius: 50%;
 		flex-shrink: 0;
-		border: 1px solid rgba(255, 255, 255, 0.8);
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+		border: 2px solid rgba(255, 255, 255, 0.9);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+	}
+
+	.legend-icon {
+		font-size: 10px;
+		line-height: 1;
+		text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 	}
 
 	.legend-text {

@@ -4,7 +4,65 @@
     "description": "Direcciones y información de lugares cercanos al edificio Aires de Río en Santiago del Estero",
     "apartment_reference": "Intersección de Rivadavia y Olaechea, Santiago del Estero",
     "last_updated": "2025-10-25",
-    "total_places": 29
+    "total_places": 29,
+    "categories": {
+      "edificio_principal": {
+        "name": "Aires de Río",
+        "color": "#6B4423",
+        "icon": "🏠",
+        "isAlwaysVisible": true
+      },
+      "transporte": {
+        "name": "Transporte",
+        "color": "#2563eb",
+        "icon": "🚌"
+      },
+      "cultura_entretenimiento": {
+        "name": "Cultura y Entretenimiento",
+        "color": "#7c3aed",
+        "icon": "🎭"
+      },
+      "infraestructura": {
+        "name": "Infraestructura",
+        "color": "#059669",
+        "icon": "🏢"
+      },
+      "lugares_historicos": {
+        "name": "Lugares Históricos",
+        "color": "#dc2626",
+        "icon": "🏛️"
+      },
+      "parques_recreacion": {
+        "name": "Parques y Recreación",
+        "color": "#16a34a",
+        "icon": "🌳"
+      },
+      "museos": {
+        "name": "Museos",
+        "color": "#9333ea",
+        "icon": "🏛️"
+      },
+      "gastronomia": {
+        "name": "Gastronomía",
+        "color": "#ea580c",
+        "icon": "🍽️"
+      },
+      "supermercados": {
+        "name": "Supermercados",
+        "color": "#0891b2",
+        "icon": "🛒"
+      },
+      "servicios": {
+        "name": "Servicios",
+        "color": "#4338ca",
+        "icon": "⚙️"
+      },
+      "vida_nocturna": {
+        "name": "Vida Nocturna",
+        "color": "#be185d",
+        "icon": "🌙"
+      }
+    }
   },
   "lugares": {
     "edificio_principal": {
