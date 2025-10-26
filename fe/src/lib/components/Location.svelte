@@ -3,6 +3,7 @@
 	import { untrack } from 'svelte';
 	import PhotoCarousel from './PhotoCarousel.svelte';
 	import CategorySelector from './CategorySelector.svelte';
+	import GoogleMap from './GoogleMap.svelte';
 
 	const GOOGLE_MAPS_API_KEY = 'AIzaSyAEjLiUxzFltYqAYYiIapqw9yt6O0ge2QY';
 
@@ -23,11 +24,10 @@
 
 	// --- COMPONENT STATE VARIABLES ---
 	// @fold:start(state-vars)
-	let mapElement: HTMLDivElement;
-	let scriptLoaded = $state(false);
 	let placesData = $state<any>(null);
-	let map: any;
-	let markers = $state<any[]>([]);
+	let googleMapRef: any;
+	let mapCenter = $state({ lat: -27.779686, lng: -64.258992 });
+	let mapMarkers = $state<any[]>([]);
 	let photoCarouselVisible = $state(false);
 	let carouselPlace = $state<any>(null);
 	let carouselCategory = $state<string>('');
@@ -100,69 +100,51 @@
 		}
 	}
 
-	// Fit map bounds to show all visible markers
-	function fitMapToMarkers() {
-		if (!map || markers.length === 0) return;
+	// Process places data into marker format for GoogleMap component
+	function processPlacesIntoMarkers() {
+		if (!placesData) return [];
 
-		const bounds = new (window as any).google.maps.LatLngBounds();
-		let hasVisibleMarkers = false;
+		const markers: any[] = [];
 
-		markers.forEach(marker => {
-			// Get marker position (works for both AdvancedMarkerElement and regular Marker)
-			let position;
-			if (marker instanceof (window as any).google.maps.marker?.AdvancedMarkerElement) {
-				position = marker.position;
-			} else {
-				position = marker.getPosition();
-			}
+		Object.entries(placesData.lugares).forEach(([category, places]: [string, any]) => {
+			Object.entries(places).forEach(([placeId, place]: [string, any]) => {
+				if (!place.coordenadas_aproximadas) return;
 
-			if (position) {
-				bounds.extend(position);
-				hasVisibleMarkers = true;
-			}
+				const isMainMarker = place.es_edificio_principal;
+				
+				// Create custom marker element for places with photos
+				let customElement: HTMLElement | undefined;
+				if (place.photos && place.photos.length > 0) {
+					customElement = createMarkerWithPhotoButton(category, place, placeId, isMainMarker);
+				}
+
+				// Create info window content
+				const infoContent = createInfoWindowContent(place, category);
+
+				markers.push({
+					id: `${category}_${placeId}`,
+					position: place.coordenadas_aproximadas,
+					title: place.nombre,
+					category: category,
+					color: categoryColors[category] || '#6B4423',
+					isMainMarker: isMainMarker,
+					photos: place.photos || [],
+					infoContent: infoContent,
+					customElement: customElement,
+					placeData: place,
+					placeId: placeId
+				});
+			});
 		});
 
-		if (hasVisibleMarkers) {
-			// Add some padding around the markers
-			map.fitBounds(bounds, {
-				top: 50,
-				right: 50,
-				bottom: 50,
-				left: 50
-			});
-
-			// Ensure minimum zoom level (don't zoom in too much for single markers)
-			const listener = (window as any).google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
-				if (map.getZoom() > 17) {
-					map.setZoom(17);
-				}
-			});
-		}
+		return markers;
 	}
 
-	// Find the main building from JSON data
-	function findMainBuilding() {
-		if (!placesData) return null;
-		
-		for (const [category, places] of Object.entries(placesData.lugares)) {
-			for (const [placeId, place] of Object.entries(places as any)) {
-				if ((place as any).es_edificio_principal) {
-					return {
-						category,
-						placeId,
-						place: place as any
-					};
-				}
-			}
-		}
-		return null;
-	}
-
-	// Create custom marker element for Advanced Markers
-	function createMarkerElement(category: string, place: any, placeId: string, isMainBuilding: boolean = false): HTMLElement {
+	// Create custom marker element with photo button
+	function createMarkerWithPhotoButton(category: string, place: any, placeId: string, isMainMarker: boolean = false): HTMLElement {
 		const color = categoryColors[category] || '#6B4423';
-		const size = isMainBuilding ? 24 : 16;
-		const strokeWidth = isMainBuilding ? 3 : 2;
+		const size = isMainMarker ? 24 : 16;
+		const strokeWidth = isMainMarker ? 3 : 2;
 		const hasPhotos = place.photos && place.photos.length > 0;
 		
 		const markerContainer = document.createElement('div');
@@ -228,6 +210,44 @@
 		return markerContainer;
 	}
 
+	// Handle marker click from GoogleMap component
+	function handleMarkerClick(markerData: any, markerId: string) {
+		// This is where we could handle marker clicks if needed
+		// For now, info windows are handled automatically by GoogleMap
+		console.log('Marker clicked:', markerData.title);
+	}
+
+	// Handle map ready event
+	function handleMapReady(mapInstance: any) {
+		console.log('Map is ready');
+	}
+
+	// Fit map bounds using GoogleMap component
+	function fitMapToMarkers() {
+		if (googleMapRef) {
+			googleMapRef.fitToMarkers();
+		}
+	}
+
+	// Find the main building from JSON data
+	function findMainBuilding() {
+		if (!placesData) return null;
+		
+		for (const [category, places] of Object.entries(placesData.lugares)) {
+			for (const [placeId, place] of Object.entries(places as any)) {
+				if ((place as any).es_edificio_principal) {
+					return {
+						category,
+						placeId,
+						place: place as any
+					};
+				}
+			}
+		}
+		return null;
+	}
+
+
 	// Create info window content
 	function createInfoWindowContent(place: any, category: string): string {
 		const distanceColor = place.distancia_categoria === 'MUY CERCA' ? '#16a34a' : 
@@ -253,202 +273,29 @@
 				<p style="margin: 0; font-size: 0.8rem; color: #9ca3af; font-style: italic;">
 					${place.descripcion}
 				</p>
-			</div>
+                        </div>
 		`;
 	}
 
-	// Clear all markers
-	function clearMarkers() {
-		markers.forEach(marker => {
-			if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
-				if (marker.map) {
-					marker.map = null;
-				}
-			} else {
-				// Regular marker
-				marker.setMap(null);
-			}
-		});
-		markers = [];
-	}
-
-	// Create markers for places
-	function createPlaceMarkers() {
-		if (!placesData || !map) return;
-
-		clearMarkers();
-		
-		console.log('Creating markers for', Object.keys(placesData.lugares).length, 'categories');
-		console.log('Advanced Markers available:', !!(window as any).google?.maps?.marker?.AdvancedMarkerElement);
-
-		Object.entries(placesData.lugares).forEach(([category, places]: [string, any]) => {
-			Object.entries(places).forEach(([placeId, place]: [string, any]) => {
-				if (!place.coordenadas_aproximadas) return;
-
-				const isMainBuilding = place.es_edificio_principal;
-				
-				// Always show main building, check filter for other places
-				if (!isMainBuilding && !showPlaceMarkers) return;
-				if (!isMainBuilding && categoryFilter.length > 0 && !categoryFilter.includes(category)) return;
-
-				// Create marker with Advanced Marker Element or fallback to regular marker
-				let marker;
-				
-				try {
-					// Try to use Advanced Markers
-					if ((window as any).google.maps.marker && (window as any).google.maps.marker.AdvancedMarkerElement) {
-						const markerElement = createMarkerElement(category, place, placeId, isMainBuilding);
-						
-						marker = new (window as any).google.maps.marker.AdvancedMarkerElement({
-							position: {
-								lat: place.coordenadas_aproximadas.lat,
-								lng: place.coordenadas_aproximadas.lng
-							},
-							map: map,
-							title: place.nombre,
-							content: markerElement
-						});
-					} else {
-						throw new Error('Advanced Markers not available');
-					}
-				} catch (error) {
-					console.warn('Advanced Markers not available, falling back to regular markers:', error);
-					// Fallback to regular markers
-					marker = new (window as any).google.maps.Marker({
-						position: {
-							lat: place.coordenadas_aproximadas.lat,
-							lng: place.coordenadas_aproximadas.lng
-						},
-						map: map,
-						title: place.nombre,
-						icon: {
-							path: (window as any).google.maps.SymbolPath.CIRCLE,
-							fillColor: categoryColors[category] || '#6B4423',
-							fillOpacity: 0.8,
-							strokeColor: '#ffffff',
-							strokeWeight: isMainBuilding ? 3 : 2,
-							scale: isMainBuilding ? 12 : 8
-						}
-					});
-				}
-
-				const infoWindow = new (window as any).google.maps.InfoWindow({
-					content: createInfoWindowContent(place, category)
-				});
-
-				marker.addListener('click', () => {
-					// Handle both Advanced Markers and regular markers
-					if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
-						infoWindow.open({
-							anchor: marker,
-							map: map
-						});
-					} else {
-						infoWindow.open(map, marker);
-					}
-				});
-
-				// Auto-open info window for main building
-				if (isMainBuilding) {
-					if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
-						infoWindow.open({
-							anchor: marker,
-							map: map
-						});
-					} else {
-						infoWindow.open(map, marker);
-					}
-				}
-
-				markers.push(marker);
-				console.log(`Created marker for ${place.nombre} at (${place.coordenadas_aproximadas.lat}, ${place.coordenadas_aproximadas.lng})`);
-			});
-		});
-		
-		console.log(`Total markers created: ${markers.length}`);
-	}
-
-	// Load Google Maps script
-	$effect(() => {
-		if (!browser) return;
-
-		if (window.google && window.google.maps) {
-			scriptLoaded = true;
-			return;
-		}
-
-		const scriptId = 'google-maps-script';
-		if (document.getElementById(scriptId)) {
-			if (window.initMap) window.initMap();
-			return;
-		}
-
-		window.initMap = () => {
-			scriptLoaded = true;
-		};
-
-		const script = document.createElement('script');
-		script.id = scriptId;
-		script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap&libraries=marker&v=weekly`;
-		script.async = true;
-		script.defer = true;
-		document.head.appendChild(script);
-
-		return () => {
-			// Clean up the global callback function
-			if ((window as any).initMap) {
-				delete (window as any).initMap;
-			}
-		};
-	});
+	// OLD FUNCTIONS - REMOVED (now handled by GoogleMap component)
 
 	// Load places data when component mounts
 	$effect(() => {
 		loadPlacesData();
 	});
 
-	// Initialize map when script loads and element is ready
+	// Update map center when places data loads
 	$effect(() => {
-		if (scriptLoaded && mapElement && placesData) {
+		if (placesData) {
 			const mainBuilding = findMainBuilding();
-			const defaultLocation = { lat: -27.779686, lng: -64.258992 };
-
-			// Use main building coordinates if available, otherwise use default
-			const mapCenter = mainBuilding?.place.coordenadas_aproximadas || defaultLocation;
-
-			map = new (window as any).google.maps.Map(mapElement, {
-				zoom: 15,
-				center: mapCenter,
-				mapTypeId: 'roadmap',
-				mapId: 'AIRES_DE_RIO_MAP' // Required for Advanced Markers (styles controlled via Cloud Console)
-			});
+			if (mainBuilding?.place.coordenadas_aproximadas) {
+				mapCenter = mainBuilding.place.coordenadas_aproximadas;
+			}
 		}
 	});
 
-	// Create place markers when data is loaded and map is ready
-	$effect(() => {
-		if (placesData && map) {
-			//createPlaceMarkers();
-		}
-	});
-
-	// Update markers when filters change (but not when markers array changes)
-	$effect(() => {
-		// Track only the dependencies we care about, not the markers array
-		const shouldShowMarkers = showPlaceMarkers;
-		const currentCategoryFilter = [...categoryFilter];
-		const currentPlacesData = placesData;
-		const currentMap = map;
-		
-		if (currentPlacesData && currentMap) {
-			// Use untrack to prevent markers array changes from triggering this effect
-			untrack(() => {
-				createPlaceMarkers();
-				// Fit map to show all visible markers after creation
-				setTimeout(() => fitMapToMarkers(), 100);
-			});
-		}
-	});
+	// Process markers when places data changes
+	let processedMarkers = $derived(processPlacesIntoMarkers());
 </script>
 
 <section id="ubicacion" class="ubi" aria-labelledby="ubicacion-heading">
@@ -470,19 +317,26 @@
 			</p>
 		</div>
 		<div class="map-container">
-		<div
-			bind:this={mapElement}
-			id="map"
-			class="map"
-			role="img"
-			aria-label="Mapa del entorno mostrando la ubicación estratégica de Aires de Río en Avenida Rivadavia, Santiago del Estero"
-		></div>
+			<GoogleMap
+				bind:this={googleMapRef}
+				apiKey={GOOGLE_MAPS_API_KEY}
+				mapId="AIRES_DE_RIO_MAP"
+				center={mapCenter}
+				zoom={15}
+				markers={processedMarkers}
+				showMarkers={showPlaceMarkers}
+				{categoryFilter}
+				onMarkerClick={handleMarkerClick}
+				onMapReady={handleMapReady}
+				containerClass="location-map"
+				height="25rem"
+			/>
 			
 			<CategorySelector 
 				{placesData}
 				{showPlaceMarkers}
 				{categoryFilter}
-				markersCount={markers.length}
+				markersCount={processedMarkers.length}
 				onToggleMarkers={toggleMarkers}
 				onCategoryToggle={toggleCategory}
 				onFitToView={fitMapToMarkers}
@@ -540,11 +394,6 @@
 		gap: 0;
 	}
 
-	.map {
-		flex: 1;
-		min-height: 25rem;
-		background-color: #e9e9e9;
-	}
 
 
 	@media (max-width: 850px) {
@@ -570,10 +419,6 @@
 			min-height: auto;
 		}
 
-		.map {
-			min-height: 20rem;
-			order: 1;
-		}
 
 	}
 </style>
