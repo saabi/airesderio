@@ -12,7 +12,7 @@
 	}
 
 	let { 
-		jsonUrl = '/static/lugares/lugares-direcciones.json',
+		jsonUrl = '/lugares/lugares-direcciones.json',
 		showPlaceMarkers = true,
 		enableClustering = false,
 		categoryFilter = []
@@ -26,6 +26,7 @@
 
 	// Category colors for different types of places
 	const categoryColors: Record<string, string> = {
+		edificio_principal: '#6B4423', // brown (main building)
 		transporte: '#2563eb', // blue
 		cultura_entretenimiento: '#7c3aed', // purple
 		infraestructura: '#059669', // green
@@ -49,6 +50,24 @@
 		} catch (error) {
 			console.error('Error loading places data:', error);
 		}
+	}
+
+	// Find the main building from JSON data
+	function findMainBuilding() {
+		if (!placesData) return null;
+		
+		for (const [category, places] of Object.entries(placesData.lugares)) {
+			for (const [placeId, place] of Object.entries(places as any)) {
+				if ((place as any).es_edificio_principal) {
+					return {
+						category,
+						placeId,
+						place: place as any
+					};
+				}
+			}
+		}
+		return null;
 	}
 
 	// Create custom marker icon
@@ -101,17 +120,21 @@
 
 	// Create markers for places
 	function createPlaceMarkers() {
-		if (!placesData || !map || !showPlaceMarkers) return;
+		if (!placesData || !map) return;
 
 		clearMarkers();
 
 		Object.entries(placesData.lugares).forEach(([category, places]: [string, any]) => {
-			// Skip category if filter is active and category not included
-			if (categoryFilter.length > 0 && !categoryFilter.includes(category)) return;
-
 			Object.entries(places).forEach(([placeId, place]: [string, any]) => {
 				if (!place.coordenadas_aproximadas) return;
 
+				const isMainBuilding = place.es_edificio_principal;
+				
+				// Always show main building, check filter for other places
+				if (!isMainBuilding && !showPlaceMarkers) return;
+				if (!isMainBuilding && categoryFilter.length > 0 && !categoryFilter.includes(category)) return;
+
+				// Create marker with special styling for main building
 				const marker = new (window as any).google.maps.Marker({
 					position: {
 						lat: place.coordenadas_aproximadas.lat,
@@ -119,7 +142,14 @@
 					},
 					map: map,
 					title: place.nombre,
-					icon: createMarkerIcon(category)
+					icon: isMainBuilding ? {
+						path: (window as any).google.maps.SymbolPath.CIRCLE,
+						fillColor: categoryColors[category] || '#6B4423',
+						fillOpacity: 1,
+						strokeColor: '#ffffff',
+						strokeWeight: 3,
+						scale: 12
+					} : createMarkerIcon(category)
 				});
 
 				const infoWindow = new (window as any).google.maps.InfoWindow({
@@ -129,6 +159,11 @@
 				marker.addListener('click', () => {
 					infoWindow.open(map, marker);
 				});
+
+				// Auto-open info window for main building
+				if (isMainBuilding) {
+					infoWindow.open(map, marker);
+				}
 
 				markers.push(marker);
 			});
@@ -176,12 +211,16 @@
 
 	// Initialize map when script loads and element is ready
 	$effect(() => {
-		if (scriptLoaded && mapElement) {
-			const location = { lat: -27.779686, lng: -64.258992 };
+		if (scriptLoaded && mapElement && placesData) {
+			const mainBuilding = findMainBuilding();
+			const defaultLocation = { lat: -27.779686, lng: -64.258992 };
+			
+			// Use main building coordinates if available, otherwise use default
+			const mapCenter = mainBuilding?.place.coordenadas_aproximadas || defaultLocation;
 
 			map = new (window as any).google.maps.Map(mapElement, {
 				zoom: 15,
-				center: location,
+				center: mapCenter,
 				mapTypeId: 'roadmap',
 				styles: [
 					{
@@ -191,41 +230,6 @@
 					}
 				]
 			});
-
-			// Create main building marker
-			const buildingMarker = new (window as any).google.maps.Marker({
-				position: location,
-				map: map,
-				title: 'Aires de Río',
-				icon: {
-					path: (window as any).google.maps.SymbolPath.CIRCLE,
-					fillColor: '#6B4423',
-					fillOpacity: 1,
-					strokeColor: '#ffffff',
-					strokeWeight: 3,
-					scale: 12
-				}
-			});
-
-			const buildingInfoWindow = new (window as any).google.maps.InfoWindow({
-				content: `
-					<div style="padding: 0.75rem; text-align: center; font-family: system-ui, sans-serif;">
-						<h3 style="margin: 0 0 0.5rem 0; color: #6B4423; font-size: 1.1rem; font-weight: 600;">Aires de Río</h3>
-						<p style="margin: 0; font-size: 0.875rem; color: #666; line-height: 1.4;">
-							🏢 Edificio residencial<br>
-							📍 Avenida Rivadavia<br>
-							Santiago del Estero, Argentina
-						</p>
-					</div>
-				`
-			});
-
-			buildingMarker.addListener('click', function () {
-				buildingInfoWindow.open(map, buildingMarker);
-			});
-
-			// Open building info window by default
-			buildingInfoWindow.open(map, buildingMarker);
 		}
 	});
 
@@ -276,7 +280,7 @@
 					<h4>Lugares de Interés</h4>
 					<div class="legend-items">
 						{#each Object.entries(categoryColors) as [category, color]}
-							{#if placesData.lugares[category]}
+							{#if placesData.lugares[category] && category !== 'edificio_principal'}
 								<div class="legend-item">
 									<div class="legend-color" style="background-color: {color}"></div>
 									<span class="legend-label">
@@ -288,7 +292,7 @@
 					</div>
 					<div class="legend-stats">
 						<small>
-							{placesData.metadata.total_places} lugares • 
+							{placesData.metadata.total_places - 1} lugares de interés • 
 							{markers.length} marcadores
 						</small>
 					</div>
@@ -330,28 +334,27 @@
 	}
 
 	.map-container {
-		position: relative;
+		display: flex;
 		min-height: 25rem;
 		width: 100%;
+		gap: 0;
 	}
 
 	.map {
+		flex: 1;
 		min-height: 25rem;
-		width: 100%;
 		background-color: #e9e9e9;
 	}
 
 	.map-legend {
-		position: absolute;
-		top: 1rem;
-		right: 1rem;
+		flex: 0 0 240px;
 		background: rgba(255, 255, 255, 0.95);
 		backdrop-filter: blur(10px);
-		border-radius: 0.5rem;
-		padding: 0.75rem;
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-		max-width: 200px;
+		border-left: 1px solid #e5e7eb;
+		padding: 1rem;
+		box-shadow: -2px 0 4px -1px rgba(0, 0, 0, 0.1);
 		z-index: 1000;
+		overflow-y: auto;
 	}
 
 	.map-legend h4 {
@@ -364,8 +367,8 @@
 	.legend-items {
 		display: flex;
 		flex-direction: column;
-		gap: 0.25rem;
-		margin-bottom: 0.5rem;
+		gap: 0.375rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.legend-item {
@@ -416,12 +419,23 @@
 			grid-row: 2;
 		}
 
+		.map-container {
+			flex-direction: column;
+			min-height: auto;
+		}
+
+		.map {
+			min-height: 20rem;
+			order: 1;
+		}
+
 		.map-legend {
-			position: absolute;
-			top: 0.5rem;
-			right: 0.5rem;
-			max-width: 160px;
-			padding: 0.5rem;
+			flex: none;
+			order: 2;
+			border-left: none;
+			border-top: 1px solid #e5e7eb;
+			padding: 0.75rem;
+			box-shadow: 0 -2px 4px -1px rgba(0, 0, 0, 0.1);
 		}
 
 		.map-legend h4 {
