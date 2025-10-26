@@ -70,17 +70,34 @@
 		return null;
 	}
 
-	// Create custom marker icon
-	function createMarkerIcon(category: string): any {
+	// Create custom marker element for Advanced Markers
+	function createMarkerElement(category: string, isMainBuilding: boolean = false): HTMLElement {
 		const color = categoryColors[category] || '#6B4423';
-		return {
-			path: (window as any).google.maps.SymbolPath.CIRCLE,
-			fillColor: color,
-			fillOpacity: 0.8,
-			strokeColor: '#ffffff',
-			strokeWeight: 2,
-			scale: 8
-		};
+		const size = isMainBuilding ? 24 : 16;
+		const strokeWidth = isMainBuilding ? 3 : 2;
+		
+		const markerElement = document.createElement('div');
+		markerElement.style.cssText = `
+			width: ${size}px;
+			height: ${size}px;
+			background-color: ${color};
+			border: ${strokeWidth}px solid #ffffff;
+			border-radius: 50%;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+			cursor: pointer;
+			transition: transform 0.2s ease;
+		`;
+		
+		// Add hover effect
+		markerElement.addEventListener('mouseenter', () => {
+			markerElement.style.transform = 'scale(1.1)';
+		});
+		
+		markerElement.addEventListener('mouseleave', () => {
+			markerElement.style.transform = 'scale(1)';
+		});
+		
+		return markerElement;
 	}
 
 	// Create info window content
@@ -114,7 +131,16 @@
 
 	// Clear all markers
 	function clearMarkers() {
-		markers.forEach(marker => marker.setMap(null));
+		markers.forEach(marker => {
+			if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
+				if (marker.map) {
+					marker.map = null;
+				}
+			} else {
+				// Regular marker
+				marker.setMap(null);
+			}
+		});
 		markers = [];
 	}
 
@@ -123,6 +149,9 @@
 		if (!placesData || !map) return;
 
 		clearMarkers();
+		
+		console.log('Creating markers for', Object.keys(placesData.lugares).length, 'categories');
+		console.log('Advanced Markers available:', !!(window as any).google?.maps?.marker?.AdvancedMarkerElement);
 
 		Object.entries(placesData.lugares).forEach(([category, places]: [string, any]) => {
 			Object.entries(places).forEach(([placeId, place]: [string, any]) => {
@@ -134,40 +163,81 @@
 				if (!isMainBuilding && !showPlaceMarkers) return;
 				if (!isMainBuilding && categoryFilter.length > 0 && !categoryFilter.includes(category)) return;
 
-				// Create marker with special styling for main building
-				const marker = new (window as any).google.maps.Marker({
-					position: {
-						lat: place.coordenadas_aproximadas.lat,
-						lng: place.coordenadas_aproximadas.lng
-					},
-					map: map,
-					title: place.nombre,
-					icon: isMainBuilding ? {
-						path: (window as any).google.maps.SymbolPath.CIRCLE,
-						fillColor: categoryColors[category] || '#6B4423',
-						fillOpacity: 1,
-						strokeColor: '#ffffff',
-						strokeWeight: 3,
-						scale: 12
-					} : createMarkerIcon(category)
-				});
+				// Create marker with Advanced Marker Element or fallback to regular marker
+				let marker;
+				
+				try {
+					// Try to use Advanced Markers
+					if ((window as any).google.maps.marker && (window as any).google.maps.marker.AdvancedMarkerElement) {
+						const markerElement = createMarkerElement(category, isMainBuilding);
+						
+						marker = new (window as any).google.maps.marker.AdvancedMarkerElement({
+							position: {
+								lat: place.coordenadas_aproximadas.lat,
+								lng: place.coordenadas_aproximadas.lng
+							},
+							map: map,
+							title: place.nombre,
+							content: markerElement
+						});
+					} else {
+						throw new Error('Advanced Markers not available');
+					}
+				} catch (error) {
+					console.warn('Advanced Markers not available, falling back to regular markers:', error);
+					// Fallback to regular markers
+					marker = new (window as any).google.maps.Marker({
+						position: {
+							lat: place.coordenadas_aproximadas.lat,
+							lng: place.coordenadas_aproximadas.lng
+						},
+						map: map,
+						title: place.nombre,
+						icon: {
+							path: (window as any).google.maps.SymbolPath.CIRCLE,
+							fillColor: categoryColors[category] || '#6B4423',
+							fillOpacity: 0.8,
+							strokeColor: '#ffffff',
+							strokeWeight: isMainBuilding ? 3 : 2,
+							scale: isMainBuilding ? 12 : 8
+						}
+					});
+				}
 
 				const infoWindow = new (window as any).google.maps.InfoWindow({
 					content: createInfoWindowContent(place, category)
 				});
 
 				marker.addListener('click', () => {
-					infoWindow.open(map, marker);
+					// Handle both Advanced Markers and regular markers
+					if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
+						infoWindow.open({
+							anchor: marker,
+							map: map
+						});
+					} else {
+						infoWindow.open(map, marker);
+					}
 				});
 
 				// Auto-open info window for main building
 				if (isMainBuilding) {
-					infoWindow.open(map, marker);
+					if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
+						infoWindow.open({
+							anchor: marker,
+							map: map
+						});
+					} else {
+						infoWindow.open(map, marker);
+					}
 				}
 
 				markers.push(marker);
+				console.log(`Created marker for ${place.nombre} at (${place.coordenadas_aproximadas.lat}, ${place.coordenadas_aproximadas.lng})`);
 			});
 		});
+		
+		console.log(`Total markers created: ${markers.length}`);
 	}
 
 	// Load Google Maps script
@@ -191,7 +261,7 @@
 
 		const script = document.createElement('script');
 		script.id = scriptId;
-		script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap`;
+		script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap&libraries=marker&v=weekly`;
 		script.async = true;
 		script.defer = true;
 		document.head.appendChild(script);

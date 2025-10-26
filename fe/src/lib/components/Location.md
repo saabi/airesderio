@@ -148,9 +148,12 @@ See `/routes/mapa-ejemplo/+page.svelte` for a complete example with:
 
 ## Technical Notes
 
-- Uses Google Maps JavaScript API
+- Uses Google Maps JavaScript API with Advanced Markers (v=weekly)
 - Requires valid API key in component
+- Uses `google.maps.marker.AdvancedMarkerElement` (replaces deprecated `google.maps.Marker`)
+- HTML-based custom marker elements with hover effects
 - Markers are recreated when filters change
 - Supports any number of categories
 - Handles missing coordinate data gracefully
 - TypeScript compatible with proper type definitions
+- Future-proof implementation with latest Google Maps API
