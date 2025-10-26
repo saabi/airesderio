@@ -3,7 +3,7 @@
 	import { untrack } from 'svelte';
 	import PhotoCarousel from './PhotoCarousel.svelte';
 	import CategorySelector from './CategorySelector.svelte';
-	import GoogleMap from './GoogleMap.svelte';
+	import GoogleMapGeneric from './GoogleMapGeneric.svelte';
 
 	const GOOGLE_MAPS_API_KEY = 'AIzaSyAEjLiUxzFltYqAYYiIapqw9yt6O0ge2QY';
 
@@ -100,7 +100,7 @@
 		}
 	}
 
-	// Process places data into marker format for GoogleMap component
+	// Process places data into generic markers for GoogleMapGeneric component
 	function processPlacesIntoMarkers() {
 		if (!placesData) return [];
 
@@ -112,27 +112,28 @@
 
 				const isMainMarker = place.es_edificio_principal;
 				
+				// Always show main marker, check filter for others
+				if (!isMainMarker && !showPlaceMarkers) return;
+				if (!isMainMarker && categoryFilter.length > 0 && !categoryFilter.includes(category)) return;
+				
 				// Create custom marker element for places with photos
 				let customElement: HTMLElement | undefined;
 				if (place.photos && place.photos.length > 0) {
 					customElement = createMarkerWithPhotoButton(category, place, placeId, isMainMarker);
 				}
 
-				// Create info window content
-				const infoContent = createInfoWindowContent(place, category);
-
+				// Create generic marker data
 				markers.push({
 					id: `${category}_${placeId}`,
 					position: place.coordenadas_aproximadas,
 					title: place.nombre,
-					category: category,
-					color: categoryColors[category] || '#6B4423',
 					isMainMarker: isMainMarker,
-					photos: place.photos || [],
-					infoContent: infoContent,
 					customElement: customElement,
-					placeData: place,
-					placeId: placeId
+					// Additional data for info window snippet
+					place: place,
+					category: category,
+					placeId: placeId,
+					categoryColor: categoryColors[category] || '#6B4423'
 				});
 			});
 		});
@@ -210,11 +211,11 @@
 		return markerContainer;
 	}
 
-	// Handle marker click from GoogleMap component
-	function handleMarkerClick(markerData: any, markerId: string) {
-		// This is where we could handle marker clicks if needed
-		// For now, info windows are handled automatically by GoogleMap
-		console.log('Marker clicked:', markerData.title);
+	// Handle marker click from GoogleMapGeneric component
+	function handleMarkerClick(marker: any) {
+		// Just log the marker click - don't automatically open photo carousel
+		// Photo carousel should only open when photo button is clicked
+		console.log('Marker clicked:', marker.title);
 	}
 
 	// Handle map ready event
@@ -317,7 +318,7 @@
 			</p>
 		</div>
 		<div class="map-container">
-			<GoogleMap
+			<GoogleMapGeneric
 				bind:this={googleMapRef}
 				apiKey={GOOGLE_MAPS_API_KEY}
 				mapId="AIRES_DE_RIO_MAP"
@@ -325,12 +326,45 @@
 				zoom={15}
 				markers={processedMarkers}
 				showMarkers={showPlaceMarkers}
-				{categoryFilter}
 				onMarkerClick={handleMarkerClick}
 				onMapReady={handleMapReady}
 				containerClass="location-map"
 				height="25rem"
-			/>
+			>
+				{#snippet markerInfoWindow(marker)}
+					<div class="info-window">
+						<div class="info-header">
+							<div class="category-indicator" style="background-color: {marker.categoryColor}"></div>
+							<h3 class="place-name">{marker.place.nombre}</h3>
+						</div>
+						
+						<div class="info-content">
+							<p class="address">
+								📍 {marker.place.direccion}
+							</p>
+							
+							<div class="badges">
+								<span class="distance-badge" style="background-color: {marker.place.distancia_categoria === 'MUY CERCA' ? '#16a34a' : marker.place.distancia_categoria === 'CERCANO' ? '#ea580c' : '#dc2626'}">
+									{marker.place.distancia_categoria}
+								</span>
+								<span class="distance-detail">
+									{marker.place.distancia_cuadras || marker.place.distancia_aproximada}
+								</span>
+							</div>
+							
+							{#if marker.place.descripcion}
+								<p class="description">{marker.place.descripcion}</p>
+							{/if}
+							
+							{#if marker.place.photos && marker.place.photos.length > 0}
+								<button class="photo-button" onclick={() => openPhotoCarousel(marker.place, marker.category, marker.placeId)}>
+									📷 Ver {marker.place.photos.length} foto{marker.place.photos.length > 1 ? 's' : ''}
+								</button>
+							{/if}
+						</div>
+					</div>
+				{/snippet}
+			</GoogleMapGeneric>
 			
 			<CategorySelector 
 				{placesData}
@@ -418,7 +452,98 @@
 			flex-direction: column;
 			min-height: auto;
 		}
+	}
 
+	/* Info Window Snippet Styles */
+	:global(.info-window) {
+		max-width: 280px;
+		font-family: system-ui, sans-serif;
+		padding: 0;
+		margin: 0;
+	}
 
+	:global(.info-header) {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	:global(.category-indicator) {
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		flex-shrink: 0;
+	}
+
+	:global(.place-name) {
+		margin: 0;
+		color: #1f2937;
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1.2;
+	}
+
+	:global(.info-content) {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	:global(.address) {
+		margin: 0;
+		font-size: 0.875rem;
+		color: #6b7280;
+		line-height: 1.4;
+	}
+
+	:global(.badges) {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	:global(.distance-badge) {
+		color: white;
+		padding: 0.125rem 0.5rem;
+		border-radius: 0.25rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+	}
+
+	:global(.distance-detail) {
+		background-color: #f3f4f6;
+		color: #374151;
+		padding: 0.125rem 0.5rem;
+		border-radius: 0.25rem;
+		font-size: 0.75rem;
+	}
+
+	:global(.description) {
+		margin: 0;
+		font-size: 0.8rem;
+		color: #9ca3af;
+		font-style: italic;
+		line-height: 1.3;
+	}
+
+	:global(.photo-button) {
+		background: #3b82f6;
+		color: white;
+		border: none;
+		padding: 0.5rem 0.75rem;
+		border-radius: 0.375rem;
+		font-size: 0.875rem;
+		cursor: pointer;
+		transition: background-color 0.2s;
+		align-self: flex-start;
+	}
+
+	:global(.photo-button:hover) {
+		background: #2563eb;
+	}
+
+	:global(.photo-button:active) {
+		background: #1d4ed8;
 	}
 </style>

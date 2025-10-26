@@ -1,22 +1,17 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { untrack } from 'svelte';
-	import MarkerInfoWindow from './MarkerInfoWindow.svelte';
-	import { SvelteInfoWindowManager } from '../utils/svelteToDOM.js';
+	import type { Snippet } from 'svelte';
 
-	// Component Props Interface
-	interface MarkerData {
+	// Generic marker interface - minimal required data
+	interface GenericMarker {
 		id: string;
 		position: { lat: number; lng: number };
 		title: string;
-		category: string;
-		color?: string;
 		isMainMarker?: boolean;
-		photos?: string[];
-		infoContent?: string;
 		customElement?: HTMLElement;
-		placeData?: any;
-		placeId?: string;
+		// Allow additional properties for snippet data
+		[key: string]: any;
 	}
 
 	interface Props {
@@ -27,15 +22,17 @@
 		zoom?: number;
 		mapTypeId?: string;
 		
-		// Markers Data
-		markers: MarkerData[];
+		// Generic markers data
+		markers: GenericMarker[];
 		
 		// Display Options
 		showMarkers?: boolean;
-		categoryFilter?: string[];
+		
+		// Snippets for marker content
+		markerInfoWindow?: Snippet<[GenericMarker]>;
 		
 		// Event Callbacks
-		onMarkerClick?: (marker: MarkerData, markerId: string) => void;
+		onMarkerClick?: (marker: GenericMarker) => void;
 		onMapReady?: (map: any) => void;
 		onBoundsChanged?: () => void;
 		
@@ -52,7 +49,7 @@
 		mapTypeId = 'roadmap',
 		markers = [],
 		showMarkers = true,
-		categoryFilter = [],
+		markerInfoWindow,
 		onMarkerClick,
 		onMapReady,
 		onBoundsChanged,
@@ -68,7 +65,9 @@
 	let openInfoWindows = $state<Set<string>>(new Set());
 	let infoWindows = $state<Map<string, any>>(new Map());
 	let isInitialLoad = $state(true);
-	let svelteInfoManager = new SvelteInfoWindowManager();
+
+	// Store snippet-rendered elements
+	let snippetContainers = $state<Record<string, HTMLElement>>({});
 
 	// Load Google Maps API
 	$effect(() => {
@@ -92,7 +91,6 @@
 		document.head.appendChild(script);
 
 		return () => {
-			// Clean up the global callback function
 			if ((window as any).initMap) {
 				delete (window as any).initMap;
 			}
@@ -108,31 +106,22 @@
 				mapTypeId
 			};
 
-			// Add mapId if provided (required for Advanced Markers)
 			if (mapId) {
 				mapConfig.mapId = mapId;
 			}
 
 			map = new (window as any).google.maps.Map(mapElement, mapConfig);
 
-			// Notify parent that map is ready
 			if (onMapReady) {
 				onMapReady(map);
 			}
 		}
 	});
 
-	// Create custom marker element for Advanced Markers
-	function createMarkerElement(marker: MarkerData): HTMLElement {
-		// If custom element is provided, use it
-		if (marker.customElement) {
-			return marker.customElement;
-		}
-
-		// Create default marker element
-		const color = marker.color || '#6B4423';
-		const size = marker.isMainMarker ? 28 : 16; // Larger main building marker
-		const strokeWidth = marker.isMainMarker ? 4 : 2; // Thicker border for main building
+	// Create default marker element
+	function createDefaultMarkerElement(marker: GenericMarker): HTMLElement {
+		const size = marker.isMainMarker ? 28 : 16;
+		const strokeWidth = marker.isMainMarker ? 4 : 2;
 
 		const markerContainer = document.createElement('div');
 		markerContainer.style.cssText = `
@@ -146,7 +135,7 @@
 		markerElement.style.cssText = `
 			width: ${size}px;
 			height: ${size}px;
-			background-color: ${color};
+			background-color: #6B4423;
 			border: ${strokeWidth}px solid #ffffff;
 			border-radius: 50%;
 			box-shadow: ${marker.isMainMarker ? '0 4px 8px rgba(0,0,0,0.4)' : '0 2px 4px rgba(0,0,0,0.3)'};
@@ -154,21 +143,20 @@
 			transition: transform 0.2s ease;
 			${marker.isMainMarker ? 'animation: pulse 2s infinite;' : ''}
 		`;
-		
-		// Add pulsing animation for main building
+
+		// Add pulsing animation for main marker
 		if (marker.isMainMarker) {
 			const style = document.createElement('style');
 			style.textContent = `
 				@keyframes pulse {
-					0% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 0 ${color}; }
+					0% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 0 #6B4423; }
 					50% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 8px rgba(107, 68, 35, 0.3); }
-					100% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 0 ${color}; }
+					100% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 0 #6B4423; }
 				}
 			`;
 			document.head.appendChild(style);
 		}
 
-		// Add hover effect
 		markerElement.addEventListener('mouseenter', () => {
 			markerElement.style.transform = 'scale(1.1)';
 		});
@@ -187,18 +175,16 @@
 			if (marker instanceof (window as any).google.maps.marker?.AdvancedMarkerElement) {
 				marker.map = null;
 			} else {
-				// Regular marker
 				marker.setMap(null);
 			}
 		});
 		mapMarkers = [];
 		
-		// Clean up old Svelte components that are no longer needed
-		// But preserve the ones that should be reopened
+		// Clean up snippet containers that are no longer needed
 		const currentMarkerIds = new Set(markers.map(m => m.id));
-		Array.from(infoWindows.keys()).forEach(id => {
+		Object.keys(snippetContainers).forEach(id => {
 			if (!currentMarkerIds.has(id)) {
-				svelteInfoManager.destroyInfoWindow(id);
+				delete snippetContainers[id];
 				infoWindows.delete(id);
 				openInfoWindows.delete(id);
 			}
@@ -211,24 +197,18 @@
 
 		clearMarkers();
 
-		console.log('Creating markers for GoogleMap component:', markers.length);
-		console.log('Advanced Markers available:', !!(window as any).google?.maps?.marker?.AdvancedMarkerElement);
+		console.log('Creating markers for GoogleMapGeneric:', markers.length);
 
 		markers.forEach(markerData => {
-			// Check if marker should be visible based on filters
-			const isMainMarker = markerData.isMainMarker;
-			
-			// Always show main marker, check filters for others
-			if (!isMainMarker && !showMarkers) return;
-			if (!isMainMarker && categoryFilter.length > 0 && !categoryFilter.includes(markerData.category)) return;
+			if (!showMarkers && !markerData.isMainMarker) return;
 
 			let marker;
 
 			try {
-				// Try to use Advanced Markers
+				// Use custom element if provided, otherwise create default
+				const markerElement = markerData.customElement || createDefaultMarkerElement(markerData);
+				
 				if ((window as any).google.maps.marker && (window as any).google.maps.marker.AdvancedMarkerElement) {
-					const markerElement = createMarkerElement(markerData);
-					
 					marker = new (window as any).google.maps.marker.AdvancedMarkerElement({
 						position: markerData.position,
 						map: map,
@@ -240,109 +220,83 @@
 				}
 			} catch (error) {
 				console.warn('Advanced Markers not available, falling back to regular markers:', error);
-				// Fallback to regular markers
 				marker = new (window as any).google.maps.Marker({
 					position: markerData.position,
 					map: map,
 					title: markerData.title,
 					icon: {
 						path: (window as any).google.maps.SymbolPath.CIRCLE,
-						fillColor: markerData.color || '#6B4423',
+						fillColor: '#6B4423',
 						fillOpacity: 0.8,
 						strokeColor: '#ffffff',
-						strokeWeight: isMainMarker ? 3 : 2,
-						scale: isMainMarker ? 12 : 8
+						strokeWeight: markerData.isMainMarker ? 3 : 2,
+						scale: markerData.isMainMarker ? 12 : 8
 					}
 				});
 			}
 
-			// Create info window using Svelte component
-			if (markerData.infoContent || true) { // Always create info window now
-				// Create Svelte component for info window content
-				const infoElement = svelteInfoManager.createInfoWindow(
-					markerData.id,
-					MarkerInfoWindow,
-					{
-						place: markerData.placeData || {
-							nombre: markerData.title,
-							direccion: 'Dirección no disponible',
-							descripcion: 'Información no disponible',
-							distancia_categoria: 'DESCONOCIDO',
-							photos: markerData.photos || []
-						},
-						category: markerData.category,
-						categoryColor: markerData.color || '#6B4423',
-						onPhotoClick: onMarkerClick ? (place: any, category: string, placeId: string) => {
-							onMarkerClick(markerData, markerData.id);
-						} : undefined,
-						placeId: markerData.placeId || markerData.id
+			// Create info window if snippet is provided
+			if (markerInfoWindow) {
+				// Use the snippet container that was bound in the template
+				const infoElement = snippetContainers[markerData.id];
+				
+				if (infoElement) {
+					const infoWindow = new (window as any).google.maps.InfoWindow({
+						content: infoElement
+					});
+
+					infoWindows.set(markerData.id, infoWindow);
+
+					// Event listeners for info window state
+					infoWindow.addListener('closeclick', () => {
+						openInfoWindows.delete(markerData.id);
+						setTimeout(() => fitBoundsToMarkers(), 100);
+					});
+
+					const openInfoWindow = () => {
+						if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
+							infoWindow.open({
+								anchor: marker,
+								map: map
+							});
+						} else {
+							infoWindow.open(map, marker);
+						}
+						
+						openInfoWindows.add(markerData.id);
+						setTimeout(() => fitBoundsToMarkers(), 100);
+					};
+
+					marker.addListener('click', () => {
+						openInfoWindow();
+						if (onMarkerClick) {
+							onMarkerClick(markerData);
+						}
+					});
+
+					// Auto-open for main marker (only on initial load or if previously open)
+					if (markerData.isMainMarker && (isInitialLoad || openInfoWindows.has(markerData.id))) {
+						setTimeout(openInfoWindow, 500);
 					}
-				);
-
-				const infoWindow = new (window as any).google.maps.InfoWindow({
-					content: infoElement
-				});
-
-				// Store info window reference
-				infoWindows.set(markerData.id, infoWindow);
-
-				// Add event listeners for info window open/close
-				infoWindow.addListener('closeclick', () => {
-					openInfoWindows.delete(markerData.id);
-					// Refit bounds when info window closes
-					setTimeout(() => fitBoundsToMarkers(), 100);
-				});
-
-				const openInfoWindow = () => {
-					// Close other info windows first (optional - for single info window behavior)
-					// infoWindows.forEach((iw, id) => {
-					//     if (id !== markerData.id) {
-					//         iw.close();
-					//         openInfoWindows.delete(id);
-					//     }
-					// });
-
-					// Open this info window
-					if (marker instanceof (window as any).google.maps.marker.AdvancedMarkerElement) {
-						infoWindow.open({
-							anchor: marker,
-							map: map
-						});
-					} else {
-						infoWindow.open(map, marker);
+					// Reopen previously open windows
+					else if (!markerData.isMainMarker && openInfoWindows.has(markerData.id)) {
+						setTimeout(openInfoWindow, 100);
 					}
-					
-					openInfoWindows.add(markerData.id);
-					// Refit bounds when info window opens
-					setTimeout(() => fitBoundsToMarkers(), 100);
-				};
-
-				marker.addListener('click', openInfoWindow);
-
-				// Auto-open info window for main marker (only on initial load or if it was previously open)
-				if (isMainMarker && (isInitialLoad || openInfoWindows.has(markerData.id))) {
-					setTimeout(openInfoWindow, 500); // Small delay to ensure map is fully loaded
 				}
-				// Reopen info windows that were previously open (for non-main markers)
-				else if (!isMainMarker && openInfoWindows.has(markerData.id)) {
-					setTimeout(openInfoWindow, 100);
-				}
-			}
-
-			// Handle marker click events
-			if (onMarkerClick) {
+			} else {
+				// No info window, just handle click
 				marker.addListener('click', () => {
-					onMarkerClick(markerData, markerData.id);
+					if (onMarkerClick) {
+						onMarkerClick(markerData);
+					}
 				});
 			}
 
 			mapMarkers.push(marker);
-			console.log(`Created marker for ${markerData.title} at (${markerData.position.lat}, ${markerData.position.lng})`);
 		});
 
 		console.log(`Total markers created: ${mapMarkers.length}`);
 		
-		// Mark initial load as complete after first marker creation
 		if (isInitialLoad) {
 			isInitialLoad = false;
 		}
@@ -356,7 +310,6 @@
 		let hasVisibleMarkers = false;
 
 		mapMarkers.forEach(marker => {
-			// Get marker position (works for both AdvancedMarkerElement and regular Marker)
 			let position;
 			if (marker instanceof (window as any).google.maps.marker?.AdvancedMarkerElement) {
 				position = marker.position;
@@ -371,24 +324,21 @@
 		});
 
 		if (hasVisibleMarkers) {
-			// Adjust padding based on whether info windows are open
 			const hasOpenInfoWindows = openInfoWindows.size > 0;
 			const padding = {
 				top: hasOpenInfoWindows ? 80 : 50,
 				right: hasOpenInfoWindows ? 80 : 50,
-				bottom: hasOpenInfoWindows ? 120 : 50, // Extra bottom padding for info windows
+				bottom: hasOpenInfoWindows ? 120 : 50,
 				left: hasOpenInfoWindows ? 80 : 50
 			};
 
 			map.fitBounds(bounds, padding);
 
-			// Ensure minimum zoom level (don't zoom in too much for single markers)
 			const listener = (window as any).google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
 				if (map.getZoom() > 17) {
 					map.setZoom(17);
 				}
 				
-				// Notify parent of bounds change
 				if (onBoundsChanged) {
 					onBoundsChanged();
 				}
@@ -398,38 +348,31 @@
 
 	// Update markers when data or filters change
 	$effect(() => {
-		// Track dependencies
 		const currentMarkers = markers;
 		const currentShowMarkers = showMarkers;
-		const currentCategoryFilter = [...categoryFilter];
 		const currentMap = map;
 		
 		if (currentMap && currentMarkers.length > 0) {
-			// Use untrack to prevent markers array changes from triggering this effect
 			untrack(() => {
 				createMapMarkers();
-				// Fit map to show all visible markers after creation
 				setTimeout(() => fitBoundsToMarkers(), 100);
 			});
 		}
 	});
 
-	// Expose fitBoundsToMarkers function to parent
+	// Expose functions to parent
 	export function fitToMarkers() {
 		fitBoundsToMarkers();
 	}
 
-	// Expose map instance to parent
 	export function getMap() {
 		return map;
 	}
 
-	// Expose markers array to parent
 	export function getMarkers() {
 		return mapMarkers;
 	}
 
-	// Close all info windows
 	export function closeAllInfoWindows() {
 		infoWindows.forEach((infoWindow) => {
 			infoWindow.close();
@@ -437,28 +380,26 @@
 		openInfoWindows.clear();
 	}
 
-	// Cleanup function for component destruction
-	function cleanup() {
-		svelteInfoManager.destroyAll();
-		infoWindows.clear();
-		openInfoWindows.clear();
-	}
-
 	// Cleanup on component destroy
 	$effect(() => {
 		return () => {
-			cleanup();
+			snippetContainers = {};
+			infoWindows.clear();
+			openInfoWindows.clear();
 		};
 	});
-
-	// Get info window state (for debugging)
-	export function getInfoWindowState() {
-		return {
-			openWindows: Array.from(openInfoWindows),
-			totalWindows: infoWindows.size
-		};
-	}
 </script>
+
+<!-- Hidden containers for snippet rendering -->
+<div style="display: none;">
+	{#if markerInfoWindow}
+		{#each markers as marker (marker.id)}
+			<div bind:this={snippetContainers[marker.id]}>
+				{@render markerInfoWindow(marker)}
+			</div>
+		{/each}
+	{/if}
+</div>
 
 <div
 	bind:this={mapElement}
