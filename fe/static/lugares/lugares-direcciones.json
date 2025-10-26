@@ -4,9 +4,29 @@
     "description": "Direcciones y información de lugares cercanos al edificio Aires de Río en Santiago del Estero",
     "apartment_reference": "Intersección de Rivadavia y Olaechea, Santiago del Estero",
     "last_updated": "2025-10-25",
-    "total_places": 28
+    "total_places": 29
   },
   "lugares": {
+    "edificio_principal": {
+      "aires_de_rio": {
+        "nombre": "Aires de Río",
+        "direccion": "Avenida Rivadavia, Santiago del Estero, Argentina",
+        "direccion_aproximada": "Intersección de Rivadavia y Olaechea",
+        "tipo": "Edificio residencial",
+        "descripcion": "Moderno edificio de departamentos con ubicación estratégica en el centro de Santiago del Estero",
+        "coordenadas_aproximadas": {
+          "lat": -27.779686,
+          "lng": -64.258992
+        },
+        "es_edificio_principal": true,
+        "distancia_aproximada": "0 m (ubicación base)",
+        "distancia_categoria": "AQUÍ",
+        "distancia_cuadras": "0 cuadras",
+        "distancia_metros": 0,
+        "fotos_disponibles": 0,
+        "fuente_direccion": "Dirección del proyecto"
+      }
+    },
     "transporte": {
       "terminal_omnibus": {
         "nombre": "Terminal de Ómnibus de Santiago del Estero",
