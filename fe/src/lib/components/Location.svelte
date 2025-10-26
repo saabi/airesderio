@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { untrack } from 'svelte';
+	import PhotoCarousel from './PhotoCarousel.svelte';
 
 	const GOOGLE_MAPS_API_KEY = 'AIzaSyAEjLiUxzFltYqAYYiIapqw9yt6O0ge2QY';
 
@@ -25,7 +26,11 @@
 	let map: any;
 	let markers = $state<any[]>([]);
 	let photoCarouselVisible = $state(false);
-	let currentCarouselData = $state<any>(null);
+	let carouselPlace = $state<any>(null);
+	let carouselCategory = $state<string>('');
+	let carouselPlaceId = $state<string>('');
+	let carouselPhotos = $state<string[]>([]);
+	let carouselCurrentIndex = $state(0);
 
 	// Category colors for different types of places
 	const categoryColors: Record<string, string> = {
@@ -59,40 +64,22 @@
 	function openPhotoCarousel(place: any, category: string, placeId: string) {
 		if (!place.photos || place.photos.length === 0) return;
 		
-		currentCarouselData = {
-			place,
-			category,
-			placeId,
-			currentIndex: 0,
-			photos: place.photos.map((filename: string) => `/lugares/${category}/${placeId}/${filename}`)
-		};
+		carouselPlace = place;
+		carouselCategory = category;
+		carouselPlaceId = placeId;
+		carouselPhotos = place.photos.map((filename: string) => `/lugares/${category}/${placeId}/${filename}`);
+		carouselCurrentIndex = 0;
 		photoCarouselVisible = true;
 	}
 
 	// Close photo carousel
 	function closePhotoCarousel() {
 		photoCarouselVisible = false;
-		currentCarouselData = null;
-	}
-
-	// Navigate carousel
-	function navigateCarousel(direction: number) {
-		if (!currentCarouselData) return;
-		
-		const newIndex = currentCarouselData.currentIndex + direction;
-		if (newIndex >= currentCarouselData.photos.length) {
-			currentCarouselData.currentIndex = 0;
-		} else if (newIndex < 0) {
-			currentCarouselData.currentIndex = currentCarouselData.photos.length - 1;
-		} else {
-			currentCarouselData.currentIndex = newIndex;
-		}
-	}
-
-	// Go to specific photo
-	function goToPhoto(index: number) {
-		if (!currentCarouselData) return;
-		currentCarouselData.currentIndex = index;
+		carouselPlace = null;
+		carouselCategory = '';
+		carouselPlaceId = '';
+		carouselPhotos = [];
+		carouselCurrentIndex = 0;
 	}
 
 	// Find the main building from JSON data
@@ -375,14 +362,7 @@
 				zoom: 15,
 				center: mapCenter,
 				mapTypeId: 'roadmap',
-				mapId: 'AIRES_DE_RIO_MAP', // Required for Advanced Markers
-				styles: [
-					{
-						featureType: 'poi',
-						elementType: 'labels',
-						stylers: [{ visibility: 'off' }]
-					}
-				]
+				mapId: 'AIRES_DE_RIO_MAP' // Required for Advanced Markers (styles controlled via Cloud Console)
 			});
 		}
 	});
@@ -465,49 +445,16 @@
 	</div>
 </section>
 
-<!-- Photo Carousel Modal -->
-{#if photoCarouselVisible && currentCarouselData}
-	<div class="photo-carousel-overlay" role="dialog" aria-modal="true" onclick={closePhotoCarousel} onkeydown={(e) => e.key === 'Escape' && closePhotoCarousel()}>
-		<div class="photo-carousel-modal" role="document" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
-			<div class="photo-carousel-header">
-				<h3>{currentCarouselData.place.nombre}</h3>
-				<button class="close-button" onclick={closePhotoCarousel} aria-label="Cerrar galería de fotos">×</button>
-			</div>
-			
-			<div class="photo-carousel-content">
-				<div class="photo-container">
-					<img 
-						src={currentCarouselData.photos[currentCarouselData.currentIndex]} 
-						alt={`${currentCarouselData.place.nombre} - Foto ${currentCarouselData.currentIndex + 1}`}
-						class="carousel-image"
-					/>
-					
-					{#if currentCarouselData.photos.length > 1}
-						<button class="nav-button prev" onclick={() => navigateCarousel(-1)} aria-label="Foto anterior">‹</button>
-						<button class="nav-button next" onclick={() => navigateCarousel(1)} aria-label="Siguiente foto">›</button>
-					{/if}
-				</div>
-				
-				{#if currentCarouselData.photos.length > 1}
-					<div class="photo-dots">
-						{#each currentCarouselData.photos as _, index}
-							<button 
-								class="dot {index === currentCarouselData.currentIndex ? 'active' : ''}"
-								onclick={() => goToPhoto(index)}
-								aria-label={`Ver foto ${index + 1}`}
-							></button>
-						{/each}
-					</div>
-				{/if}
-				
-				<div class="photo-info">
-					<p>{currentCarouselData.currentIndex + 1} de {currentCarouselData.photos.length} fotos</p>
-					<p class="photo-description">{currentCarouselData.place.descripcion}</p>
-				</div>
-			</div>
-		</div>
-	</div>
-{/if}
+<!-- Photo Carousel Component -->
+<PhotoCarousel 
+	visible={photoCarouselVisible}
+	place={carouselPlace}
+	category={carouselCategory}
+	placeId={carouselPlaceId}
+	photos={carouselPhotos}
+	bind:currentIndex={carouselCurrentIndex}
+	onClose={closePhotoCarousel}
+/>
 
 <style>
 	.ubi {
@@ -606,159 +553,6 @@
 	.legend-stats small {
 		color: #9ca3af;
 		font-size: 0.7rem;
-	}
-
-	/* Photo Carousel Styles */
-	.photo-carousel-overlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: rgba(0, 0, 0, 0.8);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 10000;
-		backdrop-filter: blur(4px);
-	}
-
-	.photo-carousel-modal {
-		background: white;
-		border-radius: 0.75rem;
-		max-width: 90vw;
-		max-height: 90vh;
-		width: 600px;
-		box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-		overflow: hidden;
-	}
-
-	.photo-carousel-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 1rem 1.5rem;
-		border-bottom: 1px solid #e5e7eb;
-		background: #f9fafb;
-	}
-
-	.photo-carousel-header h3 {
-		margin: 0;
-		color: #374151;
-		font-size: 1.125rem;
-		font-weight: 600;
-	}
-
-	.close-button {
-		background: none;
-		border: none;
-		font-size: 1.5rem;
-		cursor: pointer;
-		color: #6b7280;
-		padding: 0.25rem;
-		border-radius: 0.25rem;
-		transition: background-color 0.2s;
-	}
-
-	.close-button:hover {
-		background: #e5e7eb;
-		color: #374151;
-	}
-
-	.photo-carousel-content {
-		padding: 1.5rem;
-	}
-
-	.photo-container {
-		position: relative;
-		width: 100%;
-		height: 400px;
-		border-radius: 0.5rem;
-		overflow: hidden;
-		background: #f3f4f6;
-		margin-bottom: 1rem;
-	}
-
-	.carousel-image {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-	}
-
-	.nav-button {
-		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
-		background: rgba(0, 0, 0, 0.6);
-		color: white;
-		border: none;
-		border-radius: 50%;
-		width: 40px;
-		height: 40px;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 1.25rem;
-		transition: background-color 0.2s;
-		z-index: 10;
-	}
-
-	.nav-button:hover {
-		background: rgba(0, 0, 0, 0.8);
-	}
-
-	.nav-button.prev {
-		left: 1rem;
-	}
-
-	.nav-button.next {
-		right: 1rem;
-	}
-
-	.photo-dots {
-		display: flex;
-		justify-content: center;
-		gap: 0.5rem;
-		margin-bottom: 1rem;
-	}
-
-	.dot {
-		width: 12px;
-		height: 12px;
-		border-radius: 50%;
-		border: none;
-		background: #d1d5db;
-		cursor: pointer;
-		transition: background-color 0.2s;
-	}
-
-	.dot.active {
-		background: #6B4423;
-	}
-
-	.dot:hover {
-		background: #9ca3af;
-	}
-
-	.dot.active:hover {
-		background: #5a3a1e;
-	}
-
-	.photo-info {
-		text-align: center;
-	}
-
-	.photo-info p {
-		margin: 0.25rem 0;
-		color: #6b7280;
-		font-size: 0.875rem;
-	}
-
-	.photo-description {
-		font-style: italic;
-		color: #9ca3af !important;
 	}
 
 	@media (max-width: 850px) {
