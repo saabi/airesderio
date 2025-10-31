@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { untrack } from 'svelte';
 	import PhotoCarousel from './PhotoCarousel.svelte';
 	import CategorySelector from './CategorySelector.svelte';
 	import GoogleMap from './GoogleMap.svelte';
@@ -15,6 +14,16 @@
 		categoryFilter?: string[];
 	}
 
+	interface MarkerData {
+		id: string;
+		position: { lat: number; lng: number };
+		title: string;
+		category: string;
+		placeId: string;
+		place: any;
+		isMainMarker: boolean;
+	}
+
 	let { 
 		jsonUrl = '/lugares/lugares-direcciones.json',
 		showPlaceMarkers = true,
@@ -27,7 +36,6 @@
 	let placesData = $state<any>(null);
 	let googleMapRef = $state<any>(null);
 	let mapCenter = $state({ lat: -27.779686, lng: -64.258992 });
-	let mapMarkers = $state<any[]>([]);
 	let photoCarouselVisible = $state(false);
 	let carouselPlace = $state<any>(null);
 	let carouselCategory = $state<string>('');
@@ -35,6 +43,11 @@
 	let carouselPhotos = $state<string[]>([]);
 	let carouselCurrentIndex = $state(0);
 	// @fold:end
+
+	let hasInitializedCategoryFilter = $state(false);
+	let activeMarkerId = $state<string | null>(null);
+	let mapInitialized = $state(false);
+	let hasAutoOpenedMainMarker = $state(false);
 
 	// All category data is now loaded from JSON metadata
 	let categories = $derived(placesData?.metadata?.categories || {});
@@ -73,6 +86,71 @@
 		};
 	}
 
+	let selectableCategories = $derived.by(() => {
+		if (!placesData) return [];
+
+		return Object.keys(placesData.lugares || {}).filter((category: string) => {
+			const categoryMeta = placesData.metadata?.categories?.[category];
+			return !categoryMeta?.isAlwaysVisible;
+		});
+	});
+
+	let alwaysVisibleCategories = $derived.by(() => {
+		if (!placesData) return [];
+
+		const meta = placesData.metadata?.categories || {};
+		return Object.entries(meta)
+			.filter(([, category]: [string, any]) => category?.isAlwaysVisible)
+			.map(([key]) => key);
+	});
+
+	let allMarkers = $derived.by<MarkerData[]>(() => {
+		if (!placesData) return [];
+
+		const markers: MarkerData[] = [];
+
+		Object.entries(placesData.lugares || {}).forEach(([category, places]: [string, any]) => {
+			Object.entries(places).forEach(([placeId, place]: [string, any]) => {
+				if (!place?.coordenadas_aproximadas) return;
+
+				markers.push({
+					id: `${category}_${placeId}`,
+					position: place.coordenadas_aproximadas,
+					title: place.nombre,
+					category,
+					placeId,
+					place: place as any,
+					isMainMarker: !!place.es_edificio_principal
+				});
+			});
+		});
+
+		return markers;
+	});
+
+	let mainMarker = $derived.by<MarkerData | null>(() => allMarkers.find((marker) => marker.isMainMarker) || null);
+	let mainMarkerId = $derived.by<string | null>(() => mainMarker?.id ?? null);
+
+	let visibleMarkers = $derived.by<MarkerData[]>(() => {
+		if (!allMarkers.length) return [];
+
+		const alwaysVisibleSet = new Set(alwaysVisibleCategories);
+		if (mainMarker?.category) {
+			alwaysVisibleSet.add(mainMarker.category);
+		}
+
+		const selectedCategories = new Set(categoryFilter);
+		alwaysVisibleSet.forEach((category) => selectedCategories.add(category));
+
+		return allMarkers.filter((marker) => {
+			if (!showPlaceMarkers && !alwaysVisibleSet.has(marker.category)) {
+				return false;
+			}
+
+			return selectedCategories.has(marker.category);
+		});
+	});
+
 
 	// Load places data from JSON
 	async function loadPlacesData() {
@@ -80,14 +158,18 @@
 		
 		console.log('Loading places data from:', jsonUrl);
 		try {
-			const response = await fetch(jsonUrl);
-			if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-			placesData = await response.json();
-			console.log('Places data loaded successfully:', {
-				totalCategories: Object.keys(placesData.lugares).length,
-				hasMainBuilding: !!findMainBuilding(),
-				categoriesLoaded: Object.keys(placesData.metadata?.categories || {}).length,
-				categories: $state.snapshot(placesData.metadata?.categories)
+				const response = await fetch(jsonUrl);
+				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+				const data = await response.json();
+				placesData = data;
+				hasInitializedCategoryFilter = false;
+				activeMarkerId = null;
+				hasAutoOpenedMainMarker = false;
+				console.log('Places data loaded successfully:', {
+					totalCategories: Object.keys(data.lugares).length,
+					hasMainBuilding: !!findMainBuilding(data),
+					categoriesLoaded: Object.keys(data.metadata?.categories || {}).length,
+					categories: $state.snapshot(data.metadata?.categories)
 			});
 		} catch (error) {
 			console.error('Error loading places data:', error);
@@ -118,148 +200,53 @@
 
 	// Toggle markers visibility
 	function toggleMarkers() {
-		captureOpenInfoWindows(); // Capture before changing
 		showPlaceMarkers = !showPlaceMarkers;
-		handleFilterChange(); // Handle reopening after change
 	}
 
 	// Toggle category filter
 	function toggleCategory(category: string) {
-		captureOpenInfoWindows(); // Capture before changing
 		if (categoryFilter.includes(category)) {
-			categoryFilter = categoryFilter.filter(c => c !== category);
+			categoryFilter = categoryFilter.filter((c) => c !== category);
 		} else {
 			categoryFilter = [...categoryFilter, category];
 		}
-		handleFilterChange(); // Handle reopening after change
 	}
 
-	// Process places data into generic markers for GoogleMap component
-	function processPlacesIntoMarkers() {
-		if (!placesData) {
-			// This is expected during initial load - data will be available after fetch completes
-			return [];
-		}
-
-		console.log('🔄 Processing places into markers:', {
-			totalCategories: Object.keys(placesData.lugares).length,
-			showPlaceMarkers: showPlaceMarkers,
-			categoryFilterLength: categoryFilter.length,
-			categoryFilter: categoryFilter
-		});
-
-		const markers: any[] = [];
-
-		Object.entries(placesData.lugares).forEach(([category, places]: [string, any]) => {
-			Object.entries(places).forEach(([placeId, place]: [string, any]) => {
-				if (!place.coordenadas_aproximadas) return;
-
-				const isMainMarker = place.es_edificio_principal;
-				
-				// Debug main marker detection
-				if (isMainMarker) {
-					console.log('🏠 MAIN MARKER FOUND:', {
-						name: place.nombre,
-						category: category,
-						coordinates: $state.snapshot(place.coordenadas_aproximadas),
-						showPlaceMarkers: showPlaceMarkers,
-						categoryFilterLength: categoryFilter.length,
-						willBeIncluded: true
-					});
-				}
-				
-				// Always show main marker, check filter for others
-				if (!isMainMarker) {
-					// Hide non-main markers if showPlaceMarkers is false
-					if (!showPlaceMarkers) {
-						console.log('Skipping non-main marker due to showPlaceMarkers=false:', place.nombre);
-			return;
-		}
-
-					// If no category filters are set, hide all non-main markers (only show main marker initially)
-					if (categoryFilter.length === 0) {
-						console.log('Skipping non-main marker - no category filters set:', place.nombre);
-			return;
-		}
-
-					// If category filters are set, only show markers in selected categories
-					if (!categoryFilter.includes(category)) {
-						console.log('Skipping non-main marker due to category filter:', place.nombre, 'category:', category);
-						return;
-					}
-				}
-				
-				// Ensure main marker is always included
-				if (isMainMarker) {
-					console.log('Including main marker:', place.nombre, 'showPlaceMarkers:', showPlaceMarkers);
-				}
-				
-				// No need to create custom elements - handled by marker snippet
-
-				// Create generic marker data
-				const markerData = {
-					id: `${category}_${placeId}`,
-					position: place.coordenadas_aproximadas,
-					title: place.nombre,
-					isMainMarker: isMainMarker,
-					// Additional data for snippets
-					place: place,
-					category: category,
-					placeId: placeId
-				};
-				
-				markers.push(markerData);
-				
-				if (isMainMarker) {
-					console.log('✅ MAIN MARKER ADDED TO ARRAY:', {
-						id: markerData.id,
-						title: markerData.title,
-						position: $state.snapshot(markerData.position),
-						totalMarkersNow: markers.length
-					});
-				}
-			});
-		});
-
-		console.log(`Processed ${markers.length} markers total`);
-		const mainMarkers = markers.filter(m => m.isMainMarker);
-		console.log(`Main markers: ${mainMarkers.length}`, $state.snapshot(mainMarkers.map(m => m.title)));
-		
-		return markers;
+	function setCategoryFilter(categories: string[]) {
+		categoryFilter = categories;
 	}
 
 	// Marker creation is now handled by snippets in GoogleMap component
 
 	// Handle marker click from GoogleMap component
 	function handleMarkerClick(marker: any) {
-		// Open info window for clicked marker
-		console.log('Marker clicked:', marker.title);
-		if (googleMapRef) {
-			googleMapRef.openInfoWindow(marker.id);
+		activeMarkerId = marker.id;
+	}
+
+	function handleMarkerPhotoClick(marker: any) {
+		if (marker?.place?.photos && marker.place.photos.length > 0) {
+			openPhotoCarousel(marker.place, marker.category, marker.placeId);
 		}
 	}
 
 	// Handle info window close from GoogleMap component
 	function handleInfoWindowClose(markerId: string) {
-		console.log('Info window closed for marker:', markerId);
-		// No specific tracking needed - GoogleMap component handles the state
+		if (activeMarkerId === markerId) {
+			activeMarkerId = null;
+		}
 	}
-
-	// Track which info windows should be reopened after filter changes
-	let infoWindowsToReopen = $state<string[]>([]);
 
 	// Handle map ready event
 	function handleMapReady(mapInstance: any) {
 		console.log('🗺️ Map is ready:', mapInstance);
 		
-		// Auto-open info window for main marker after a short delay
-		setTimeout(() => {
-			const mainMarker = processedMarkers.find(m => m.isMainMarker || m.place?.es_edificio_principal);
-			if (mainMarker && googleMapRef) {
-				console.log('🏠 Auto-opening info window for main marker:', mainMarker.title, 'ID:', mainMarker.id);
-				googleMapRef.openInfoWindow(mainMarker.id);
-			}
-		}, 1000); // Wait for markers and info windows to be fully created
+		// Only clear user closed state and auto-open main marker on first initialization
+		if (!mapInitialized) {
+			mapInitialized = true;
+			
+			// Allow auto-open effect to run once data and markers are ready
+			hasAutoOpenedMainMarker = false;
+		}
 	}
 
 	// Fit map bounds using GoogleMap component
@@ -270,10 +257,10 @@
 	}
 
 	// Find the main building from JSON data
-	function findMainBuilding() {
-		if (!placesData) return null;
+	function findMainBuilding(data: any = placesData) {
+		if (!data) return null;
 		
-		for (const [category, places] of Object.entries(placesData.lugares)) {
+		for (const [category, places] of Object.entries(data.lugares || {})) {
 			for (const [placeId, place] of Object.entries(places as any)) {
 				if ((place as any).es_edificio_principal) {
 					return {
@@ -288,68 +275,39 @@
 	}
 
 
-	// Create info window content
-	function createInfoWindowContent(place: any, category: string): string {
-		const distanceColor = place.distancia_categoria === 'MUY CERCA' ? '#16a34a' : 
-							 place.distancia_categoria === 'CERCANO' ? '#ea580c' : '#dc2626';
-		
-		return `
-			<div style="padding: 0.75rem; max-width: 280px; font-family: system-ui, sans-serif;">
-				<div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-					<div style="width: 12px; height: 12px; border-radius: 50%; background-color: ${categoryColors[category] || '#6B4423'};"></div>
-					<h3 style="margin: 0; color: #1f2937; font-size: 1rem; font-weight: 600;">${place.nombre}</h3>
-				</div>
-				<p style="margin: 0 0 0.5rem 0; font-size: 0.875rem; color: #6b7280; line-height: 1.4;">
-					📍 ${place.direccion}
-				</p>
-				<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
-					<span style="background-color: ${distanceColor}; color: white; padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 500;">
-						${place.distancia_categoria}
-					</span>
-					<span style="background-color: #f3f4f6; color: #374151; padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
-						${place.distancia_cuadras || place.distancia_aproximada}
-					</span>
-				</div>
-				<p style="margin: 0; font-size: 0.8rem; color: #9ca3af; font-style: italic;">
-					${place.descripcion}
-				</p>
-                        </div>
-		`;
-	}
-
-	// OLD FUNCTIONS - REMOVED (now handled by GoogleMap component)
-
 	// Load places data when component mounts
 	$effect(() => {
 		loadPlacesData();
 	});
 
-	// Update map center when places data loads
+	// Update map center when main marker is available
 	$effect(() => {
-		if (placesData) {
-			const mainBuilding = findMainBuilding();
-			if (mainBuilding?.place.coordenadas_aproximadas) {
-				mapCenter = mainBuilding.place.coordenadas_aproximadas;
-			}
+		if (mainMarker?.place?.coordenadas_aproximadas) {
+			const { lat, lng } = mainMarker.place.coordenadas_aproximadas;
+			mapCenter = { lat, lng };
 		}
 	});
 
-	// Process markers when places data changes
-	let processedMarkers = $derived(processPlacesIntoMarkers());
-	
-	// Debug processed markers
+	// Ensure the main marker opens once when the map and data are ready
 	$effect(() => {
-		console.log('📊 Location: processedMarkers updated:', {
-			markersLength: processedMarkers.length,
-			hasPlacesData: !!placesData,
-			showPlaceMarkers: showPlaceMarkers,
-			categoryFilterLength: categoryFilter.length,
-			mainMarkers: processedMarkers.filter(m => m.isMainMarker).length,
-			categoriesLoaded: Object.keys(categories).length,
-			colorsLoaded: Object.keys(categoryColors).length,
-			iconsLoaded: Object.keys(categoryIcons).length,
-			sampleMainMarker: $state.snapshot(processedMarkers.find(m => m.isMainMarker))
-		});
+		if (!mapInitialized || hasAutoOpenedMainMarker) return;
+		if (!mainMarkerId) return;
+
+		const visibleIds = new Set(visibleMarkers.map((marker) => marker.id));
+		if (!visibleIds.has(mainMarkerId)) return;
+
+		activeMarkerId = mainMarkerId;
+		hasAutoOpenedMainMarker = true;
+	});
+
+	// Keep the active marker in sync with the currently visible markers
+	$effect(() => {
+		if (!activeMarkerId) return;
+
+		const visibleIds = new Set(visibleMarkers.map((marker) => marker.id));
+		if (!visibleIds.has(activeMarkerId)) {
+			activeMarkerId = null;
+		}
 	});
 
 	// Debug categories loading
@@ -363,37 +321,20 @@
 		}
 	});
 
-	// Handle reopening info windows after filter changes
-	function handleFilterChange() {
-		if (infoWindowsToReopen.length > 0 && googleMapRef) {
-			// Wait for markers to be recreated, then reopen valid info windows
-			setTimeout(() => {
-				if (googleMapRef && processedMarkers.length > 0) {
-					const currentMarkerIds = processedMarkers.map(m => m.id);
-					const validWindowsToReopen = infoWindowsToReopen.filter((windowId: string) => 
-						currentMarkerIds.includes(windowId)
-					);
-					
-					if (validWindowsToReopen.length > 0) {
-						console.log('🔄 Reopening valid info windows after filter change:', validWindowsToReopen);
-						googleMapRef.reopenInfoWindows(validWindowsToReopen);
-					}
-					
-					// Clear the reopen list
-					infoWindowsToReopen = [];
-				}
-			}, 800); // Longer delay to ensure markers are fully created
-		}
-	}
+	$effect(() => {
+		if (!placesData || hasInitializedCategoryFilter) return;
 
-	// Capture open info windows before filter changes
-	function captureOpenInfoWindows() {
-		if (googleMapRef) {
-			const openWindows = googleMapRef.getOpenInfoWindows();
-			console.log('📋 Capturing open info windows before filter change:', openWindows);
-			infoWindowsToReopen = [...openWindows];
-		}
-	}
+		// Initialize category filter - set to empty array so all categories start unselected
+		// To start with all categories selected, uncomment the line below:
+		// if (selectableCategories.length > 0 && categoryFilter.length === 0) {
+		// 	categoryFilter = [...selectableCategories];
+		// }
+
+		hasInitializedCategoryFilter = true;
+	});
+
+
+	// OLD FUNCTIONS - REMOVED (now handled by GoogleMap component)
 </script>
 
 <section id="ubicacion" class="ubi" aria-labelledby="ubicacion-heading">
@@ -415,19 +356,20 @@
 			</p>
 		</div>
 		<div class="map-container">
-			{#if placesData && processedMarkers.length > 0}
+			{#if placesData && visibleMarkers.length > 0}
 				<GoogleMap
 					bind:this={googleMapRef}
 					apiKey={GOOGLE_MAPS_API_KEY}
 					mapId="AIRES_DE_RIO_MAP"
 					center={mapCenter}
 					zoom={15}
-					markers={processedMarkers}
+					markers={visibleMarkers}
+					activeMarkerId={activeMarkerId}
 					onMarkerClick={handleMarkerClick}
 					onMapReady={handleMapReady}
 					onInfoWindowClose={handleInfoWindowClose}
+					onMarkerPhotoClick={handleMarkerPhotoClick}
 					containerClass="location-map"
-					height="25rem"
 				>
 				{#snippet markerElement(marker)}
 					{@const isMainMarker = marker.isMainMarker || marker.place?.es_edificio_principal}
@@ -449,6 +391,7 @@
 					
 					<div style="position: relative; display: flex; align-items: center; justify-content: center; z-index: 1000;">
 						<div 
+							class="marker-dot"
 							role="button"
 							tabindex="0"
 							aria-label="Map marker for {marker.title}"
@@ -472,8 +415,6 @@
 								visibility: visible;
 								{isMainMarker ? 'animation: pulse 2s infinite;' : ''}
 							"
-							onmouseenter={(e) => (e.target as HTMLElement).style.transform = 'scale(1.1)'}
-							onmouseleave={(e) => (e.target as HTMLElement).style.transform = 'scale(1)'}
 						>
 							{#if icon}
 								<span style="
@@ -515,6 +456,7 @@
 						
 						{#if marker.place?.photos && marker.place.photos.length > 0}
 							<button 
+								data-photo-trigger
 								type="button"
 								aria-label="View {marker.place.photos.length} photo{marker.place.photos.length > 1 ? 's' : ''} for {marker.title}"
 								style="
@@ -535,10 +477,6 @@
 									z-index: 10;
 									padding: 0;
 								"
-								onclick={(e) => {
-									e.stopPropagation();
-									openPhotoCarousel(marker.place, marker.category, marker.placeId);
-								}}
 							>
 								📷
 							</button>
@@ -593,18 +531,19 @@
 				</div>
 			{/if}
 			
-			<CategorySelector 
-				{placesData}
-				{showPlaceMarkers}
-				{categoryFilter}
-				{categoryColors}
-				{categoryIcons}
-				{categoryNames}
-				markersCount={processedMarkers.length}
-				onToggleMarkers={toggleMarkers}
-				onCategoryToggle={toggleCategory}
-				onFitToView={fitMapToMarkers}
-			/>
+				<CategorySelector 
+					{placesData}
+					{showPlaceMarkers}
+					{categoryFilter}
+					{categoryColors}
+					{categoryIcons}
+					{categoryNames}
+					markersCount={visibleMarkers.length}
+					onToggleMarkers={toggleMarkers}
+					onCategoryToggle={toggleCategory}
+					onSetCategoryFilter={setCategoryFilter}
+					onFitToView={fitMapToMarkers}
+				/>
 		</div>
 	</div>
 </section>
@@ -627,7 +566,7 @@
 
 	.location-block {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: min-content 1fr;
 		gap: 0;
 		background: var(--brand);
 		border-radius: 0.625rem;
@@ -636,6 +575,7 @@
 	}
 
 	.location-text {
+		max-width: 40ch;
 		padding: 1.75rem;
 		color: #fff;
 	}
@@ -648,12 +588,11 @@
 
 	.location-text p {
 		font-size: 0.95em;
-		max-width: 65ch;
 	}
 
 	.map-container {
-		display: flex;
-		min-height: 25rem;
+		display: grid;
+		grid-template-columns: 1fr min-content;
 		width: 100%;
 		gap: 0;
 	}
@@ -666,21 +605,16 @@
 			/* Invert order on mobile */
 			grid-template-rows: auto auto;
 		}
+		.location-text {
+			max-width: 100%;
+		}
 		.location-text h3 {
 			font-size: 2em; /* smaller location title */
 		}
 
-		.location-block .map-container {
-			grid-row: 1;
-		}
-
-		.location-block .location-text {
-			grid-row: 2;
-		}
-
 		.map-container {
-			flex-direction: column;
-			min-height: auto;
+			grid-template-columns: 1fr;
+			grid-template-rows: 50vh min-content;
 		}
 	}
 
@@ -791,6 +725,24 @@
 
 	:global(.photo-button:active) {
 		background: #1d4ed8;
+	}
+
+	:global(.custom-map-marker) {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	:global(.custom-map-marker .marker-dot) {
+		transition: transform 0.2s ease;
+		transform-origin: center;
+	}
+
+	:global(.custom-map-marker:hover .marker-dot) {
+		transform: scale(1.08);
 	}
 
 	/* Pulse animation for main marker */
