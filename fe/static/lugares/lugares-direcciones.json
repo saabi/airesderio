@@ -81,7 +81,6 @@
         "distancia_categoria": "AQUÍ",
         "distancia_cuadras": "0 cuadras",
         "distancia_metros": 0,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Dirección del proyecto",
         "photos": []
       }
@@ -100,7 +99,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 1500,
-        "fotos_disponibles": 3,
         "fuente_direccion": "Busbud Terminal Directory",
         "photos": [
           "exterior.jpg",
@@ -123,7 +121,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 800,
-        "fotos_disponibles": 3,
         "fuente_direccion": "TripAdvisor",
         "photos": [
           "centro-convenciones-argentina-ejemplo-PD.jpg",
@@ -144,7 +141,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 1200,
-        "fotos_disponibles": 1,
         "fuente_direccion": "Sitio web oficial CCB",
         "photos": [
           "centro-cultural-ejemplo-PD.jpg"
@@ -163,7 +159,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 600,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Referencias locales",
         "photos": [
           "teatro-argentina-ejemplo-PD.jpg"
@@ -184,7 +179,6 @@
         "distancia_categoria": "MODERADAMENTE DISTANTE",
         "distancia_cuadras": "más de 8 cuadras",
         "distancia_metros": 2000,
-        "fotos_disponibles": 1,
         "fuente_direccion": "Referencias geográficas",
         "photos": [
           "puente-exterior.jpg"
@@ -205,7 +199,6 @@
         "distancia_categoria": "MUY CERCA",
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 300,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Referencias geográficas",
         "photos": [
           "plaza-argentina-ejemplo-PD.jpg"
@@ -224,7 +217,6 @@
         "distancia_categoria": "MUY CERCA",
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 300,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Referencias geográficas",
         "photos": [
           "catedral-exterior-PD.jpg"
@@ -243,7 +235,6 @@
         "distancia_categoria": "MUY CERCA",
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 300,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Referencias geográficas",
         "photos": [
           "casa-gobierno-argentina-ejemplo-PD.jpg"
@@ -264,7 +255,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 1000,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Referencias locales",
         "photos": [
           "parque-argentino-ejemplo-PD.jpg"
@@ -285,7 +275,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 1200,
-        "fotos_disponibles": 0,
         "nota": "Ubicado dentro del Centro Cultural del Bicentenario",
         "fuente_direccion": "CCB oficial",
         "photos": [
@@ -305,7 +294,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 1200,
-        "fotos_disponibles": 0,
         "nota": "Ubicado dentro del Centro Cultural del Bicentenario",
         "fuente_direccion": "CCB oficial",
         "photos": [
@@ -324,7 +312,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 800,
-        "fotos_disponibles": 1,
         "nota": "Imagen representativa de café argentino típico",
         "fuente_direccion": "Pendiente de confirmación",
         "coordenadas_aproximadas": {
@@ -345,7 +332,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 800,
-        "fotos_disponibles": 1,
         "nota": "Imagen representativa de restaurant argentino típico",
         "fuente_direccion": "Facebook (pendiente de confirmación)",
         "coordenadas_aproximadas": {
@@ -366,7 +352,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 800,
-        "fotos_disponibles": 1,
         "nota": "Imagen representativa de establecimiento argentino típico",
         "fuente_direccion": "Instagram @bless.sgo (pendiente de confirmación)",
         "coordenadas_aproximadas": {
@@ -386,7 +371,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 800,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.781,
@@ -411,7 +395,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 500,
-        "fotos_disponibles": 1,
         "nota": "Imagen representativa de supermercado argentino",
         "fuente_direccion": "Tiendeo.com.ar",
         "photos": [
@@ -428,7 +411,6 @@
         "distancia_categoria": "MODERADAMENTE DISTANTE",
         "distancia_cuadras": "más de 8 cuadras",
         "distancia_metros": 3000,
-        "fotos_disponibles": 1,
         "nota": "Imagen representativa de supermercado argentino",
         "fuente_direccion": "Tiendeo.com.ar (ubicación específica pendiente)",
         "coordenadas_aproximadas": {
@@ -448,7 +430,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 400,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.785,
@@ -469,7 +450,6 @@
         "distancia_categoria": "MUY CERCA",
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 100,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.777,
@@ -488,7 +468,6 @@
         "distancia_categoria": "MUY CERCA",
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 200,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.776,
@@ -507,7 +486,6 @@
         "distancia_categoria": "MUY CERCA",
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 300,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.78,
@@ -526,7 +504,6 @@
         "distancia_categoria": "MUY CERCA",
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 250,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.784,
@@ -547,7 +524,6 @@
         "distancia_categoria": "MUY CERCA",
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 200,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.795,
@@ -566,7 +542,6 @@
         "distancia_categoria": "MUY CERCA",
         "distancia_cuadras": "0-3 cuadras",
         "distancia_metros": 300,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.778,
@@ -585,7 +560,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 600,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.782,
@@ -604,7 +578,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 650,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.779,
@@ -623,7 +596,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 700,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.781,
@@ -642,7 +614,6 @@
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
         "distancia_metros": 750,
-        "fotos_disponibles": 0,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
           "lat": -27.783,
