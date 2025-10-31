@@ -10,6 +10,7 @@
 		onToggleMarkers: () => void;
 		onCategoryToggle: (category: string) => void;
 		onFitToView?: () => void;
+		onSetCategoryFilter: (categories: string[]) => void;
 	}
 
 	let {
@@ -22,7 +23,8 @@
 		markersCount = 0,
 		onToggleMarkers,
 		onCategoryToggle,
-		onFitToView
+		onFitToView,
+		onSetCategoryFilter
 	}: Props = $props();
 
 	// Category data is now passed as props from Location component
@@ -30,17 +32,24 @@
 	// Get filtered categories (exclude categories with isAlwaysVisible: true)
 	let filteredCategories = $derived.by(() => {
 		if (!placesData) return [];
-		
-		return Object.keys(placesData.lugares).filter(category => {
+
+		return Object.keys(placesData.lugares).filter((category) => {
 			const categoryData = placesData.metadata?.categories?.[category];
 			return !categoryData?.isAlwaysVisible;
 		});
 	});
 
+	let selectedCount = $derived(categoryFilter.length);
+	let allSelected = $derived(
+		filteredCategories.length > 0 && selectedCount === filteredCategories.length
+	);
+	let noneSelected = $derived(selectedCount === 0);
+	let someSelected = $derived(!noneSelected && !allSelected);
+
 	// Calculate total places count (excluding categories with isAlwaysVisible: true)
 	let totalPlacesCount = $derived.by(() => {
 		if (!placesData) return 0;
-		
+
 		return Object.entries(placesData.lugares)
 			.filter(([category]) => {
 				const categoryData = placesData.metadata?.categories?.[category];
@@ -55,8 +64,35 @@
 		<div class="legend-header">
 			<h4>Lugares de Interés</h4>
 			<div class="header-buttons">
+				<button
+					class="select-all-btn {allSelected ? 'all-selected' : ''} {someSelected
+						? 'partial-selected'
+						: ''}"
+					role="checkbox"
+					aria-checked={allSelected ? 'true' : someSelected ? 'mixed' : 'false'}
+					onclick={() => {
+						if (filteredCategories.length === 0) return;
+						if (allSelected) {
+							onSetCategoryFilter([]);
+						} else {
+							onSetCategoryFilter(filteredCategories);
+						}
+					}}
+					aria-label={allSelected
+						? 'Deseleccionar todas las categorías'
+						: noneSelected
+							? 'Seleccionar todas las categorías'
+							: 'Seleccionar todas las categorías'}
+					title={allSelected
+						? 'Deseleccionar todas'
+						: noneSelected
+							? 'Seleccionar todas'
+							: 'Seleccionar todas'}
+				>
+					<span class="checkbox-box"></span>
+				</button>
 				{#if onFitToView && markersCount > 0}
-					<button 
+					<button
 						class="fit-view-btn"
 						onclick={onFitToView}
 						aria-label="Ajustar vista para mostrar todos los marcadores"
@@ -65,7 +101,7 @@
 						🔍
 					</button>
 				{/if}
-				<button 
+				<button
 					class="toggle-markers-btn"
 					onclick={onToggleMarkers}
 					aria-label={showPlaceMarkers ? 'Ocultar marcadores' : 'Mostrar marcadores'}
@@ -74,21 +110,21 @@
 				</button>
 			</div>
 		</div>
-		
+
 		<div class="legend-categories">
 			{#each filteredCategories as category}
 				{@const categoryPlaces = placesData.lugares[category]}
 				{@const placesCount = Object.keys(categoryPlaces).length}
-				{@const isActive = categoryFilter.length === 0 || categoryFilter.includes(category)}
-				
+				{@const isActive = categoryFilter.includes(category)}
+
 				<button
 					class="legend-item {isActive ? 'active' : 'inactive'}"
 					onclick={() => onCategoryToggle(category)}
 					aria-pressed={isActive}
 				>
 					<div class="legend-indicator">
-						<span 
-							class="legend-color" 
+						<span
+							class="legend-color"
 							style="background-color: {categoryColors[category] || '#6B4423'}"
 						>
 							{#if categoryIcons[category]}
@@ -103,10 +139,10 @@
 				</button>
 			{/each}
 		</div>
-		
+
 		<div class="legend-stats">
 			<small>
-				{markersCount} marcadores activos de {totalPlacesCount} lugares
+				{markersCount} marcadores activos · {selectedCount}/{filteredCategories.length} categorías seleccionadas
 			</small>
 		</div>
 	</div>
@@ -118,7 +154,7 @@
 		border-radius: 0.5rem;
 		padding: 1rem;
 		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-		border-left: 4px solid #6B4423;
+		border-left: 4px solid #6b4423;
 		min-width: 250px;
 		max-width: 300px;
 		height: fit-content;
@@ -147,7 +183,8 @@
 	}
 
 	.toggle-markers-btn,
-	.fit-view-btn {
+	.fit-view-btn,
+	.select-all-btn {
 		background: none;
 		border: 1px solid #d1d5db;
 		border-radius: 0.25rem;
@@ -163,7 +200,8 @@
 	}
 
 	.toggle-markers-btn:hover,
-	.fit-view-btn:hover {
+	.fit-view-btn:hover,
+	.select-all-btn:hover {
 		background: #f3f4f6;
 		border-color: #9ca3af;
 	}
@@ -178,6 +216,52 @@
 		background: #e0f2fe;
 		border-color: #0284c7;
 		color: #0284c7;
+	}
+
+	.select-all-btn {
+		position: relative;
+	}
+
+	.select-all-btn .checkbox-box {
+		width: 16px;
+		height: 16px;
+		border: 2px solid #9ca3af;
+		border-radius: 0.25rem;
+		position: relative;
+		background: white;
+	}
+
+	.select-all-btn.all-selected .checkbox-box {
+		background: #4ade80;
+		border-color: #22c55e;
+	}
+
+	.select-all-btn.partial-selected .checkbox-box {
+		background: linear-gradient(180deg, #f8fafc 0%, #cbd5f5 100%);
+		border-color: #94a3b8;
+	}
+
+	.select-all-btn.all-selected .checkbox-box::after,
+	.select-all-btn.partial-selected .checkbox-box::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 8px;
+		height: 2px;
+		background: #1f2937;
+		border-radius: 1px;
+	}
+
+	.select-all-btn.all-selected .checkbox-box::after {
+		width: 4px;
+		height: 8px;
+		border: 2px solid #1f2937;
+		border-top: none;
+		border-left: none;
+		transform: translate(-50%, -55%) rotate(45deg);
+		background: none;
 	}
 
 	.legend-categories {
@@ -279,7 +363,7 @@
 			max-width: unset;
 			width: 100%;
 			border-left: none;
-			border-top: 4px solid #6B4423;
+			border-top: 4px solid #6b4423;
 			border-radius: 0.5rem 0.5rem 0 0;
 		}
 
@@ -298,7 +382,7 @@
 		.legend-categories {
 			grid-template-columns: 1fr;
 		}
-		
+
 		.legend-item {
 			padding: 0.625rem 0.75rem;
 		}
