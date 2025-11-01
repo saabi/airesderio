@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ContactSection from '$lib/components/ContactSection.svelte';
 	import Equipment from '$lib/components/Equipment.svelte';
 	import FloorPlans from '$lib/components/FloorPlans.svelte';
 	import Hero from '$lib/components/Hero.svelte';
@@ -21,6 +22,7 @@
 		<Interior />
 		<Equipment />
 		<FloorPlans />
+		<ContactSection />
 	</main>
 </div>
 
