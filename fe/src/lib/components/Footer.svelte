@@ -12,7 +12,7 @@
 	footer {
 		border-top: 1px solid var(--line);
 		padding: 1.5rem 0;
-		color: #666;
+		color: var(--color-mid);
 		text-align: center;
 		margin-top: 1.75rem;
 	}

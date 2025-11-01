@@ -39,7 +39,7 @@
 		padding-left: 0;
 		display: grid;
 		gap: 0.625rem;
-		color: #111;
+		color: var(--color-ink);
 	}
 
 	.intro__kpis dl {
@@ -64,7 +64,7 @@
 
 	.kpi small {
 		display: block;
-		color: #111;
+		color: var(--color-ink);
 		text-transform: uppercase;
 		letter-spacing: 0.12em;
 		margin-top: 0.25rem;

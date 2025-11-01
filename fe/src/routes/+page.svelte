@@ -26,12 +26,12 @@
 
 <style>
 	.welcome {
-		background: #f3f4f6;
+		background: var(--color-neutral-200);
 		border-radius: 0.625rem;
 		padding: 1.125rem;
 		display: block;
 		margin: 1rem auto;
-		color: #111;
+		color: var(--color-ink);
 		text-align: center;
 		max-width: 60em;
 		font-size: 1.2rem;

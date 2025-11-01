@@ -59,9 +59,9 @@
 		position: sticky;
 		top: 0;
 		z-index: 50;
-		background: #fff;
+		background: var(--color-white);
 		border-bottom: 1px solid var(--line);
-		box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.06);
+		box-shadow: 0 0.125rem 0.375rem var(--shadow-subtle);
 	}
 
 	.site__bar {
@@ -96,7 +96,7 @@
 	}
 
 	.nav__desktop a:hover {
-		border-color: #cdb09b;
+		border-color: var(--color-brand-border);
 	}
 
 	.nav__desktop a[aria-current='page'] {
@@ -133,7 +133,7 @@
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background-color: rgba(255, 255, 255, 0.98);
+			background-color: var(--overlay-white-strong);
 			-webkit-backdrop-filter: blur(0.3125rem);
 			backdrop-filter: blur(0.3125rem);
 			display: flex;

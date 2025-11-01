@@ -3,7 +3,6 @@
 		placesData: any;
 		showPlaceMarkers: boolean;
 		categoryFilter: string[];
-		categoryColors: Record<string, string>;
 		categoryIcons: Record<string, string>;
 		categoryNames: Record<string, string>;
 		markersCount: number;
@@ -17,8 +16,7 @@
 		placesData,
 		showPlaceMarkers = true,
 		categoryFilter = [],
-		categoryColors,
-		categoryIcons,
+	categoryIcons,
 		categoryNames,
 		markersCount = 0,
 		onToggleMarkers,
@@ -39,12 +37,15 @@
 		});
 	});
 
-	let selectedCount = $derived(categoryFilter.length);
-	let allSelected = $derived(
-		filteredCategories.length > 0 && selectedCount === filteredCategories.length
-	);
-	let noneSelected = $derived(selectedCount === 0);
-	let someSelected = $derived(!noneSelected && !allSelected);
+let selectedCount = $derived(categoryFilter.length);
+let allSelected = $derived(
+	filteredCategories.length > 0 && selectedCount === filteredCategories.length
+);
+let noneSelected = $derived(selectedCount === 0);
+let someSelected = $derived(!noneSelected && !allSelected);
+
+const toCategoryClass = (category: string) =>
+	`category-${category.replace(/[^a-z0-9]+/gi, '-')}`;
 
 	// Calculate total places count (excluding categories with isAlwaysVisible: true)
 	let totalPlacesCount = $derived.by(() => {
@@ -123,10 +124,7 @@
 					aria-pressed={isActive}
 				>
 					<div class='legend-indicator'>
-						<span
-							class='legend-color'
-							style='background-color: {categoryColors[category] || '#6B4423'}'
-						>
+						<span class={`legend-color category-color ${toCategoryClass(category)}`}>
 							{#if categoryIcons[category]}
 								<span class='legend-icon'>{categoryIcons[category]}</span>
 							{/if}
@@ -150,11 +148,11 @@
 
 <style>
 	.map-legend {
-		background: white;
+		background: var(--color-white);
 		border-radius: 0.5rem;
 		padding: 1rem;
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-		border-left: 4px solid #6b4423;
+		box-shadow: 0 4px 6px -1px var(--shadow-soft);
+		border-left: 4px solid var(--brand);
 		min-width: 250px;
 		max-width: 300px;
 		height: fit-content;
@@ -166,12 +164,12 @@
 		align-items: center;
 		margin-bottom: 0.75rem;
 		padding-bottom: 0.5rem;
-		border-bottom: 1px solid #e5e7eb;
+		border-bottom: 1px solid var(--color-neutral-300);
 	}
 
 	.legend-header h4 {
 		margin: 0;
-		color: #374151;
+		color: var(--color-neutral-800);
 		font-size: 1rem;
 		font-weight: 600;
 	}
@@ -186,7 +184,7 @@
 	.fit-view-btn,
 	.select-all-btn {
 		background: none;
-		border: 1px solid #d1d5db;
+		border: 1px solid var(--color-neutral-400);
 		border-radius: 0.25rem;
 		padding: 0.25rem 0.5rem;
 		cursor: pointer;
@@ -202,20 +200,20 @@
 	.toggle-markers-btn:hover,
 	.fit-view-btn:hover,
 	.select-all-btn:hover {
-		background: #f3f4f6;
-		border-color: #9ca3af;
+		background: var(--color-neutral-200);
+		border-color: var(--color-neutral-500);
 	}
 
 	.fit-view-btn {
-		background: #f0f9ff;
-		border-color: #0ea5e9;
-		color: #0ea5e9;
+		background: var(--color-cool-100);
+		border-color: var(--color-sky-500);
+		color: var(--color-sky-500);
 	}
 
 	.fit-view-btn:hover {
-		background: #e0f2fe;
-		border-color: #0284c7;
-		color: #0284c7;
+		background: var(--color-cool-200);
+		border-color: var(--color-sky-600);
+		color: var(--color-sky-600);
 	}
 
 	.select-all-btn {
@@ -225,20 +223,20 @@
 	.select-all-btn .checkbox-box {
 		width: 16px;
 		height: 16px;
-		border: 2px solid #9ca3af;
+		border: 2px solid var(--color-neutral-500);
 		border-radius: 0.25rem;
 		position: relative;
-		background: white;
+		background: var(--color-white);
 	}
 
 	.select-all-btn.all-selected .checkbox-box {
-		background: #4ade80;
-		border-color: #22c55e;
+		background: var(--color-green-400);
+		border-color: var(--color-green-500);
 	}
 
 	.select-all-btn.partial-selected .checkbox-box {
-		background: linear-gradient(180deg, #f8fafc 0%, #cbd5f5 100%);
-		border-color: #94a3b8;
+		background: linear-gradient(180deg, var(--color-neutral-150) 0%, var(--color-cool-400) 100%);
+		border-color: var(--color-neutral-600);
 	}
 
 	.select-all-btn.all-selected .checkbox-box::after,
@@ -250,14 +248,14 @@
 		transform: translate(-50%, -50%);
 		width: 8px;
 		height: 2px;
-		background: #1f2937;
+		background: var(--color-neutral-900);
 		border-radius: 1px;
 	}
 
 	.select-all-btn.all-selected .checkbox-box::after {
 		width: 4px;
 		height: 8px;
-		border: 2px solid #1f2937;
+		border: 2px solid var(--color-neutral-900);
 		border-top: none;
 		border-left: none;
 		transform: translate(-50%, -55%) rotate(45deg);
@@ -286,22 +284,22 @@
 	}
 
 	.legend-item:hover {
-		background: #f9fafb;
+		background: var(--color-neutral-125);
 	}
 
 	.legend-item.active {
-		background: #f0f9ff;
-		border: 1px solid #e0f2fe;
+		background: var(--color-cool-100);
+		border: 1px solid var(--color-cool-200);
 	}
 
 	.legend-item.inactive {
 		opacity: 0.5;
-		background: #f9fafb;
+		background: var(--color-neutral-125);
 	}
 
 	.legend-item.inactive:hover {
 		opacity: 0.7;
-		background: #f3f4f6;
+		background: var(--color-neutral-200);
 	}
 
 	.legend-indicator {
@@ -316,23 +314,24 @@
 		height: 18px;
 		border-radius: 50%;
 		flex-shrink: 0;
-		border: 2px solid rgba(255, 255, 255, 0.9);
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+		border: 2px solid var(--overlay-white-soft);
+		box-shadow: 0 1px 3px var(--shadow-medium);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		position: relative;
+		background-color: var(--category-color, var(--brand));
 	}
 
 	.legend-icon {
 		font-size: 10px;
 		line-height: 1;
-		text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+		text-shadow: 0 0 2px var(--overlay-black-30);
 	}
 
 	.legend-text {
 		font-size: 0.875rem;
-		color: #374151;
+		color: var(--color-neutral-800);
 		flex: 1;
 		display: flex;
 		justify-content: space-between;
@@ -340,19 +339,19 @@
 	}
 
 	.legend-text small {
-		color: #6b7280;
+		color: var(--color-muted);
 		font-size: 0.75rem;
 		font-weight: 500;
 	}
 
 	.legend-stats {
-		border-top: 1px solid #e5e7eb;
+		border-top: 1px solid var(--color-neutral-300);
 		padding-top: 0.5rem;
 		text-align: center;
 	}
 
 	.legend-stats small {
-		color: #9ca3af;
+		color: var(--color-neutral-500);
 		font-size: 0.7rem;
 	}
 
@@ -363,7 +362,7 @@
 			max-width: unset;
 			width: 100%;
 			border-left: none;
-			border-top: 4px solid #6b4423;
+			border-top: 4px solid var(--brand);
 			border-radius: 0.5rem 0.5rem 0 0;
 		}
 

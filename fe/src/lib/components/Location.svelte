@@ -53,15 +53,6 @@
 	// All category data is now loaded from JSON metadata
 	let categories = $derived(placesData?.metadata?.categories || {});
 	
-	// Derived category data for backward compatibility and easy access
-	let categoryColors = $derived.by(() => {
-		const colors: Record<string, string> = {};
-		Object.entries(categories).forEach(([key, category]: [string, any]) => {
-			colors[key] = category.color || '#6B4423';
-		});
-		return colors;
-	});
-	
 	let categoryIcons = $derived.by(() => {
 		const icons: Record<string, string> = {};
 		Object.entries(categories).forEach(([key, category]: [string, any]) => {
@@ -78,14 +69,19 @@
 		return names;
 	});
 	
-	// Helper function to get category data
-	function getCategoryData(category: string) {
-		return categories[category] || {
-			name: category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-			color: '#6B4423',
-			icon: ''
-		};
+const toCategoryClass = (category: string) =>
+	`category-${category.replace(/[^a-z0-9]+/gi, '-')}`;
+
+const getDistanceBadgeClass = (value: string | undefined) => {
+	switch (value) {
+		case 'MUY CERCA':
+			return 'distance-badge--very-near';
+		case 'CERCANO':
+			return 'distance-badge--near';
+		default:
+			return 'distance-badge--far';
 	}
+};
 
 	let selectableCategories = $derived.by(() => {
 		if (!placesData) return [];
@@ -341,7 +337,7 @@
 <section id='ubicacion' class='ubi' aria-labelledby='ubicacion-heading'>
 	<div class='location-block'>
 		<div class='location-text'>
-			<span style='text-transform: uppercase; letter-spacing: .1em; font-size: .9em;'>Ubicación</span>
+			<span class='location-eyebrow'>Ubicación</span>
 			<h3>¿DÓNDE SE ENCUENTRA?</h3>
 			<p>
 				Aires de Río ofrece una ubicación de privilegio. Se emplaza sobre Avenida Rivadavia, a un paso
@@ -374,80 +370,39 @@
 				>
 				{#snippet markerElement(marker)}
 					{@const isMainMarker = marker.isMainMarker || marker.place?.es_edificio_principal}
-					{@const size = isMainMarker ? 28 : 16}
-					{@const strokeWidth = isMainMarker ? 4 : 2}
-					{@const color = categoryColors[marker.category] || '#6B4423'}
+					{@const categoryClass = toCategoryClass(marker.category)}
 					{@const icon = categoryIcons[marker.category]}
 					{#if isMainMarker}
 						{console.log('🎨 RENDERING MAIN MARKER SNIPPET:', {
 							title: marker.title,
 							category: marker.category,
-							color: color,
-							icon: icon,
-							size: size,
+							icon,
+							size: isMainMarker ? 28 : 16,
 							categoryData: $state.snapshot(categories[marker.category]),
 							isAlwaysVisible: categories[marker.category]?.isAlwaysVisible
 						})}
 					{/if}
 					
-					<div style='position: relative; display: flex; align-items: center; justify-content: center; z-index: 1000;'>
-						<div 
-							class='marker-dot'
+					<div class={`marker-wrapper ${isMainMarker ? 'marker-wrapper--main' : ''}`}>
+						<div
+							class={`marker-dot category-color ${categoryClass} ${isMainMarker ? 'marker-dot--main' : ''}`}
 							role='button'
 							tabindex='0'
-							aria-label='Map marker for {marker.title}'
-							style='
-								width: {size}px;
-								height: {size}px;
-								background-color: {color};
-								border: {strokeWidth}px solid #ffffff;
-								border-radius: 50%;
-								box-shadow: {isMainMarker ? '0 4px 8px rgba(0,0,0,0.4)' : '0 2px 4px rgba(0,0,0,0.3)'};
-								cursor: pointer;
-								transition: transform 0.2s ease;
-								display: flex;
-								align-items: center;
-								justify-content: center;
-								font-size: {isMainMarker ? '14px' : '10px'};
-								line-height: 1;
-								font-family: Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif;
-								z-index: 1001;
-								opacity: 1;
-								visibility: visible;
-								{isMainMarker ? 'animation: pulse 2s infinite;' : ''}
-							'
+							aria-label={`Map marker for ${marker.title}`}
 						>
 							{#if icon}
-								<span style='
-									font-size: {isMainMarker ? '16px' : '12px'};
-									line-height: 1;
-									font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif;
-									font-weight: normal;
-									font-style: normal;
-									text-rendering: optimizeLegibility;
-									-webkit-font-smoothing: antialiased;
-									-moz-osx-font-smoothing: grayscale;
-									display: inline-block;
-									vertical-align: middle;
-									color: white;
-									text-shadow: 0 0 2px rgba(0,0,0,0.5);
-								'>{icon}</span>
+								<span class={`marker-icon ${isMainMarker ? 'marker-icon--main' : ''}`}>
+									{icon}
+								</span>
 								{console.log('🎨 EMOJI ICON RENDERED:', {
 									title: marker.title,
 									category: marker.category,
-									icon: icon,
-									isMainMarker: isMainMarker
+									icon,
+									isMainMarker
 								})}
 							{:else}
 								<!-- Simple fallback dot for missing icon -->
-								<span style='
-									font-size: {isMainMarker ? '12px' : '8px'};
-									line-height: 1;
-									font-family: system-ui, sans-serif;
-									font-weight: bold;
-									color: white;
-									text-shadow: 0 0 2px rgba(0,0,0,0.5);
-								'>●</span>
+								<span class={`marker-fallback ${isMainMarker ? 'marker-fallback--main' : ''}`}>●</span>
 								{console.log('❌ NO ICON, using dot fallback:', {
 									title: marker.title,
 									category: marker.category
@@ -459,25 +414,8 @@
 							<button 
 								data-photo-trigger
 								type='button'
-								aria-label='View {marker.place.photos.length} photo{marker.place.photos.length > 1 ? 's' : ''} for {marker.title}'
-								style='
-									position: absolute;
-									top: -8px;
-									right: -8px;
-									width: 16px;
-									height: 16px;
-									background: #ffffff;
-									border: 1px solid #e5e7eb;
-									border-radius: 50%;
-									display: flex;
-									align-items: center;
-									justify-content: center;
-									font-size: 8px;
-									cursor: pointer;
-									box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-									z-index: 10;
-									padding: 0;
-								'
+								class='photo-trigger'
+								aria-label={`View ${marker.place.photos.length} photo${marker.place.photos.length > 1 ? 's' : ''} for ${marker.title}`}
 							>
 								📷
 							</button>
@@ -486,9 +424,11 @@
 				{/snippet}
 
 				{#snippet markerInfoWindow(marker)}
+					{@const categoryClass = toCategoryClass(marker.category)}
+					{@const distanceClass = getDistanceBadgeClass(marker.place.distancia_categoria)}
 					<div class='info-window'>
 						<div class='info-header'>
-							<div class='category-indicator' style='background-color: {categoryColors[marker.category] || '#6B4423'}'>
+							<div class={`category-indicator category-color ${categoryClass}`}>
 								{#if categoryIcons[marker.category]}
 									<span class='category-icon'>{categoryIcons[marker.category]}</span>
 								{/if}
@@ -505,7 +445,7 @@
 							</p>
 							
 							<div class='badges'>
-								<span class='distance-badge' style='background-color: {marker.place.distancia_categoria === 'MUY CERCA' ? '#16a34a' : marker.place.distancia_categoria === 'CERCANO' ? '#ea580c' : '#dc2626'}'>
+								<span class={`distance-badge ${distanceClass}`}>
 									{marker.place.distancia_categoria}
 								</span>
 								<span class='distance-detail'>
@@ -527,8 +467,8 @@
 				{/snippet}
 			</GoogleMap>
 			{:else}
-				<div class='location-map' style='height: 25rem; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 0.5rem;'>
-					<p style='color: #6b7280;'>Cargando mapa...</p>
+				<div class='location-map location-map--placeholder'>
+					<p class='location-map__message'>Cargando mapa...</p>
 				</div>
 			{/if}
 			
@@ -536,7 +476,6 @@
 					{placesData}
 					{showPlaceMarkers}
 					{categoryFilter}
-					{categoryColors}
 					{categoryIcons}
 					{categoryNames}
 					markersCount={visibleMarkers.length}
@@ -578,7 +517,17 @@
 	.location-text {
 		max-width: 40ch;
 		padding: 1.75rem;
-		color: #fff;
+		color: var(--color-white);
+	}
+
+	.location-eyebrow {
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		font-size: 0.9em;
+		display: inline-block;
+		margin-bottom: 0.5rem;
+		color: var(--color-white);
+		opacity: 0.85;
 	}
 
 	.location-text h3 {
@@ -596,6 +545,25 @@
 		grid-template-columns: 1fr min-content;
 		width: 100%;
 		gap: 0;
+	}
+
+	.location-map {
+		min-height: 25rem;
+		border-radius: 0.5rem;
+		overflow: hidden;
+		background: var(--color-white);
+	}
+
+	.location-map--placeholder {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--color-neutral-200);
+	}
+
+	.location-map__message {
+		color: var(--color-muted);
+		font-size: 0.95rem;
 	}
 
 
@@ -642,24 +610,28 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 1px solid rgba(255, 255, 255, 0.8);
+		border: 1px solid var(--overlay-white-medium);
+		background-color: var(--category-color, var(--brand));
+		box-shadow: 0 1px 2px var(--shadow-medium);
+		color: var(--color-white);
 	}
 
 	:global(.category-icon) {
 		font-size: 8px;
 		line-height: 1;
+		text-shadow: 0 0 2px var(--overlay-black-40);
 	}
 
 	:global(.category-name) {
 		font-size: 0.75rem;
-		color: #6b7280;
+		color: var(--color-muted);
 		font-weight: 400;
 		margin-left: 0.5rem;
 	}
 
 	:global(.place-name) {
 		margin: 0;
-		color: #1f2937;
+		color: var(--color-neutral-900);
 		font-size: 1rem;
 		font-weight: 600;
 		line-height: 1.2;
@@ -674,7 +646,7 @@
 	:global(.address) {
 		margin: 0;
 		font-size: 0.875rem;
-		color: #6b7280;
+		color: var(--color-muted);
 		line-height: 1.4;
 	}
 
@@ -684,17 +656,123 @@
 		gap: 0.5rem;
 	}
 
+	:global(.marker-wrapper) {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000;
+	}
+
+	:global(.marker-wrapper--main) {
+		z-index: 1001;
+	}
+
+	:global(.marker-dot) {
+		width: 16px;
+		height: 16px;
+		background-color: var(--category-color, var(--brand));
+		border: 2px solid var(--color-white);
+		border-radius: 50%;
+		box-shadow: 0 2px 4px var(--shadow-strong);
+		cursor: pointer;
+		transition: transform 0.2s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 10px;
+		line-height: 1;
+		font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+	}
+
+	:global(.marker-dot--main) {
+		width: 28px;
+		height: 28px;
+		border-width: 4px;
+		font-size: 14px;
+		animation: marker-pulse 2s infinite;
+	}
+
+	:global(.marker-icon) {
+		display: inline-block;
+		font-size: 12px;
+		line-height: 1;
+		color: var(--color-white);
+		text-shadow: 0 0 2px var(--overlay-black-40);
+		font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif;
+		font-weight: normal;
+		font-style: normal;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	:global(.marker-icon--main) {
+		font-size: 16px;
+	}
+
+	:global(.marker-fallback) {
+		display: inline-block;
+		font-size: 8px;
+		line-height: 1;
+		font-family: system-ui, sans-serif;
+		font-weight: 700;
+		color: var(--color-white);
+		text-shadow: 0 0 2px var(--overlay-black-40);
+	}
+
+	:global(.marker-fallback--main) {
+		font-size: 12px;
+	}
+
+	:global(.photo-trigger) {
+		position: absolute;
+		top: -8px;
+		right: -8px;
+		width: 16px;
+		height: 16px;
+		background: var(--color-white);
+		border: 1px solid var(--color-neutral-300);
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 8px;
+		cursor: pointer;
+		box-shadow: 0 1px 3px var(--shadow-medium);
+		z-index: 10;
+		padding: 0;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	:global(.photo-trigger:hover) {
+		transform: scale(1.05);
+		box-shadow: 0 2px 6px var(--shadow-strong);
+	}
+
 	:global(.distance-badge) {
-		color: white;
+		color: var(--color-white);
 		padding: 0.125rem 0.5rem;
 		border-radius: 0.25rem;
 		font-size: 0.75rem;
 		font-weight: 500;
 	}
 
+	:global(.distance-badge--very-near) {
+		background: var(--color-green-600);
+	}
+
+	:global(.distance-badge--near) {
+		background: var(--color-orange-500);
+	}
+
+	:global(.distance-badge--far) {
+		background: var(--color-red-500);
+	}
+
 	:global(.distance-detail) {
-		background-color: #f3f4f6;
-		color: #374151;
+		background-color: var(--color-neutral-200);
+		color: var(--color-neutral-800);
 		padding: 0.125rem 0.5rem;
 		border-radius: 0.25rem;
 		font-size: 0.75rem;
@@ -703,14 +781,14 @@
 	:global(.description) {
 		margin: 0;
 		font-size: 0.8rem;
-		color: #9ca3af;
+		color: var(--color-neutral-500);
 		font-style: italic;
 		line-height: 1.3;
 	}
 
 	:global(.photo-button) {
-		background: #3b82f6;
-		color: white;
+		background: var(--color-blue-500);
+		color: var(--color-white);
 		border: none;
 		padding: 0.5rem 0.75rem;
 		border-radius: 0.375rem;
@@ -721,11 +799,11 @@
 	}
 
 	:global(.photo-button:hover) {
-		background: #2563eb;
+		background: var(--color-blue-600);
 	}
 
 	:global(.photo-button:active) {
-		background: #1d4ed8;
+		background: var(--color-blue-700);
 	}
 
 	:global(.custom-map-marker) {
@@ -747,15 +825,15 @@
 	}
 
 	/* Pulse animation for main marker */
-	@keyframes -global-pulse {
-		0% { 
-			box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 0 rgba(107, 68, 35, 0.7); 
+	@keyframes marker-pulse {
+		0% {
+			box-shadow: 0 4px 8px var(--overlay-black-40), 0 0 0 0 var(--brand-overlay-70);
 		}
-		50% { 
-			box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 8px rgba(107, 68, 35, 0.3); 
+		50% {
+			box-shadow: 0 4px 8px var(--overlay-black-40), 0 0 0 8px var(--brand-overlay-30);
 		}
-		100% { 
-			box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 0 0 rgba(107, 68, 35, 0.7); 
+		100% {
+			box-shadow: 0 4px 8px var(--overlay-black-40), 0 0 0 0 var(--brand-overlay-70);
 		}
 	}
 </style>

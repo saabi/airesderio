@@ -15,7 +15,7 @@
 		interiores con los colores que ofrece la naturaleza a través de la inclusión de vegetación, luz
 		natural y materiales orgánicos como la madera.
 	</p>
-	<div class='interior-gallery' style='margin-top:0.75rem'>
+	<div class='interior-gallery'>
 		<figure>
 		<div class='ph' role='img' aria-label='Imagen del diseño interior - galería automática'>
 			<span class='arrow'></span>
@@ -34,6 +34,7 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 1.125rem;
+		margin-top: 0.75rem;
 	}
 
 	.interior-gallery figure {
@@ -41,7 +42,7 @@
 	}
 
 	.ph {
-		background: #e9e9e9;
+		background: var(--color-neutral-275);
 		height: 16.25rem;
 		border-radius: 0.5rem;
 		position: relative;
@@ -53,11 +54,11 @@
 		left: 0.5rem;
 		bottom: 0.5rem;
 		font-size: 0.78rem;
-		background: #fff;
+		background: var(--color-white);
 		padding: 0.25rem 0.375rem;
 		border-radius: 0.375rem;
-		border: 1px solid #ddd;
-		color: #111;
+		border: 1px solid var(--color-neutral-350);
+		color: var(--color-ink);
 	}
 
 	.ph .arrow {
@@ -69,7 +70,7 @@
 		height: 0;
 		border-top: 1.625rem solid transparent;
 		border-bottom: 1.625rem solid transparent;
-		border-left: 2.75rem solid #ff4444;
+		border-left: 2.75rem solid var(--color-red-accent);
 	}
 	@media (max-width: 850px) {
 		.interior-gallery {
