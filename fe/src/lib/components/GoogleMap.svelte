@@ -59,12 +59,34 @@
 	const markerInstances = new Map<string, any>();
 	const infoWindowInstances = new Map<string, any>();
 	let snippetContainers = $state<Record<string, HTMLElement>>({});
-	let markerSnippetContainers = $state<Record<string, HTMLElement>>({});
-	let currentActiveInfoWindow: string | null = null;
-	let isInitialFitPending = $state(true);
-	let syncGeneration = 0;
-	let lastMarkerSignature = '';
-	let lastMarkerCount = 0;
+let markerSnippetContainers = $state<Record<string, HTMLElement>>({});
+let currentActiveInfoWindow: string | null = null;
+let isInitialFitPending = $state(true);
+let syncGeneration = 0;
+let lastMarkerSignature = '';
+let lastMarkerCount = 0;
+
+const readCssColor = (token: string, fallback: string) =>
+	browser
+		? getComputedStyle(document.documentElement).getPropertyValue(token)?.trim() || fallback
+		: fallback;
+
+let markerFillColor = readCssColor('--color-brand-primary', 'var(--color-brand-primary)');
+let markerStrokeColor = readCssColor('--color-white', 'var(--color-white)');
+
+const ensureMarkerColors = () => {
+	if (!browser) return;
+	if (!markerFillColor || markerFillColor.startsWith('var(')) {
+		markerFillColor = readCssColor('--color-brand-primary', markerFillColor || 'var(--color-brand-primary)');
+	}
+	if (!markerStrokeColor || markerStrokeColor.startsWith('var(')) {
+		markerStrokeColor = readCssColor('--color-white', markerStrokeColor || 'var(--color-white)');
+	}
+};
+
+$effect(() => {
+	ensureMarkerColors();
+});
 
 	$effect(() => {
 		if (!browser || !apiKey) return;
@@ -149,6 +171,7 @@
 	}
 
 	function createMarker(markerData: GenericMarker, content?: HTMLElement) {
+		ensureMarkerColors();
 		let marker;
 
 		const AdvancedMarker = (window as any).google?.maps?.marker?.AdvancedMarkerElement;
@@ -167,9 +190,9 @@
 				title: markerData.title,
 				icon: {
 					path: (window as any).google.maps.SymbolPath.CIRCLE,
-					fillColor: '#6B4423',
+					fillColor: markerFillColor,
 					fillOpacity: 0.8,
-					strokeColor: '#ffffff',
+					strokeColor: markerStrokeColor,
 					strokeWeight: 2,
 					scale: 8
 				}
@@ -490,10 +513,10 @@
 		markerDot.style.cssText = `
 			width: 16px;
 			height: 16px;
-			background-color: #6B4423;
-			border: 2px solid #ffffff;
+			background-color: var(--color-brand-primary);
+			border: 2px solid var(--color-white);
 			border-radius: 50%;
-			box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+			box-shadow: 0 2px 4px var(--shadow-strong);
 			cursor: pointer;
 			transition: transform 0.2s ease;
 		`;
@@ -542,7 +565,7 @@
 	.google-map {
 		height: 100%;
 		width: 100%;
-		background-color: #e9e9e9;
+		background-color: var(--color-neutral-275);
 		border-radius: 0.5rem;
 		overflow: hidden;
 	}

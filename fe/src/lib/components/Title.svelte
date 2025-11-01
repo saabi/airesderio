@@ -19,7 +19,7 @@
 
 	.boxed .eyebrow {
 		letter-spacing: 0.18em;
-		color: #111;
+		color: var(--color-ink);
 		display: block;
 	}
 

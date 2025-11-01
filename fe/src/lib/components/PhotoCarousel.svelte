@@ -111,7 +111,7 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: rgba(0, 0, 0, 0.8);
+		background: var(--overlay-black-80);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -120,12 +120,12 @@
 	}
 
 	.photo-carousel-modal {
-		background: white;
+		background: var(--color-white);
 		border-radius: 0.75rem;
 		max-width: 90vw;
 		max-height: 90vh;
 		width: 600px;
-		box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 20px 25px -5px var(--shadow-soft);
 		overflow: hidden;
 	}
 
@@ -134,13 +134,13 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 1rem 1.5rem;
-		border-bottom: 1px solid #e5e7eb;
-		background: #f9fafb;
+		border-bottom: 1px solid var(--color-neutral-300);
+		background: var(--color-neutral-125);
 	}
 
 	.photo-carousel-header h3 {
 		margin: 0;
-		color: #374151;
+		color: var(--color-neutral-800);
 		font-size: 1.125rem;
 		font-weight: 600;
 	}
@@ -150,15 +150,15 @@
 		border: none;
 		font-size: 1.5rem;
 		cursor: pointer;
-		color: #6b7280;
+		color: var(--color-muted);
 		padding: 0.25rem;
 		border-radius: 0.25rem;
 		transition: background-color 0.2s;
 	}
 
 	.close-button:hover {
-		background: #e5e7eb;
-		color: #374151;
+		background: var(--color-neutral-300);
+		color: var(--color-neutral-800);
 	}
 
 	.photo-carousel-content {
@@ -171,7 +171,7 @@
 		height: 400px;
 		border-radius: 0.5rem;
 		overflow: hidden;
-		background: #f3f4f6;
+		background: var(--color-neutral-200);
 		margin-bottom: 1rem;
 	}
 
@@ -186,8 +186,8 @@
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
-		background: rgba(0, 0, 0, 0.6);
-		color: white;
+		background: var(--overlay-black-60);
+		color: var(--color-white);
 		border: none;
 		border-radius: 50%;
 		width: 40px;
@@ -202,7 +202,7 @@
 	}
 
 	.nav-button:hover {
-		background: rgba(0, 0, 0, 0.8);
+		background: var(--overlay-black-80);
 	}
 
 	.nav-button.prev {
@@ -225,21 +225,21 @@
 		height: 12px;
 		border-radius: 50%;
 		border: none;
-		background: #d1d5db;
+		background: var(--color-neutral-400);
 		cursor: pointer;
 		transition: background-color 0.2s;
 	}
 
 	.dot.active {
-		background: #6B4423;
+		background: var(--brand);
 	}
 
 	.dot:hover {
-		background: #9ca3af;
+		background: var(--color-neutral-500);
 	}
 
 	.dot.active:hover {
-		background: #5a3a1e;
+		background: var(--color-brand-dark);
 	}
 
 	.photo-info {
@@ -248,13 +248,13 @@
 
 	.photo-info p {
 		margin: 0.25rem 0;
-		color: #6b7280;
+		color: var(--color-muted);
 		font-size: 0.875rem;
 	}
 
 	.photo-description {
 		font-style: italic;
-		color: #9ca3af !important;
+		color: var(--color-neutral-500) !important;
 	}
 
 	/* Mobile responsiveness */

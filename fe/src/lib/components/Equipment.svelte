@@ -74,7 +74,7 @@
 		padding: 0.75rem 0;
 		font-size: 1.75rem;
 		line-height: 1.4;
-		color: #333;
+		color: var(--color-contrast-low);
 	}
 
 	.equip-list li span::before,

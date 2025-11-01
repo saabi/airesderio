@@ -91,14 +91,14 @@
 		padding: 0.75rem;
 		border: none;
 		background: var(--brand);
-		color: #fff;
+		color: var(--color-white);
 		font-weight: 600;
 		border-radius: 0.25rem;
 		cursor: pointer;
 	}
 
 	.form-group button:hover {
-		background: #4a2f18;
+		background: var(--color-brand-deep);
 	}
 
 	@media (max-width: 850px) {
