@@ -77,8 +77,8 @@
         "tipo": "Edificio residencial",
         "descripcion": "Moderno edificio de departamentos con ubicación estratégica en el centro de Santiago del Estero",
         "coordenadas_aproximadas": {
-          "lat": -27.77966171958701,
-          "lng": -64.25909533868962
+          "lat": -27.779721054753658,
+          "lng": -64.25902291804294
         },
         "es_edificio_principal": true,
         "distancia_aproximada": "~1.3 km del apartamento",
