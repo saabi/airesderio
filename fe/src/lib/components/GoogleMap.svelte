@@ -72,7 +72,7 @@ const readCssColor = (token: string, fallback: string) =>
 		: fallback;
 
 let markerFillColor = readCssColor('--color-accent-primary', 'var(--color-accent-primary)');
-let markerStrokeColor = readCssColor('--color-white', 'var(--color-white)');
+let markerStrokeColor = readCssColor('--color-text-inverse', 'var(--color-text-inverse)');
 
 const ensureMarkerColors = () => {
 	if (!browser) return;
@@ -80,7 +80,7 @@ const ensureMarkerColors = () => {
 		markerFillColor = readCssColor('--color-accent-primary', markerFillColor || 'var(--color-accent-primary)');
 	}
 	if (!markerStrokeColor || markerStrokeColor.startsWith('var(')) {
-		markerStrokeColor = readCssColor('--color-white', markerStrokeColor || 'var(--color-white)');
+		markerStrokeColor = readCssColor('--color-text-inverse', markerStrokeColor || 'var(--color-text-inverse)');
 	}
 };
 
@@ -514,7 +514,7 @@ $effect(() => {
 			width: 16px;
 			height: 16px;
 			background-color: var(--color-accent-primary);
-			border: 2px solid var(--color-white);
+			border: 2px solid var(--color-text-inverse);
 			border-radius: 50%;
 			box-shadow: 0 2px 4px var(--shadow-strong);
 			cursor: pointer;

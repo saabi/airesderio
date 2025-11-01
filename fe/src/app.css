@@ -18,18 +18,18 @@
     --ref-mid: oklch(0.5103 0 89.88deg);
     --ref-contrast-low: oklch(0.3211 0 89.88deg);
 
-    --ref-neutral-900: oklch(0.2781 0.0296 256.85deg);
-    --ref-neutral-800: oklch(0.3729 0.0306 259.73deg);
-    --ref-neutral-600: oklch(0.7107 0.0351 256.79deg);
-    --ref-neutral-500: oklch(0.7137 0.0192 261.32deg);
-    --ref-neutral-400: oklch(0.8717 0.0093 258.34deg);
-    --ref-neutral-350: oklch(0.8975 0 89.88deg);
-    --ref-neutral-300: oklch(0.9276 0.0058 264.53deg);
-    --ref-neutral-275: oklch(0.9340 0 89.88deg);
-    --ref-neutral-250: oklch(0.9521 0 89.88deg);
-    --ref-neutral-200: oklch(0.9670 0.0029 264.54deg);
-    --ref-neutral-150: oklch(0.9842 0.0034 247.86deg);
-    --ref-neutral-125: oklch(0.9846 0.0017 247.84deg);
+    --ref-neutral-900: oklch(0.2781 0 0deg);
+    --ref-neutral-800: oklch(0.3729 0 0deg);
+    --ref-neutral-600: oklch(0.7107 0 0deg);
+    --ref-neutral-500: oklch(0.7137 0 0deg);
+    --ref-neutral-400: oklch(0.8717 0 0deg);
+    --ref-neutral-350: oklch(0.8975 0 0deg);
+    --ref-neutral-300: oklch(0.9276 0 0deg);
+    --ref-neutral-275: oklch(0.9340 0 0deg);
+    --ref-neutral-250: oklch(0.9521 0 0deg);
+    --ref-neutral-200: oklch(0.9670 0 0deg);
+    --ref-neutral-150: oklch(0.9842 0 0deg);
+    --ref-neutral-125: oklch(0.9846 0 0deg);
 
     --ref-sky-500: oklch(0.6847 0.1479 237.32deg);
     --ref-sky-600: oklch(0.5876 0.1389 241.97deg);
@@ -57,13 +57,15 @@
     /* === Functional tokens === */
     --color-bg-canvas: var(--ref-white);
     --color-bg-surface: var(--ref-neutral-150);
-    --color-bg-elevated: var(--ref-neutral-125);
+    --color-bg-elevated: color-mix(in oklch, var(--ref-white) 95%, var(--ref-neutral-200) 5%);
     --color-bg-muted: var(--ref-neutral-200);
     --color-bg-inset: var(--ref-neutral-250);
     --color-bg-interactive: var(--ref-brand-primary);
+    --color-bg-contrast: var(--ref-white);
 
     --color-border-subtle: var(--ref-neutral-300);
     --color-border-default: var(--ref-neutral-400);
+    --color-border-title: var(--ref-neutral-600);
     --color-border-strong: var(--ref-brand-border);
 
     --color-text-primary: var(--ref-ink);
@@ -79,6 +81,7 @@
     --color-accent-secondary: var(--ref-brand-secondary);
     --color-accent-hover: color-mix(in oklch, var(--ref-brand-primary) 85%, var(--ref-white) 15%);
     --color-accent-border: var(--ref-brand-border);
+    --color-accent-strong: var(--ref-brand-deep);
 
     --color-success: var(--ref-green-500);
     --color-success-strong: var(--ref-green-600);
@@ -134,10 +137,12 @@
     --color-bg-muted: color-mix(in oklch, var(--ref-neutral-950) 70%, var(--ref-neutral-400) 30%);
     --color-bg-inset: color-mix(in oklch, var(--ref-neutral-950) 60%, var(--ref-neutral-300) 40%);
     --color-bg-interactive: color-mix(in oklch, var(--ref-brand-primary) 70%, var(--ref-white) 30%);
+    --color-bg-contrast: color-mix(in oklch, var(--ref-neutral-200) 75%, var(--ref-white) 25%);
 
     --color-border-subtle: color-mix(in oklch, var(--ref-neutral-950) 65%, var(--ref-neutral-300) 35%);
     --color-border-default: color-mix(in oklch, var(--ref-neutral-900) 55%, var(--ref-neutral-250) 45%);
     --color-border-strong: color-mix(in oklch, var(--ref-brand-border) 40%, var(--ref-neutral-900) 60%);
+    --color-border-title: color-mix(in oklch, var(--ref-neutral-600) 45%, var(--ref-neutral-200) 55%);
 
     --color-text-primary: var(--ref-white);
     --color-text-secondary: color-mix(in oklch, var(--ref-white) 75%, var(--ref-neutral-500) 25%);
@@ -152,6 +157,7 @@
     --color-accent-secondary: color-mix(in oklch, var(--ref-brand-secondary) 70%, var(--ref-white) 30%);
     --color-accent-hover: color-mix(in oklch, var(--color-accent-primary) 70%, var(--ref-white) 30%);
     --color-accent-border: color-mix(in oklch, var(--ref-brand-border) 55%, var(--ref-neutral-900) 45%);
+    --color-accent-strong: color-mix(in oklch, var(--ref-brand-primary) 55%, var(--ref-neutral-900) 45%);
 
     --color-success: color-mix(in oklch, var(--ref-green-500) 70%, var(--ref-white) 30%);
     --color-success-strong: color-mix(in oklch, var(--ref-green-600) 70%, var(--ref-white) 30%);

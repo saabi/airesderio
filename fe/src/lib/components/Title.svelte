@@ -10,7 +10,7 @@
 <style>
 	.boxed {
 		display: inline-block;
-		border: .2em solid var(--color-border-strong);
+		border: .2em solid var(--color-border-title);
 		border-radius: 0.25rem;
 		font-size: 2rem;
 		padding: 0.5rem 0.875rem;
