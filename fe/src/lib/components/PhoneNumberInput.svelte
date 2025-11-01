@@ -26,6 +26,7 @@
 		{ name: 'México', code: 'MX', dialCode: '+52' },
 		{ name: 'España', code: 'ES', dialCode: '+34' },
 		{ name: 'Estados Unidos', code: 'US', dialCode: '+1' },
+		{ name: 'Otro País', code: 'OTHER', dialCode: '+' },
 	];
 
 	let selectedCountry = $state<Country>(
@@ -35,10 +36,22 @@
 	// Store only the number part (without dial code)
 	let phoneNumberPart = $state('');
 	let phoneInputRef: HTMLInputElement | null = $state(null);
+	let customDialCodeRef: HTMLInputElement | null = $state(null);
+	
+	// Custom dial code for "Otro País" option
+	let customDialCode = $state('+');
+
+	// Get current dial code (either from selected country or custom)
+	let currentDialCode = $derived.by(() => {
+		if (selectedCountry.code === 'OTHER') {
+			return customDialCode || '+';
+		}
+		return selectedCountry.dialCode;
+	});
 
 	// Computed full phone number for form submission
 	let fullPhoneNumber = $derived.by(() => {
-		return selectedCountry.dialCode + phoneNumberPart;
+		return currentDialCode + phoneNumberPart;
 	});
 
 	// Handle country change - keep the number part but update dial code
@@ -47,8 +60,36 @@
 		const country = countries.find((c) => c.code === target.value);
 		if (country) {
 			selectedCountry = country;
+			// Reset custom dial code when switching away from "Otro País"
+			if (country.code !== 'OTHER') {
+				customDialCode = '+';
+			}
 			// Number part stays the same, only dial code changes
 		}
+	}
+
+	// Handle custom dial code input for "Otro País"
+	function handleCustomDialCodeInput(event: Event) {
+		const target = event.target as HTMLInputElement;
+		let value = target.value;
+
+		// Ensure it starts with +
+		if (!value.startsWith('+')) {
+			value = '+' + value.replace(/[^\d]/g, '');
+		} else {
+			// Allow digits after +
+			value = '+' + value.slice(1).replace(/[^\d]/g, '');
+		}
+
+		customDialCode = value;
+
+		// Restore cursor position
+		requestAnimationFrame(() => {
+			if (customDialCodeRef) {
+				const cursorPosition = Math.min(target.selectionStart || 0, value.length);
+				customDialCodeRef.setSelectionRange(cursorPosition, cursorPosition);
+			}
+		});
 	}
 
 	// Handle phone number input - only allow number part (no dial code editing)
@@ -101,7 +142,19 @@
 			{/each}
 		</select>
 		<div class='phone-number-wrapper'>
-			<span class='phone-dial-code'>{selectedCountry.dialCode}</span>
+			{#if selectedCountry.code === 'OTHER'}
+				<input
+					type='text'
+					class='phone-dial-code-input'
+					bind:this={customDialCodeRef}
+					value={customDialCode}
+					oninput={handleCustomDialCodeInput}
+					placeholder='+'
+					aria-label='Country code'
+				/>
+			{:else}
+				<span class='phone-dial-code'>{selectedCountry.dialCode}</span>
+			{/if}
 			<input
 				type='tel'
 				class='phone-number-input'
@@ -180,6 +233,19 @@
 		flex-shrink: 0;
 		user-select: none;
 		pointer-events: none;
+	}
+
+	.phone-dial-code-input {
+		padding: 0.625rem 0.5rem;
+		background: var(--color-neutral-100);
+		color: var(--color-text);
+		font-size: 0.875em;
+		border: none;
+		border-right: 1px solid var(--color-border-default);
+		flex-shrink: 0;
+		min-width: 60px;
+		max-width: 80px;
+		outline: none;
 	}
 
 	.phone-number-input {
