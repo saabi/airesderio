@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
+import { browser } from '$app/environment';
 
-	import CategorySelector from '$lib/components/CategorySelector.svelte';
-	import GoogleMap from '$lib/components/GoogleMap.svelte';
-	import PhotoCarousel from '$lib/components/PhotoCarousel.svelte';
+import CategorySelector from '$lib/components/CategorySelector.svelte';
+import GoogleMap from '$lib/components/GoogleMap.svelte';
+import PhotoCarousel from '$lib/components/PhotoCarousel.svelte';
+import { createSectionObserver } from '$lib/utils/sectionVisibility';
 
 	const GOOGLE_MAPS_API_KEY = 'AIzaSyAEjLiUxzFltYqAYYiIapqw9yt6O0ge2QY';
 
@@ -82,6 +83,10 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 			return 'distance-badge--far';
 	}
 };
+
+const { action: locationObserver, visible: locationVisible } = createSectionObserver('location', {
+    threshold: 0.3
+});
 
 	let selectableCategories = $derived.by(() => {
 		if (!placesData) return [];
@@ -334,25 +339,37 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 	// OLD FUNCTIONS - REMOVED (now handled by GoogleMap component)
 </script>
 
-<section id='ubicacion' class='ubi' aria-labelledby='ubicacion-heading'>
-	<div class='location-block'>
-		<div class='location-text'>
-			<span class='location-eyebrow'>Ubicación</span>
-			<h3>¿DÓNDE SE ENCUENTRA?</h3>
-			<p>
-				Aires de Río ofrece una ubicación de privilegio. Se emplaza sobre Avenida Rivadavia, a un paso
-				de todo lo que esta ciudad ofrece para brindarte una vida placentera y cómoda.
+<section
+    id='ubicacion'
+    class='ubi'
+    aria-labelledby='ubicacion-heading'
+    use:locationObserver
+    data-section-active={$locationVisible}
+>
+    <div class='location-block'>
+        <div
+            class='location-text scroll-animate'
+            style='--scroll-animate-offset: 48px; --scroll-animate-duration: 520ms;'
+        >
+            <span class='location-eyebrow'>Ubicación</span>
+            <h3>¿DÓNDE SE ENCUENTRA?</h3>
+            <p>
+                Aires de Río ofrece una ubicación de privilegio. Se emplaza sobre Avenida Rivadavia, a un paso
+                de todo lo que esta ciudad ofrece para brindarte una vida placentera y cómoda.
 			</p>
 			<p>
 				Ubicado en un área de modernos y elegantes desarrollos edilicios, centro de convenciones, de
 				parques y hermosas zonas verdes.
 			</p>
 			<p>
-				Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
-				de cercanía a solo una cuadra.
-			</p>
-		</div>
-		<div class='map-container'>
+                Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
+                de cercanía a solo una cuadra.
+            </p>
+        </div>
+        <div
+            class='map-container scroll-animate'
+            style='--scroll-animate-delay: 140ms; --scroll-animate-offset: 60px; --scroll-animate-duration: 540ms;'
+        >
 			{#if placesData && visibleMarkers.length > 0}
 				<GoogleMap
 					bind:this={googleMapRef}

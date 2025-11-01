@@ -1,7 +1,29 @@
-<section class='hero' role='banner' aria-labelledby='hero-heading'>
+<script lang="ts">
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+
+	const { action: heroObserver, visible: heroVisible } = createSectionObserver('hero', {
+		threshold: 0.45
+	});
+</script>
+
+<section
+	class='hero'
+	role='banner'
+	aria-labelledby='hero-heading'
+	use:heroObserver
+	data-section-active={$heroVisible}
+>
 	<h2 id='hero-heading' class='vh'>Presentación y Contacto - Aires de Río</h2>
-	<div class='hero-img' role='img' aria-label='Fachada del edificio Aires de Río'></div>
-	<div class='hero-contact'>
+	<div
+		class='hero-img scroll-animate'
+		role='img'
+		aria-label='Fachada del edificio Aires de Río'
+		style='--scroll-animate-offset: 48px; --scroll-animate-duration: 520ms;'
+	></div>
+	<div
+		class='hero-contact scroll-animate'
+		style='--scroll-animate-delay: 120ms; --scroll-animate-offset: 36px; --scroll-animate-duration: 520ms;'
+	>
 		<h2>PROYECTO AIRES DE RÍO</h2>
 		<p>Comunicate con nosotros</p>
 		<form action='#' method='POST' on:submit|preventDefault>

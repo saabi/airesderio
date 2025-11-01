@@ -1,6 +1,20 @@
-<section class='intro' id='proyecto' aria-labelledby='proyecto-heading'>
+<script lang="ts">
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+
+	const { action: introObserver, visible: introVisible } = createSectionObserver('intro', {
+		threshold: 0.35
+	});
+</script>
+
+<section
+	class='intro'
+	id='proyecto'
+	aria-labelledby='proyecto-heading'
+	use:introObserver
+	data-section-active={$introVisible}
+>
 	<h2 id='proyecto-heading' class='vh'>Sobre el Proyecto</h2>
-	<div>
+	<div class='scroll-animate' style='--scroll-animate-offset: 40px; --scroll-animate-duration: 480ms;'>
 		<p>
 			Quienes vivan en Aires de Río gozarán de una multi-oferta de entretenimiento, shopping, áreas
 			verdes, deportes, confiterías y eventos culturales.
@@ -11,7 +25,11 @@
 			todo.
 		</p>
 	</div>
-	<aside class='intro__kpis' aria-labelledby='kpis-heading'>
+	<aside
+		class='intro__kpis scroll-animate'
+		style='--scroll-animate-delay: 120ms; --scroll-animate-offset: 52px; --scroll-animate-duration: 520ms;'
+		aria-labelledby='kpis-heading'
+	>
 		<h3 id='kpis-heading' class='vh'>Características principales del proyecto</h3>
 		<dl>
 			<dt class='kpi'><strong>2.500</strong><small>metros cuadrados</small></dt>
