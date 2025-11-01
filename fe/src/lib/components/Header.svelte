@@ -60,7 +60,7 @@
 		top: 0;
 		z-index: 50;
 		background: var(--color-white);
-		border-bottom: 1px solid var(--line);
+		border-bottom: 1px solid var(--color-border-default);
 		box-shadow: 0 0.125rem 0.375rem var(--shadow-subtle);
 	}
 
@@ -73,7 +73,7 @@
 
 	.logo {
 		font-weight: 800;
-		color: var(--brand);
+		color: var(--color-accent-primary);
 		letter-spacing: 0.02em;
 		z-index: 1001; /* Ensure logo is above mobile nav background */
 	}
@@ -87,7 +87,7 @@
 	}
 
 	.nav__desktop a {
-		color: var(--brand);
+		color: var(--color-accent-primary);
 		text-decoration: none;
 		font-weight: 600;
 		border-bottom: 2px solid transparent;
@@ -96,11 +96,11 @@
 	}
 
 	.nav__desktop a:hover {
-		border-color: var(--color-brand-border);
+		border-color: var(--color-accent-border);
 	}
 
 	.nav__desktop a[aria-current='page'] {
-		border-color: var(--accent);
+		border-color: var(--color-accent-secondary);
 	}
 
 	.nav-toggle {
@@ -116,7 +116,7 @@
 		display: block;
 		width: 1.5rem;
 		height: 3px;
-		background-color: var(--brand);
+		background-color: var(--color-accent-primary);
 		margin: 0.3125rem 0;
 		transition: all 0.2s;
 	}

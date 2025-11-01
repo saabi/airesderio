@@ -84,7 +84,7 @@
 		left: 0;
 		right: 0;
 		height: 0.25rem;
-		background-color: var(--line);
+		background-color: var(--color-border-default);
 	}
 
 	.equip-list li span::before {

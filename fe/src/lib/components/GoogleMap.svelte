@@ -71,13 +71,13 @@ const readCssColor = (token: string, fallback: string) =>
 		? getComputedStyle(document.documentElement).getPropertyValue(token)?.trim() || fallback
 		: fallback;
 
-let markerFillColor = readCssColor('--color-brand-primary', 'var(--color-brand-primary)');
+let markerFillColor = readCssColor('--color-accent-primary', 'var(--color-accent-primary)');
 let markerStrokeColor = readCssColor('--color-white', 'var(--color-white)');
 
 const ensureMarkerColors = () => {
 	if (!browser) return;
 	if (!markerFillColor || markerFillColor.startsWith('var(')) {
-		markerFillColor = readCssColor('--color-brand-primary', markerFillColor || 'var(--color-brand-primary)');
+		markerFillColor = readCssColor('--color-accent-primary', markerFillColor || 'var(--color-accent-primary)');
 	}
 	if (!markerStrokeColor || markerStrokeColor.startsWith('var(')) {
 		markerStrokeColor = readCssColor('--color-white', markerStrokeColor || 'var(--color-white)');
@@ -513,7 +513,7 @@ $effect(() => {
 		markerDot.style.cssText = `
 			width: 16px;
 			height: 16px;
-			background-color: var(--color-brand-primary);
+			background-color: var(--color-accent-primary);
 			border: 2px solid var(--color-white);
 			border-radius: 50%;
 			box-shadow: 0 2px 4px var(--shadow-strong);

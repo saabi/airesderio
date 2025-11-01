@@ -20,6 +20,6 @@
 		background: var(--color-neutral-250);
 		height: 27.5rem;
 		border-radius: 0.5rem;
-		border: 1px solid var(--line);
+		border: 1px solid var(--color-border-default);
 	}
 </style>

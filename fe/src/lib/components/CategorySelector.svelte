@@ -152,7 +152,7 @@ const toCategoryClass = (category: string) =>
 		border-radius: 0.5rem;
 		padding: 1rem;
 		box-shadow: 0 4px 6px -1px var(--shadow-soft);
-		border-left: 4px solid var(--brand);
+		border-left: 4px solid var(--color-accent-primary);
 		min-width: 250px;
 		max-width: 300px;
 		height: fit-content;
@@ -320,7 +320,7 @@ const toCategoryClass = (category: string) =>
 		align-items: center;
 		justify-content: center;
 		position: relative;
-		background-color: var(--category-color, var(--brand));
+		background-color: var(--category-color, var(--color-accent-primary));
 	}
 
 	.legend-icon {
@@ -362,7 +362,7 @@ const toCategoryClass = (category: string) =>
 			max-width: unset;
 			width: 100%;
 			border-left: none;
-			border-top: 4px solid var(--brand);
+			border-top: 4px solid var(--color-accent-primary);
 			border-radius: 0.5rem 0.5rem 0 0;
 		}
 

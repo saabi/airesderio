@@ -231,7 +231,7 @@
 	}
 
 	.dot.active {
-		background: var(--brand);
+		background: var(--color-accent-primary);
 	}
 
 	.dot:hover {
@@ -239,7 +239,7 @@
 	}
 
 	.dot.active:hover {
-		background: var(--color-brand-dark);
+		background: color-mix(in oklch, var(--color-accent-primary) 80%, var(--ref-black) 20%);
 	}
 
 	.photo-info {
