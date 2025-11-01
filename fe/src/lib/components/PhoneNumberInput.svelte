@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { formatPhoneNumber, numberingPlans } from '$lib/utils/multiCountryPhone';
+	import { formatPhoneNumberPartial, validatePhoneNumber, numberingPlans } from '$lib/utils/multiCountryPhone';
 
 	interface Country {
 		name: string;
@@ -31,25 +31,6 @@
 		{ name: 'Otro País', code: 'OTHER', dialCode: '+' },
 	];
 
-	// Map component country codes to utility country names
-	const countryCodeToUtilityName: Record<string, string> = {
-		AR: 'argentina',
-		BO: 'bolivia',
-		BR: 'brasil',
-		CL: 'chile',
-		CO: 'colombia',
-		EC: 'ecuador',
-		PY: 'paraguay',
-		PE: 'peru',
-		UY: 'uruguay',
-		VE: 'venezuela',
-		MX: 'mexico',
-		ES: 'espana',
-		US: 'usa',
-	};
-
-	// Generic format for unknown countries: XXX-XXX-XXXX (3-3-4 pattern)
-	const defaultFormat: number[] = [3, 3, 4];
 
 	let selectedCountry = $state<Country>(
 		countries.find((c) => c.code === 'AR') || countries[0]
@@ -71,65 +52,41 @@
 		return selectedCountry.dialCode;
 	});
 
-	// Generic formatter using a pattern array
-	function formatGeneric(digits: string, pattern: number[]): string {
-		if (!digits) return '';
-		
-		let formatted = '';
-		let digitIndex = 0;
-		
-		for (const groupSize of pattern) {
-			if (digitIndex >= digits.length) break;
-			
-			if (formatted) {
-				formatted += '-';
-			}
-			
-			const group = digits.slice(digitIndex, digitIndex + groupSize);
-			formatted += group;
-			digitIndex += groupSize;
-		}
-		
-		// Add remaining digits
-		if (digitIndex < digits.length) {
-			if (formatted) formatted += '-';
-			formatted += digits.slice(digitIndex);
-		}
-		
-		return formatted;
-	}
-
 	// Format phone number using multiCountryPhone utility
 	function formatPhoneNumberDisplay(digits: string, countryCode: string, dialCode: string): string {
 		if (!digits) return '';
 		
 		// Handle "Otro País" case with generic format
 		if (countryCode === 'OTHER') {
-			return formatGeneric(digits, defaultFormat);
+			// Use simple 3-3-4 grouping for unknown countries
+			let formatted = '';
+			let idx = 0;
+			const pattern = [3, 3, 4];
+			for (const size of pattern) {
+				if (idx >= digits.length) break;
+				if (formatted) formatted += '-';
+				formatted += digits.slice(idx, idx + size);
+				idx += size;
+			}
+			if (idx < digits.length) {
+				if (formatted) formatted += '-';
+				formatted += digits.slice(idx);
+			}
+			return formatted;
 		}
 		
-		const utilityCountryName = countryCodeToUtilityName[countryCode];
-		if (!utilityCountryName) {
-			return formatGeneric(digits, defaultFormat);
-		}
+		// Build full phone number with country code for utility
+		const countryCodeDigits = dialCode.replace(/^\+/, '');
+		const fullNumber = '+' + countryCodeDigits + digits;
 		
-		// Get the country plan to use its grouping
-		const plan = numberingPlans[utilityCountryName];
-		if (!plan) {
-			return formatGeneric(digits, defaultFormat);
-		}
+		// Use formatPhoneNumberPartial which handles partial numbers gracefully
+		// Pass the country code directly (e.g., 'AR', 'US') - utility now uses ISO codes
+		const formatted = formatPhoneNumberPartial(fullNumber, countryCode, { includeCountryCode: false });
 		
-		// Determine grouping from plan (same logic as utility)
-		const grouping = plan.grouping && plan.grouping.length > 0 
-			? plan.grouping 
-			: (digits.length >= 10 ? [3, 3, 4] : digits.length >= 8 ? [4, 4] : [3, 4]);
-		
-		// Format using the plan's grouping
-		const formatted = formatGeneric(digits, grouping);
-		
-		// Special handling for US: convert to (XXX) XXX-XXXX format
+		// Utility returns space-separated groups, convert format based on country
 		if (countryCode === 'US') {
-			const cleaned = digits;
+			// Convert to (XXX) XXX-XXXX format
+			const cleaned = formatted.replace(/\s+/g, '');
 			if (cleaned.length <= 3) {
 				return cleaned.length > 0 ? `(${cleaned}` : '';
 			} else if (cleaned.length <= 6) {
@@ -139,8 +96,8 @@
 			}
 		}
 		
-		// For other countries, use the formatted result with dashes (already done by formatGeneric)
-		return formatted;
+		// Convert spaces to dashes for all other countries
+		return formatted.replace(/\s+/g, '-');
 	}
 
 	// Strip all non-digit characters
@@ -156,6 +113,75 @@
 	// Computed full phone number for form submission (raw digits only)
 	let fullPhoneNumber = $derived.by(() => {
 		return currentDialCode + phoneNumberDigits;
+	});
+
+	// Validate phone number using multiCountryPhone utility
+	let isValidPhoneNumber = $derived.by(() => {
+		if (!phoneNumberDigits) return true; // Empty is valid (not required until submit)
+		
+		// Handle "Otro País" case - skip validation for custom countries
+		if (selectedCountry.code === 'OTHER') {
+			return true;
+		}
+		
+		// Get country plan to check expected lengths (using ISO code directly)
+		const plan = numberingPlans[selectedCountry.code];
+		if (!plan) {
+			return true; // Unknown country, skip validation
+		}
+		
+		// Only validate if number length matches one of the expected lengths
+		// This prevents false negatives while user is typing
+		const expectedLengths = plan.nsnLengths;
+		const currentLength = phoneNumberDigits.length;
+		
+		// For Argentina, also check for special/specific service codes
+		if (selectedCountry.code === 'AR') {
+			// Check if it matches special/specific patterns (they have different lengths)
+			if (plan.specialPrefixes) {
+				for (const prefixPattern of plan.specialPrefixes) {
+					if (prefixPattern.test(phoneNumberDigits)) {
+						// Special numbers are valid regardless of length
+						return true;
+					}
+				}
+			}
+		}
+		
+		// Only validate if the number has reached a valid length
+		if (!expectedLengths.includes(currentLength)) {
+			// If it's shorter than the minimum, allow it (user is still typing)
+			const minLength = Math.min(...expectedLengths);
+			if (currentLength < minLength) {
+				return true;
+			}
+			// If it's longer than expected, might be invalid
+			const maxLength = Math.max(...expectedLengths);
+			if (currentLength > maxLength) {
+				return false;
+			}
+			// If it's between lengths, might be a valid intermediate state
+			return true;
+		}
+		
+		try {
+			// Build full phone number with country code for validation
+			const countryCodeDigits = currentDialCode.replace(/^\+/, '');
+			const fullNumber = '+' + countryCodeDigits + phoneNumberDigits;
+			
+			// Validate using utility - only validate complete numbers
+			// Pass the country code directly (e.g., 'AR', 'US')
+			return validatePhoneNumber(fullNumber, selectedCountry.code);
+		} catch {
+			// If validation throws, and we're at expected length, consider invalid
+			// Otherwise might be a partial number that can't parse yet
+			return !expectedLengths.includes(currentLength) || currentLength < Math.min(...expectedLengths);
+		}
+	});
+
+	// Show validation error only when user has entered something and it's invalid
+	let showValidationError = $derived.by(() => {
+		return phoneNumberDigits.length > 0 && !isValidPhoneNumber;
 	});
 
 	// Handle country change - keep the number part but update dial code
@@ -255,9 +281,12 @@
 	}
 </script>
 
-<div class='phone-input-group'>
-	<label for={id}>Número de teléfono</label>
-	<p class='phone-input-hint'>Con código de área. Ej: +54 3512334353</p>
+	<div class='phone-input-group'>
+		<label for={id}>Número de teléfono</label>
+		<p class='phone-input-hint'>Con código de área. Ej: +54 3512334353</p>
+		{#if showValidationError}
+			<p class='phone-validation-error' role='alert'>Número de teléfono inválido</p>
+		{/if}
 	<div class='phone-input-container'>
 		<select
 			id={`${id}-country`}
@@ -287,12 +316,14 @@
 			<input
 				type='tel'
 				class='phone-number-input'
+				class:invalid={showValidationError}
 				bind:this={phoneInputRef}
 				value={formattedPhoneNumber}
 				oninput={handlePhoneInput}
 				onkeydown={handleKeyDown}
 				placeholder={selectedCountry.code === 'US' ? '(385) 500-1635' : selectedCountry.code === 'AR' ? '3512-3343-53' : '3512-3343-53'}
 				aria-label='Phone number'
+				aria-invalid={showValidationError}
 				inputmode='numeric'
 			/>
 			<!-- Hidden input for form submission with full phone number -->
@@ -390,6 +421,22 @@
 
 	.phone-number-input::placeholder {
 		color: var(--color-text-tertiary);
+	}
+
+	.phone-number-input.invalid {
+		border-color: var(--color-red-500);
+		background-color: var(--color-red-50);
+	}
+
+	.phone-validation-error {
+		font-size: 0.75em;
+		color: var(--color-red-600);
+		margin: 0.25rem 0 0;
+		padding: 0;
+	}
+
+	.phone-number-wrapper:has(.phone-number-input.invalid) {
+		border-color: var(--color-red-500);
 	}
 </style>
 

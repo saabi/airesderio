@@ -18,6 +18,16 @@
   `countryPlans` definitions to suit real‑world requirements.
 */
 
+// Import specialised Argentine validator and formatter.  These functions
+// implement ENACOM’s block‑range checks and handle mobile prefixes (9 and 15)
+// accurately.  See phoneValidator.ts for further details on their
+// behaviour.
+import {
+  isValidArgentineNumber,
+  parseArgentineNumber,
+  formatArgentineNumber,
+} from './phoneValidator';
+
 export interface CountryPlan {
   /** The human readable name of the country (e.g. "Argentina"). */
   name: string;
@@ -65,9 +75,11 @@ export interface CountryPlan {
  * lightweight—real implementations should expand the prefix patterns and
  * grouping according to official documents.  See report for citation of
  * numbering rules.
+ * 
+ * Keys are ISO 3166-1 alpha-2 country codes (e.g., 'AR', 'US').
  */
 const countryPlans: Record<string, CountryPlan> = {
-  argentina: {
+  AR: {
     name: 'Argentina',
     countryCode: '54',
     // Total NSN is always 10 digits (area code + subscriber)【185636828100435†L143-L149】.
@@ -86,7 +98,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '0',
     grouping: [2, 4, 4],
   },
-  bolivia: {
+  BO: {
     name: 'Bolivia',
     countryCode: '591',
     // NSN length is eight digits【624113304393908†L120-L124】.
@@ -99,7 +111,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '',
     grouping: [3, 3, 2],
   },
-  brasil: {
+  BR: {
     name: 'Brasil',
     countryCode: '55',
     // Landlines have 10 digits, mobiles have 11 digits【529456426295658†L149-L167】.
@@ -113,7 +125,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '0',
     grouping: [2, 5, 4],
   },
-  chile: {
+  CL: {
     name: 'Chile',
     countryCode: '56',
     // All numbers are 9 digits with no area code【322193636461553†L136-L138】.
@@ -125,7 +137,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '',
     grouping: [3, 3, 3],
   },
-  colombia: {
+  CO: {
     name: 'Colombia',
     countryCode: '57',
     // NSN is 10 digits for both fixed and mobile【2792527637557†L143-L158】.
@@ -139,7 +151,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '',
     grouping: [3, 3, 4],
   },
-  ecuador: {
+  EC: {
     name: 'Ecuador',
     countryCode: '593',
     // Landlines are 8 digits (1‑digit area + 7‑digit subscriber); mobiles are 9
@@ -152,7 +164,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '0',
     grouping: [2, 4, 3],
   },
-  paraguay: {
+  PY: {
     name: 'Paraguay',
     countryCode: '595',
     // National numbers are 9 digits【853192362873591†L124-L139】.
@@ -165,7 +177,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '0',
     grouping: [3, 3, 3],
   },
-  peru: {
+  PE: {
     name: 'Perú',
     countryCode: '51',
     // Mobiles are 9 digits; landlines are 7 or 8 digits depending on area
@@ -181,7 +193,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '0',
     grouping: [3, 3, 3],
   },
-  uruguay: {
+  UY: {
     name: 'Uruguay',
     countryCode: '598',
     // All numbers are 8 digits【412652503981061†L133-L150】.
@@ -195,7 +207,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '',
     grouping: [4, 4],
   },
-  venezuela: {
+  VE: {
     name: 'Venezuela',
     countryCode: '58',
     // Area codes are 3 digits and subscriber numbers are 7 digits【22126412675660†L124-L127】.
@@ -209,7 +221,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '0',
     grouping: [3, 4, 3],
   },
-  mexico: {
+  MX: {
     name: 'México',
     countryCode: '52',
     // Since 2019 all numbers are 10 digits【661495600076735†L145-L163】.
@@ -221,7 +233,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '',
     grouping: [3, 3, 4],
   },
-  espana: {
+  ES: {
     name: 'España',
     countryCode: '34',
     // Closed plan with 9‑digit numbers【781411421512909†L181-L187】.
@@ -234,7 +246,7 @@ const countryPlans: Record<string, CountryPlan> = {
     trunkPrefix: '',
     grouping: [3, 3, 3],
   },
-  usa: {
+  US: {
     name: 'Estados Unidos',
     countryCode: '1',
     // NANP numbers have 10 digits【592791073543680†L538-L553】.
@@ -263,20 +275,28 @@ function sanitize(input: string): string {
 }
 
 /**
- * Looks up a country plan by name or country code.  The lookup is case
- * insensitive and will match keys based on the country’s English name,
- * Spanish name (if provided) or numeric country code.  Returns undefined
- * if no plan exists.
+ * Looks up a country plan by ISO 3166-1 alpha-2 country code, numeric country code,
+ * or country name (for backward compatibility).  The lookup is case insensitive.
+ * Returns undefined if no plan exists.
  */
 function getCountryPlan(key: string): CountryPlan | undefined {
-  const normalised = key.replace(/^\+/, '').toLowerCase();
-  // Try direct key match.
-  if (countryPlans[normalised]) return countryPlans[normalised];
-  // Search by country code.
+  // Remove leading + and normalize
+  let normalized = key.replace(/^\+/, '');
+  
+  // Try uppercase first (for ISO codes like 'AR', 'US')
+  const upperKey = normalized.toUpperCase();
+  if (countryPlans[upperKey]) return countryPlans[upperKey];
+  
+  // Try lowercase (for backward compatibility with old names like 'argentina')
+  const lowerKey = normalized.toLowerCase();
+  if (countryPlans[lowerKey]) return countryPlans[lowerKey];
+  
+  // Search by numeric country code or country name
   for (const plan of Object.values(countryPlans)) {
-    if (plan.countryCode === normalised) return plan;
-    if (plan.name.toLowerCase() === normalised) return plan;
+    if (plan.countryCode === normalized) return plan;
+    if (plan.name.toLowerCase() === lowerKey) return plan;
   }
+  
   return undefined;
 }
 
@@ -325,9 +345,36 @@ function parsePhoneNumber(raw: string, country?: string) {
  * mobile, fixed or special prefix (if defined).
  */
 export function validatePhoneNumber(phone: string, country?: string): boolean {
+  // Delegate to the specialised Argentine validator when appropriate.  If the
+  // country parameter explicitly references Argentina (by name or code), use
+  // isValidArgentineNumber to perform a full ENACOM check.  Likewise if
+  // no country is specified but the input begins with +54, delegate to
+  // isValidArgentineNumber.
   try {
+    const countryKey = country?.toUpperCase();
+    if (countryKey && (countryKey === 'AR' || countryKey === 'ARGENTINA' || countryKey === '54')) {
+      return isValidArgentineNumber(phone);
+    }
+    if (!country && sanitize(phone).startsWith('+54')) {
+      return isValidArgentineNumber(phone);
+    }
     const { plan, nationalNumber } = parsePhoneNumber(phone, country);
-    // Check length.
+    // Specific custom checks for the United States: enforce NANP NXX rules.
+    if (plan.name === 'Estados Unidos') {
+      // Must be 10 digits and follow NXXNXXXXXX pattern: area code and
+      // central office codes cannot start with 0 or 1, and N11 codes are
+      // reserved for special services.  See NANPA FAQ【575145482074086†L170-L181】.
+      if (nationalNumber.length !== 10) return false;
+      const area = nationalNumber.slice(0, 3);
+      const central = nationalNumber.slice(3, 6);
+      // First digit of area and central office codes must be 2–9.
+      if (!/^[2-9]\d{2}$/.test(area)) return false;
+      if (!/^[2-9]\d{2}$/.test(central)) return false;
+      // Exclude N11 prefixes (e.g. 211, 311, …, 911)【575145482074086†L170-L181】.
+      const n11s = ['211', '311', '411', '511', '611', '711', '811', '911'];
+      if (n11s.includes(area) || n11s.includes(central)) return false;
+    }
+    // General length check.
     if (!plan.nsnLengths.includes(nationalNumber.length)) {
       // Allow special numbers outside the normal NSN range.
       if (!plan.specialPrefixes?.some((rx) => rx.test(nationalNumber))) {
@@ -347,7 +394,7 @@ export function validatePhoneNumber(phone: string, country?: string): boolean {
     }
     return matchesMobile || matchesFixed;
   } catch {
-    return false;
+      return false;
   }
 }
 
@@ -362,6 +409,24 @@ export function formatPhoneNumber(
   options: { includeCountryCode?: boolean } = {}
 ): string {
   const includeCC = options.includeCountryCode ?? true;
+  const countryKey = country.toUpperCase();
+  // Special handling for Argentina: delegate to formatArgentineNumber for
+  // ENACOM‑compliant formatting.  The parse/format functions expect a
+  // parsed PhoneData and accept options for country and national prefixes.
+  if (countryKey === 'AR' || countryKey === 'ARGENTINA' || countryKey === '54') {
+    const parsed = parseArgentineNumber(phone);
+    if (!parsed) throw new Error('Invalid Argentine number');
+    // When includeCC is false, we omit the country code and include the
+    // national prefix if present.  When includeCC is true, we include the
+    // international mobile indicator (9) for mobiles and omit the national
+    // prefix.  These behaviours mirror telefono‑argentino defaults.
+    return formatArgentineNumber(parsed, {
+      country: includeCC,
+      nationalPrefix: !includeCC,
+      internationalMobile: includeCC,
+    });
+  }
+  // Use the generic formatter for all other countries.
   const { plan, nationalNumber } = parsePhoneNumber(phone, country);
   // Determine grouping: use plan.grouping or fallback.
   const grouping = plan.grouping && plan.grouping.length > 0 ? plan.grouping :
@@ -380,6 +445,149 @@ export function formatPhoneNumber(
   }
   const nationalFormatted = groups.join(' ');
   return includeCC ? `+${plan.countryCode} ${nationalFormatted}` : nationalFormatted;
+}
+
+/**
+ * Formats a phone number that may be incomplete (partial input while typing).
+ * Unlike formatPhoneNumber, this function never throws and handles partial
+ * numbers gracefully using heuristics when parsing fails.
+ * 
+ * @param phone - The phone number to format (may be partial)
+ * @param country - Country name or code
+ * @param options - Formatting options
+ * @returns Formatted phone number string
+ */
+export function formatPhoneNumberPartial(
+  phone: string,
+  country: string,
+  options: { includeCountryCode?: boolean } = {}
+): string {
+  const includeCC = options.includeCountryCode ?? true;
+  const countryKey = country.toUpperCase();
+  
+  // Remove country code prefix for processing
+  const cleaned = sanitize(phone);
+  let digitsOnly = cleaned.replace(/^\+?/, '');
+  
+  // Remove country code if present
+  const plan = getCountryPlan(country);
+  if (plan && digitsOnly.startsWith(plan.countryCode)) {
+    digitsOnly = digitsOnly.slice(plan.countryCode.length);
+  }
+  
+  // Remove trunk prefix if present
+  if (plan?.trunkPrefix && digitsOnly.startsWith(plan.trunkPrefix)) {
+    digitsOnly = digitsOnly.slice(plan.trunkPrefix.length);
+  }
+  
+  // Special handling for Argentina: try parsing first, fallback to heuristics
+  if (countryKey === 'AR' || countryKey === 'ARGENTINA' || countryKey === '54') {
+    try {
+      // Try full formatting first (works for complete numbers)
+      const formatted = formatPhoneNumber(phone, country, options);
+      return formatted;
+    } catch {
+      // If parsing fails (partial number), use heuristics
+      if (!digitsOnly) return '';
+      
+      // Try to parse what we have
+      const parsed = parseArgentineNumber(phone);
+      if (parsed && parsed.areaCode && parsed.subscriber) {
+        // Successfully parsed, format based on structure
+        const areaCode = parsed.areaCode;
+        const subscriber = parsed.subscriber;
+        
+        // Format subscriber based on length
+        let formattedSubscriber = subscriber;
+        if (subscriber.length === 6) {
+          formattedSubscriber = `${subscriber.slice(0, 3)}-${subscriber.slice(3)}`;
+        } else if (subscriber.length === 7) {
+          formattedSubscriber = `${subscriber.slice(0, 4)}-${subscriber.slice(4)}`;
+        } else if (subscriber.length === 8) {
+          formattedSubscriber = `${subscriber.slice(0, 4)}-${subscriber.slice(4)}`;
+        }
+        
+        const result = `${areaCode}-${formattedSubscriber}`;
+        return includeCC ? `+${plan?.countryCode || '54'} ${result}` : result;
+      }
+      
+      // Fallback heuristics for partial numbers
+      // Argentina area codes: 2 digits (11), 3 digits (most common), or 4 digits
+      if (digitsOnly.length >= 7) {
+        // Try 3-digit area code first (most common pattern)
+        const areaCode = digitsOnly.slice(0, 3);
+        const subscriber = digitsOnly.slice(3);
+        
+        if (subscriber.length === 7) {
+          const formatted = `${areaCode}-${subscriber.slice(0, 4)}-${subscriber.slice(4)}`;
+          return includeCC ? `+${plan?.countryCode || '54'} ${formatted}` : formatted;
+        } else if (subscriber.length >= 4) {
+          const formatted = `${areaCode}-${subscriber.slice(0, 4)}-${subscriber.slice(4)}`;
+          return includeCC ? `+${plan?.countryCode || '54'} ${formatted}` : formatted;
+        }
+        const formatted = `${areaCode}-${subscriber}`;
+        return includeCC ? `+${plan?.countryCode || '54'} ${formatted}` : formatted;
+      } else if (digitsOnly.length >= 5) {
+        // For shorter numbers, try 3-digit area code
+        const areaCode = digitsOnly.slice(0, 3);
+        const subscriber = digitsOnly.slice(3);
+        const formatted = `${areaCode}-${subscriber}`;
+        return includeCC ? `+${plan?.countryCode || '54'} ${formatted}` : formatted;
+      }
+      
+      // Very short numbers, return as-is
+      return includeCC ? `+${plan?.countryCode || '54'} ${digitsOnly}` : digitsOnly;
+    }
+  }
+  
+  // For other countries: try full formatting, fallback to grouping pattern
+  try {
+    const formatted = formatPhoneNumber(phone, country, options);
+    return formatted;
+  } catch {
+    // Use grouping pattern from plan as fallback
+    if (!plan) {
+      // No plan available, use default grouping
+      const defaultGrouping = digitsOnly.length >= 10 ? [3, 3, 4] : digitsOnly.length >= 8 ? [4, 4] : [3, 4];
+      const formatted = formatByGrouping(digitsOnly, defaultGrouping);
+      // Try to get country code from plan if available
+      const fallbackPlan = countryPlans[countryKey] || countryPlans[countryKey.toLowerCase()];
+      const countryCode = fallbackPlan?.countryCode || '';
+      return includeCC ? `+${countryCode} ${formatted}` : formatted;
+    }
+    
+    // Use plan's grouping or fallback
+    const grouping = plan.grouping && plan.grouping.length > 0 
+      ? plan.grouping 
+      : (digitsOnly.length >= 10 ? [3, 3, 4] : digitsOnly.length >= 8 ? [4, 4] : [3, 4]);
+    
+    const formatted = formatByGrouping(digitsOnly, grouping);
+    return includeCC ? `+${plan.countryCode} ${formatted}` : formatted;
+  }
+}
+
+/**
+ * Helper function to format digits using a grouping pattern.
+ */
+function formatByGrouping(digits: string, grouping: number[]): string {
+  if (!digits) return '';
+  
+  const groups: string[] = [];
+  let idx = 0;
+  
+  for (const size of grouping) {
+    if (idx >= digits.length) break;
+    const end = Math.min(idx + size, digits.length);
+    groups.push(digits.slice(idx, end));
+    idx = end;
+  }
+  
+  // Append remaining digits
+  if (idx < digits.length) {
+    groups.push(digits.slice(idx));
+  }
+  
+  return groups.join(' ');
 }
 
 /**
