@@ -10,9 +10,9 @@
 
 <style>
 	footer {
-		border-top: 1px solid var(--line);
+		border-top: 1px solid var(--color-border-subtle);
 		padding: 1.5rem 0;
-		color: var(--color-mid);
+		color: var(--color-text-tertiary);
 		text-align: center;
 		margin-top: 1.75rem;
 	}

@@ -50,7 +50,7 @@
 
 	.hero-contact {
 		padding: 1rem;
-		border: 1px solid var(--line);
+		border: 1px solid var(--color-border-default);
 		border-radius: 0.5rem;
 	}
 
@@ -58,7 +58,7 @@
 		font-size: 1.1em;
 		font-weight: 600;
 		letter-spacing: 0.1em;
-		color: var(--brand);
+		color: var(--color-accent-primary);
 	}
 
 	.hero-contact p {
@@ -74,7 +74,7 @@
 		display: block;
 		font-size: 0.85em;
 		margin-bottom: 0.25rem;
-		color: var(--muted);
+		color: var(--color-text-secondary);
 	}
 
 	.form-group input,
@@ -82,7 +82,7 @@
 	.form-group select {
 		width: 100%;
 		padding: 0.625rem;
-		border: 1px solid var(--line);
+		border: 1px solid var(--color-border-default);
 		border-radius: 0.25rem;
 	}
 
@@ -90,7 +90,7 @@
 		width: 100%;
 		padding: 0.75rem;
 		border: none;
-		background: var(--brand);
+		background: var(--color-accent-primary);
 		color: var(--color-white);
 		font-weight: 600;
 		border-radius: 0.25rem;
@@ -98,7 +98,7 @@
 	}
 
 	.form-group button:hover {
-		background: var(--color-brand-deep);
+		background: color-mix(in oklch, var(--color-accent-primary) 80%, var(--ref-black) 20%);
 	}
 
 	@media (max-width: 850px) {

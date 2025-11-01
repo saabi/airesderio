@@ -508,10 +508,10 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 		display: grid;
 		grid-template-columns: min-content 1fr;
 		gap: 0;
-		background: var(--brand);
+		background: var(--color-accent-primary);
 		border-radius: 0.625rem;
 		overflow: hidden;
-		border: 1px solid var(--line);
+		border: 1px solid var(--color-border-strong);
 	}
 
 	.location-text {
@@ -562,7 +562,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 	}
 
 	.location-map__message {
-		color: var(--color-muted);
+		color: var(--color-text-secondary);
 		font-size: 0.95rem;
 	}
 
@@ -611,7 +611,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 		align-items: center;
 		justify-content: center;
 		border: 1px solid var(--overlay-white-medium);
-		background-color: var(--category-color, var(--brand));
+		background-color: var(--category-color, var(--color-accent-primary));
 		box-shadow: 0 1px 2px var(--shadow-medium);
 		color: var(--color-white);
 	}
@@ -624,7 +624,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 
 	:global(.category-name) {
 		font-size: 0.75rem;
-		color: var(--color-muted);
+		color: var(--color-text-secondary);
 		font-weight: 400;
 		margin-left: 0.5rem;
 	}
@@ -646,7 +646,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 	:global(.address) {
 		margin: 0;
 		font-size: 0.875rem;
-		color: var(--color-muted);
+		color: var(--color-text-secondary);
 		line-height: 1.4;
 	}
 
@@ -671,7 +671,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 	:global(.marker-dot) {
 		width: 16px;
 		height: 16px;
-		background-color: var(--category-color, var(--brand));
+		background-color: var(--category-color, var(--color-accent-primary));
 		border: 2px solid var(--color-white);
 		border-radius: 50%;
 		box-shadow: 0 2px 4px var(--shadow-strong);
