@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+
 	import { browser } from '$app/environment';
 	import { tick } from 'svelte';
-	import type { Snippet } from 'svelte';
 
 	interface GenericMarker {
 		id: string;

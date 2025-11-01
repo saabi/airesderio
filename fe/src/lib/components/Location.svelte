@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import PhotoCarousel from './PhotoCarousel.svelte';
-	import CategorySelector from './CategorySelector.svelte';
-	import GoogleMap from './GoogleMap.svelte';
+
+	import CategorySelector from '$lib/components/CategorySelector.svelte';
+	import GoogleMap from '$lib/components/GoogleMap.svelte';
+	import PhotoCarousel from '$lib/components/PhotoCarousel.svelte';
 
 	const GOOGLE_MAPS_API_KEY = 'AIzaSyAEjLiUxzFltYqAYYiIapqw9yt6O0ge2QY';
 
