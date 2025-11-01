@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Title from './Title.svelte';
+	import Title from '$lib/components/Title.svelte';
 </script>
 
 <section id="interior" aria-labelledby="interior-heading">

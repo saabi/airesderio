@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Hero from '$lib/components/Hero.svelte';
-	import Intro from '$lib/components/Intro.svelte';
-	import Location from '$lib/components/Location.svelte';
-	import Interior from '$lib/components/Interior.svelte';
 	import Equipment from '$lib/components/Equipment.svelte';
 	import FloorPlans from '$lib/components/FloorPlans.svelte';
+	import Hero from '$lib/components/Hero.svelte';
+	import Interior from '$lib/components/Interior.svelte';
+	import Intro from '$lib/components/Intro.svelte';
+	import Location from '$lib/components/Location.svelte';
 </script>
 
 <div class="wrap page">

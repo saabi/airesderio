@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Title from './Title.svelte';
+	import Title from '$lib/components/Title.svelte';
 
 	const equipmentItems = [
 		{ icon: '🖼️', svg: '/iconos-servicios/ascensores.svg', text: 'Carpintería de Aluminio Línea A30 NEW de Aluar.' },
