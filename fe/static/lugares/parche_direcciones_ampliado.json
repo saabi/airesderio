@@ -1,0 +1,384 @@
+{
+  "lugares": {
+    "transporte": {
+      "terminal_omnibus": {
+        "direccion": "Av. Roca Norte 100, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "centro_cultural_bicentenario": {
+        "direccion": "Av. Libertad 439, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "teatro_25_mayo": {
+        "direccion": "Calle Avellaneda 387, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "casa_gobierno": {
+        "direccion": "Av. B. Rivadavia (O) 550, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "complejo_ibarra": {
+        "direccion": "Av. Belgrano y Av. 9 de Julio, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "catedral_basilica": {
+        "direccion": "Calle 24 de Septiembre Nº 55, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "iglesia_merced": {
+        "direccion": "Calle Urquiza Nº 24, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "santo_doming": {
+        "direccion": "Calle Urquiza Nº 397, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "museo_arte_sacro": {
+        "direccion": "Av. General J. A. Roca Sur Nº 716, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "mibo": {
+        "direccion": "Calle San Martín Nº 172, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "parrilla_1900": {
+        "direccion": "Calle Alvarado Nº 200, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "mia_mamma": {
+        "direccion": "Calle 24 de Septiembre Nº 15, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "gran_coventry": {
+        "direccion": "Calle Chacabuco Nº 325, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "croccantino": {
+        "direccion": "Calle Avellaneda Nº 133, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "cerecett": {
+        "direccion": "Calle Libertad Nº 525, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "belfast_pub": {
+        "direccion": "Av. Juan Bautista Alberdi Sur Nº 445, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "docker_bar": {
+        "direccion": "Calle Absalón Rojas Nº 301, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "bar_perikos": {
+        "direccion": "Av. Libertad Nº 411, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "hospital_regional": {
+        "direccion": "Av. Belgrano Sur Nº 2273, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "plaza_libertad": {
+        "direccion": "Zona céntrica, entre Avellaneda, 24 de Septiembre y Belgrano, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "parque_aguirre": {
+        "direccion": "Av. Libertad s/n, Costanera Río Dulce, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "estadio_madre_ciudades": {
+        "direccion": "Av. Diego A. Maradona Nº 2700, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "puente_carretero": {
+        "direccion": "Ruta Provincial 11, entre Santiago del Estero y La Banda",
+        "direccion_confirmada": true
+      }
+    },
+    "gastronomia": {
+      "leblon_cafe": {
+        "direccion": "Av. Gral. J. A. Roca Sur 850, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "bless": {
+        "direccion": "Av. Roca Sur 443, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "centro_cultural_bicentenario": {
+        "direccion": "Av. Libertad 439, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "teatro_25_mayo": {
+        "direccion": "Calle Avellaneda 387, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "casa_gobierno": {
+        "direccion": "Av. B. Rivadavia (O) 550, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "complejo_ibarra": {
+        "direccion": "Av. Belgrano y Av. 9 de Julio, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "catedral_basilica": {
+        "direccion": "Calle 24 de Septiembre Nº 55, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "iglesia_merced": {
+        "direccion": "Calle Urquiza Nº 24, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "santo_doming": {
+        "direccion": "Calle Urquiza Nº 397, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "museo_arte_sacro": {
+        "direccion": "Av. General J. A. Roca Sur Nº 716, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "mibo": {
+        "direccion": "Calle San Martín Nº 172, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "parrilla_1900": {
+        "direccion": "Calle Alvarado Nº 200, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "mia_mamma": {
+        "direccion": "Calle 24 de Septiembre Nº 15, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "gran_coventry": {
+        "direccion": "Calle Chacabuco Nº 325, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "croccantino": {
+        "direccion": "Calle Avellaneda Nº 133, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "cerecett": {
+        "direccion": "Calle Libertad Nº 525, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "belfast_pub": {
+        "direccion": "Av. Juan Bautista Alberdi Sur Nº 445, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "docker_bar": {
+        "direccion": "Calle Absalón Rojas Nº 301, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "bar_perikos": {
+        "direccion": "Av. Libertad Nº 411, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "hospital_regional": {
+        "direccion": "Av. Belgrano Sur Nº 2273, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "plaza_libertad": {
+        "direccion": "Zona céntrica, entre Avellaneda, 24 de Septiembre y Belgrano, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "parque_aguirre": {
+        "direccion": "Av. Libertad s/n, Costanera Río Dulce, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "estadio_madre_ciudades": {
+        "direccion": "Av. Diego A. Maradona Nº 2700, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "puente_carretero": {
+        "direccion": "Ruta Provincial 11, entre Santiago del Estero y La Banda",
+        "direccion_confirmada": true
+      }
+    },
+    "servicios": {
+      "bse_centro_pagos": {
+        "direccion": "Pedro Pablo Olaechea 451, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "centro_cultural_bicentenario": {
+        "direccion": "Av. Libertad 439, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "teatro_25_mayo": {
+        "direccion": "Calle Avellaneda 387, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "casa_gobierno": {
+        "direccion": "Av. B. Rivadavia (O) 550, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "complejo_ibarra": {
+        "direccion": "Av. Belgrano y Av. 9 de Julio, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "catedral_basilica": {
+        "direccion": "Calle 24 de Septiembre Nº 55, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "iglesia_merced": {
+        "direccion": "Calle Urquiza Nº 24, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "santo_doming": {
+        "direccion": "Calle Urquiza Nº 397, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "museo_arte_sacro": {
+        "direccion": "Av. General J. A. Roca Sur Nº 716, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "mibo": {
+        "direccion": "Calle San Martín Nº 172, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "parrilla_1900": {
+        "direccion": "Calle Alvarado Nº 200, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "mia_mamma": {
+        "direccion": "Calle 24 de Septiembre Nº 15, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "gran_coventry": {
+        "direccion": "Calle Chacabuco Nº 325, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "croccantino": {
+        "direccion": "Calle Avellaneda Nº 133, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "cerecett": {
+        "direccion": "Calle Libertad Nº 525, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "belfast_pub": {
+        "direccion": "Av. Juan Bautista Alberdi Sur Nº 445, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "docker_bar": {
+        "direccion": "Calle Absalón Rojas Nº 301, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "bar_perikos": {
+        "direccion": "Av. Libertad Nº 411, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "hospital_regional": {
+        "direccion": "Av. Belgrano Sur Nº 2273, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "plaza_libertad": {
+        "direccion": "Zona céntrica, entre Avellaneda, 24 de Septiembre y Belgrano, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "parque_aguirre": {
+        "direccion": "Av. Libertad s/n, Costanera Río Dulce, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "estadio_madre_ciudades": {
+        "direccion": "Av. Diego A. Maradona Nº 2700, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "puente_carretero": {
+        "direccion": "Ruta Provincial 11, entre Santiago del Estero y La Banda",
+        "direccion_confirmada": true
+      }
+    },
+    "cultura_entretenimiento": {
+      "forum_santiago": {
+        "direccion": "Calle Perú 511, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "centro_cultural_bicentenario": {
+        "direccion": "Av. Libertad 439, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "teatro_25_mayo": {
+        "direccion": "Calle Avellaneda 387, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "casa_gobierno": {
+        "direccion": "Av. B. Rivadavia (O) 550, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "complejo_ibarra": {
+        "direccion": "Av. Belgrano y Av. 9 de Julio, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "catedral_basilica": {
+        "direccion": "Calle 24 de Septiembre Nº 55, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "iglesia_merced": {
+        "direccion": "Calle Urquiza Nº 24, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "santo_doming": {
+        "direccion": "Calle Urquiza Nº 397, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "museo_arte_sacro": {
+        "direccion": "Av. General J. A. Roca Sur Nº 716, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "mibo": {
+        "direccion": "Calle San Martín Nº 172, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "parrilla_1900": {
+        "direccion": "Calle Alvarado Nº 200, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "mia_mamma": {
+        "direccion": "Calle 24 de Septiembre Nº 15, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "gran_coventry": {
+        "direccion": "Calle Chacabuco Nº 325, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "croccantino": {
+        "direccion": "Calle Avellaneda Nº 133, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "cerecett": {
+        "direccion": "Calle Libertad Nº 525, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "belfast_pub": {
+        "direccion": "Av. Juan Bautista Alberdi Sur Nº 445, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "docker_bar": {
+        "direccion": "Calle Absalón Rojas Nº 301, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "bar_perikos": {
+        "direccion": "Av. Libertad Nº 411, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "hospital_regional": {
+        "direccion": "Av. Belgrano Sur Nº 2273, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "plaza_libertad": {
+        "direccion": "Zona céntrica, entre Avellaneda, 24 de Septiembre y Belgrano, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "parque_aguirre": {
+        "direccion": "Av. Libertad s/n, Costanera Río Dulce, Santiago del Estero",
+        "direccion_confirmada": true
+      },
+      "estadio_madre_ciudades": {
+        "direccion": "Av. Diego A. Maradona Nº 2700, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true
+      },
+      "puente_carretero": {
+        "direccion": "Ruta Provincial 11, entre Santiago del Estero y La Banda",
+        "direccion_confirmada": true
+      }
+    }
+  }
+}

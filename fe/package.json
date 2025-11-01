@@ -14,7 +14,8 @@
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
-		"sync:photos": "node scripts/updatePlacePhotos.js"
+		"sync:photos": "node scripts/updatePlacePhotos.js",
+		"sync:geo": "node scripts/updatePlaceGeo.js"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",

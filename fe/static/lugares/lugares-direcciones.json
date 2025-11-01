@@ -62,6 +62,10 @@
         "color": "#be185d",
         "icon": "🌙"
       }
+    },
+    "apartment_reference_coords": {
+      "lat": -27.779686,
+      "lng": -64.258992
     }
   },
   "lugares": {
@@ -69,196 +73,215 @@
       "aires_de_rio": {
         "nombre": "Aires de Río",
         "direccion": "Avenida Rivadavia, Santiago del Estero, Argentina",
-        "direccion_aproximada": "Intersección de Rivadavia y Olaechea",
+        "direccion_aproximada": "Rivadavia Este 14",
         "tipo": "Edificio residencial",
         "descripcion": "Moderno edificio de departamentos con ubicación estratégica en el centro de Santiago del Estero",
         "coordenadas_aproximadas": {
-          "lat": -27.779686,
-          "lng": -64.258992
+          "lat": -27.77966171958701,
+          "lng": -64.25909533868962
         },
         "es_edificio_principal": true,
-        "distancia_aproximada": "0 m (ubicación base)",
-        "distancia_categoria": "AQUÍ",
-        "distancia_cuadras": "0 cuadras",
-        "distancia_metros": 0,
+        "distancia_aproximada": "~1.3 km del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 1331,
         "fuente_direccion": "Dirección del proyecto",
-        "photos": []
+        "photos": [],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     },
     "transporte": {
       "terminal_omnibus": {
         "nombre": "Terminal de Ómnibus de Santiago del Estero",
-        "direccion": "Chacabuco s/n, 4200 Santiago del Estero, Argentina",
+        "direccion": "Av. Roca Norte 100, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true,
         "tipo": "Terminal de transporte",
         "descripcion": "Terminal principal de ómnibus de la ciudad",
         "coordenadas_aproximadas": {
-          "lat": -27.7833,
-          "lng": -64.2667
+          "lat": -27.7784542,
+          "lng": -64.26343469999999
         },
-        "distancia_aproximada": "1.5 km del apartamento",
+        "distancia_aproximada": "~460 m del apartamento",
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 1500,
+        "distancia_metros": 458,
         "fuente_direccion": "Busbud Terminal Directory",
         "photos": [
           "exterior.jpg",
           "terminal-exterior-2.jpg",
           "terminal-llegada.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     },
     "cultura_entretenimiento": {
       "forum_santiago": {
         "nombre": "Fórum Santiago del Estero",
-        "direccion": "Av. Roca Sur 401, 4200 Santiago del Estero, Argentina",
+        "direccion": "Calle Perú 511, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true,
         "tipo": "Centro de convenciones",
         "descripcion": "Centro de convenciones y eventos culturales, antigua estación de ferrocarril",
         "coordenadas_aproximadas": {
-          "lat": -27.795,
-          "lng": -64.2614
+          "lat": -27.7800169,
+          "lng": -64.2621739
         },
-        "distancia_aproximada": "800 m del apartamento",
+        "distancia_aproximada": "~320 m del apartamento",
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 800,
+        "distancia_metros": 315,
         "fuente_direccion": "TripAdvisor",
         "photos": [
           "centro-convenciones-argentina-ejemplo-PD.jpg",
           "forum-exterior-ejemplo-PD.jpg",
           "forum-interior-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "centro_cultural_bicentenario": {
         "nombre": "Centro Cultural del Bicentenario",
-        "direccion": "Avenida Libertad 439, Santiago del Estero G4200CZE, Argentina",
+        "direccion": "Av. Libertad 439, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true,
         "tipo": "Centro cultural",
         "descripcion": "Centro cultural con museos y espacios de exhibición",
         "coordenadas_aproximadas": {
-          "lat": -27.7833,
-          "lng": -64.25
+          "lat": -27.7867715,
+          "lng": -64.2603343
         },
-        "distancia_aproximada": "1.2 km del apartamento",
+        "distancia_aproximada": "~800 m del apartamento",
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 1200,
+        "distancia_metros": 799,
         "fuente_direccion": "Sitio web oficial CCB",
         "photos": [
           "centro-cultural-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "teatro_25_mayo": {
         "nombre": "Teatro 25 de Mayo",
-        "direccion": "Av. Belgrano Sur y 24 de Septiembre, Santiago del Estero",
+        "direccion": "Calle Avellaneda 387, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true,
         "tipo": "Teatro",
         "descripcion": "Teatro principal de la ciudad, importante centro cultural",
         "coordenadas_aproximadas": {
-          "lat": -27.795,
-          "lng": -64.26
+          "lat": -27.786592,
+          "lng": -64.25680129999999
         },
-        "distancia_aproximada": "600 m del apartamento",
+        "distancia_aproximada": "~800 m del apartamento",
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 600,
+        "distancia_metros": 798,
         "fuente_direccion": "Referencias locales",
         "photos": [
           "teatro-argentina-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     },
     "infraestructura": {
       "puente_carretero": {
         "nombre": "Puente Carretero",
-        "direccion": "Puente Carretero, Santiago del Estero - La Banda, Argentina",
+        "direccion": "Ruta Provincial 11, entre Santiago del Estero y La Banda",
+        "direccion_confirmada": true,
         "tipo": "Puente histórico",
         "descripcion": "Puente histórico que conecta Santiago del Estero con La Banda sobre el Río Dulce",
         "coordenadas_aproximadas": {
-          "lat": -27.7667,
-          "lng": -64.25
+          "lat": -27.7220872,
+          "lng": -64.2297625
         },
-        "distancia_aproximada": "2.0 km del apartamento",
+        "distancia_aproximada": "~7 km del apartamento",
         "distancia_categoria": "MODERADAMENTE DISTANTE",
         "distancia_cuadras": "más de 8 cuadras",
-        "distancia_metros": 2000,
+        "distancia_metros": 7021,
         "fuente_direccion": "Referencias geográficas",
         "photos": [
           "puente-exterior.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     },
     "lugares_historicos": {
       "plaza_libertad": {
         "nombre": "Plaza Libertad",
-        "direccion": "Plaza Libertad, Centro, Santiago del Estero",
+        "direccion": "Zona céntrica, entre Avellaneda, 24 de Septiembre y Belgrano, Santiago del Estero",
+        "direccion_confirmada": true,
         "tipo": "Plaza principal",
         "descripcion": "Plaza principal de la ciudad, centro histórico y social",
         "coordenadas_aproximadas": {
-          "lat": -27.795,
-          "lng": -64.2614
+          "lat": -27.8012615,
+          "lng": -64.2519812
         },
-        "distancia_aproximada": "300 m del apartamento",
-        "distancia_categoria": "MUY CERCA",
-        "distancia_cuadras": "0-3 cuadras",
-        "distancia_metros": 300,
+        "distancia_aproximada": "~2.5 km del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 2496,
         "fuente_direccion": "Referencias geográficas",
         "photos": [
           "plaza-argentina-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "catedral_basilica": {
         "nombre": "Catedral Basílica de Santiago del Estero",
-        "direccion": "Plaza Libertad, Centro, Santiago del Estero",
+        "direccion": "Calle 24 de Septiembre Nº 55, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true,
         "tipo": "Catedral",
         "descripcion": "Catedral principal de la ciudad, importante sitio religioso e histórico",
         "coordenadas_aproximadas": {
-          "lat": -27.795,
-          "lng": -64.2614
+          "lat": -27.7882484,
+          "lng": -64.2606945
         },
-        "distancia_aproximada": "300 m del apartamento",
-        "distancia_categoria": "MUY CERCA",
-        "distancia_cuadras": "0-3 cuadras",
-        "distancia_metros": 300,
+        "distancia_aproximada": "~970 m del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 967,
         "fuente_direccion": "Referencias geográficas",
         "photos": [
           "catedral-exterior-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "casa_gobierno": {
         "nombre": "Casa de Gobierno",
-        "direccion": "Plaza Libertad, Centro, Santiago del Estero",
+        "direccion": "Av. B. Rivadavia (O) 550, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true,
         "tipo": "Edificio gubernamental",
         "descripcion": "Sede del gobierno provincial, edificio histórico",
         "coordenadas_aproximadas": {
-          "lat": -27.795,
-          "lng": -64.2614
+          "lat": -27.7831138,
+          "lng": -64.2649608
         },
-        "distancia_aproximada": "300 m del apartamento",
-        "distancia_categoria": "MUY CERCA",
-        "distancia_cuadras": "0-3 cuadras",
-        "distancia_metros": 300,
+        "distancia_aproximada": "~700 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 700,
         "fuente_direccion": "Referencias geográficas",
         "photos": [
           "casa-gobierno-argentina-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     },
     "parques_recreacion": {
       "parque_aguirre": {
         "nombre": "Parque Aguirre",
-        "direccion": "Av. Aguirre, Santiago del Estero",
+        "direccion": "Av. Libertad s/n, Costanera Río Dulce, Santiago del Estero",
+        "direccion_confirmada": true,
         "tipo": "Parque público",
         "descripcion": "Principal parque de la ciudad, ideal para recreación y actividades al aire libre",
         "coordenadas_aproximadas": {
-          "lat": -27.78,
-          "lng": -64.27
+          "lat": -27.800016,
+          "lng": -64.2806723
         },
-        "distancia_aproximada": "1.0 km del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 1000,
+        "distancia_aproximada": "~3.1 km del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 3108,
         "fuente_direccion": "Referencias locales",
         "photos": [
           "parque-argentino-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     },
     "museos": {
@@ -268,18 +291,19 @@
         "tipo": "Museo",
         "descripcion": "Museo de arqueología y antropología, parte del Centro Cultural del Bicentenario",
         "coordenadas_aproximadas": {
-          "lat": -27.7833,
-          "lng": -64.25
+          "lat": -27.7868108,
+          "lng": -64.2603247
         },
-        "distancia_aproximada": "1.2 km del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 1200,
+        "distancia_aproximada": "~800 m del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 803,
         "nota": "Ubicado dentro del Centro Cultural del Bicentenario",
         "fuente_direccion": "CCB oficial",
         "photos": [
           "museo-argentina-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "museo_ciencias_naturales": {
         "nombre": "Museo de Ciencias Naturales",
@@ -287,40 +311,42 @@
         "tipo": "Museo",
         "descripcion": "Museo de ciencias naturales, parte del Centro Cultural del Bicentenario",
         "coordenadas_aproximadas": {
-          "lat": -27.7833,
-          "lng": -64.25
+          "lat": -27.7870421,
+          "lng": -64.2599753
         },
-        "distancia_aproximada": "1.2 km del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 1200,
+        "distancia_aproximada": "~820 m del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 824,
         "nota": "Ubicado dentro del Centro Cultural del Bicentenario",
         "fuente_direccion": "CCB oficial",
         "photos": [
           "museo-ciencias-argentina-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     },
     "gastronomia": {
       "leblon_cafe": {
         "nombre": "Leblon Café y Pastelería Artesanal",
-        "direccion": "Dirección específica no confirmada",
-        "direccion_aproximada": "Zona céntrica de Santiago del Estero",
+        "direccion": "Av. Gral. J. A. Roca Sur 850, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true,
         "tipo": "Café y pastelería",
         "descripcion": "Café local conocido por su pastelería artesanal",
-        "distancia_aproximada": "Radio de 2 km del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 800,
+        "distancia_aproximada": "~930 m del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 925,
         "nota": "Imagen representativa de café argentino típico",
         "fuente_direccion": "Pendiente de confirmación",
         "coordenadas_aproximadas": {
-          "lat": -27.78,
-          "lng": -64.259
+          "lat": -27.7869402,
+          "lng": -64.25438559999999
         },
         "photos": [
           "cafe-argentino-ejemplo.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "dominga_resto_bar": {
         "nombre": "Dominga Resto Bar",
@@ -328,57 +354,60 @@
         "direccion_aproximada": "Zona céntrica de Santiago del Estero",
         "tipo": "Restaurant y bar",
         "descripcion": "Restaurant y bar local popular",
-        "distancia_aproximada": "Radio de 2 km del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 800,
+        "distancia_aproximada": "~1.2 km del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 1185,
         "nota": "Imagen representativa de restaurant argentino típico",
         "fuente_direccion": "Facebook (pendiente de confirmación)",
         "coordenadas_aproximadas": {
-          "lat": -27.782,
-          "lng": -64.258
+          "lat": -27.7887879,
+          "lng": -64.2527171
         },
         "photos": [
           "restaurante-argentino-ejemplo.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "bless": {
         "nombre": "Bless",
-        "direccion": "Dirección específica no confirmada",
-        "direccion_aproximada": "Zona céntrica de Santiago del Estero",
+        "direccion": "Av. Roca Sur 443, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true,
         "tipo": "Establecimiento gastronómico",
         "descripcion": "Establecimiento local con presencia en Instagram (@bless.sgo)",
-        "distancia_aproximada": "Radio de 2 km del apartamento",
+        "distancia_aproximada": "~430 m del apartamento",
         "distancia_categoria": "CERCANO",
         "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 800,
+        "distancia_metros": 432,
         "nota": "Imagen representativa de establecimiento argentino típico",
         "fuente_direccion": "Instagram @bless.sgo (pendiente de confirmación)",
         "coordenadas_aproximadas": {
-          "lat": -27.779,
-          "lng": -64.26
+          "lat": -27.7834876,
+          "lng": -64.2580825
         },
         "photos": [
           "establecimiento-bless-ejemplo.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "amasijo": {
         "nombre": "Amasijo",
         "direccion": "Moreno Sur 622, Santiago del Estero",
         "tipo": "Restaurant/Panadería",
         "descripcion": "Restaurant y panadería local",
-        "distancia_aproximada": "800 m del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 800,
+        "distancia_aproximada": "~1.4 km del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 1440,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.781,
-          "lng": -64.257
+          "lat": -27.7922064,
+          "lng": -64.2627184
         },
         "photos": [
           "restaurante-amasijo-ejemplo.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     },
     "supermercados": {
@@ -388,18 +417,19 @@
         "tipo": "Supermercado",
         "descripcion": "Supermercado de la cadena Vea ubicado en esquina estratégica",
         "coordenadas_aproximadas": {
-          "lat": -27.7833,
-          "lng": -64.2667
+          "lat": -27.7787725,
+          "lng": -64.2579034
         },
-        "distancia_aproximada": "500 m del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 500,
+        "distancia_aproximada": "~150 m del apartamento",
+        "distancia_categoria": "MUY CERCA",
+        "distancia_cuadras": "0-3 cuadras",
+        "distancia_metros": 148,
         "nota": "Imagen representativa de supermercado argentino",
         "fuente_direccion": "Tiendeo.com.ar",
         "photos": [
           "supermercado-argentino-ejemplo.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "changomas": {
         "nombre": "Changomas",
@@ -407,111 +437,118 @@
         "direccion_aproximada": "Santiago del Estero",
         "tipo": "Supermercado",
         "descripcion": "Supermercado de la cadena Changomas",
-        "distancia_aproximada": "Radio de 3 km del apartamento",
+        "distancia_aproximada": "~3.4 km del apartamento",
         "distancia_categoria": "MODERADAMENTE DISTANTE",
         "distancia_cuadras": "más de 8 cuadras",
-        "distancia_metros": 3000,
+        "distancia_metros": 3442,
         "nota": "Imagen representativa de supermercado argentino",
         "fuente_direccion": "Tiendeo.com.ar (ubicación específica pendiente)",
         "coordenadas_aproximadas": {
-          "lat": -27.778,
-          "lng": -64.261
+          "lat": -27.8093976,
+          "lng": -64.24915899999999
         },
         "photos": [
           "supermercado-changomas-ejemplo.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "super_nataly": {
         "nombre": "Super Nataly",
         "direccion": "Rivadavia 654 y Belgrano Sur 377, Santiago del Estero",
         "tipo": "Supermercado",
         "descripcion": "Supermercado local con dos ubicaciones cercanas",
-        "distancia_aproximada": "400 m del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 400,
+        "distancia_aproximada": "~960 m del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 955,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.785,
-          "lng": -64.255
+          "lat": -27.7851923,
+          "lng": -64.2664418
         },
         "photos": [
           "supermercado-nataly-ejemplo.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     },
     "servicios": {
       "bse_centro_pagos": {
         "nombre": "BSE Centro de Pagos",
-        "direccion": "Olaechea 451, Santiago del Estero",
+        "direccion": "Pedro Pablo Olaechea 451, Santiago del Estero, CP 4200",
+        "direccion_confirmada": true,
         "tipo": "Centro de pagos",
         "descripcion": "Centro de pagos de servicios BSE",
-        "distancia_aproximada": "100 m del apartamento",
-        "distancia_categoria": "MUY CERCA",
-        "distancia_cuadras": "0-3 cuadras",
-        "distancia_metros": 100,
+        "distancia_aproximada": "~660 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 660,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.777,
-          "lng": -64.258
+          "lat": -27.7845373,
+          "lng": -64.2551202
         },
         "photos": [
           "bse-pagos-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "farmacia_del_este": {
         "nombre": "Farmacia Del Este",
         "direccion": "Rivadavia 1, Santiago del Estero",
         "tipo": "Farmacia",
         "descripcion": "Farmacia local en Rivadavia",
-        "distancia_aproximada": "200 m del apartamento",
+        "distancia_aproximada": "~170 m del apartamento",
         "distancia_categoria": "MUY CERCA",
         "distancia_cuadras": "0-3 cuadras",
-        "distancia_metros": 200,
+        "distancia_metros": 167,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.776,
-          "lng": -64.259
+          "lat": -27.7804377,
+          "lng": -64.2604659
         },
         "photos": [
           "farmacia-argentina-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "banco_nacion": {
         "nombre": "Banco de la Nación",
         "direccion": "Centro, Santiago del Estero",
         "tipo": "Banco",
         "descripcion": "Sucursal del Banco de la Nación Argentina",
-        "distancia_aproximada": "300 m del apartamento",
-        "distancia_categoria": "MUY CERCA",
-        "distancia_cuadras": "0-3 cuadras",
-        "distancia_metros": 300,
+        "distancia_aproximada": "~1.1 km del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 1100,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.78,
-          "lng": -64.26
+          "lat": -27.7895806,
+          "lng": -64.2590459
         },
         "photos": [
           "banco-argentina-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "estacion_petrobras": {
         "nombre": "Estación Petrobras",
         "direccion": "Belgrano y Rivadavia, Santiago del Estero",
         "tipo": "Estación de servicio",
         "descripcion": "Estación de servicio Petrobras",
-        "distancia_aproximada": "250 m del apartamento",
-        "distancia_categoria": "MUY CERCA",
-        "distancia_cuadras": "0-3 cuadras",
-        "distancia_metros": 250,
+        "distancia_aproximada": "~870 m del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 868,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.784,
-          "lng": -64.262
+          "lat": -27.7846115,
+          "lng": -64.2658405
         },
         "photos": [
           "estacion-gas-argentina-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     },
     "vida_nocturna": {
@@ -520,108 +557,114 @@
         "direccion": "Alvear 500, Santiago del Estero",
         "tipo": "Bar",
         "descripcion": "Bar local en zona céntrica",
-        "distancia_aproximada": "200 m del apartamento",
-        "distancia_categoria": "MUY CERCA",
-        "distancia_cuadras": "0-3 cuadras",
-        "distancia_metros": 200,
+        "distancia_aproximada": "~320 m del apartamento",
+        "distancia_categoria": "CERCANO",
+        "distancia_cuadras": "3-8 cuadras",
+        "distancia_metros": 324,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.795,
-          "lng": -64.2614
+          "lat": -27.7803149,
+          "lng": -64.2622085
         },
         "photos": [
           "bar-argentino-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "la_roca_pub": {
         "nombre": "La Roca Pub",
         "direccion": "Roca y Urquiza, Santiago del Estero",
         "tipo": "Pub",
         "descripcion": "Pub local en la intersección de Roca y Urquiza",
-        "distancia_aproximada": "300 m del apartamento",
-        "distancia_categoria": "MUY CERCA",
-        "distancia_cuadras": "0-3 cuadras",
-        "distancia_metros": 300,
+        "distancia_aproximada": "~1 km del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 1013,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.778,
-          "lng": -64.257
+          "lat": -27.7875614,
+          "lng": -64.2538245
         },
         "photos": [
           "pub-argentino-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "buddha_bar": {
         "nombre": "Buddha Bar",
         "direccion": "Av. Roca Sur, Santiago del Estero",
         "tipo": "Bar",
         "descripcion": "Bar en Avenida Roca Sur",
-        "distancia_aproximada": "600 m del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 600,
+        "distancia_aproximada": "~940 m del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 944,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.782,
-          "lng": -64.256
+          "lat": -27.7872133,
+          "lng": -64.25456299999999
         },
         "photos": [
           "bar-buddha-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "bar_oculto": {
         "nombre": "Bar Oculto",
         "direccion": "Av. Roca Sur, Santiago del Estero",
         "tipo": "Bar",
         "descripcion": "Bar en Avenida Roca Sur",
-        "distancia_aproximada": "650 m del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 650,
+        "distancia_aproximada": "~920 m del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 922,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.779,
-          "lng": -64.258
+          "lat": -27.7868245,
+          "lng": -64.2542143
         },
         "photos": [
           "bar-oculto-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "distrito_roca": {
         "nombre": "Distrito Roca",
         "direccion": "Av. Roca Sur, Santiago del Estero",
         "tipo": "Bar/Restaurant",
         "descripcion": "Establecimiento gastronómico en Avenida Roca Sur",
-        "distancia_aproximada": "700 m del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 700,
+        "distancia_aproximada": "~930 m del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 932,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.781,
-          "lng": -64.259
+          "lat": -27.7870881,
+          "lng": -64.2545476
         },
         "photos": [
           "distrito-roca-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       },
       "cambalache": {
         "nombre": "Cambalache",
         "direccion": "Av. Roca Sur, Santiago del Estero",
         "tipo": "Restaurant",
         "descripcion": "Restaurant en Avenida Roca Sur",
-        "distancia_aproximada": "750 m del apartamento",
-        "distancia_categoria": "CERCANO",
-        "distancia_cuadras": "3-8 cuadras",
-        "distancia_metros": 750,
+        "distancia_aproximada": "~940 m del apartamento",
+        "distancia_categoria": "MODERADAMENTE DISTANTE",
+        "distancia_cuadras": "más de 8 cuadras",
+        "distancia_metros": 941,
         "fuente_direccion": "Mapa de distancias local",
         "coordenadas_aproximadas": {
-          "lat": -27.783,
-          "lng": -64.26
+          "lat": -27.7870592,
+          "lng": -64.25429489999999
         },
         "photos": [
           "cambalache-ejemplo-PD.jpg"
-        ]
+        ],
+        "fuente_coordenadas": "Google Maps Geocoding API"
       }
     }
   },

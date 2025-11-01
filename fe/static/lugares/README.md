@@ -54,6 +54,11 @@ Las imágenes descargadas provienen de:
 - **Wikimedia Commons**: Imágenes de dominio público o con licencias libres
 - **Fuentes gubernamentales**: Sitios web oficiales de instituciones públicas
 
+## Scripts de sincronización
+
+- `npm run sync:photos` sincroniza los nombres de archivos de cada carpeta con el arreglo `photos` del JSON `lugares-direcciones.json`.
+- `npm run sync:geo` geolocaliza cada lugar usando Google Maps Geocoding API, actualiza las coordenadas y recalcula distancias. Requiere definir `GOOGLE_MAPS_API_KEY` (puede colocarse en un `.env` cargado antes de ejecutar el script). Añade las banderas `--dry-run`, `--place=categoria/lugar_id`, `--ref-lat` y `--ref-lng` para ejecuciones más controladas.
+
 ## Licencias
 
 Todas las imágenes descargadas son de dominio público o tienen licencias que permiten su uso. Se recomienda verificar las licencias específicas antes de cualquier uso comercial.
