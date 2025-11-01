@@ -1,21 +1,33 @@
 <script lang="ts">
-	import Title from '$lib/components/Title.svelte';
+    import Title from '$lib/components/Title.svelte';
+    import { createSectionObserver } from '$lib/utils/sectionVisibility';
+
+    const { action: interiorObserver, visible: interiorVisible } = createSectionObserver('interior', {
+        threshold: 0.35
+    });
 </script>
 
-<section id='interior' aria-labelledby='interior-heading'>
-	<h2 id='interior-heading' class='vh'>Diseño Interior</h2>
-	<Title eyebrow='Diseño' big='INTERIOR' />
-	<p>
-		Ambientes generosos para unidades de un dormitorio que integran estética y funcionalidad
-		explorando tendencias contemporáneas, incorporando las nuevas tecnologías y los recursos más
-		elegantes en interiorismo.
-	</p>
-	<p>
-		El proyecto incorporó materiales ecológicos y formas curvas, buscando conectar los espacios
-		interiores con los colores que ofrece la naturaleza a través de la inclusión de vegetación, luz
-		natural y materiales orgánicos como la madera.
-	</p>
-	<div class='interior-gallery'>
+<section
+    id='interior'
+    aria-labelledby='interior-heading'
+    use:interiorObserver
+    data-section-active={$interiorVisible}
+>
+    <h2 id='interior-heading' class='vh'>Diseño Interior</h2>
+    <div class='scroll-animate' style='--scroll-animate-offset: 40px;'>
+        <Title eyebrow='Diseño' big='INTERIOR' />
+    </div>
+    <p class='scroll-animate' style='--scroll-animate-offset: 48px; --scroll-animate-delay: 80ms;'>
+        Ambientes generosos para unidades de un dormitorio que integran estética y funcionalidad
+        explorando tendencias contemporáneas, incorporando las nuevas tecnologías y los recursos más
+        elegantes en interiorismo.
+    </p>
+    <p class='scroll-animate' style='--scroll-animate-offset: 52px; --scroll-animate-delay: 120ms;'>
+        El proyecto incorporó materiales ecológicos y formas curvas, buscando conectar los espacios
+        interiores con los colores que ofrece la naturaleza a través de la inclusión de vegetación, luz
+        natural y materiales orgánicos como la madera.
+    </p>
+    <div class='interior-gallery scroll-animate' style='--scroll-animate-delay: 180ms; --scroll-animate-offset: 60px;'>
 		<figure>
 		<div class='ph' role='img' aria-label='Imagen del diseño interior - galería automática'>
 			<span class='arrow'></span>

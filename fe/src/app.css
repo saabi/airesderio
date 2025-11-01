@@ -243,6 +243,28 @@
     --category-color: var(--category-vida-nocturna);
 }
 
+[data-section-active] .scroll-animate {
+    opacity: 0;
+    transform: translate3d(0, var(--scroll-animate-offset, 36px), 0)
+        scale(var(--scroll-animate-scale, 0.98));
+    transition:
+        transform var(--scroll-animate-duration, 420ms) var(--scroll-animate-easing, cubic-bezier(0.22, 1, 0.36, 1)),
+        opacity var(--scroll-animate-duration, 420ms) ease;
+    transition-delay: var(--scroll-animate-delay, 0ms);
+}
+
+[data-section-active='true'] .scroll-animate {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-section-active] .scroll-animate {
+        transform: none;
+        transition-duration: 0ms;
+    }
+}
+
 * {
     box-sizing: border-box
 }

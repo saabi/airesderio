@@ -1,7 +1,8 @@
 <script lang="ts">
-	import Title from '$lib/components/Title.svelte';
+    import Title from '$lib/components/Title.svelte';
+    import { createSectionObserver } from '$lib/utils/sectionVisibility';
 
-	const equipmentItems = [
+    const equipmentItems = [
 		{ icon: '🖼️', svg: '/iconos-servicios/ascensores.svg', text: 'Carpintería de Aluminio Línea A30 NEW de Aluar.' },
 		{ icon: '🍳', svg: '/iconos-servicios/horno.svg', text: 'Unidades separadas de anafe y horno a gas empotrados.' },
 		{ icon: '🚪', svg: '/iconos-servicios/puerta.svg', text: 'Puertas de madera de diseño exclusivo y elegante.' },
@@ -25,19 +26,34 @@
 		{ icon: '⚡', svg: '/iconos-servicios/energia-electrica.svg', text: 'Energía eléctrica con transformador en el edificio.' },
 		{ icon: '⬜', svg: '/iconos-servicios/lavasecarropas.svg', text: 'Pisos de porcelanato en todos los ambientes.' },
 		{ icon: '🍽️', svg: '/iconos-servicios/cocina.svg', text: 'Cocina equipada con muebles altos y bajos.' }
-	];
+    ];
+
+    const { action: equipmentObserver, visible: equipmentVisible } = createSectionObserver('equipment', {
+        threshold: 0.3
+    });
 </script>
 
-<section id='equipados' class='equip' aria-labelledby='equipados-heading'>
-	<Title eyebrow='Cómo están' big='EQUIPADOS' />
-	<ul class='equip-list' role='list'>
-		{#each equipmentItems as item}
-			<li>
-				<img src={item.svg} alt='' aria-hidden='true' />
-				<span>{item.text}</span>
-			</li>
-		{/each}
-	</ul>
+<section
+    id='equipados'
+    class='equip'
+    aria-labelledby='equipados-heading'
+    use:equipmentObserver
+    data-section-active={$equipmentVisible}
+>
+    <div class='scroll-animate' style='--scroll-animate-offset: 36px;'>
+        <Title eyebrow='Cómo están' big='EQUIPADOS' />
+    </div>
+    <ul class='equip-list' role='list'>
+        {#each equipmentItems as item, index}
+            <li
+                class='scroll-animate'
+                style={`--scroll-animate-delay: ${140 + index * 60}ms; --scroll-animate-offset: 48px;`}
+            >
+                <img src={item.svg} alt='' aria-hidden='true' />
+                <span>{item.text}</span>
+            </li>
+        {/each}
+    </ul>
 </section>
 
 <style>
