@@ -512,10 +512,10 @@
 </script>
 
 <!-- Hidden containers for snippet rendering -->
-<div style="display: none;">
+<div style='display: none;'>
 	{#if markerElement}
 		{#each markers as marker (marker.id)}
-			<div bind:this={markerSnippetContainers[marker.id]} id="marker-{marker.id}">
+			<div bind:this={markerSnippetContainers[marker.id]} id='marker-{marker.id}'>
 				{@render markerElement(marker)}
 			</div>
 		{/each}
@@ -523,7 +523,7 @@
 
 	{#if markerInfoWindow}
 		{#each markers as marker (marker.id)}
-			<div bind:this={snippetContainers[marker.id]} id="info-window-{marker.id}">
+			<div bind:this={snippetContainers[marker.id]} id='info-window-{marker.id}'>
 				{@render markerInfoWindow(marker)}
 			</div>
 		{/each}
@@ -532,10 +532,10 @@
 
 <div
 	bind:this={mapElement}
-	class="google-map {containerClass}"
-	style="height: {height}; min-height: {height}; width: {width}; min-width: {width};"
-	role="img"
-	aria-label="Interactive map"
+	class='google-map {containerClass}'
+	style='height: {height}; min-height: {height}; width: {width}; min-width: {width};'
+	role='img'
+	aria-label='Interactive map'
 ></div>
 
 <style>

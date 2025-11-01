@@ -2,9 +2,9 @@
 	let { eyebrow, big }: { eyebrow: string; big: string } = $props();
 </script>
 
-<div class="boxed">
-	<span class="eyebrow">{eyebrow}</span>
-	<span class="big">{big}</span>
+<div class='boxed'>
+	<span class='eyebrow'>{eyebrow}</span>
+	<span class='big'>{big}</span>
 </div>
 
 <style>
