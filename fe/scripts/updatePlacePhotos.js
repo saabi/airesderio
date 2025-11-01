@@ -28,7 +28,7 @@ async function main() {
   const data = JSON.parse(raw);
 
   if (!data || typeof data !== 'object' || !data.lugares || typeof data.lugares !== 'object') {
-    throw new Error('Unexpected JSON structure: missing "lugares" root object.');
+    throw new Error('Unexpected JSON structure: missing \'lugares\' root object.');
   }
 
   let hasMissingDirectories = false;

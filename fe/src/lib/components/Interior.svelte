@@ -2,9 +2,9 @@
 	import Title from '$lib/components/Title.svelte';
 </script>
 
-<section id="interior" aria-labelledby="interior-heading">
-	<h2 id="interior-heading" class="vh">Diseño Interior</h2>
-	<Title eyebrow="Diseño" big="INTERIOR" />
+<section id='interior' aria-labelledby='interior-heading'>
+	<h2 id='interior-heading' class='vh'>Diseño Interior</h2>
+	<Title eyebrow='Diseño' big='INTERIOR' />
 	<p>
 		Ambientes generosos para unidades de un dormitorio que integran estética y funcionalidad
 		explorando tendencias contemporáneas, incorporando las nuevas tecnologías y los recursos más
@@ -15,16 +15,16 @@
 		interiores con los colores que ofrece la naturaleza a través de la inclusión de vegetación, luz
 		natural y materiales orgánicos como la madera.
 	</p>
-	<div class="interior-gallery" style="margin-top:0.75rem">
+	<div class='interior-gallery' style='margin-top:0.75rem'>
 		<figure>
-			<div class="ph" role="img" aria-label="Imagen del diseño interior - galería automática">
-				<span class="arrow"></span>
-			</div>
-			<figcaption class="vh">Galería de imágenes del diseño interior</figcaption>
-		</figure>
-		<figure>
-			<div class="ph" role="img" aria-label="Imagen del diseño interior - galería automática"></div>
-			<figcaption class="vh">Galería de imágenes del diseño interior</figcaption>
+		<div class='ph' role='img' aria-label='Imagen del diseño interior - galería automática'>
+			<span class='arrow'></span>
+		</div>
+		<figcaption class='vh'>Galería de imágenes del diseño interior</figcaption>
+	</figure>
+	<figure>
+		<div class='ph' role='img' aria-label='Imagen del diseño interior - galería automática'></div>
+		<figcaption class='vh'>Galería de imágenes del diseño interior</figcaption>
 		</figure>
 	</div>
 </section>

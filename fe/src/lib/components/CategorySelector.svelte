@@ -60,15 +60,15 @@
 </script>
 
 {#if placesData && showPlaceMarkers}
-	<div class="map-legend">
-		<div class="legend-header">
+	<div class='map-legend'>
+		<div class='legend-header'>
 			<h4>Lugares de Interés</h4>
-			<div class="header-buttons">
+			<div class='header-buttons'>
 				<button
-					class="select-all-btn {allSelected ? 'all-selected' : ''} {someSelected
+					class='select-all-btn {allSelected ? 'all-selected' : ''} {someSelected
 						? 'partial-selected'
-						: ''}"
-					role="checkbox"
+						: ''}'
+					role='checkbox'
 					aria-checked={allSelected ? 'true' : someSelected ? 'mixed' : 'false'}
 					onclick={() => {
 						if (filteredCategories.length === 0) return;
@@ -89,20 +89,20 @@
 							? 'Seleccionar todas'
 							: 'Seleccionar todas'}
 				>
-					<span class="checkbox-box"></span>
+					<span class='checkbox-box'></span>
 				</button>
 				{#if onFitToView && markersCount > 0}
 					<button
-						class="fit-view-btn"
+						class='fit-view-btn'
 						onclick={onFitToView}
-						aria-label="Ajustar vista para mostrar todos los marcadores"
-						title="Ajustar vista"
+						aria-label='Ajustar vista para mostrar todos los marcadores'
+						title='Ajustar vista'
 					>
 						🔍
 					</button>
 				{/if}
 				<button
-					class="toggle-markers-btn"
+					class='toggle-markers-btn'
 					onclick={onToggleMarkers}
 					aria-label={showPlaceMarkers ? 'Ocultar marcadores' : 'Mostrar marcadores'}
 				>
@@ -111,28 +111,28 @@
 			</div>
 		</div>
 
-		<div class="legend-categories">
+		<div class='legend-categories'>
 			{#each filteredCategories as category}
 				{@const categoryPlaces = placesData.lugares[category]}
 				{@const placesCount = Object.keys(categoryPlaces).length}
 				{@const isActive = categoryFilter.includes(category)}
 
 				<button
-					class="legend-item {isActive ? 'active' : 'inactive'}"
+					class='legend-item {isActive ? 'active' : 'inactive'}'
 					onclick={() => onCategoryToggle(category)}
 					aria-pressed={isActive}
 				>
-					<div class="legend-indicator">
+					<div class='legend-indicator'>
 						<span
-							class="legend-color"
-							style="background-color: {categoryColors[category] || '#6B4423'}"
+							class='legend-color'
+							style='background-color: {categoryColors[category] || '#6B4423'}'
 						>
 							{#if categoryIcons[category]}
-								<span class="legend-icon">{categoryIcons[category]}</span>
+								<span class='legend-icon'>{categoryIcons[category]}</span>
 							{/if}
 						</span>
 					</div>
-					<span class="legend-text">
+					<span class='legend-text'>
 						{categoryNames[category] || category}
 						<small>({placesCount})</small>
 					</span>
@@ -140,7 +140,7 @@
 			{/each}
 		</div>
 
-		<div class="legend-stats">
+		<div class='legend-stats'>
 			<small>
 				{markersCount} marcadores activos · {selectedCount}/{filteredCategories.length} categorías seleccionadas
 			</small>

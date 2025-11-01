@@ -338,10 +338,10 @@
 	// OLD FUNCTIONS - REMOVED (now handled by GoogleMap component)
 </script>
 
-<section id="ubicacion" class="ubi" aria-labelledby="ubicacion-heading">
-	<div class="location-block">
-		<div class="location-text">
-			<span style="text-transform: uppercase; letter-spacing: .1em; font-size: .9em;">Ubicación</span>
+<section id='ubicacion' class='ubi' aria-labelledby='ubicacion-heading'>
+	<div class='location-block'>
+		<div class='location-text'>
+			<span style='text-transform: uppercase; letter-spacing: .1em; font-size: .9em;'>Ubicación</span>
 			<h3>¿DÓNDE SE ENCUENTRA?</h3>
 			<p>
 				Aires de Río ofrece una ubicación de privilegio. Se emplaza sobre Avenida Rivadavia, a un paso
@@ -356,12 +356,12 @@
 				de cercanía a solo una cuadra.
 			</p>
 		</div>
-		<div class="map-container">
+		<div class='map-container'>
 			{#if placesData && visibleMarkers.length > 0}
 				<GoogleMap
 					bind:this={googleMapRef}
 					apiKey={GOOGLE_MAPS_API_KEY}
-					mapId="AIRES_DE_RIO_MAP"
+					mapId='AIRES_DE_RIO_MAP'
 					center={mapCenter}
 					zoom={15}
 					markers={visibleMarkers}
@@ -370,7 +370,7 @@
 					onMapReady={handleMapReady}
 					onInfoWindowClose={handleInfoWindowClose}
 					onMarkerPhotoClick={handleMarkerPhotoClick}
-					containerClass="location-map"
+					containerClass='location-map'
 				>
 				{#snippet markerElement(marker)}
 					{@const isMainMarker = marker.isMainMarker || marker.place?.es_edificio_principal}
@@ -390,13 +390,13 @@
 						})}
 					{/if}
 					
-					<div style="position: relative; display: flex; align-items: center; justify-content: center; z-index: 1000;">
+					<div style='position: relative; display: flex; align-items: center; justify-content: center; z-index: 1000;'>
 						<div 
-							class="marker-dot"
-							role="button"
-							tabindex="0"
-							aria-label="Map marker for {marker.title}"
-							style="
+							class='marker-dot'
+							role='button'
+							tabindex='0'
+							aria-label='Map marker for {marker.title}'
+							style='
 								width: {size}px;
 								height: {size}px;
 								background-color: {color};
@@ -415,13 +415,13 @@
 								opacity: 1;
 								visibility: visible;
 								{isMainMarker ? 'animation: pulse 2s infinite;' : ''}
-							"
+							'
 						>
 							{#if icon}
-								<span style="
+								<span style='
 									font-size: {isMainMarker ? '16px' : '12px'};
 									line-height: 1;
-									font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols', sans-serif;
+									font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif;
 									font-weight: normal;
 									font-style: normal;
 									text-rendering: optimizeLegibility;
@@ -431,7 +431,7 @@
 									vertical-align: middle;
 									color: white;
 									text-shadow: 0 0 2px rgba(0,0,0,0.5);
-								">{icon}</span>
+								'>{icon}</span>
 								{console.log('🎨 EMOJI ICON RENDERED:', {
 									title: marker.title,
 									category: marker.category,
@@ -440,14 +440,14 @@
 								})}
 							{:else}
 								<!-- Simple fallback dot for missing icon -->
-								<span style="
+								<span style='
 									font-size: {isMainMarker ? '12px' : '8px'};
 									line-height: 1;
 									font-family: system-ui, sans-serif;
 									font-weight: bold;
 									color: white;
 									text-shadow: 0 0 2px rgba(0,0,0,0.5);
-								">●</span>
+								'>●</span>
 								{console.log('❌ NO ICON, using dot fallback:', {
 									title: marker.title,
 									category: marker.category
@@ -458,9 +458,9 @@
 						{#if marker.place?.photos && marker.place.photos.length > 0}
 							<button 
 								data-photo-trigger
-								type="button"
-								aria-label="View {marker.place.photos.length} photo{marker.place.photos.length > 1 ? 's' : ''} for {marker.title}"
-								style="
+								type='button'
+								aria-label='View {marker.place.photos.length} photo{marker.place.photos.length > 1 ? 's' : ''} for {marker.title}'
+								style='
 									position: absolute;
 									top: -8px;
 									right: -8px;
@@ -477,7 +477,7 @@
 									box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 									z-index: 10;
 									padding: 0;
-								"
+								'
 							>
 								📷
 							</button>
@@ -486,39 +486,39 @@
 				{/snippet}
 
 				{#snippet markerInfoWindow(marker)}
-					<div class="info-window">
-						<div class="info-header">
-							<div class="category-indicator" style="background-color: {categoryColors[marker.category] || '#6B4423'}">
+					<div class='info-window'>
+						<div class='info-header'>
+							<div class='category-indicator' style='background-color: {categoryColors[marker.category] || '#6B4423'}'>
 								{#if categoryIcons[marker.category]}
-									<span class="category-icon">{categoryIcons[marker.category]}</span>
+									<span class='category-icon'>{categoryIcons[marker.category]}</span>
 								{/if}
 							</div>
-							<h3 class="place-name">{marker.place.nombre}</h3>
+							<h3 class='place-name'>{marker.place.nombre}</h3>
 							{#if categoryNames[marker.category]}
-								<span class="category-name">({categoryNames[marker.category]})</span>
+								<span class='category-name'>({categoryNames[marker.category]})</span>
 							{/if}
 						</div>
 						
-						<div class="info-content">
-							<p class="address">
+						<div class='info-content'>
+							<p class='address'>
 								📍 {marker.place.direccion}
 							</p>
 							
-							<div class="badges">
-								<span class="distance-badge" style="background-color: {marker.place.distancia_categoria === 'MUY CERCA' ? '#16a34a' : marker.place.distancia_categoria === 'CERCANO' ? '#ea580c' : '#dc2626'}">
+							<div class='badges'>
+								<span class='distance-badge' style='background-color: {marker.place.distancia_categoria === 'MUY CERCA' ? '#16a34a' : marker.place.distancia_categoria === 'CERCANO' ? '#ea580c' : '#dc2626'}'>
 									{marker.place.distancia_categoria}
 								</span>
-								<span class="distance-detail">
+								<span class='distance-detail'>
 									{marker.place.distancia_cuadras || marker.place.distancia_aproximada}
 								</span>
 							</div>
 							
 							{#if marker.place.descripcion}
-								<p class="description">{marker.place.descripcion}</p>
+								<p class='description'>{marker.place.descripcion}</p>
 							{/if}
 							
 							{#if marker.place.photos && marker.place.photos.length > 0}
-								<button class="photo-button" onclick={() => openPhotoCarousel(marker.place, marker.category, marker.placeId)}>
+								<button class='photo-button' onclick={() => openPhotoCarousel(marker.place, marker.category, marker.placeId)}>
 									📷 Ver {marker.place.photos.length} foto{marker.place.photos.length > 1 ? 's' : ''}
 								</button>
 							{/if}
@@ -527,8 +527,8 @@
 				{/snippet}
 			</GoogleMap>
 			{:else}
-				<div class="location-map" style="height: 25rem; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 0.5rem;">
-					<p style="color: #6b7280;">Cargando mapa...</p>
+				<div class='location-map' style='height: 25rem; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 0.5rem;'>
+					<p style='color: #6b7280;'>Cargando mapa...</p>
 				</div>
 			{/if}
 			

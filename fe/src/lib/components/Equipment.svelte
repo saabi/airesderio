@@ -28,12 +28,12 @@
 	];
 </script>
 
-<section id="equipados" class="equip" aria-labelledby="equipados-heading">
-	<Title eyebrow="Cómo están" big="EQUIPADOS" />
-	<ul class="equip-list" role="list">
+<section id='equipados' class='equip' aria-labelledby='equipados-heading'>
+	<Title eyebrow='Cómo están' big='EQUIPADOS' />
+	<ul class='equip-list' role='list'>
 		{#each equipmentItems as item}
 			<li>
-				<img src={item.svg} alt="" aria-hidden="true" />
+				<img src={item.svg} alt='' aria-hidden='true' />
 				<span>{item.text}</span>
 			</li>
 		{/each}

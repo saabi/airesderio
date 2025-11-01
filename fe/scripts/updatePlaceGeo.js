@@ -161,7 +161,7 @@ async function main() {
   const data = JSON.parse(raw);
 
   if (!data || typeof data !== 'object' || !data.lugares) {
-    throw new Error('Unexpected JSON structure: missing "lugares".');
+    throw new Error('Unexpected JSON structure: missing \'lugares\'.');
   }
 
   const metadata = data.metadata ?? (data.metadata = {});
