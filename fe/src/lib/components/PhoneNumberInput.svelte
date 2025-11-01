@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { formatPhoneNumber, numberingPlans } from '$lib/utils/multiCountryPhone';
+
 	interface Country {
 		name: string;
 		code: string;
@@ -29,29 +31,21 @@
 		{ name: 'Otro País', code: 'OTHER', dialCode: '+' },
 	];
 
-	// Phone number formatting patterns by country
-	// Can be a single pattern or array of patterns for variants
-	// Format: array of group sizes, e.g., [3, 3, 4] = (XXX) XXX-XXXX
-	// For variants, use array of patterns, selected by digit count
-	type PhoneFormat = number[] | number[][];
-	
-	const phoneFormats: Record<string, PhoneFormat> = {
-		US: [3, 3, 4], // (XXX) XXX-XXXX
-		MX: [2, 4, 4], // XX-XXXX-XXXX
-		AR: [
-			[4, 4, 4], // XXXX-XXXX-XXXX (11 digits - landlines)
-			[3, 4, 4]  // XXX-XXXX-XXXX (10 digits - mobile)
-		],
-		BR: [2, 5, 4], // (XX) XXXXX-XXXX
-		ES: [3, 3, 3], // XXX XXX XXX
-		CL: [4, 4], // XXXX-XXXX
-		CO: [3, 3, 4], // XXX XXX XXXX
-		EC: [3, 3, 4], // XXX-XXX-XXXX
-		PY: [3, 3, 4], // XXX XXX XXXX
-		PE: [3, 3, 4], // XXX XXX XXXX
-		UY: [4, 4], // XXXX-XXXX
-		VE: [4, 3, 4], // XXXX-XXX-XXXX
-		BO: [4, 4], // XXXX-XXXX
+	// Map component country codes to utility country names
+	const countryCodeToUtilityName: Record<string, string> = {
+		AR: 'argentina',
+		BO: 'bolivia',
+		BR: 'brasil',
+		CL: 'chile',
+		CO: 'colombia',
+		EC: 'ecuador',
+		PY: 'paraguay',
+		PE: 'peru',
+		UY: 'uruguay',
+		VE: 'venezuela',
+		MX: 'mexico',
+		ES: 'espana',
+		US: 'usa',
 	};
 
 	// Generic format for unknown countries: XXX-XXX-XXXX (3-3-4 pattern)
@@ -69,102 +63,6 @@
 	// Custom dial code for "Otro País" option
 	let customDialCode = $state('+');
 
-	// Select the appropriate pattern based on digit count
-	function selectPattern(countryCode: string, digitCount: number): number[] {
-		if (countryCode === 'OTHER') {
-			return defaultFormat;
-		}
-		
-		const format = phoneFormats[countryCode];
-		if (!format) {
-			return defaultFormat;
-		}
-		
-		// Check if it's a single pattern (array of numbers) or multiple patterns (array of arrays)
-		const firstElement = format[0];
-		if (typeof firstElement === 'number') {
-			// Single pattern: [3, 3, 4]
-			return format as number[];
-		}
-		
-		// Multiple patterns: [[4, 4, 4], [3, 4, 4]]
-		const patterns = format as number[][];
-		
-		// For Argentina: 11 digits = 4-4-4, 10 digits = 3-4-4
-		if (countryCode === 'AR') {
-			if (digitCount >= 11) {
-				return patterns[0]; // [4, 4, 4] - landlines
-			} else if (digitCount >= 10) {
-				return patterns[1]; // [3, 4, 4] - mobile
-			}
-			// While typing (less than 10 digits), use the shorter format as default
-			// It will automatically switch when reaching 11 digits
-			if (digitCount >= 4) {
-				// Start with longer format, but will adapt
-				return patterns[0]; // [4, 4, 4] - will adapt as more digits are added
-			}
-			return patterns[1]; // [3, 4, 4] - default for shorter numbers
-		}
-		
-		// For other countries with variants, use the first pattern by default
-		// or add logic here for specific countries
-		return patterns[0];
-	}
-
-	// Get formatting pattern for current country based on current digit count
-	let currentFormat = $derived.by(() => {
-		return selectPattern(selectedCountry.code, phoneNumberDigits.length);
-	});
-
-	// Format phone number based on country pattern
-	function formatPhoneNumber(digits: string, pattern: number[]): string {
-		if (!digits) return '';
-		
-		// Special formatting for US: (XXX) XXX-XXXX
-		if (selectedCountry.code === 'US' && pattern.length === 3 && pattern[0] === 3 && pattern[1] === 3 && pattern[2] === 4) {
-			if (digits.length <= 3) {
-				return digits.length > 0 ? `(${digits}` : '';
-			} else if (digits.length <= 6) {
-				return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-			} else {
-				return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-			}
-		}
-		
-		let formatted = '';
-		let digitIndex = 0;
-		
-		for (const groupSize of pattern) {
-			if (digitIndex >= digits.length) break;
-			
-			if (formatted) {
-				// Add separator (use space for some countries, dash for others)
-				const useSpace = selectedCountry.code === 'ES' || selectedCountry.code === 'CO' || selectedCountry.code === 'PY' || selectedCountry.code === 'PE';
-				formatted += useSpace ? ' ' : '-';
-			}
-			
-			const group = digits.slice(digitIndex, digitIndex + groupSize);
-			formatted += group;
-			digitIndex += groupSize;
-		}
-		
-		// Add remaining digits without formatting if any
-		if (digitIndex < digits.length) {
-			if (formatted) {
-				const useSpace = selectedCountry.code === 'ES' || selectedCountry.code === 'CO' || selectedCountry.code === 'PY' || selectedCountry.code === 'PE';
-				formatted += useSpace ? ' ' : '-';
-			}
-			formatted += digits.slice(digitIndex);
-		}
-		
-		return formatted;
-	}
-
-	// Strip all non-digit characters
-	function stripFormatting(value: string): string {
-		return value.replace(/\D/g, '');
-	}
-
 	// Get current dial code (either from selected country or custom)
 	let currentDialCode = $derived.by(() => {
 		if (selectedCountry.code === 'OTHER') {
@@ -173,9 +71,86 @@
 		return selectedCountry.dialCode;
 	});
 
+	// Generic formatter using a pattern array
+	function formatGeneric(digits: string, pattern: number[]): string {
+		if (!digits) return '';
+		
+		let formatted = '';
+		let digitIndex = 0;
+		
+		for (const groupSize of pattern) {
+			if (digitIndex >= digits.length) break;
+			
+			if (formatted) {
+				formatted += '-';
+			}
+			
+			const group = digits.slice(digitIndex, digitIndex + groupSize);
+			formatted += group;
+			digitIndex += groupSize;
+		}
+		
+		// Add remaining digits
+		if (digitIndex < digits.length) {
+			if (formatted) formatted += '-';
+			formatted += digits.slice(digitIndex);
+		}
+		
+		return formatted;
+	}
+
+	// Format phone number using multiCountryPhone utility
+	function formatPhoneNumberDisplay(digits: string, countryCode: string, dialCode: string): string {
+		if (!digits) return '';
+		
+		// Handle "Otro País" case with generic format
+		if (countryCode === 'OTHER') {
+			return formatGeneric(digits, defaultFormat);
+		}
+		
+		const utilityCountryName = countryCodeToUtilityName[countryCode];
+		if (!utilityCountryName) {
+			return formatGeneric(digits, defaultFormat);
+		}
+		
+		// Get the country plan to use its grouping
+		const plan = numberingPlans[utilityCountryName];
+		if (!plan) {
+			return formatGeneric(digits, defaultFormat);
+		}
+		
+		// Determine grouping from plan (same logic as utility)
+		const grouping = plan.grouping && plan.grouping.length > 0 
+			? plan.grouping 
+			: (digits.length >= 10 ? [3, 3, 4] : digits.length >= 8 ? [4, 4] : [3, 4]);
+		
+		// Format using the plan's grouping
+		const formatted = formatGeneric(digits, grouping);
+		
+		// Special handling for US: convert to (XXX) XXX-XXXX format
+		if (countryCode === 'US') {
+			const cleaned = digits;
+			if (cleaned.length <= 3) {
+				return cleaned.length > 0 ? `(${cleaned}` : '';
+			} else if (cleaned.length <= 6) {
+				return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
+			} else {
+				return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+			}
+		}
+		
+		// For other countries, use the formatted result with dashes (already done by formatGeneric)
+		return formatted;
+	}
+
+	// Strip all non-digit characters
+	function stripFormatting(value: string): string {
+		return value.replace(/\D/g, '');
+	}
+
 	// Formatted display value
 	let formattedPhoneNumber = $derived.by(() => {
-		return formatPhoneNumber(phoneNumberDigits, currentFormat);
+		return formatPhoneNumberDisplay(phoneNumberDigits, selectedCountry.code, currentDialCode);
 	});
 
 	// Computed full phone number for form submission (raw digits only)
@@ -245,8 +220,8 @@
 			charsBeforeCursor++;
 		}
 		
-		// Format the number
-		const formatted = formatPhoneNumber(digits, currentFormat);
+		// Get formatted value for cursor position calculation
+		const formatted = formatPhoneNumberDisplay(digits, selectedCountry.code, currentDialCode);
 		
 		// Calculate new cursor position in formatted string
 		let newCursorPosition = 0;
