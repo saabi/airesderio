@@ -59,7 +59,7 @@
 		position: sticky;
 		top: 0;
 		z-index: 50;
-		background: var(--color-white);
+		background: var(--color-bg-canvas);
 		border-bottom: 1px solid var(--color-border-default);
 		box-shadow: 0 0.125rem 0.375rem var(--shadow-subtle);
 	}
@@ -69,6 +69,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0.75rem 0;
+		background: var(--color-bg-elevated);
 	}
 
 	.logo {

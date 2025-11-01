@@ -120,7 +120,7 @@
 	}
 
 	.photo-carousel-modal {
-		background: var(--color-white);
+		background: var(--color-bg-contrast);
 		border-radius: 0.75rem;
 		max-width: 90vw;
 		max-height: 90vh;
@@ -187,7 +187,7 @@
 		top: 50%;
 		transform: translateY(-50%);
 		background: var(--overlay-black-60);
-		color: var(--color-white);
+		color: var(--color-text-inverse);
 		border: none;
 		border-radius: 50%;
 		width: 40px;
@@ -239,7 +239,7 @@
 	}
 
 	.dot.active:hover {
-		background: color-mix(in oklch, var(--color-accent-primary) 80%, var(--ref-black) 20%);
+		background: var(--color-accent-strong);
 	}
 
 	.photo-info {

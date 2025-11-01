@@ -148,7 +148,7 @@ const toCategoryClass = (category: string) =>
 
 <style>
 	.map-legend {
-		background: var(--color-white);
+		background: var(--color-bg-contrast);
 		border-radius: 0.5rem;
 		padding: 1rem;
 		box-shadow: 0 4px 6px -1px var(--shadow-soft);
@@ -226,7 +226,7 @@ const toCategoryClass = (category: string) =>
 		border: 2px solid var(--color-neutral-500);
 		border-radius: 0.25rem;
 		position: relative;
-		background: var(--color-white);
+		background: var(--color-bg-contrast);
 	}
 
 	.select-all-btn.all-selected .checkbox-box {

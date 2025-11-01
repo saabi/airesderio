@@ -54,7 +54,7 @@
 		left: 0.5rem;
 		bottom: 0.5rem;
 		font-size: 0.78rem;
-		background: var(--color-white);
+		background: var(--color-bg-contrast);
 		padding: 0.25rem 0.375rem;
 		border-radius: 0.375rem;
 		border: 1px solid var(--color-neutral-350);

@@ -517,7 +517,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 	.location-text {
 		max-width: 40ch;
 		padding: 1.75rem;
-		color: var(--color-white);
+		color: var(--color-text-inverse);
 	}
 
 	.location-eyebrow {
@@ -526,7 +526,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 		font-size: 0.9em;
 		display: inline-block;
 		margin-bottom: 0.5rem;
-		color: var(--color-white);
+		color: var(--color-text-inverse);
 		opacity: 0.85;
 	}
 
@@ -551,7 +551,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 		min-height: 25rem;
 		border-radius: 0.5rem;
 		overflow: hidden;
-		background: var(--color-white);
+		background: var(--color-bg-contrast);
 	}
 
 	.location-map--placeholder {
@@ -613,7 +613,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 		border: 1px solid var(--overlay-white-medium);
 		background-color: var(--category-color, var(--color-accent-primary));
 		box-shadow: 0 1px 2px var(--shadow-medium);
-		color: var(--color-white);
+		color: var(--color-text-inverse);
 	}
 
 	:global(.category-icon) {
@@ -672,7 +672,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 		width: 16px;
 		height: 16px;
 		background-color: var(--category-color, var(--color-accent-primary));
-		border: 2px solid var(--color-white);
+		border: 2px solid var(--color-text-inverse);
 		border-radius: 50%;
 		box-shadow: 0 2px 4px var(--shadow-strong);
 		cursor: pointer;
@@ -697,7 +697,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 		display: inline-block;
 		font-size: 12px;
 		line-height: 1;
-		color: var(--color-white);
+		color: var(--color-text-inverse);
 		text-shadow: 0 0 2px var(--overlay-black-40);
 		font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif;
 		font-weight: normal;
@@ -717,7 +717,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 		line-height: 1;
 		font-family: system-ui, sans-serif;
 		font-weight: 700;
-		color: var(--color-white);
+		color: var(--color-text-inverse);
 		text-shadow: 0 0 2px var(--overlay-black-40);
 	}
 
@@ -731,7 +731,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 		right: -8px;
 		width: 16px;
 		height: 16px;
-		background: var(--color-white);
+		background: var(--color-bg-contrast);
 		border: 1px solid var(--color-neutral-300);
 		border-radius: 50%;
 		display: flex;
@@ -751,7 +751,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 	}
 
 	:global(.distance-badge) {
-		color: var(--color-white);
+		color: var(--color-text-inverse);
 		padding: 0.125rem 0.5rem;
 		border-radius: 0.25rem;
 		font-size: 0.75rem;
@@ -788,7 +788,7 @@ const getDistanceBadgeClass = (value: string | undefined) => {
 
 	:global(.photo-button) {
 		background: var(--color-blue-500);
-		color: var(--color-white);
+		color: var(--color-text-inverse);
 		border: none;
 		padding: 0.5rem 0.75rem;
 		border-radius: 0.375rem;

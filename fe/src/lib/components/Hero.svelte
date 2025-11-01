@@ -91,14 +91,14 @@
 		padding: 0.75rem;
 		border: none;
 		background: var(--color-accent-primary);
-		color: var(--color-white);
+		color: var(--color-text-inverse);
 		font-weight: 600;
 		border-radius: 0.25rem;
 		cursor: pointer;
 	}
 
 	.form-group button:hover {
-		background: color-mix(in oklch, var(--color-accent-primary) 80%, var(--ref-black) 20%);
+		background: var(--color-accent-strong);
 	}
 
 	@media (max-width: 850px) {
