@@ -20,14 +20,43 @@
 		children,
 		class: className = ''
 	}: Props = $props();
+
+	let selectElement: HTMLSelectElement | null = $state(null);
+	let isKeyboardFocus = $state(false);
+
+	function handleFocus(event: FocusEvent) {
+        // For Firefox, show focus ring on click too since :-moz-focusring doesn't work
+        // with appearance: none. This provides needed visual feedback.
+        const isFirefox = typeof navigator !== 'undefined' && 
+            navigator.userAgent.toLowerCase().includes('firefox');
+        
+        if (isFirefox) {
+            // Show focus ring on any focus in Firefox
+            isKeyboardFocus = true;
+        } else {
+            // In other browsers, only show focus ring for keyboard navigation (standard behavior)
+            isKeyboardFocus = false;
+        }
+	}
+
+	function handleBlur() {
+		// Keep the state briefly to avoid flicker
+		setTimeout(() => {
+			isKeyboardFocus = false;
+		}, 100);
+	}
 </script>
 
 <select
+	bind:this={selectElement}
 	{id}
 	{name}
 	class='select-input {className}'
+	class:keyboard-focus={isKeyboardFocus}
 	value={value}
 	onchange={onchange}
+	onfocus={handleFocus}
+	onblur={handleBlur}
 >
 	{#if placeholder}
 		<option value='' disabled hidden>{placeholder}</option>
@@ -69,6 +98,13 @@
 		border-color: var(--color-border-strong) !important;
 		outline: 1px solid var(--color-border-strong) !important;
 		outline-offset: 0 !important;
+	}
+
+	/* JavaScript-based keyboard focus detection for Firefox fallback */
+	.select-input.keyboard-focus:focus {
+		border-color: var(--color-border-strong);
+		outline: 1px solid var(--color-border-strong);
+		outline-offset: 0;
 	}
 
 	/* Suppress default Firefox inner focus styling */
