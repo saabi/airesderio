@@ -112,7 +112,7 @@ export interface PhoneData {
 function cleanup(str: string): string {
   return str
     .toString()
-    .replace(/[^\\d+]+/g, '')
+    .replace(/[^\d+]+/g, '')
     .trim();
 }
 
@@ -159,13 +159,15 @@ interface ExtractedNumber {
   subscriber: string;
 }
 
-function extractAreaAndSubscriber(input: string): ExtractedNumber | undefined {
-  if (!input) return undefined;
+function extractAreaAndSubscriber(input: string): ExtractedNumber[] {
+  if (!input) return [];
+
+  const candidates: ExtractedNumber[] = [];
 
   for (const code of SORTED_AREA_CODES) {
     if (!input.startsWith(code)) continue;
     let remainder = input.slice(code.length);
-    if (!remainder) return undefined;
+    if (!remainder) continue;
 
     let mobilePrefix: string | undefined;
     if (remainder.startsWith('15')) {
@@ -173,10 +175,10 @@ function extractAreaAndSubscriber(input: string): ExtractedNumber | undefined {
       remainder = remainder.slice(2);
     }
 
-    if (!remainder) return undefined;
-    if (!isDigits(remainder)) return undefined;
+    if (!remainder) continue;
+    if (!isDigits(remainder)) continue;
 
-    return { areaCode: code, mobilePrefix, subscriber: remainder };
+    candidates.push({ areaCode: code, mobilePrefix, subscriber: remainder });
   }
 
   let subscriber = input;
@@ -186,10 +188,11 @@ function extractAreaAndSubscriber(input: string): ExtractedNumber | undefined {
     subscriber = subscriber.slice(2);
   }
 
-  if (!subscriber) return undefined;
-  if (!isDigits(subscriber)) return undefined;
+  if (subscriber && isDigits(subscriber)) {
+    candidates.push({ subscriber, mobilePrefix });
+  }
 
-  return { subscriber, mobilePrefix };
+  return candidates;
 }
 
 function parseSpecialNumber(cleaned: string): PhoneData | undefined {
@@ -281,48 +284,54 @@ export function parseArgentineNumber(raw: string): PhoneData | undefined {
   const { rest, international, country, nationalCall, mobile } = normalisePrefixes(cleaned);
   if (!rest) return undefined;
 
-  const extracted = extractAreaAndSubscriber(rest);
-  if (!extracted) return undefined;
+  const extractedCandidates = extractAreaAndSubscriber(rest);
+  if (extractedCandidates.length === 0) return undefined;
 
-  let { areaCode, mobilePrefix, subscriber } = extracted;
+  for (const candidate of extractedCandidates) {
+    let { areaCode, mobilePrefix, subscriber } = candidate;
 
-  if (!areaCode) {
-    const length = subscriber.length;
-    if (length < 6 || length > 8) {
-      return undefined;
+    if (!subscriber) continue;
+
+    if (!areaCode) {
+      const length = subscriber.length;
+      if (length < 6 || length > 8) {
+        continue;
+      }
+    } else {
+      const expectedLength = expectedSubscriberLength(areaCode);
+      if (!expectedLength || subscriber.length !== expectedLength) {
+        continue;
+      }
     }
-  } else {
-    const expectedLength = expectedSubscriberLength(areaCode);
-    if (!expectedLength || subscriber.length !== expectedLength) {
-      return undefined;
+
+    const data: Partial<PhoneData> = {
+      input: cleaned,
+      international,
+      country,
+      nationalCall,
+      mobile,
+      mobilePrefix,
+      areaCode,
+      subscriber,
+    };
+
+    const areaRef = areaCode ?? (subscriber.length === 8 ? '11' : undefined);
+    const block = findBlockNumber(areaRef, subscriber);
+    data.blockNumber = block;
+    if (block) {
+      data.givenNumber = subscriber.slice(block.length);
     }
+
+    data.type = determineType(data);
+
+    if (data.type && areaRef && !block) {
+      continue;
+    }
+
+    return data as PhoneData;
   }
 
-  const data: Partial<PhoneData> = {
-    input: cleaned,
-    international,
-    country,
-    nationalCall,
-    mobile,
-    mobilePrefix,
-    areaCode,
-    subscriber,
-  };
-
-  const areaRef = areaCode ?? (subscriber.length === 8 ? '11' : undefined);
-  const block = findBlockNumber(areaRef, subscriber);
-  data.blockNumber = block;
-  if (block) {
-    data.givenNumber = subscriber.slice(block.length);
-  }
-
-  data.type = determineType(data);
-
-  if (data.type && areaRef && !block) {
-    return undefined;
-  }
-
-  return data as PhoneData;
+  return undefined;
 }
 
 export function isValidArgentineNumber(raw: string): boolean {
