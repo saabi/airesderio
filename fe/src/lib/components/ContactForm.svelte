@@ -1,5 +1,6 @@
 <script lang="ts">
 	import PhoneNumberInput from '$lib/components/PhoneNumberInput.svelte';
+	import Select from '$lib/components/Select.svelte';
 
 	function handleSubmit(event: Event) {
 		event.preventDefault();
@@ -19,12 +20,13 @@
 	<PhoneNumberInput id='telefono' name='telefono' />
 	<div class='form-group'>
 		<label for='consulta'>Consulta</label>
-		<select id='consulta' name='consulta'>
-			<option>Seleccioná</option>
-			<option>Precio y Financiación</option>
-			<option>Visitar el Showroom</option>
-			<option>Otras consultas</option>
-		</select>
+		<Select id='consulta' name='consulta' placeholder='Seleccioná'>
+			{#snippet children()}
+				<option>Precio y Financiación</option>
+				<option>Visitar el Showroom</option>
+				<option>Otras consultas</option>
+			{/snippet}
+		</Select>
 	</div>
 	<div class='form-group'>
 		<label for='mensaje'>Mensaje</label>
@@ -48,8 +50,7 @@
 	}
 
 	.form-group input,
-	.form-group textarea,
-	.form-group select {
+	.form-group textarea {
 		width: 100%;
 		padding: 0.625rem;
 		border: 1px solid var(--color-border-default);

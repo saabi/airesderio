@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { formatPhoneNumberPartial, validatePhoneNumber, numberingPlans } from '$lib/utils/multiCountryPhone';
+	import Select from '$lib/components/Select.svelte';
 
 	interface Country {
 		name: string;
@@ -288,17 +289,19 @@
 			<p class='phone-validation-error' role='alert'>Número de teléfono inválido</p>
 		{/if}
 	<div class='phone-input-container'>
-		<select
+		<Select
 			id={`${id}-country`}
 			name={`${name}-country`}
-			class='phone-country-select'
 			value={selectedCountry.code}
 			onchange={handleCountryChange}
+			class='phone-country-select'
 		>
-			{#each countries as country}
-				<option value={country.code}>{country.name}</option>
-			{/each}
-		</select>
+			{#snippet children()}
+				{#each countries as country}
+					<option value={country.code}>{country.name}</option>
+				{/each}
+			{/snippet}
+		</Select>
 		<div class='phone-number-wrapper'>
 			{#if selectedCountry.code === 'OTHER'}
 				<input
@@ -339,12 +342,10 @@
 
 	.phone-input-group label {
 		display: block;
-		font-size: 0.85em;
-		margin-bottom: 0.25rem;
-		color: var(--color-text-secondary);
-		font-weight: 600;
 		font-size: 1em;
-		color: var(--color-text);
+		margin-bottom: 0.25rem;
+		color: var(--color-text-primary);
+		font-weight: 600;
 	}
 
 	.phone-input-hint {
@@ -359,20 +360,10 @@
 		align-items: stretch;
 	}
 
-	.phone-country-select {
+	:global(.phone-country-select.select-input) {
+		width: auto;
 		flex: 0 0 auto;
 		min-width: 140px;
-		padding: 0.625rem;
-		border: 1px solid var(--color-border-default);
-		border-radius: 0.25rem;
-		background: var(--color-bg-contrast);
-		color: var(--color-text);
-		cursor: pointer;
-		appearance: none;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-		background-repeat: no-repeat;
-		background-position: right 0.625rem center;
-		padding-right: 2rem;
 	}
 
 	.phone-number-wrapper {
@@ -381,14 +372,20 @@
 		align-items: center;
 		border: 1px solid var(--color-border-default);
 		border-radius: 0.25rem;
-		background: var(--color-bg-contrast);
+		background-color: field;
+		color: text;
 		overflow: hidden;
+	}
+
+	.phone-number-wrapper:has(.phone-number-input:focus),
+	.phone-number-wrapper:has(.phone-dial-code-input:focus) {
+		border-color: Highlight;
 	}
 
 	.phone-dial-code {
 		padding: 0.625rem 0.5rem;
-		background: var(--color-neutral-100);
-		color: var(--color-text-secondary);
+		background: var(--color-bg-muted);
+		color: var(--color-text-primary);
 		font-size: 0.875em;
 		border-right: 1px solid var(--color-border-default);
 		flex-shrink: 0;
@@ -398,8 +395,8 @@
 
 	.phone-dial-code-input {
 		padding: 0.625rem 0.5rem;
-		background: var(--color-neutral-100);
-		color: var(--color-text);
+		background: var(--color-bg-muted);
+		color: var(--color-text-primary);
 		font-size: 0.875em;
 		border: none;
 		border-right: 1px solid var(--color-border-default);
@@ -413,8 +410,6 @@
 		flex: 1 1 auto;
 		padding: 0.625rem;
 		border: none;
-		background: transparent;
-		color: var(--color-text);
 		outline: none;
 		width: 100%;
 	}
@@ -423,20 +418,14 @@
 		color: var(--color-text-tertiary);
 	}
 
-	.phone-number-input.invalid {
-		border-color: var(--color-red-500);
-		background-color: var(--color-red-50);
-	}
-
 	.phone-validation-error {
 		font-size: 0.75em;
-		color: var(--color-red-600);
+		color: var(--color-danger-strong);
 		margin: 0.25rem 0 0;
 		padding: 0;
 	}
 
 	.phone-number-wrapper:has(.phone-number-input.invalid) {
-		border-color: var(--color-red-500);
+		border-color: var(--color-danger);
 	}
 </style>
-
