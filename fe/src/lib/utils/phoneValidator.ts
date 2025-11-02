@@ -7,7 +7,12 @@ import blockRangeData from '$lib/data/argentina-block-ranges.json';
  * range allocated by ENACOM.
  */
 export type BlockRangeMap = Record<string, Array<[number, number]>>;
-const blockRanges: BlockRangeMap = blockRangeData as BlockRangeMap;
+const blockRanges: BlockRangeMap = Object.fromEntries(
+  Object.entries(blockRangeData as Record<string, number[][]>).map(([code, ranges]) => [
+    code,
+    ranges.map((pair) => [pair[0], pair[1]] as [number, number]),
+  ])
+);
 
 const AREA_CODES = Object.keys(blockRanges);
 const SORTED_AREA_CODES = [...AREA_CODES].sort((a, b) => b.length - a.length);
