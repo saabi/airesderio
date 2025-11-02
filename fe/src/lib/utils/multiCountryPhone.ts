@@ -262,6 +262,25 @@ const countryPlans: Record<string, CountryPlan> = {
   },
 };
 
+interface ModuleContext {
+  plan: CountryPlan;
+  countryKey: string;
+}
+
+interface CountryModule {
+  validate?: (phone: string, context: ModuleContext) => boolean;
+  format?: (
+    phone: string,
+    options: { includeCountryCode?: boolean },
+    context: ModuleContext
+  ) => string;
+  formatPartial?: (
+    phone: string,
+    options: { includeCountryCode?: boolean },
+    context: ModuleContext
+  ) => string;
+}
+
 /**
  * Sanitises a phone number by removing all non‑digit characters except a
  * leading plus.  This helper is used internally during parsing.
@@ -274,29 +293,114 @@ function sanitize(input: string): string {
   return (hasPlus ? '+' : '') + digits;
 }
 
+function stripToNationalDigits(cleaned: string, plan: CountryPlan): string {
+  let digits = cleaned;
+  if (digits.startsWith('+')) {
+    digits = digits.slice(1);
+  }
+  if (digits.startsWith('00')) {
+    digits = digits.slice(2);
+  }
+  if (digits.startsWith(plan.countryCode)) {
+    digits = digits.slice(plan.countryCode.length);
+  }
+  if (plan.trunkPrefix && digits.startsWith(plan.trunkPrefix)) {
+    digits = digits.slice(plan.trunkPrefix.length);
+  }
+  return digits;
+}
+
+function resolveCountryKey(input: string): string | undefined {
+  if (!input) return undefined;
+  const normalized = input.replace(/^\+/, '').trim();
+  if (!normalized) return undefined;
+  const upper = normalized.toUpperCase();
+  if (countryPlans[upper]) return upper;
+  const entries = Object.entries(countryPlans) as Array<[string, CountryPlan]>;
+  for (const [code, plan] of entries) {
+    if (code.toLowerCase() === normalized.toLowerCase()) return code;
+    if (plan.countryCode === normalized) return code;
+    if (plan.name.toLowerCase() === normalized.toLowerCase()) return code;
+  }
+  return undefined;
+}
+
 /**
  * Looks up a country plan by ISO 3166-1 alpha-2 country code, numeric country code,
  * or country name (for backward compatibility).  The lookup is case insensitive.
  * Returns undefined if no plan exists.
  */
 function getCountryPlan(key: string): CountryPlan | undefined {
-  // Remove leading + and normalize
-  let normalized = key.replace(/^\+/, '');
-  
-  // Try uppercase first (for ISO codes like 'AR', 'US')
-  const upperKey = normalized.toUpperCase();
-  if (countryPlans[upperKey]) return countryPlans[upperKey];
-  
-  // Try lowercase (for backward compatibility with old names like 'argentina')
-  const lowerKey = normalized.toLowerCase();
-  if (countryPlans[lowerKey]) return countryPlans[lowerKey];
-  
-  // Search by numeric country code or country name
-  for (const plan of Object.values(countryPlans)) {
-    if (plan.countryCode === normalized) return plan;
-    if (plan.name.toLowerCase() === lowerKey) return plan;
+  const resolved = resolveCountryKey(key);
+  return resolved ? countryPlans[resolved] : undefined;
+}
+
+const countryModules: Record<string, CountryModule> = {
+  AR: {
+    validate: (phone) => isValidArgentineNumber(phone),
+    format: (phone, options = {}, _context) => {
+      const includeCC = options.includeCountryCode ?? true;
+      const parsed = parseArgentineNumber(phone);
+      if (!parsed) throw new Error('Invalid Argentine number');
+      return formatArgentineNumber(parsed, {
+        country: includeCC,
+        nationalPrefix: !includeCC,
+        internationalMobile: includeCC,
+      });
+    },
+    formatPartial: (phone, options = {}, context) => {
+      const includeCC = options.includeCountryCode ?? true;
+      const parsed = parseArgentineNumber(phone);
+      if (parsed) {
+        return formatArgentineNumber(parsed, {
+          country: includeCC,
+          nationalPrefix: !includeCC,
+          internationalMobile: includeCC,
+        });
+      }
+
+      const cleaned = sanitize(phone);
+      let digitsOnly = stripToNationalDigits(cleaned, context.plan);
+      if (!digitsOnly) return '';
+
+      if (digitsOnly.length >= 7) {
+        const areaCode = digitsOnly.slice(0, 3);
+        const subscriber = digitsOnly.slice(3);
+        let formatted: string;
+        if (subscriber.length >= 7) {
+          formatted = `${areaCode}-${subscriber.slice(0, 4)}-${subscriber.slice(4)}`;
+        } else {
+          formatted = `${areaCode}-${subscriber}`;
+        }
+        return includeCC ? `+${context.plan.countryCode} ${formatted}` : formatted;
+      }
+
+      if (digitsOnly.length >= 5) {
+        const areaCode = digitsOnly.slice(0, 3);
+        const subscriber = digitsOnly.slice(3);
+        const formatted = `${areaCode}-${subscriber}`;
+        return includeCC ? `+${context.plan.countryCode} ${formatted}` : formatted;
+      }
+
+      return includeCC ? `+${context.plan.countryCode} ${digitsOnly}` : digitsOnly;
+    },
+  },
+};
+
+function resolveModuleKey(phone: string, explicitKey?: string): string | undefined {
+  if (explicitKey && explicitKey in countryModules) {
+    return explicitKey;
   }
-  
+  const cleaned = sanitize(phone);
+  let digits = cleaned;
+  if (digits.startsWith('+')) {
+    digits = digits.slice(1);
+  } else if (digits.startsWith('00')) {
+    digits = digits.slice(2);
+  }
+  if (digits.startsWith('54')) {
+    return 'AR';
+  }
   return undefined;
 }
 
@@ -323,7 +427,8 @@ function parsePhoneNumber(raw: string, country?: string) {
     // Infer from +countryCode.
     const digits = cleaned.slice(1);
     // Try to match the longest possible country code.
-    plan = Object.values(countryPlans).find((p) => digits.startsWith(p.countryCode));
+    const plans = Object.values(countryPlans) as CountryPlan[];
+    plan = plans.find((p) => digits.startsWith(p.countryCode));
     if (!plan) throw new Error(`Unable to infer country from ${raw}`);
     nationalNumber = digits.slice(plan.countryCode.length);
   } else {
@@ -336,6 +441,89 @@ function parsePhoneNumber(raw: string, country?: string) {
   return { plan, nationalNumber };
 }
 
+function defaultValidate(plan: CountryPlan, nationalNumber: string): boolean {
+  if (!nationalNumber) return false;
+  if (plan.name === 'Estados Unidos') {
+    if (nationalNumber.length !== 10) return false;
+    const area = nationalNumber.slice(0, 3);
+    const central = nationalNumber.slice(3, 6);
+    if (!/^[2-9]\d{2}$/.test(area)) return false;
+    if (!/^[2-9]\d{2}$/.test(central)) return false;
+    const n11s = ['211', '311', '411', '511', '611', '711', '811', '911'];
+    if (n11s.includes(area) || n11s.includes(central)) return false;
+  }
+
+  if (!plan.nsnLengths.includes(nationalNumber.length)) {
+    const hasSpecialLength = plan.specialPrefixes?.some((rx) => rx.test(nationalNumber)) ?? false;
+    if (!hasSpecialLength) {
+      return false;
+    }
+  }
+
+  const isSpecial = plan.specialPrefixes?.some((rx) => rx.test(nationalNumber)) ?? false;
+  if (isSpecial) return true;
+
+  const matchesMobile = plan.mobilePrefixes?.some((rx) => rx.test(nationalNumber)) ?? false;
+  const matchesFixed = plan.fixedLinePrefixes?.some((rx) => rx.test(nationalNumber)) ?? false;
+
+  if (!plan.mobilePrefixes?.length && !plan.fixedLinePrefixes?.length) {
+    return true;
+  }
+
+  return matchesMobile || matchesFixed;
+}
+
+function formatByGrouping(digits: string, grouping: number[]): string {
+  if (!digits) return '';
+
+  const groups: string[] = [];
+  let idx = 0;
+
+  for (const size of grouping) {
+    if (idx >= digits.length) break;
+    const end = Math.min(idx + size, digits.length);
+    groups.push(digits.slice(idx, end));
+    idx = end;
+  }
+
+  if (idx < digits.length) {
+    groups.push(digits.slice(idx));
+  }
+
+  return groups.join(' ');
+}
+
+function defaultFormat(plan: CountryPlan, nationalNumber: string, includeCountryCode: boolean): string {
+  const grouping =
+    plan.grouping && plan.grouping.length > 0
+      ? plan.grouping
+      : nationalNumber.length === 10
+      ? [3, 3, 4]
+      : nationalNumber.length === 8
+      ? [4, 4]
+      : [3, 4];
+  const nationalFormatted = formatByGrouping(nationalNumber, grouping);
+  if (!includeCountryCode) return nationalFormatted;
+  return nationalFormatted ? `+${plan.countryCode} ${nationalFormatted}` : `+${plan.countryCode}`;
+}
+
+function defaultFormatPartial(phone: string, plan: CountryPlan, includeCountryCode: boolean): string {
+  const cleaned = sanitize(phone);
+  const digits = stripToNationalDigits(cleaned, plan);
+  if (!digits) return '';
+  const grouping =
+    plan.grouping && plan.grouping.length > 0
+      ? plan.grouping
+      : digits.length >= 10
+      ? [3, 3, 4]
+      : digits.length >= 8
+      ? [4, 4]
+      : [3, 4];
+  const formatted = formatByGrouping(digits, grouping);
+  if (!includeCountryCode) return formatted;
+  return formatted ? `+${plan.countryCode} ${formatted}` : `+${plan.countryCode}`;
+}
+
 /**
  * Validates a phone number according to the rules defined in the country plan.
  * The country can be specified by name or country code.  If the number
@@ -345,56 +533,22 @@ function parsePhoneNumber(raw: string, country?: string) {
  * mobile, fixed or special prefix (if defined).
  */
 export function validatePhoneNumber(phone: string, country?: string): boolean {
-  // Delegate to the specialised Argentine validator when appropriate.  If the
-  // country parameter explicitly references Argentina (by name or code), use
-  // isValidArgentineNumber to perform a full ENACOM check.  Likewise if
-  // no country is specified but the input begins with +54, delegate to
-  // isValidArgentineNumber.
   try {
-    const countryKey = country?.toUpperCase();
-    if (countryKey && (countryKey === 'AR' || countryKey === 'ARGENTINA' || countryKey === '54')) {
-      return isValidArgentineNumber(phone);
-    }
-    if (!country && sanitize(phone).startsWith('+54')) {
-      return isValidArgentineNumber(phone);
-    }
-    const { plan, nationalNumber } = parsePhoneNumber(phone, country);
-    // Specific custom checks for the United States: enforce NANP NXX rules.
-    if (plan.name === 'Estados Unidos') {
-      // Must be 10 digits and follow NXXNXXXXXX pattern: area code and
-      // central office codes cannot start with 0 or 1, and N11 codes are
-      // reserved for special services.  See NANPA FAQ【575145482074086†L170-L181】.
-      if (nationalNumber.length !== 10) return false;
-      const area = nationalNumber.slice(0, 3);
-      const central = nationalNumber.slice(3, 6);
-      // First digit of area and central office codes must be 2–9.
-      if (!/^[2-9]\d{2}$/.test(area)) return false;
-      if (!/^[2-9]\d{2}$/.test(central)) return false;
-      // Exclude N11 prefixes (e.g. 211, 311, …, 911)【575145482074086†L170-L181】.
-      const n11s = ['211', '311', '411', '511', '611', '711', '811', '911'];
-      if (n11s.includes(area) || n11s.includes(central)) return false;
-    }
-    // General length check.
-    if (!plan.nsnLengths.includes(nationalNumber.length)) {
-      // Allow special numbers outside the normal NSN range.
-      if (!plan.specialPrefixes?.some((rx) => rx.test(nationalNumber))) {
-        return false;
+    const explicitKey = country ? resolveCountryKey(country) : undefined;
+    const moduleKey = resolveModuleKey(phone, explicitKey);
+    if (moduleKey) {
+      const module = countryModules[moduleKey];
+      if (module?.validate) {
+        return module.validate(phone, {
+          plan: countryPlans[moduleKey],
+          countryKey: moduleKey,
+        });
       }
     }
-    // Check prefixes: if any mobile or fixedLine pattern is defined, the
-    // national number must match at least one of the categories.  Special
-    // prefixes are accepted regardless of length.
-    const isSpecial = plan.specialPrefixes?.some((rx) => rx.test(nationalNumber)) ?? false;
-    if (isSpecial) return true;
-    const matchesMobile = plan.mobilePrefixes?.some((rx) => rx.test(nationalNumber)) ?? false;
-    const matchesFixed = plan.fixedLinePrefixes?.some((rx) => rx.test(nationalNumber)) ?? false;
-    // If both arrays are empty, we accept any prefix.
-    if (!plan.mobilePrefixes?.length && !plan.fixedLinePrefixes?.length) {
-      return true;
-    }
-    return matchesMobile || matchesFixed;
+    const { plan, nationalNumber } = parsePhoneNumber(phone, country);
+    return defaultValidate(plan, nationalNumber);
   } catch {
-      return false;
+    return false;
   }
 }
 
@@ -409,42 +563,19 @@ export function formatPhoneNumber(
   options: { includeCountryCode?: boolean } = {}
 ): string {
   const includeCC = options.includeCountryCode ?? true;
-  const countryKey = country.toUpperCase();
-  // Special handling for Argentina: delegate to formatArgentineNumber for
-  // ENACOM‑compliant formatting.  The parse/format functions expect a
-  // parsed PhoneData and accept options for country and national prefixes.
-  if (countryKey === 'AR' || countryKey === 'ARGENTINA' || countryKey === '54') {
-    const parsed = parseArgentineNumber(phone);
-    if (!parsed) throw new Error('Invalid Argentine number');
-    // When includeCC is false, we omit the country code and include the
-    // national prefix if present.  When includeCC is true, we include the
-    // international mobile indicator (9) for mobiles and omit the national
-    // prefix.  These behaviours mirror telefono‑argentino defaults.
-    return formatArgentineNumber(parsed, {
-      country: includeCC,
-      nationalPrefix: !includeCC,
-      internationalMobile: includeCC,
+  const countryKey = resolveCountryKey(country);
+  if (!countryKey) {
+    throw new Error(`Unknown country: ${country}`);
+  }
+  const module = countryModules[countryKey];
+  if (module?.format) {
+    return module.format(phone, options, {
+      plan: countryPlans[countryKey],
+      countryKey,
     });
   }
-  // Use the generic formatter for all other countries.
   const { plan, nationalNumber } = parsePhoneNumber(phone, country);
-  // Determine grouping: use plan.grouping or fallback.
-  const grouping = plan.grouping && plan.grouping.length > 0 ? plan.grouping :
-    (nationalNumber.length === 10 ? [3, 3, 4] : nationalNumber.length === 8 ? [4, 4] : [3, 4]);
-  const groups: string[] = [];
-  let idx = 0;
-  for (const size of grouping) {
-    if (idx >= nationalNumber.length) break;
-    const end = Math.min(idx + size, nationalNumber.length);
-    groups.push(nationalNumber.slice(idx, end));
-    idx = end;
-  }
-  // Append any remaining digits as the last group.
-  if (idx < nationalNumber.length) {
-    groups.push(nationalNumber.slice(idx));
-  }
-  const nationalFormatted = groups.join(' ');
-  return includeCC ? `+${plan.countryCode} ${nationalFormatted}` : nationalFormatted;
+  return defaultFormat(plan, nationalNumber, includeCC);
 }
 
 /**
@@ -463,131 +594,31 @@ export function formatPhoneNumberPartial(
   options: { includeCountryCode?: boolean } = {}
 ): string {
   const includeCC = options.includeCountryCode ?? true;
-  const countryKey = country.toUpperCase();
-  
-  // Remove country code prefix for processing
-  const cleaned = sanitize(phone);
-  let digitsOnly = cleaned.replace(/^\+?/, '');
-  
-  // Remove country code if present
-  const plan = getCountryPlan(country);
-  if (plan && digitsOnly.startsWith(plan.countryCode)) {
-    digitsOnly = digitsOnly.slice(plan.countryCode.length);
-  }
-  
-  // Remove trunk prefix if present
-  if (plan?.trunkPrefix && digitsOnly.startsWith(plan.trunkPrefix)) {
-    digitsOnly = digitsOnly.slice(plan.trunkPrefix.length);
-  }
-  
-  // Special handling for Argentina: try parsing first, fallback to heuristics
-  if (countryKey === 'AR' || countryKey === 'ARGENTINA' || countryKey === '54') {
-    try {
-      // Try full formatting first (works for complete numbers)
-      const formatted = formatPhoneNumber(phone, country, options);
-      return formatted;
-    } catch {
-      // If parsing fails (partial number), use heuristics
-      if (!digitsOnly) return '';
-      
-      // Try to parse what we have
-      const parsed = parseArgentineNumber(phone);
-      if (parsed && parsed.areaCode && parsed.subscriber) {
-        // Successfully parsed, format based on structure
-        const areaCode = parsed.areaCode;
-        const subscriber = parsed.subscriber;
-        
-        // Format subscriber based on length
-        let formattedSubscriber = subscriber;
-        if (subscriber.length === 6) {
-          formattedSubscriber = `${subscriber.slice(0, 3)}-${subscriber.slice(3)}`;
-        } else if (subscriber.length === 7) {
-          formattedSubscriber = `${subscriber.slice(0, 4)}-${subscriber.slice(4)}`;
-        } else if (subscriber.length === 8) {
-          formattedSubscriber = `${subscriber.slice(0, 4)}-${subscriber.slice(4)}`;
-        }
-        
-        const result = `${areaCode}-${formattedSubscriber}`;
-        return includeCC ? `+${plan?.countryCode || '54'} ${result}` : result;
-      }
-      
-      // Fallback heuristics for partial numbers
-      // Argentina area codes: 2 digits (11), 3 digits (most common), or 4 digits
-      if (digitsOnly.length >= 7) {
-        // Try 3-digit area code first (most common pattern)
-        const areaCode = digitsOnly.slice(0, 3);
-        const subscriber = digitsOnly.slice(3);
-        
-        if (subscriber.length === 7) {
-          const formatted = `${areaCode}-${subscriber.slice(0, 4)}-${subscriber.slice(4)}`;
-          return includeCC ? `+${plan?.countryCode || '54'} ${formatted}` : formatted;
-        } else if (subscriber.length >= 4) {
-          const formatted = `${areaCode}-${subscriber.slice(0, 4)}-${subscriber.slice(4)}`;
-          return includeCC ? `+${plan?.countryCode || '54'} ${formatted}` : formatted;
-        }
-        const formatted = `${areaCode}-${subscriber}`;
-        return includeCC ? `+${plan?.countryCode || '54'} ${formatted}` : formatted;
-      } else if (digitsOnly.length >= 5) {
-        // For shorter numbers, try 3-digit area code
-        const areaCode = digitsOnly.slice(0, 3);
-        const subscriber = digitsOnly.slice(3);
-        const formatted = `${areaCode}-${subscriber}`;
-        return includeCC ? `+${plan?.countryCode || '54'} ${formatted}` : formatted;
-      }
-      
-      // Very short numbers, return as-is
-      return includeCC ? `+${plan?.countryCode || '54'} ${digitsOnly}` : digitsOnly;
-    }
-  }
-  
-  // For other countries: try full formatting, fallback to grouping pattern
-  try {
-    const formatted = formatPhoneNumber(phone, country, options);
-    return formatted;
-  } catch {
-    // Use grouping pattern from plan as fallback
-    if (!plan) {
-      // No plan available, use default grouping
-      const defaultGrouping = digitsOnly.length >= 10 ? [3, 3, 4] : digitsOnly.length >= 8 ? [4, 4] : [3, 4];
-      const formatted = formatByGrouping(digitsOnly, defaultGrouping);
-      // Try to get country code from plan if available
-      const fallbackPlan = countryPlans[countryKey] || countryPlans[countryKey.toLowerCase()];
-      const countryCode = fallbackPlan?.countryCode || '';
-      return includeCC ? `+${countryCode} ${formatted}` : formatted;
-    }
-    
-    // Use plan's grouping or fallback
-    const grouping = plan.grouping && plan.grouping.length > 0 
-      ? plan.grouping 
-      : (digitsOnly.length >= 10 ? [3, 3, 4] : digitsOnly.length >= 8 ? [4, 4] : [3, 4]);
-    
-    const formatted = formatByGrouping(digitsOnly, grouping);
-    return includeCC ? `+${plan.countryCode} ${formatted}` : formatted;
-  }
-}
+  const countryKey = resolveCountryKey(country);
+  const plan = countryKey ? countryPlans[countryKey] : getCountryPlan(country);
 
-/**
- * Helper function to format digits using a grouping pattern.
- */
-function formatByGrouping(digits: string, grouping: number[]): string {
-  if (!digits) return '';
-  
-  const groups: string[] = [];
-  let idx = 0;
-  
-  for (const size of grouping) {
-    if (idx >= digits.length) break;
-    const end = Math.min(idx + size, digits.length);
-    groups.push(digits.slice(idx, end));
-    idx = end;
+  if (countryKey) {
+    const module = countryModules[countryKey];
+    if (module?.formatPartial) {
+      return module.formatPartial(phone, options, {
+        plan: countryPlans[countryKey],
+        countryKey,
+      });
+    }
   }
-  
-  // Append remaining digits
-  if (idx < digits.length) {
-    groups.push(digits.slice(idx));
+
+  if (plan) {
+    return defaultFormatPartial(phone, plan, includeCC);
   }
-  
-  return groups.join(' ');
+
+  const cleaned = sanitize(phone);
+  const digitsOnly = cleaned.replace(/^[+]?/, '');
+  if (!digitsOnly) return '';
+  const grouping = digitsOnly.length >= 10 ? [3, 3, 4] : digitsOnly.length >= 8 ? [4, 4] : [3, 4];
+  const formatted = formatByGrouping(digitsOnly, grouping);
+  return includeCC && countryKey
+    ? formatted ? `+${countryPlans[countryKey].countryCode} ${formatted}` : `+${countryPlans[countryKey].countryCode}`
+    : formatted;
 }
 
 /**
