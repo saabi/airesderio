@@ -164,12 +164,12 @@ const toCategoryClass = (category: string) =>
 		align-items: center;
 		margin-bottom: 0.75rem;
 		padding-bottom: 0.5rem;
-		border-bottom: 1px solid var(--color-neutral-300);
+		border-bottom: 1px solid var(--color-border-subtle);
 	}
 
 	.legend-header h4 {
 		margin: 0;
-		color: var(--color-neutral-800);
+		color: var(--color-text-on-light);
 		font-size: 1rem;
 		font-weight: 600;
 	}
@@ -184,7 +184,7 @@ const toCategoryClass = (category: string) =>
 	.fit-view-btn,
 	.select-all-btn {
 		background: none;
-		border: 1px solid var(--color-neutral-400);
+		border: 1px solid var(--color-border-default);
 		border-radius: 0.25rem;
 		padding: 0.25rem 0.5rem;
 		cursor: pointer;
@@ -200,20 +200,21 @@ const toCategoryClass = (category: string) =>
 	.toggle-markers-btn:hover,
 	.fit-view-btn:hover,
 	.select-all-btn:hover {
-		background: var(--color-neutral-200);
-		border-color: var(--color-neutral-500);
+		background: var(--color-bg-muted);
+		border-color: var(--color-border-default);
 	}
 
 	.fit-view-btn {
-		background: var(--color-cool-100);
-		border-color: var(--color-sky-500);
-		color: var(--color-sky-500);
+		background: var(--color-bg-surface);
+		border-color: var(--color-info);
+		color: var(--color-info);
 	}
 
 	.fit-view-btn:hover {
-		background: var(--color-cool-200);
-		border-color: var(--color-sky-600);
-		color: var(--color-sky-600);
+		background: var(--color-bg-muted);
+		border-color: var(--color-info);
+		color: var(--color-info);
+		opacity: 0.9;
 	}
 
 	.select-all-btn {
@@ -223,20 +224,20 @@ const toCategoryClass = (category: string) =>
 	.select-all-btn .checkbox-box {
 		width: 16px;
 		height: 16px;
-		border: 2px solid var(--color-neutral-500);
+		border: 2px solid var(--color-border-default);
 		border-radius: 0.25rem;
 		position: relative;
 		background: var(--color-bg-contrast);
 	}
 
 	.select-all-btn.all-selected .checkbox-box {
-		background: var(--color-green-400);
-		border-color: var(--color-green-500);
+		background: var(--color-success);
+		border-color: var(--color-success-strong);
 	}
 
 	.select-all-btn.partial-selected .checkbox-box {
-		background: linear-gradient(180deg, var(--color-neutral-150) 0%, var(--color-cool-400) 100%);
-		border-color: var(--color-neutral-600);
+		background: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-muted) 100%);
+		border-color: var(--color-border-title);
 	}
 
 	.select-all-btn.all-selected .checkbox-box::after,
@@ -248,14 +249,14 @@ const toCategoryClass = (category: string) =>
 		transform: translate(-50%, -50%);
 		width: 8px;
 		height: 2px;
-		background: var(--color-neutral-900);
+		background: var(--color-text-on-light);
 		border-radius: 1px;
 	}
 
 	.select-all-btn.all-selected .checkbox-box::after {
 		width: 4px;
 		height: 8px;
-		border: 2px solid var(--color-neutral-900);
+		border: 2px solid var(--color-text-on-light);
 		border-top: none;
 		border-left: none;
 		transform: translate(-50%, -55%) rotate(45deg);
@@ -284,22 +285,22 @@ const toCategoryClass = (category: string) =>
 	}
 
 	.legend-item:hover {
-		background: var(--color-neutral-125);
+		background: var(--color-bg-surface);
 	}
 
 	.legend-item.active {
-		background: var(--color-cool-100);
-		border: 1px solid var(--color-cool-200);
+		background: var(--color-bg-surface);
+		border: 1px solid var(--color-border-subtle);
 	}
 
 	.legend-item.inactive {
 		opacity: 0.5;
-		background: var(--color-neutral-125);
+		background: var(--color-bg-surface);
 	}
 
 	.legend-item.inactive:hover {
 		opacity: 0.7;
-		background: var(--color-neutral-200);
+		background: var(--color-bg-muted);
 	}
 
 	.legend-indicator {
@@ -331,7 +332,7 @@ const toCategoryClass = (category: string) =>
 
 	.legend-text {
 		font-size: 0.875rem;
-		color: var(--color-neutral-800);
+		color: var(--color-text-on-light);
 		flex: 1;
 		display: flex;
 		justify-content: space-between;
@@ -339,19 +340,19 @@ const toCategoryClass = (category: string) =>
 	}
 
 	.legend-text small {
-		color: var(--color-muted);
+		color: var(--color-text-secondary-dark);
 		font-size: 0.75rem;
 		font-weight: 500;
 	}
 
 	.legend-stats {
-		border-top: 1px solid var(--color-neutral-300);
+		border-top: 1px solid var(--color-border-subtle);
 		padding-top: 0.5rem;
 		text-align: center;
 	}
 
 	.legend-stats small {
-		color: var(--color-neutral-500);
+		color: var(--color-text-tertiary);
 		font-size: 0.7rem;
 	}
 

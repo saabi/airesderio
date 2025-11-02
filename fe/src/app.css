@@ -10,6 +10,8 @@
     --ref-brand-secondary: oklch(0.5595 0.0662 75.61deg);
     --ref-brand-dark: oklch(0.3795 0.0615 60.47deg);
     --ref-brand-deep: oklch(0.3324 0.0532 59.85deg);
+    /* Darker variant for text on light backgrounds - meets WCAG AA 4.5:1 */
+    --ref-brand-primary-text: oklch(0.3000 0.0717 59.27deg);
     --ref-brand-accent: oklch(0.7541 0.0853 67.10deg);
     --ref-brand-border: oklch(0.7769 0.0445 57.93deg);
 
@@ -20,6 +22,7 @@
 
     --ref-neutral-900: oklch(0.2781 0 0deg);
     --ref-neutral-800: oklch(0.3729 0 0deg);
+    --ref-neutral-700: oklch(0.4500 0 0deg);
     --ref-neutral-600: oklch(0.7107 0 0deg);
     --ref-neutral-500: oklch(0.7137 0 0deg);
     --ref-neutral-400: oklch(0.8717 0 0deg);
@@ -70,9 +73,14 @@
 
     --color-text-primary: var(--ref-ink);
     --color-text-secondary: var(--ref-muted);
+    --color-text-secondary-dark: var(--ref-neutral-700);
     --color-text-tertiary: var(--ref-neutral-600);
     --color-text-inverse: var(--ref-white);
     --color-text-link: var(--ref-blue-600);
+    /* Text color for accent background - ensures high contrast */
+    --color-text-on-accent: var(--ref-white);
+    /* Dark text for use on light backgrounds (info windows, cards) */
+    --color-text-on-light: var(--ref-neutral-900);
 
     --color-icon-primary: var(--color-text-primary);
     --color-icon-inverse: var(--color-text-inverse);
@@ -82,6 +90,8 @@
     --color-accent-hover: color-mix(in oklch, var(--ref-brand-primary) 85%, var(--ref-white) 15%);
     --color-accent-border: var(--ref-brand-border);
     --color-accent-strong: var(--ref-brand-deep);
+    /* Darker accent color for text on light backgrounds */
+    --color-accent-primary-text: var(--ref-brand-primary-text);
 
     --color-success: var(--ref-green-500);
     --color-success-strong: var(--ref-green-600);
@@ -146,9 +156,12 @@
 
     --color-text-primary: var(--ref-white);
     --color-text-secondary: color-mix(in oklch, var(--ref-white) 75%, var(--ref-neutral-500) 25%);
+    --color-text-secondary-dark: color-mix(in oklch, var(--ref-white) 85%, var(--ref-neutral-700) 15%);
     --color-text-tertiary: color-mix(in oklch, var(--ref-white) 60%, var(--ref-neutral-600) 40%);
     --color-text-inverse: color-mix(in oklch, var(--ref-neutral-200) 80%, var(--ref-white) 20%);
     --color-text-link: color-mix(in oklch, var(--ref-blue-500) 85%, var(--ref-white) 15%);
+    /* Dark text for use on light backgrounds (info windows, cards) */
+    --color-text-on-light: var(--ref-white);
 
     --color-icon-primary: var(--color-text-primary);
     --color-icon-inverse: var(--ref-neutral-980);

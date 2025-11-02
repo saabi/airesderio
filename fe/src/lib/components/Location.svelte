@@ -405,7 +405,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 							class={`marker-dot category-color ${categoryClass} ${isMainMarker ? 'marker-dot--main' : ''}`}
 							role='button'
 							tabindex='0'
-							aria-label={`Map marker for ${marker.title}`}
+							aria-label={icon ? `Location marker: ${icon} ${marker.title}` : `Location marker: ${marker.title}`}
 						>
 							{#if icon}
 								<span class={`marker-icon ${isMainMarker ? 'marker-icon--main' : ''}`}>
@@ -443,14 +443,15 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 				{#snippet markerInfoWindow(marker)}
 					{@const categoryClass = toCategoryClass(marker.category)}
 					{@const distanceClass = getDistanceBadgeClass(marker.place.distancia_categoria)}
-					<div class='info-window'>
+					{@const placeNameId = `place-name-${marker.id}`}
+					<div class='info-window' role='dialog' aria-labelledby={placeNameId} aria-label={`Information about ${marker.place.nombre}`}>
 						<div class='info-header'>
 							<div class={`category-indicator category-color ${categoryClass}`}>
 								{#if categoryIcons[marker.category]}
 									<span class='category-icon'>{categoryIcons[marker.category]}</span>
 								{/if}
 							</div>
-							<h3 class='place-name'>{marker.place.nombre}</h3>
+							<h3 class='place-name' id={placeNameId}>{marker.place.nombre}</h3>
 							{#if categoryNames[marker.category]}
 								<span class='category-name'>({categoryNames[marker.category]})</span>
 							{/if}
@@ -534,7 +535,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 	.location-text {
 		max-width: 40ch;
 		padding: 1.75rem;
-		color: var(--color-text-inverse);
+		color: var(--color-text-on-accent);
 	}
 
 	.location-eyebrow {
@@ -543,8 +544,8 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 		font-size: 0.9em;
 		display: inline-block;
 		margin-bottom: 0.5rem;
-		color: var(--color-text-inverse);
-		opacity: 0.85;
+		color: var(--color-text-on-accent);
+		opacity: 0.95;
 	}
 
 	.location-text h3 {
@@ -575,7 +576,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: var(--color-neutral-200);
+		background: var(--color-bg-muted);
 	}
 
 	.location-map__message {
@@ -641,14 +642,14 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 
 	:global(.category-name) {
 		font-size: 0.75rem;
-		color: var(--color-text-secondary);
+		color: var(--color-text-secondary-dark);
 		font-weight: 400;
 		margin-left: 0.5rem;
 	}
 
 	:global(.place-name) {
 		margin: 0;
-		color: var(--color-neutral-900);
+		color: var(--color-text-on-light);
 		font-size: 1rem;
 		font-weight: 600;
 		line-height: 1.2;
@@ -663,7 +664,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 	:global(.address) {
 		margin: 0;
 		font-size: 0.875rem;
-		color: var(--color-text-secondary);
+		color: var(--color-text-secondary-dark);
 		line-height: 1.4;
 	}
 
@@ -749,7 +750,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 		width: 16px;
 		height: 16px;
 		background: var(--color-bg-contrast);
-		border: 1px solid var(--color-neutral-300);
+		border: 1px solid var(--color-border-subtle);
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
@@ -776,20 +777,20 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 	}
 
 	:global(.distance-badge--very-near) {
-		background: var(--color-green-600);
+		background: var(--color-success-strong);
 	}
 
 	:global(.distance-badge--near) {
-		background: var(--color-orange-500);
+		background: var(--color-warning);
 	}
 
 	:global(.distance-badge--far) {
-		background: var(--color-red-500);
+		background: var(--color-danger);
 	}
 
 	:global(.distance-detail) {
-		background-color: var(--color-neutral-200);
-		color: var(--color-neutral-800);
+		background-color: var(--color-bg-muted);
+		color: var(--color-text-on-light);
 		padding: 0.125rem 0.5rem;
 		border-radius: 0.25rem;
 		font-size: 0.75rem;
@@ -798,13 +799,13 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 	:global(.description) {
 		margin: 0;
 		font-size: 0.8rem;
-		color: var(--color-neutral-500);
+		color: var(--color-text-tertiary);
 		font-style: italic;
 		line-height: 1.3;
 	}
 
 	:global(.photo-button) {
-		background: var(--color-blue-500);
+		background: var(--color-info);
 		color: var(--color-text-inverse);
 		border: none;
 		padding: 0.5rem 0.75rem;
@@ -816,11 +817,13 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 	}
 
 	:global(.photo-button:hover) {
-		background: var(--color-blue-600);
+		background: var(--color-info);
+		opacity: 0.9;
 	}
 
 	:global(.photo-button:active) {
-		background: var(--color-blue-700);
+		background: var(--color-info);
+		opacity: 0.8;
 	}
 
 	:global(.custom-map-marker) {

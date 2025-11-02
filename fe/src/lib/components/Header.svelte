@@ -74,7 +74,7 @@
 
 	.logo {
 		font-weight: 800;
-		color: var(--color-accent-primary);
+		color: var(--color-accent-primary-text);
 		letter-spacing: 0.02em;
 		z-index: 1001; /* Ensure logo is above mobile nav background */
 	}
@@ -88,7 +88,7 @@
 	}
 
 	.nav__desktop a {
-		color: var(--color-accent-primary);
+		color: var(--color-accent-primary-text);
 		text-decoration: none;
 		font-weight: 600;
 		border-bottom: 2px solid transparent;
@@ -117,7 +117,7 @@
 		display: block;
 		width: 1.5rem;
 		height: 3px;
-		background-color: var(--color-accent-primary);
+		background-color: var(--color-accent-primary-text);
 		margin: 0.3125rem 0;
 		transition: all 0.2s;
 	}
