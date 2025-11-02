@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { formatPhoneNumberPartial, validatePhoneNumber, numberingPlans } from '$lib/utils/multiCountryPhone';
-	import Select from '$lib/components/Select.svelte';
+	import Select from '$lib/components/forms/Select.svelte';
 
 	interface Country {
 		name: string;
@@ -360,10 +360,13 @@
 		align-items: stretch;
 	}
 
+	/* Override Select component width for phone number country selector */
+	/* Using !important is necessary here to override scoped component styles */
 	:global(.phone-country-select.select-input) {
-		width: auto;
+		width: auto !important;
 		flex: 0 0 auto;
 		min-width: 140px;
+		max-width: 200px;
 	}
 
 	.phone-number-wrapper {
@@ -377,9 +380,11 @@
 		overflow: hidden;
 	}
 
-	.phone-number-wrapper:has(.phone-number-input:focus),
-	.phone-number-wrapper:has(.phone-dial-code-input:focus) {
-		border-color: Highlight;
+	.phone-number-wrapper:has(.phone-number-input:focus-visible),
+	.phone-number-wrapper:has(.phone-dial-code-input:focus-visible) {
+		border-color: var(--color-border-strong);
+		outline: 1px solid var(--color-border-strong);
+		outline-offset: 0;
 	}
 
 	.phone-dial-code {
@@ -399,7 +404,7 @@
 		color: var(--color-text-primary);
 		font-size: 0.875em;
 		border: none;
-		border-right: 1px solid var(--color-border-default);
+		border-right: 1px solid var(--color-border-strong);
 		flex-shrink: 0;
 		min-width: 60px;
 		max-width: 80px;
@@ -412,6 +417,8 @@
 		border: none;
 		outline: none;
 		width: 100%;
+		background-color: transparent;
+		color: text;
 	}
 
 	.phone-number-input::placeholder {

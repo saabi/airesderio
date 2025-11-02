@@ -1,6 +1,8 @@
 <script lang="ts">
-	import PhoneNumberInput from '$lib/components/PhoneNumberInput.svelte';
-	import Select from '$lib/components/Select.svelte';
+	import Input from '$lib/components/forms/Input.svelte';
+	import PhoneNumberInput from '$lib/components/forms/PhoneNumberInput.svelte';
+	import Select from '$lib/components/forms/Select.svelte';
+	import Textarea from '$lib/components/forms/Textarea.svelte';
 
 	function handleSubmit(event: Event) {
 		event.preventDefault();
@@ -11,11 +13,11 @@
 <form action='#' method='POST' on:submit={handleSubmit}>
 	<div class='form-group'>
 		<label for='nombre'>Nombre</label>
-		<input type='text' id='nombre' name='nombre' />
+		<Input type='text' id='nombre' name='nombre' />
 	</div>
 	<div class='form-group'>
 		<label for='correo'>Correo</label>
-		<input type='email' id='correo' name='correo' />
+		<Input type='email' id='correo' name='correo' />
 	</div>
 	<PhoneNumberInput id='telefono' name='telefono' />
 	<div class='form-group'>
@@ -30,7 +32,7 @@
 	</div>
 	<div class='form-group'>
 		<label for='mensaje'>Mensaje</label>
-		<textarea id='mensaje' name='mensaje' rows='4'></textarea>
+		<Textarea id='mensaje' name='mensaje' rows={4} />
 	</div>
 	<div class='form-group'>
 		<button type='submit'>ENVIAR</button>
@@ -47,14 +49,6 @@
 		font-size: 0.85em;
 		margin-bottom: 0.25rem;
 		color: var(--color-text-secondary);
-	}
-
-	.form-group input,
-	.form-group textarea {
-		width: 100%;
-		padding: 0.625rem;
-		border: 1px solid var(--color-border-default);
-		border-radius: 0.25rem;
 	}
 
 	.form-group button {
