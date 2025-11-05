@@ -1,32 +1,48 @@
 <script lang="ts">
-    import Title from '$lib/components/Title.svelte';
-    import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import Title from '$lib/components/Title.svelte';
+	import SvgViewport from '$lib/components/SvgViewport.svelte';
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import Ascensores from '$lib/components/icons/Ascensores.svelte';
+	import Banos from '$lib/components/icons/Banos.svelte';
+	import CerraduraDigital from '$lib/components/icons/CerraduraDigital.svelte';
+	import Cocina from '$lib/components/icons/Cocina.svelte';
+	import EnergiaElectrica from '$lib/components/icons/EnergiaElectrica.svelte';
+	import GasNatural from '$lib/components/icons/GasNatural.svelte';
+	import Horno from '$lib/components/icons/Horno.svelte';
+	import Lavasecarropas from '$lib/components/icons/Lavasecarropas.svelte';
+	import Puerta from '$lib/components/icons/Puerta.svelte';
+	import Termotanque from '$lib/components/icons/Termotanque.svelte';
+	import Vestidor from '$lib/components/icons/Vestidor.svelte';
 
-    const equipmentItems = [
-		{ icon: '🖼️', svg: '/iconos-servicios/ascensores.svg', text: 'Carpintería de Aluminio Línea A30 NEW de Aluar.' },
-		{ icon: '🍳', svg: '/iconos-servicios/horno.svg', text: 'Unidades separadas de anafe y horno a gas empotrados.' },
-		{ icon: '🚪', svg: '/iconos-servicios/puerta.svg', text: 'Puertas de madera de diseño exclusivo y elegante.' },
-		{ icon: '🌡️', svg: '/iconos-servicios/termotanque.svg', text: 'Termotanques a gas instalados en cada departamento.' },
+	const equipmentItems: Array<{
+		icon: string;
+		component: any;
+		text: string;
+	}> = [
+		{ icon: '🖼️', component: Ascensores, text: 'Carpintería de Aluminio Línea A30 NEW de Aluar.' },
+		{ icon: '🍳', component: Horno, text: 'Unidades separadas de anafe y horno a gas empotrados.' },
+		{ icon: '🚪', component: Puerta, text: 'Puertas de madera de diseño exclusivo y elegante.' },
+		{ icon: '🌡️', component: Termotanque, text: 'Termotanques a gas instalados en cada departamento.' },
 		{
 			icon: '🔐',
-			svg: '/iconos-servicios/cerradura-digital.svg',
+			component: CerraduraDigital,
 			text: 'Departamentos con cerradura Digital Inteligente Biométrica Electrónica con Huella Tarjeta Wifi.'
 		},
 		{
 			icon: '🛁',
-			svg: '/iconos-servicios/baños.svg',
+			component: Banos,
 			text: 'Baños equipados con artefactos sanitarios, vanitory y grifería de 1° calidad, mampara de vidrio color ámbar y espejo.'
 		},
-		{ icon: '🔥', svg: '/iconos-servicios/gas-natural.svg', text: 'Gas natural para calefón, hornallas y horno.' },
+		{ icon: '🔥', component: GasNatural, text: 'Gas natural para calefón, hornallas y horno.' },
 		{
 			icon: '👔',
-			svg: '/iconos-servicios/vestidor.svg',
+			component: Vestidor,
 			text: 'Elegante vestidor con cajonera, zapatero, estantes e iluminación led interior.'
 		},
-		{ icon: '⚡', svg: '/iconos-servicios/energia-electrica.svg', text: 'Energía eléctrica con transformador en el edificio.' },
-		{ icon: '⬜', svg: '/iconos-servicios/lavasecarropas.svg', text: 'Pisos de porcelanato en todos los ambientes.' },
-		{ icon: '🍽️', svg: '/iconos-servicios/cocina.svg', text: 'Cocina equipada con muebles altos y bajos.' }
-    ];
+		{ icon: '⚡', component: EnergiaElectrica, text: 'Energía eléctrica con transformador en el edificio.' },
+		{ icon: '⬜', component: Lavasecarropas, text: 'Pisos de porcelanato en todos los ambientes.' },
+		{ icon: '🍽️', component: Cocina, text: 'Cocina equipada con muebles altos y bajos.' }
+	];
 
     const { action: equipmentObserver, visible: equipmentVisible } = createSectionObserver('equipment', {
         threshold: 0.3
@@ -49,7 +65,9 @@
                 class='scroll-animate'
                 style={`--scroll-animate-delay: ${140 + index * 60}ms; --scroll-animate-offset: 48px;`}
             >
-                <img src={item.svg} alt='' aria-hidden='true' />
+                <SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
+                    <svelte:component this={item.component} />
+                </SvgViewport>
                 <span>{item.text}</span>
             </li>
         {/each}
@@ -79,11 +97,6 @@
 		padding: 1rem 0;
 	}
 
-	.equip-list li img {
-		width: 4.5rem;
-		height: 4.5rem;
-		object-fit: contain;
-	}
 
 	.equip-list li span {
 		position: relative;
