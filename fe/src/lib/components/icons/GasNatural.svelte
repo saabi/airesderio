@@ -1,6 +1,6 @@
 <defs>
   <style type="text/css">
-    .fil1 {fill:#B3B3B3}
+    .fil1 {fill:var(--svg-fill-secondary)}
   </style>
 </defs>
 <g

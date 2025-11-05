@@ -1,8 +1,8 @@
 <defs>
   <style type="text/css">
-    .fil0 {fill:#999999}
-    .fil2 {fill:white;stroke:#999999;stroke-width:61.73;stroke-miterlimit:22.9256}
-    .fil3 {fill:none;stroke:#999999;stroke-width:75;stroke-miterlimit:38.2016}
+    .fil0 {fill:var(--svg-fill-primary)}
+    .fil2 {fill:var(--svg-fill-contrast);stroke:var(--svg-stroke-primary);stroke-width:61.73;stroke-miterlimit:22.9256}
+    .fil3 {fill:none;stroke:var(--svg-stroke-primary);stroke-width:75;stroke-miterlimit:38.2016}
   </style>
 </defs>
 <g

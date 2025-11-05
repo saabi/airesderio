@@ -1,6 +1,6 @@
 <defs>
   <style type="text/css">
-    .fil0 {fill:#999999;stroke-width:0.00799015}
+    .fil0 {fill:var(--svg-fill-primary);stroke-width:0.00799015}
   </style>
 </defs>
 <path

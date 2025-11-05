@@ -1,8 +1,8 @@
 <defs>
   <style type="text/css">
-    .fil1 {fill:#b3b3b3;fill-opacity:1;stroke-width:0.00886265}
+    .fil1 {fill:var(--svg-fill-secondary);fill-opacity:1;stroke-width:0.00886265}
     .opacity-full {opacity:1}
-    .path14-style {baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#b3b3b3;stroke-miterlimit:22.9256;enable-background:accumulate;stop-color:#000000;stop-opacity:1}
+    .path14-style {baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:var(--svg-fill-secondary);stroke-miterlimit:22.9256;enable-background:accumulate;stop-color:var(--svg-stroke-contrast);stop-opacity:1}
   </style>
 </defs>
 <g>

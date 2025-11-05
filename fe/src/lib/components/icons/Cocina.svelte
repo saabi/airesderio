@@ -1,6 +1,6 @@
 <defs>
   <style type="text/css">
-    .fil0 {fill:#999999}
+    .fil0 {fill:var(--svg-fill-primary)}
   </style>
 </defs>
 <g transform="matrix(0.00889523,0,0,0.00889523,-268.524826,-34.734898)"><g><g>

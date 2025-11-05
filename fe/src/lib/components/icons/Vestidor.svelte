@@ -1,7 +1,7 @@
 <defs>
   <style type="text/css">
-    .fil0 {fill:#999999}
-    .fil0-stroke {fill:#999999;stroke:#999999;stroke-width:20;stroke-miterlimit:22.9256}
+    .fil0 {fill:var(--svg-fill-primary)}
+    .fil0-stroke {fill:var(--svg-fill-primary);stroke:var(--svg-stroke-primary);stroke-width:20;stroke-miterlimit:22.9256}
   </style>
 </defs>
 <g

@@ -54,11 +54,15 @@
     --ref-indigo-600: oklch(0.4568 0.2146 277.02deg);
     --ref-pink-600: oklch(0.5246 0.1990 3.96deg);
 
+    --ref-cream: #FAF8F4;
+    --ref-gold: #EAA43B;
+    --ref-gold-dark: #D48C20;
+
     --ref-neutral-950: color-mix(in oklch, var(--ref-black) 85%, var(--ref-white) 15%);
     --ref-neutral-980: color-mix(in oklch, var(--ref-black) 92%, var(--ref-white) 8%);
 
     /* === Functional tokens === */
-    --color-bg-canvas: var(--ref-white);
+    --color-bg-canvas: var(--ref-cream);
     --color-bg-surface: var(--ref-neutral-150);
     --color-bg-elevated: color-mix(in oklch, var(--ref-white) 95%, var(--ref-neutral-200) 5%);
     --color-bg-muted: var(--ref-neutral-200);
@@ -84,6 +88,13 @@
 
     --color-icon-primary: var(--color-text-primary);
     --color-icon-inverse: var(--color-text-inverse);
+
+    /* SVG icon colors */
+    --svg-fill-primary: var(--ref-gold-dark);
+    --svg-fill-secondary: var(--ref-gold);
+    --svg-fill-contrast: var(--ref-white);
+    --svg-stroke-primary: var(--ref-neutral-700);
+    --svg-stroke-contrast: var(--ref-black);
 
     --color-accent-primary: var(--ref-brand-primary);
     --color-accent-secondary: var(--ref-brand-secondary);
@@ -165,6 +176,13 @@
 
     --color-icon-primary: var(--color-text-primary);
     --color-icon-inverse: var(--ref-neutral-980);
+
+    /* SVG icon colors */
+    --svg-fill-primary: var(--ref-neutral-400);
+    --svg-fill-secondary: var(--ref-neutral-500);
+    --svg-fill-contrast: color-mix(in oklch, var(--ref-neutral-200) 75%, var(--ref-white) 25%);
+    --svg-stroke-primary: var(--ref-neutral-400);
+    --svg-stroke-contrast: var(--ref-white);
 
     --color-accent-primary: color-mix(in oklch, var(--ref-brand-primary) 65%, var(--ref-white) 35%);
     --color-accent-secondary: color-mix(in oklch, var(--ref-brand-secondary) 70%, var(--ref-white) 30%);

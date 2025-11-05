@@ -1,7 +1,7 @@
 <defs>
   <style type="text/css">
-    .fil0 {fill:#999999}
-    .fil2 {fill:white}
+    .fil0 {fill:var(--svg-fill-primary)}
+    .fil2 {fill:var(--svg-fill-contrast)}
   </style>
 </defs>
 <g
