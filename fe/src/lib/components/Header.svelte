@@ -1,5 +1,14 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+	import { resolveInitialTheme, setTheme, type Theme } from '$lib/utils/theme';
+
 	let isMenuOpen = $state(false);
+	let currentTheme = $state<Theme>('light');
+	let colorEditorOpen = $state(false);
+	let devColorEditorModule =
+		$state<typeof import('$lib/components/dev/DevColorEditor.svelte') | null>(null);
+	const isDevMode = import.meta.env.DEV;
 
 	const navLinks = [
 		{ href: '#', text: 'Home', current: true },
@@ -14,11 +23,47 @@
 		isMenuOpen = !isMenuOpen;
 	}
 
+	function toggleTheme() {
+		currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+		setTheme(currentTheme);
+	}
+
 	$effect(() => {
 		if (isMenuOpen) {
 			document.body.classList.add('nav-open');
 		} else {
 			document.body.classList.remove('nav-open');
+		}
+	});
+
+	onMount(() => {
+		currentTheme = resolveInitialTheme();
+		if (isDevMode) {
+			void import('$lib/components/dev/DevColorEditor.svelte').then((module) => {
+				devColorEditorModule = module;
+			});
+		}
+		
+		// Sync with theme changes from other sources (e.g., system preference changes)
+		if (browser) {
+			const updateTheme = () => {
+				const themeAttr = document.documentElement.dataset.theme;
+				if (themeAttr === 'light' || themeAttr === 'dark') {
+					currentTheme = themeAttr;
+				}
+			};
+			
+			// Check initial state
+			updateTheme();
+			
+			// Watch for changes
+			const observer = new MutationObserver(updateTheme);
+			observer.observe(document.documentElement, {
+				attributes: true,
+				attributeFilter: ['data-theme']
+			});
+			
+			return () => observer.disconnect();
 		}
 	});
 </script>
@@ -38,20 +83,82 @@
 				{/each}
 			</ul>
 		</nav>
-		<button
-			id='nav-toggle'
-			class='nav-toggle'
-			class:is-open={isMenuOpen}
-			aria-label='Abrir menú'
-			aria-expanded={isMenuOpen}
-			aria-controls='main-nav'
-			on:click={toggleMenu}
-		>
-			<span class='icon-bar'></span>
-			<span class='icon-bar'></span>
-			<span class='icon-bar'></span>
-		</button>
+		<div class='header-controls'>
+			{#if isDevMode}
+				<button
+					id='color-editor-toggle'
+					class='color-editor-toggle'
+					onclick={() => (colorEditorOpen = !colorEditorOpen)}
+					aria-expanded={colorEditorOpen}
+					type='button'
+				>
+					🎨
+				</button>
+			{/if}
+			<button
+				id='theme-toggle'
+				class='theme-toggle'
+				aria-label={currentTheme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
+				title={currentTheme === 'light' ? 'Modo oscuro' : 'Modo claro'}
+				onclick={toggleTheme}
+			>
+				{#if currentTheme === 'light'}
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						width='20'
+						height='20'
+						viewBox='0 0 24 24'
+						fill='none'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'
+						stroke-linejoin='round'
+					>
+						<path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'></path>
+					</svg>
+				{:else}
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						width='20'
+						height='20'
+						viewBox='0 0 24 24'
+						fill='none'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'
+						stroke-linejoin='round'
+					>
+						<circle cx='12' cy='12' r='5'></circle>
+						<line x1='12' y1='1' x2='12' y2='3'></line>
+						<line x1='12' y1='21' x2='12' y2='23'></line>
+						<line x1='4.22' y1='4.22' x2='5.64' y2='5.64'></line>
+						<line x1='18.36' y1='18.36' x2='19.78' y2='19.78'></line>
+						<line x1='1' y1='12' x2='3' y2='12'></line>
+						<line x1='21' y1='12' x2='23' y2='12'></line>
+						<line x1='4.22' y1='19.78' x2='5.64' y2='18.36'></line>
+						<line x1='18.36' y1='5.64' x2='19.78' y2='4.22'></line>
+					</svg>
+				{/if}
+			</button>
+			<button
+				id='nav-toggle'
+				class='nav-toggle'
+				class:is-open={isMenuOpen}
+				aria-label='Abrir menú'
+				aria-expanded={isMenuOpen}
+				aria-controls='main-nav'
+				onclick={toggleMenu}
+			>
+				<span class='icon-bar'></span>
+				<span class='icon-bar'></span>
+				<span class='icon-bar'></span>
+			</button>
+		</div>
 	</div>
+	{#if isDevMode && devColorEditorModule}
+		{@const DevColorEditor = devColorEditorModule.default}
+		<DevColorEditor open={colorEditorOpen} on:close={() => (colorEditorOpen = false)} />
+	{/if}
 </header>
 
 <style>
@@ -102,6 +209,66 @@
 
 	.nav__desktop a[aria-current='page'] {
 		border-color: var(--color-accent-secondary);
+	}
+
+	.header-controls {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		z-index: 1001;
+	}
+
+	.color-editor-toggle {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: 999px;
+		border: 1px solid var(--color-border-default);
+		background: var(--color-bg-elevated);
+		color: var(--color-accent-primary-text);
+		cursor: pointer;
+		font-size: 1.1rem;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.color-editor-toggle:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 0.5rem 1rem var(--shadow-subtle);
+	}
+
+	.theme-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.5rem;
+		color: var(--color-accent-primary-text);
+		border-radius: 0.375rem;
+		transition: background-color 0.2s, color 0.2s;
+		z-index: 1001;
+	}
+
+	.theme-toggle:hover {
+		background-color: var(--color-bg-muted);
+	}
+
+	.theme-toggle:focus-visible {
+		outline: 2px solid var(--color-accent-secondary);
+		outline-offset: 2px;
+	}
+
+	.theme-toggle svg {
+		width: 1.25rem;
+		height: 1.25rem;
+		transition: transform 0.2s;
+	}
+
+	.theme-toggle:hover svg {
+		transform: scale(1.1);
 	}
 
 	.nav-toggle {
