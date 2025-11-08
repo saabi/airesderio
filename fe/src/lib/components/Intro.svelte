@@ -74,8 +74,8 @@
 
 	.kpi strong {
 		display: block;
-		font-size: 5rem;
-		font-weight: 900;
+		font-size: 4rem;
+		font-weight: 700;
 		line-height: 1;
 		letter-spacing: 0.02em;
 	}
@@ -85,7 +85,6 @@
 		color: var(--color-ink);
 		text-transform: uppercase;
 		letter-spacing: 0.12em;
-		margin-top: 0.25rem;
 	}
 
 	@media (max-width: 850px) {

@@ -93,8 +93,8 @@
     --svg-fill-primary: var(--ref-gold-dark);
     --svg-fill-secondary: var(--ref-gold);
     --svg-fill-contrast: var(--ref-white);
-    --svg-stroke-primary: var(--ref-neutral-700);
-    --svg-stroke-contrast: var(--ref-black);
+    --svg-stroke-primary: var(--ref-gold);
+    --svg-stroke-contrast: var(--ref-gold-dark);
 
     --color-accent-primary: var(--ref-brand-primary);
     --color-accent-secondary: var(--ref-brand-secondary);
