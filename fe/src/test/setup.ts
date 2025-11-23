@@ -3,6 +3,14 @@ import * as matchers from '@testing-library/jest-dom/matchers';
 
 expect.extend(matchers);
 
+// Mock $app/environment to ensure browser mode for all tests
+vi.mock('$app/environment', () => ({
+	browser: true,
+	dev: false,
+	building: false,
+	version: '1.0.0'
+}));
+
 // Mock browser environment
 Object.defineProperty(window, 'matchMedia', {
 	writable: true,
