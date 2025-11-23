@@ -84,6 +84,9 @@ Design proposals, mockups, and visual assets for the project.
 - **#009**: Improve Accessibility (Accessibility)
 - **#010**: Reorganize Components (Code Organization)
 
+### Content Organization
+- **#011**: Organize Place Photo Carousel Files (Content Management)
+
 ## Contributing
 
 When working on tickets:
