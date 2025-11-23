@@ -9,8 +9,10 @@ declare global {
 		// interface Platform {}
 	}
 	interface Window {
-		google: any;
-		initMap: () => void;
+		google?: {
+			maps: typeof google.maps;
+		};
+		initMap?: () => void;
 	}
 }
 
