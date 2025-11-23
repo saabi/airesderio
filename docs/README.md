@@ -78,15 +78,14 @@ Design proposals, mockups, and visual assets for the project.
 - **#004**: Remove Debug Code (Code Quality)
 - **#005**: Improve Type Safety (Code Quality)
 - **#006**: Add SEO Meta Tags (SEO)
-- **#007**: Image Optimization (Performance)
+- **#011**: Organize Place Photo Carousel Files (Content Management) - *Do before #007*
+- **#007**: Image Optimization (Performance) - *Depends on #011*
 - **#008**: Add Unit Tests (Quality Assurance)
 
 ### Low Priority
 - **#009**: Improve Accessibility (Accessibility)
 - **#010**: Reorganize Components (Code Organization)
 
-### Content Organization
-- **#011**: Organize Place Photo Carousel Files (Content Management)
 
 ## Contributing
 

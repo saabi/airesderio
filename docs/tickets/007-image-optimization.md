@@ -56,11 +56,16 @@ Images are currently manually optimized. Implementing an automated image optimiz
 4-6 hours
 
 ## Dependencies
+- **Ticket #011**: Organize Place Photo Carousel Files (should be completed first)
+  - Photos need to be organized in the correct directory structure before optimization
+  - The carousel images are currently stashed/unorganized
 - Image optimization package
 - May require build process changes
 
 ## Notes
+- **Important**: Complete ticket #011 (Organize Place Photos) first, as the carousel images are currently stashed/unorganized
 - Consider using `@sveltejs/enhanced-img` for SvelteKit integration
 - May need to update image paths in components
 - Test with various image sizes and formats
+- Once photos are organized (ticket #011), optimize all images in `static/lugares/` directory
 
