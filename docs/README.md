@@ -20,7 +20,8 @@ docs/
     ├── 007-image-optimization.md
     ├── 008-add-unit-tests.md
     ├── 009-improve-accessibility.md
-    └── 010-reorganize-components.md
+    ├── 010-reorganize-components.md
+    └── 011-organize-place-photos.md
 ```
 
 ## Quick Start
