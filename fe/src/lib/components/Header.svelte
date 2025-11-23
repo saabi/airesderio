@@ -149,7 +149,7 @@
 
 <header class='site'>
 	<div class='wrap site__bar'>
-		<h1 class='logo'>Habitat Prime SAS</h1>
+		<div class='logo' aria-label='Habitat Prime SAS'>Habitat Prime SAS</div>
 		<nav
 			id='main-nav'
 			class='main-nav'

@@ -17,8 +17,13 @@
 	});
 </script>
 
+<!-- Skip to main content link for keyboard navigation -->
+<a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
 <Header />
 
-{@render children()}
+<main id="main-content">
+	{@render children()}
+</main>
 
 <Footer />

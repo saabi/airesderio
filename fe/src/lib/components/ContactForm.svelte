@@ -13,16 +13,16 @@
 <form action='#' method='POST' on:submit={handleSubmit}>
 	<div class='form-group'>
 		<label for='nombre'>Nombre</label>
-		<Input type='text' id='nombre' name='nombre' />
+		<Input type='text' id='nombre' name='nombre' required ariaLabel='Nombre completo' />
 	</div>
 	<div class='form-group'>
 		<label for='correo'>Correo</label>
-		<Input type='email' id='correo' name='correo' />
+		<Input type='email' id='correo' name='correo' required ariaLabel='Correo electrónico' />
 	</div>
 	<PhoneNumberInput id='telefono' name='telefono' />
 	<div class='form-group'>
 		<label for='consulta'>Consulta</label>
-		<Select id='consulta' name='consulta' placeholder='Seleccioná'>
+		<Select id='consulta' name='consulta' placeholder='Seleccioná' ariaLabel='Tipo de consulta'>
 			{#snippet children()}
 				<option>Precio y Financiación</option>
 				<option>Visitar el Showroom</option>
@@ -32,10 +32,10 @@
 	</div>
 	<div class='form-group'>
 		<label for='mensaje'>Mensaje</label>
-		<Textarea id='mensaje' name='mensaje' rows={4} />
+		<Textarea id='mensaje' name='mensaje' rows={4} ariaLabel='Mensaje o consulta' />
 	</div>
 	<div class='form-group'>
-		<button type='submit'>ENVIAR</button>
+		<button type='submit' aria-label='Enviar formulario de contacto'>ENVIAR</button>
 	</div>
 </form>
 

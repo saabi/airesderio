@@ -9,6 +9,7 @@
 		onchange?: (event: Event) => void;
 		children?: Snippet;
 		class?: string;
+		ariaLabel?: string;
 	}
 
 	let { 
@@ -18,7 +19,8 @@
 		placeholder,
 		onchange,
 		children,
-		class: className = ''
+		class: className = '',
+		ariaLabel
 	}: Props = $props();
 
 	let selectElement: HTMLSelectElement | null = $state(null);
@@ -57,6 +59,7 @@
 	onchange={onchange}
 	onfocus={handleFocus}
 	onblur={handleBlur}
+	aria-label={ariaLabel}
 >
 	{#if placeholder}
 		<option value='' disabled hidden>{placeholder}</option>

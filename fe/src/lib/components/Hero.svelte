@@ -26,7 +26,7 @@
 		class='hero-contact scroll-animate'
 		style='--scroll-animate-delay: 120ms; --scroll-animate-offset: 36px; --scroll-animate-duration: 520ms;'
 	>
-		<h2>PROYECTO AIRES DE RÍO</h2>
+		<h1>PROYECTO AIRES DE RÍO</h1>
 		<p>Comunicate con nosotros</p>
 		<ContactForm />
 	</div>
@@ -53,7 +53,7 @@
 		border-radius: 0.5rem;
 	}
 
-	.hero-contact h2 {
+	.hero-contact h1 {
 		font-size: 1.1em;
 		font-weight: 600;
 		letter-spacing: 0.1em;

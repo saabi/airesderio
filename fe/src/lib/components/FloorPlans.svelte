@@ -23,7 +23,7 @@
             role='img'
             aria-label='Plano de distribución de los departamentos del proyecto Aires de Río'
         ></div>
-		<figcaption class='vh'>Plano de distribución y layout de las unidades</figcaption>
+		<figcaption>Plano de distribución y layout de las unidades</figcaption>
 	</figure>
 </section>
 

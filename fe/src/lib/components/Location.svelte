@@ -469,7 +469,11 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 							{/if}
 							
 							{#if typedMarker.place.photos && typedMarker.place.photos.length > 0}
-								<button class='photo-button' onclick={() => openPhotoCarousel(typedMarker.place, typedMarker.category, typedMarker.placeId)}>
+								<button 
+									class='photo-button' 
+									onclick={() => openPhotoCarousel(typedMarker.place, typedMarker.category, typedMarker.placeId)}
+									aria-label={`Ver ${typedMarker.place.photos.length} foto${typedMarker.place.photos.length > 1 ? 's' : ''} de ${typedMarker.place.nombre}`}
+								>
 									📷 Ver {typedMarker.place.photos.length} foto{typedMarker.place.photos.length > 1 ? 's' : ''}
 								</button>
 							{/if}
