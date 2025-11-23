@@ -12,7 +12,7 @@
 		onchange?: (event: Event) => void;
 		onblur?: (event: FocusEvent) => void;
 		ariaLabel?: string;
-		ariaInvalid?: boolean | string;
+		ariaInvalid?: boolean | 'grammar' | 'spelling';
 	}
 
 	let {

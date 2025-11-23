@@ -12,9 +12,9 @@
 		onkeydown?: (event: KeyboardEvent) => void;
 		onchange?: (event: Event) => void;
 		onblur?: (event: FocusEvent) => void;
-		inputmode?: string;
+		inputmode?: 'text' | 'search' | 'none' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal';
 		ariaLabel?: string;
-		ariaInvalid?: boolean | string;
+		ariaInvalid?: boolean | 'grammar' | 'spelling';
 		elementRef?: (element: HTMLInputElement | null) => void;
 	}
 
