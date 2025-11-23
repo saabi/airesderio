@@ -68,7 +68,7 @@
 	});
 </script>
 
-<header class='site' role='banner'>
+<header class='site'>
 	<div class='wrap site__bar'>
 		<h1 class='logo'>Habitat Prime SAS</h1>
 		<nav

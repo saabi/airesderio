@@ -59,8 +59,21 @@
 <svelte:window onkeydown={handleKeydown} />
 
 {#if visible && place && photos.length > 0}
-	<div class='photo-carousel-overlay' role='dialog' aria-modal='true' onclick={onClose} onkeydown={(e) => e.key === 'Escape' && onClose()}>
-		<div class='photo-carousel-modal' role='document' onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
+	<div 
+		class='photo-carousel-overlay' 
+		role='dialog' 
+		aria-modal='true'
+	>
+		<button 
+			type='button'
+			class='photo-carousel-overlay-backdrop'
+			aria-label='Cerrar galería'
+			onclick={onClose}
+		></button>
+		<div 
+			class='photo-carousel-modal' 
+			role='document'
+		>
 			<div class='photo-carousel-header'>
 				<h3>{place.nombre}</h3>
 				<button class='close-button' onclick={onClose} aria-label='Cerrar galería de fotos'>×</button>
@@ -111,12 +124,26 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: var(--overlay-black-80);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		z-index: 10000;
 		backdrop-filter: blur(4px);
+	}
+
+	.photo-carousel-overlay-backdrop {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		background: var(--overlay-black-80);
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		z-index: 1;
 	}
 
 	.photo-carousel-modal {
@@ -127,6 +154,8 @@
 		width: 600px;
 		box-shadow: 0 20px 25px -5px var(--shadow-soft);
 		overflow: hidden;
+		position: relative;
+		z-index: 2;
 	}
 
 	.photo-carousel-header {
