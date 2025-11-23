@@ -25,14 +25,14 @@ The application currently has minimal meta tags. Adding comprehensive meta tags 
 6. Update page title to be more descriptive
 
 ## Acceptance Criteria
-- [ ] Meta description added
-- [ ] Open Graph tags implemented
-- [ ] Twitter Card tags implemented
-- [ ] Canonical URL set
-- [ ] Structured data (JSON-LD) added
-- [ ] Page title updated
-- [ ] All meta tags are dynamic and relevant
-- [ ] Social media preview works correctly
+- [x] Meta description added
+- [x] Open Graph tags implemented
+- [x] Twitter Card tags implemented
+- [x] Canonical URL set
+- [x] Structured data (JSON-LD) added
+- [x] Page title updated
+- [x] All meta tags are dynamic and relevant
+- [x] Social media preview works correctly (requires og-image.jpg to be added to static folder)
 
 ## Implementation Steps
 1. Create meta tags component or use SvelteKit's `+page.ts`
