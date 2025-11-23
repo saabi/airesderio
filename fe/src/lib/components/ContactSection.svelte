@@ -2,7 +2,7 @@
 	import ContactForm from '$lib/components/ContactForm.svelte';
 </script>
 
-<section class='contact-section' aria-labelledby='contact-heading'>
+<section id='contacto' class='contact-section' aria-labelledby='contact-heading'>
 	<div class='wrap'>
 		<div class='contact-section__container'>
 			<div class='contact-section__form'>

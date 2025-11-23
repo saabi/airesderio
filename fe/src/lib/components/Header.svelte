@@ -11,13 +11,15 @@
 	const isDevMode = import.meta.env.DEV;
 
 	const navLinks = [
-		{ href: '#', text: 'Home', current: true },
-		{ href: '#ubicacion', text: 'Ubicación' },
-		{ href: '#planos', text: 'Planos' },
-		{ href: '#equipados', text: 'Equipamiento' },
-		{ href: '#', text: 'Preventa' },
-		{ href: '#', text: 'Contacto' }
+		{ href: '#top', text: 'Home', id: 'top' },
+		{ href: '#ubicacion', text: 'Ubicación', id: 'ubicacion' },
+		{ href: '#planos', text: 'Planos', id: 'planos' },
+		{ href: '#equipados', text: 'Equipamiento', id: 'equipados' },
+		{ href: '#top', text: 'Preventa', id: 'top' }, // Links to top (hero section) for now
+		{ href: '#contacto', text: 'Contacto', id: 'contacto' }
 	];
+
+	let activeLinkId = $state<string>('top');
 
 	function toggleMenu() {
 		isMenuOpen = !isMenuOpen;
@@ -26,6 +28,74 @@
 	function toggleTheme() {
 		currentTheme = currentTheme === 'light' ? 'dark' : 'light';
 		setTheme(currentTheme);
+	}
+
+	function handleNavClick(event: MouseEvent, href: string) {
+		// Close mobile menu if open
+		if (isMenuOpen) {
+			isMenuOpen = false;
+		}
+
+		// Handle anchor links
+		if (href.startsWith('#')) {
+			event.preventDefault();
+			const targetId = href.slice(1);
+			const targetElement = document.getElementById(targetId);
+			
+			if (targetElement) {
+				const headerHeight = 80; // Approximate header height
+				const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+				
+				window.scrollTo({
+					top: targetPosition,
+					behavior: 'smooth'
+				});
+			}
+		}
+	}
+
+	function updateActiveLink() {
+		if (!browser) return;
+
+		const sections = navLinks
+			.map(link => {
+				const element = document.getElementById(link.id);
+				if (!element) return null;
+				const rect = element.getBoundingClientRect();
+				return {
+					id: link.id,
+					top: rect.top,
+					bottom: rect.bottom,
+					height: rect.height
+				};
+			})
+			.filter(Boolean) as Array<{ id: string; top: number; bottom: number; height: number }>;
+
+		if (sections.length === 0) return;
+
+		const scrollPosition = window.scrollY + 100; // Offset for header
+
+		// Find the section currently in view
+		let currentSection = sections[0].id;
+		
+		for (const section of sections) {
+			if (scrollPosition >= section.top && scrollPosition < section.bottom) {
+				currentSection = section.id;
+				break;
+			}
+		}
+
+		// If scrolled past all sections, use the last one
+		if (scrollPosition >= sections[sections.length - 1].top) {
+			currentSection = sections[sections.length - 1].id;
+		}
+
+		// If at the top, use the first section
+		if (scrollPosition < sections[0].top) {
+			currentSection = sections[0].id;
+		}
+
+		activeLinkId = currentSection;
 	}
 
 	$effect(() => {
@@ -62,8 +132,17 @@
 				attributes: true,
 				attributeFilter: ['data-theme']
 			});
+
+			// Update active link on scroll
+			updateActiveLink();
+			window.addEventListener('scroll', updateActiveLink, { passive: true });
+			window.addEventListener('resize', updateActiveLink, { passive: true });
 			
-			return () => observer.disconnect();
+			return () => {
+				observer.disconnect();
+				window.removeEventListener('scroll', updateActiveLink);
+				window.removeEventListener('resize', updateActiveLink);
+			};
 		}
 	});
 </script>
@@ -79,7 +158,16 @@
 		>
 			<ul class='nav__desktop'>
 				{#each navLinks as link}
-					<li><a href={link.href} aria-current={link.current ? 'page' : undefined}>{link.text}</a></li>
+					<li>
+						<a 
+							href={link.href} 
+							aria-current={activeLinkId === link.id ? 'page' : undefined}
+							onclick={(e) => handleNavClick(e, link.href)}
+							class:active={activeLinkId === link.id}
+						>
+							{link.text}
+						</a>
+					</li>
 				{/each}
 			</ul>
 		</nav>
@@ -207,7 +295,8 @@
 		border-color: var(--color-accent-border);
 	}
 
-	.nav__desktop a[aria-current='page'] {
+	.nav__desktop a[aria-current='page'],
+	.nav__desktop a.active {
 		border-color: var(--color-accent-secondary);
 	}
 

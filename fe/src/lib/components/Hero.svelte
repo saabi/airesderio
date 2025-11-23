@@ -8,6 +8,7 @@
 </script>
 
 <section
+	id='top'
 	class='hero'
 	role='banner'
 	aria-labelledby='hero-heading'
