@@ -70,6 +70,9 @@ src/lib/components/
 - [ ] Application works correctly
 - [ ] Code is more maintainable
 
+## Status
+**Not Started** - Low priority refactoring task. Can be done when convenient.
+
 ## Implementation Steps
 1. Create new directory structure
 2. Move components to appropriate directories

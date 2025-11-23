@@ -76,6 +76,9 @@ Photos are loaded from: `/lugares/${category}/${placeId}/${filename}` (see `Loca
 - [ ] No broken image references
 - [ ] Documentation updated if structure changes
 
+## Status
+**Not Started** - Required before ticket #007 (Image Optimization) can proceed. Photos are currently in unorganized directory structure.
+
 ## Implementation Steps
 
 ### 1. Create Analysis Script

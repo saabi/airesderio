@@ -31,6 +31,9 @@ Images are currently manually optimized. Implementing an automated image optimiz
 - [ ] Performance improvements measurable (Lighthouse)
 - [ ] All images load correctly
 
+## Status
+**Pending** - Blocked by ticket #011. Photo carousel images need to be organized first before optimization can proceed.
+
 ## Implementation Steps
 1. Install image optimization package:
    ```bash
