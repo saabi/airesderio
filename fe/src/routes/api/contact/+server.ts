@@ -11,9 +11,9 @@
  */
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { Resend } from 'resend';
-import { RESEND_API_KEY, CONTACT_FORM_RECIPIENT, CONTACT_FORM_FROM } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
-const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
+const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
 // Rate limiting: simple in-memory store (for production, use Redis or similar)
 const submissions = new Map<string, number[]>();
@@ -94,7 +94,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		};
 		
 		// Check if Resend API key is configured
-		if (!resend || !RESEND_API_KEY) {
+		if (!resend || !env.RESEND_API_KEY) {
 			console.error('RESEND_API_KEY is not configured');
 			// In development, log the submission instead
 			if (import.meta.env.DEV) {
@@ -108,8 +108,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 		
 		// Get recipient email from environment or use default
-		const recipientEmail = CONTACT_FORM_RECIPIENT || 'contacto@ferreyrapons.com';
-		const fromEmail = CONTACT_FORM_FROM || 'noreply@ferreyrapons.com';
+		const recipientEmail = env.CONTACT_FORM_RECIPIENT || 'contacto@ferreyrapons.com';
+		const fromEmail = env.CONTACT_FORM_FROM || 'noreply@ferreyrapons.com';
 		
 		// Send email using Resend
 		const emailResult = await resend.emails.send({
