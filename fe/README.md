@@ -22,12 +22,31 @@ Aires de Río is a new residential building project offering 2 and 4-room apartm
 
 - Node.js (v18 or higher)
 - npm, pnpm, or yarn
+- Google Maps API key (for the interactive map)
 
 ### Installation
+
+1. Install dependencies:
 
 ```bash
 npm install
 ```
+
+2. Set up environment variables:
+
+Create a `.env` file in the `fe/` directory (copy from `.env.example`):
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and add your Google Maps API key:
+
+```
+VITE_GOOGLE_MAPS_API_KEY=your_actual_api_key_here
+```
+
+**Note**: Get your API key from [Google Cloud Console](https://console.cloud.google.com/google/maps-apis). Make sure to restrict the API key to your domain for security.
 
 ### Development
 
