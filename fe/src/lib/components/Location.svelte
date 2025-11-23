@@ -5,6 +5,12 @@ import CategorySelector from '$lib/components/CategorySelector.svelte';
 import GoogleMap from '$lib/components/GoogleMap.svelte';
 import PhotoCarousel from '$lib/components/PhotoCarousel.svelte';
 import { createSectionObserver } from '$lib/utils/sectionVisibility';
+import type { PlacesData, MarkerData, Place, MainBuilding, Category } from '$lib/types';
+
+// Type for GoogleMap component instance
+interface GoogleMapInstance {
+	fitToMarkers: () => void;
+}
 
 	const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -22,16 +28,6 @@ import { createSectionObserver } from '$lib/utils/sectionVisibility';
 		categoryFilter?: string[];
 	}
 
-	interface MarkerData {
-		id: string;
-		position: { lat: number; lng: number };
-		title: string;
-		category: string;
-		placeId: string;
-		place: any;
-		isMainMarker: boolean;
-	}
-
 	let { 
 		jsonUrl = '/lugares/lugares-direcciones.json',
 		showPlaceMarkers = true,
@@ -41,11 +37,11 @@ import { createSectionObserver } from '$lib/utils/sectionVisibility';
 
 	// --- COMPONENT STATE VARIABLES ---
 	// @fold:start(state-vars)
-	let placesData = $state<any>(null);
-	let googleMapRef = $state<any>(null);
+	let placesData = $state<PlacesData | null>(null);
+	let googleMapRef = $state<GoogleMapInstance | null>(null);
 	let mapCenter = $state({ lat: -27.779686, lng: -64.258992 });
 	let photoCarouselVisible = $state(false);
-	let carouselPlace = $state<any>(null);
+	let carouselPlace = $state<Place | null>(null);
 	let carouselCategory = $state<string>('');
 	let carouselPlaceId = $state<string>('');
 	let carouselPhotos = $state<string[]>([]);
@@ -58,7 +54,7 @@ import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	let hasAutoOpenedMainMarker = $state(false);
 
 	// All category data is now loaded from JSON metadata
-	let categories = $derived(placesData?.metadata?.categories || {});
+	let categories = $derived<Record<string, Category>>(placesData?.metadata?.categories || {});
 	
 	let categoryIcons = $derived.by(() => {
 		const icons: Record<string, string> = {};
@@ -70,7 +66,7 @@ import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	
 	let categoryNames = $derived.by(() => {
 		const names: Record<string, string> = {};
-		Object.entries(categories).forEach(([key, category]: [string, any]) => {
+		Object.entries(categories).forEach(([key, category]: [string, Category]) => {
 			names[key] = category.name || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 		});
 		return names;
@@ -98,7 +94,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 		if (!placesData) return [];
 
 		return Object.keys(placesData.lugares || {}).filter((category: string) => {
-			const categoryMeta = placesData.metadata?.categories?.[category];
+			const categoryMeta = placesData?.metadata?.categories?.[category];
 			return !categoryMeta?.isAlwaysVisible;
 		});
 	});
@@ -108,7 +104,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 
 		const meta = placesData.metadata?.categories || {};
 		return Object.entries(meta)
-			.filter(([, category]: [string, any]) => category?.isAlwaysVisible)
+			.filter(([, category]: [string, Category]) => category?.isAlwaysVisible)
 			.map(([key]) => key);
 	});
 
@@ -117,8 +113,8 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 
 		const markers: MarkerData[] = [];
 
-		Object.entries(placesData.lugares || {}).forEach(([category, places]: [string, any]) => {
-			Object.entries(places).forEach(([placeId, place]: [string, any]) => {
+		Object.entries(placesData.lugares || {}).forEach(([category, places]: [string, Record<string, Place>]) => {
+			Object.entries(places).forEach(([placeId, place]: [string, Place]) => {
 				if (!place?.coordenadas_aproximadas) return;
 
 				markers.push({
@@ -127,7 +123,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 					title: place.nombre,
 					category,
 					placeId,
-					place: place as any,
+					place,
 					isMainMarker: !!place.es_edificio_principal
 				});
 			});
@@ -189,7 +185,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 	}
 
 	// Open photo carousel
-	function openPhotoCarousel(place: any, category: string, placeId: string) {
+	function openPhotoCarousel(place: Place, category: string, placeId: string) {
 		if (!place.photos || place.photos.length === 0) return;
 		
 		carouselPlace = place;
@@ -231,13 +227,16 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 	// Marker creation is now handled by snippets in GoogleMap component
 
 	// Handle marker click from GoogleMap component
-	function handleMarkerClick(marker: any) {
+	function handleMarkerClick(marker: MarkerData | { id: string; [key: string]: unknown }) {
 		activeMarkerId = marker.id;
 	}
 
-	function handleMarkerPhotoClick(marker: any) {
-		if (marker?.place?.photos && marker.place.photos.length > 0) {
-			openPhotoCarousel(marker.place, marker.category, marker.placeId);
+	function handleMarkerPhotoClick(marker: MarkerData | { place?: Place; category?: string; placeId?: string; [key: string]: unknown }) {
+		if ('place' in marker && marker.place && 'category' in marker && 'placeId' in marker) {
+			const typedMarker = marker as MarkerData;
+			if (typedMarker.place?.photos && typedMarker.place.photos.length > 0) {
+				openPhotoCarousel(typedMarker.place, typedMarker.category, typedMarker.placeId);
+			}
 		}
 	}
 
@@ -249,7 +248,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 	}
 
 	// Handle map ready event
-	function handleMapReady(mapInstance: any) {
+	function handleMapReady(mapInstance: google.maps.Map) {
 		if (import.meta.env.DEV) {
 			console.log('🗺️ Map is ready:', mapInstance);
 		}
@@ -271,16 +270,17 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 	}
 
 	// Find the main building from JSON data
-	function findMainBuilding(data: any = placesData) {
+	function findMainBuilding(data: PlacesData | null = placesData): MainBuilding | null {
 		if (!data) return null;
 		
 		for (const [category, places] of Object.entries(data.lugares || {})) {
-			for (const [placeId, place] of Object.entries(places as any)) {
-				if ((place as any).es_edificio_principal) {
+			for (const [placeId, place] of Object.entries(places)) {
+				const typedPlace = place as Place;
+				if (typedPlace.es_edificio_principal) {
 					return {
 						category,
 						placeId,
-						place: place as any
+						place: typedPlace
 					};
 				}
 			}
@@ -397,16 +397,17 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 					containerClass='location-map'
 				>
 				{#snippet markerElement(marker)}
-					{@const isMainMarker = marker.isMainMarker || marker.place?.es_edificio_principal}
-					{@const categoryClass = toCategoryClass(marker.category)}
-					{@const icon = categoryIcons[marker.category]}
+					{@const typedMarker = marker as MarkerData}
+					{@const isMainMarker = typedMarker.isMainMarker || typedMarker.place?.es_edificio_principal}
+					{@const categoryClass = toCategoryClass(typedMarker.category)}
+					{@const icon = categoryIcons[typedMarker.category]}
 					
 					<div class={`marker-wrapper ${isMainMarker ? 'marker-wrapper--main' : ''}`}>
 						<div
 							class={`marker-dot category-color ${categoryClass} ${isMainMarker ? 'marker-dot--main' : ''}`}
 							role='button'
 							tabindex='0'
-							aria-label={icon ? `Location marker: ${icon} ${marker.title}` : `Location marker: ${marker.title}`}
+							aria-label={icon ? `Location marker: ${icon} ${typedMarker.title}` : `Location marker: ${typedMarker.title}`}
 						>
 							{#if icon}
 								<span class={`marker-icon ${isMainMarker ? 'marker-icon--main' : ''}`}>
@@ -418,12 +419,12 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 							{/if}
 						</div>
 						
-						{#if marker.place?.photos && marker.place.photos.length > 0}
+						{#if typedMarker.place?.photos && typedMarker.place.photos.length > 0}
 							<button 
 								data-photo-trigger
 								type='button'
 								class='photo-trigger'
-								aria-label={`View ${marker.place.photos.length} photo${marker.place.photos.length > 1 ? 's' : ''} for ${marker.title}`}
+								aria-label={`View ${typedMarker.place.photos.length} photo${typedMarker.place.photos.length > 1 ? 's' : ''} for ${typedMarker.title}`}
 							>
 								📷
 							</button>
@@ -432,43 +433,44 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 				{/snippet}
 
 				{#snippet markerInfoWindow(marker)}
-					{@const categoryClass = toCategoryClass(marker.category)}
-					{@const distanceClass = getDistanceBadgeClass(marker.place.distancia_categoria)}
-					{@const placeNameId = `place-name-${marker.id}`}
-					<div class='info-window' role='dialog' aria-labelledby={placeNameId} aria-label={`Information about ${marker.place.nombre}`}>
+					{@const typedMarker = marker as MarkerData}
+					{@const categoryClass = toCategoryClass(typedMarker.category)}
+					{@const distanceClass = getDistanceBadgeClass(typedMarker.place.distancia_categoria || '')}
+					{@const placeNameId = `place-name-${typedMarker.id}`}
+					<div class='info-window' role='dialog' aria-labelledby={placeNameId} aria-label={`Information about ${typedMarker.place.nombre}`}>
 						<div class='info-header'>
 							<div class={`category-indicator category-color ${categoryClass}`}>
-								{#if categoryIcons[marker.category]}
-									<span class='category-icon'>{categoryIcons[marker.category]}</span>
+								{#if categoryIcons[typedMarker.category]}
+									<span class='category-icon'>{categoryIcons[typedMarker.category]}</span>
 								{/if}
 							</div>
-							<h3 class='place-name' id={placeNameId}>{marker.place.nombre}</h3>
-							{#if categoryNames[marker.category]}
-								<span class='category-name'>({categoryNames[marker.category]})</span>
+							<h3 class='place-name' id={placeNameId}>{typedMarker.place.nombre}</h3>
+							{#if categoryNames[typedMarker.category]}
+								<span class='category-name'>({categoryNames[typedMarker.category]})</span>
 							{/if}
 						</div>
 						
 						<div class='info-content'>
 							<p class='address'>
-								📍 {marker.place.direccion}
+								📍 {typedMarker.place.direccion || typedMarker.place.direccion_aproximada || ''}
 							</p>
 							
 							<div class='badges'>
 								<span class={`distance-badge ${distanceClass}`}>
-									{marker.place.distancia_categoria}
+									{typedMarker.place.distancia_categoria || ''}
 								</span>
 								<span class='distance-detail'>
-									{marker.place.distancia_cuadras || marker.place.distancia_aproximada}
+									{typedMarker.place.distancia_cuadras || typedMarker.place.distancia_aproximada || ''}
 								</span>
 							</div>
 							
-							{#if marker.place.descripcion}
-								<p class='description'>{marker.place.descripcion}</p>
+							{#if typedMarker.place.descripcion}
+								<p class='description'>{typedMarker.place.descripcion}</p>
 							{/if}
 							
-							{#if marker.place.photos && marker.place.photos.length > 0}
-								<button class='photo-button' onclick={() => openPhotoCarousel(marker.place, marker.category, marker.placeId)}>
-									📷 Ver {marker.place.photos.length} foto{marker.place.photos.length > 1 ? 's' : ''}
+							{#if typedMarker.place.photos && typedMarker.place.photos.length > 0}
+								<button class='photo-button' onclick={() => openPhotoCarousel(typedMarker.place, typedMarker.category, typedMarker.placeId)}>
+									📷 Ver {typedMarker.place.photos.length} foto{typedMarker.place.photos.length > 1 ? 's' : ''}
 								</button>
 							{/if}
 						</div>
@@ -481,32 +483,36 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 				</div>
 			{/if}
 			
-				<CategorySelector 
-					{placesData}
-					{showPlaceMarkers}
-					{categoryFilter}
-					{categoryIcons}
-					{categoryNames}
-					markersCount={visibleMarkers.length}
-					onToggleMarkers={toggleMarkers}
-					onCategoryToggle={toggleCategory}
-					onSetCategoryFilter={setCategoryFilter}
-					onFitToView={fitMapToMarkers}
-				/>
+				{#if placesData}
+					<CategorySelector 
+						placesData={placesData}
+						{showPlaceMarkers}
+						{categoryFilter}
+						{categoryIcons}
+						{categoryNames}
+						markersCount={visibleMarkers.length}
+						onToggleMarkers={toggleMarkers}
+						onCategoryToggle={toggleCategory}
+						onSetCategoryFilter={setCategoryFilter}
+						onFitToView={fitMapToMarkers}
+					/>
+				{/if}
 		</div>
 	</div>
 </section>
 
 <!-- Photo Carousel Component -->
-<PhotoCarousel 
-	visible={photoCarouselVisible}
-	place={carouselPlace}
-	category={carouselCategory}
-	placeId={carouselPlaceId}
-	photos={carouselPhotos}
-	bind:currentIndex={carouselCurrentIndex}
-	onClose={closePhotoCarousel}
-/>
+{#if carouselPlace}
+	<PhotoCarousel 
+		visible={photoCarouselVisible}
+		place={carouselPlace}
+		category={carouselCategory}
+		placeId={carouselPlaceId}
+		photos={carouselPhotos}
+		bind:currentIndex={carouselCurrentIndex}
+		onClose={closePhotoCarousel}
+	/>
+{/if}
 
 <style>
 	.ubi {

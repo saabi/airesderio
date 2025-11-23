@@ -3,14 +3,7 @@
 
 	import { browser } from '$app/environment';
 	import { tick } from 'svelte';
-
-	interface GenericMarker {
-		id: string;
-		position: { lat: number; lng: number };
-		title: string;
-		customElement?: HTMLElement;
-		[key: string]: any;
-	}
+	import type { GenericMarker } from '$lib/types';
 
 	interface Props {
 		apiKey: string;
@@ -23,7 +16,7 @@
 		markerElement?: Snippet<[GenericMarker]>;
 		markerInfoWindow?: Snippet<[GenericMarker]>;
 		onMarkerClick?: (marker: GenericMarker) => void;
-		onMapReady?: (map: any) => void;
+		onMapReady?: (map: google.maps.Map) => void;
 		onBoundsChanged?: () => void;
 		onInfoWindowClose?: (markerId: string) => void;
 		onMarkerPhotoClick?: (marker: GenericMarker) => void;
@@ -54,10 +47,10 @@
 
 	let mapElement: HTMLDivElement;
 	let scriptLoaded = $state(false);
-	let map: any = null;
+	let map: google.maps.Map | null = null;
 	let mapReady = $state(false);
-	const markerInstances = new Map<string, any>();
-	const infoWindowInstances = new Map<string, any>();
+	const markerInstances = new Map<string, google.maps.Marker | google.maps.marker.AdvancedMarkerElement>();
+	const infoWindowInstances = new Map<string, google.maps.InfoWindow>();
 	let snippetContainers = $state<Record<string, HTMLElement>>({});
 let markerSnippetContainers = $state<Record<string, HTMLElement>>({});
 let currentActiveInfoWindow: string | null = null;
@@ -118,21 +111,23 @@ $effect(() => {
 	$effect(() => {
 		if (!scriptLoaded || !mapElement || map) return;
 
-		const mapConfig: any = {
+		const mapConfig: google.maps.MapOptions = {
 			zoom,
 			center,
-			mapTypeId
+			mapTypeId: mapTypeId as google.maps.MapTypeId
 		};
 
 		if (mapId) {
 			mapConfig.mapId = mapId;
 		}
 
-		map = new (window as any).google.maps.Map(mapElement, mapConfig);
+		if (window.google?.maps) {
+			map = new window.google.maps.Map(mapElement, mapConfig);
+		}
 		isInitialFitPending = true;
 		mapReady = true;
 
-		if (onMapReady) {
+		if (onMapReady && map) {
 			onMapReady(map);
 		}
 	});
@@ -170,11 +165,13 @@ $effect(() => {
 		}
 	}
 
-	function createMarker(markerData: GenericMarker, content?: HTMLElement) {
+	function createMarker(markerData: GenericMarker, content?: HTMLElement): google.maps.Marker | google.maps.marker.AdvancedMarkerElement {
+		if (!map) throw new Error('Map not initialized');
+		
 		ensureMarkerColors();
-		let marker;
+		let marker: google.maps.Marker | google.maps.marker.AdvancedMarkerElement;
 
-		const AdvancedMarker = (window as any).google?.maps?.marker?.AdvancedMarkerElement;
+		const AdvancedMarker = window.google?.maps?.marker?.AdvancedMarkerElement;
 
 		if (AdvancedMarker) {
 			marker = new AdvancedMarker({
@@ -182,21 +179,22 @@ $effect(() => {
 				map,
 				title: markerData.title,
 				content
-			});
+			}) as google.maps.marker.AdvancedMarkerElement;
 		} else {
-			marker = new (window as any).google.maps.Marker({
+			if (!window.google?.maps) throw new Error('Google Maps API not loaded');
+			marker = new window.google.maps.Marker({
 				position: markerData.position,
 				map,
 				title: markerData.title,
 				icon: {
-					path: (window as any).google.maps.SymbolPath.CIRCLE,
+					path: window.google.maps.SymbolPath.CIRCLE,
 					fillColor: markerFillColor,
 					fillOpacity: 0.8,
 					strokeColor: markerStrokeColor,
 					strokeWeight: 2,
 					scale: 8
 				}
-			});
+			}) as google.maps.Marker;
 		}
 
 		marker.addListener('click', () => {
@@ -208,18 +206,20 @@ $effect(() => {
 		return marker;
 	}
 
-	function updateMarker(marker: any, markerData: GenericMarker, content?: HTMLElement) {
-		const AdvancedMarker = (window as any).google?.maps?.marker?.AdvancedMarkerElement;
+	function updateMarker(marker: google.maps.Marker | google.maps.marker.AdvancedMarkerElement, markerData: GenericMarker, content?: HTMLElement) {
+		const AdvancedMarker = window.google?.maps?.marker?.AdvancedMarkerElement;
 
 		if (AdvancedMarker && marker instanceof AdvancedMarker) {
-			marker.position = markerData.position;
-			marker.title = markerData.title;
-			if (content && marker.content !== content) {
-				marker.content = content;
+			const advancedMarker = marker as google.maps.marker.AdvancedMarkerElement;
+			advancedMarker.position = markerData.position;
+			advancedMarker.title = markerData.title;
+			if (content && advancedMarker.content !== content) {
+				advancedMarker.content = content;
 			}
-		} else if (marker instanceof (window as any).google.maps.Marker) {
-			marker.setPosition(markerData.position);
-			marker.setTitle(markerData.title);
+		} else if (marker instanceof window.google?.maps?.Marker) {
+			const standardMarker = marker as google.maps.Marker;
+			standardMarker.setPosition(markerData.position);
+			standardMarker.setTitle(markerData.title);
 		}
 	}
 
@@ -232,7 +232,8 @@ $effect(() => {
 		let infoWindow = infoWindowInstances.get(markerData.id);
 
 		if (!infoWindow) {
-			infoWindow = new (window as any).google.maps.InfoWindow({
+			if (!window.google?.maps) return;
+			infoWindow = new window.google.maps.InfoWindow({
 				content
 			});
 			infoWindow.addListener('closeclick', () => {
@@ -252,12 +253,14 @@ $effect(() => {
 	function removeMarker(markerId: string) {
 		const marker = markerInstances.get(markerId);
 		if (marker) {
-			const AdvancedMarker = (window as any).google?.maps?.marker?.AdvancedMarkerElement;
+			const AdvancedMarker = window.google?.maps?.marker?.AdvancedMarkerElement;
 			if (AdvancedMarker && marker instanceof AdvancedMarker) {
-				marker.map = null;
-				marker.content = null;
-			} else if (marker instanceof (window as any).google.maps.Marker) {
-				marker.setMap(null);
+				const advancedMarker = marker as google.maps.marker.AdvancedMarkerElement;
+				advancedMarker.map = null;
+				advancedMarker.content = null;
+			} else if (marker instanceof window.google?.maps?.Marker) {
+				const standardMarker = marker as google.maps.Marker;
+				standardMarker.setMap(null);
 			}
 			markerInstances.delete(markerId);
 		}
@@ -335,19 +338,21 @@ $effect(() => {
 	}
 
 	function fitBoundsToMarkers() {
-		if (!mapReady || !map || markerInstances.size === 0) return;
+		if (!mapReady || !map || markerInstances.size === 0 || !window.google?.maps) return;
 
-		const bounds = new (window as any).google.maps.LatLngBounds();
+		const bounds = new window.google.maps.LatLngBounds();
 		let hasValidMarker = false;
 
 		markerInstances.forEach((marker) => {
-			let position;
-			const AdvancedMarker = (window as any).google?.maps?.marker?.AdvancedMarkerElement;
+			let position: google.maps.LatLng | google.maps.LatLngLiteral | null = null;
+			const AdvancedMarker = window.google.maps.marker?.AdvancedMarkerElement;
 
 			if (AdvancedMarker && marker instanceof AdvancedMarker) {
-				position = marker.position;
-			} else if (marker instanceof (window as any).google.maps.Marker) {
-				position = marker.getPosition();
+				const advancedMarker = marker as google.maps.marker.AdvancedMarkerElement;
+				position = advancedMarker.position || null;
+			} else if (marker instanceof window.google.maps.Marker) {
+				const standardMarker = marker as google.maps.Marker;
+				position = standardMarker.getPosition()?.toJSON() || null;
 			}
 
 			if (position) {
@@ -356,13 +361,13 @@ $effect(() => {
 			}
 		});
 
-		if (!hasValidMarker) return;
+		if (!hasValidMarker || !map) return;
 
 		map.fitBounds(bounds);
 
-		if (onBoundsChanged) {
-			(window as any).google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
-				if (map.getZoom() > 17) {
+		if (onBoundsChanged && map) {
+			window.google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+				if (map && map.getZoom() && map.getZoom()! > 17) {
 					map.setZoom(17);
 				}
 				onBoundsChanged();
@@ -459,14 +464,16 @@ $effect(() => {
 			infoWindowInstances.forEach((infoWindow) => infoWindow.close());
 			infoWindowInstances.clear();
 
-			const AdvancedMarker = (window as any).google?.maps?.marker?.AdvancedMarkerElement;
+			const AdvancedMarker = window.google?.maps?.marker?.AdvancedMarkerElement;
 
 			markerInstances.forEach((marker) => {
 				if (AdvancedMarker && marker instanceof AdvancedMarker) {
-					marker.map = null;
-					marker.content = null;
-				} else if (marker instanceof (window as any).google.maps.Marker) {
-					marker.setMap(null);
+					const advancedMarker = marker as google.maps.marker.AdvancedMarkerElement;
+					advancedMarker.map = null;
+					advancedMarker.content = null;
+				} else if (marker instanceof window.google?.maps?.Marker) {
+					const standardMarker = marker as google.maps.Marker;
+					standardMarker.setMap(null);
 				}
 			});
 

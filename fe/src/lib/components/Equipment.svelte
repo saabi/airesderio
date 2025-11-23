@@ -14,9 +14,11 @@
 	import Termotanque from '$lib/components/icons/Termotanque.svelte';
 	import Vestidor from '$lib/components/icons/Vestidor.svelte';
 
+	// Note: Using 'any' for component type is acceptable here as Svelte components
+	// don't have a perfect TypeScript representation that works with svelte:component
 	const equipmentItems: Array<{
 		icon: string;
-		component: any;
+		component: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 		text: string;
 	}> = [
 		{ icon: '🖼️', component: Ascensores, text: 'Carpintería de Aluminio Línea A30 NEW de Aluar.' },

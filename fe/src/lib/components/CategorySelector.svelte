@@ -1,6 +1,8 @@
 <script lang="ts">
+	import type { PlacesData, Place } from '$lib/types';
+
 	interface Props {
-		placesData: any;
+		placesData: PlacesData;
 		showPlaceMarkers: boolean;
 		categoryFilter: string[];
 		categoryIcons: Record<string, string>;
@@ -56,7 +58,7 @@ const toCategoryClass = (category: string) =>
 				const categoryData = placesData.metadata?.categories?.[category];
 				return !categoryData?.isAlwaysVisible;
 			})
-			.reduce((total: number, [, places]: [string, any]) => total + Object.keys(places).length, 0);
+			.reduce((total: number, [, places]: [string, Record<string, Place>]) => total + Object.keys(places).length, 0);
 	});
 </script>
 

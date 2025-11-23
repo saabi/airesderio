@@ -1,7 +1,9 @@
 <script lang="ts">
+	import type { Place } from '$lib/types';
+
 	interface Props {
 		visible: boolean;
-		place: any;
+		place: Place;
 		category: string;
 		placeId: string;
 		photos: string[];
