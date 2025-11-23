@@ -1,9 +1,9 @@
 <script lang="ts">
 import { browser } from '$app/environment';
 
-import CategorySelector from '$lib/components/CategorySelector.svelte';
-import GoogleMap from '$lib/components/GoogleMap.svelte';
-import PhotoCarousel from '$lib/components/PhotoCarousel.svelte';
+import CategorySelector from '$lib/components/features/CategorySelector.svelte';
+import GoogleMap from '$lib/components/features/GoogleMap.svelte';
+import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
 import { createSectionObserver } from '$lib/utils/sectionVisibility';
 import type { PlacesData, MarkerData, Place, MainBuilding, Category } from '$lib/types';
 

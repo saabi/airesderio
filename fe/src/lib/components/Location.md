@@ -27,7 +27,7 @@ interface Props {
 ### Basic Usage (Default)
 ```svelte
 <script>
-  import Location from '$lib/components/Location.svelte';
+  import Location from '$lib/components/sections/Location.svelte';
 </script>
 
 <Location />

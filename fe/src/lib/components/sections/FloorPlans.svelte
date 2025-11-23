@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Title from '$lib/components/Title.svelte';
+    import Title from '$lib/components/ui/Title.svelte';
     import { createSectionObserver } from '$lib/utils/sectionVisibility';
 
     const { action: floorPlansObserver, visible: floorPlansVisible } = createSectionObserver('floor-plans', {

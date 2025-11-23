@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Title from '$lib/components/Title.svelte';
-	import SvgViewport from '$lib/components/SvgViewport.svelte';
+	import Title from '$lib/components/ui/Title.svelte';
+	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import Ascensores from '$lib/components/icons/Ascensores.svelte';
 	import Banos from '$lib/components/icons/Banos.svelte';

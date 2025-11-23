@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ContactForm from '$lib/components/ContactForm.svelte';
+	import ContactForm from '$lib/components/forms/ContactForm.svelte';
 </script>
 
 <section id='contacto' class='contact-section' aria-labelledby='contact-heading'>

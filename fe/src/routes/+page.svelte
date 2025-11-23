@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import ContactSection from '$lib/components/ContactSection.svelte';
-	import Equipment from '$lib/components/Equipment.svelte';
-	import FloorPlans from '$lib/components/FloorPlans.svelte';
-	import Hero from '$lib/components/Hero.svelte';
-	import Interior from '$lib/components/Interior.svelte';
-	import Intro from '$lib/components/Intro.svelte';
-	import Location from '$lib/components/Location.svelte';
+	import ContactSection from '$lib/components/sections/ContactSection.svelte';
+	import Equipment from '$lib/components/sections/Equipment.svelte';
+	import FloorPlans from '$lib/components/sections/FloorPlans.svelte';
+	import Hero from '$lib/components/sections/Hero.svelte';
+	import Interior from '$lib/components/sections/Interior.svelte';
+	import Intro from '$lib/components/sections/Intro.svelte';
+	import Location from '$lib/components/sections/Location.svelte';
 
 	// Base URL for the site
 	const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://airesderio.com';
