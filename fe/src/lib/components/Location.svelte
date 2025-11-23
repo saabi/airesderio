@@ -164,7 +164,9 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 	async function loadPlacesData() {
 		if (!browser || !jsonUrl) return;
 		
-		console.log('Loading places data from:', jsonUrl);
+		if (import.meta.env.DEV) {
+			console.log('Loading places data from:', jsonUrl);
+		}
 		try {
 				const response = await fetch(jsonUrl);
 				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -173,12 +175,14 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 				hasInitializedCategoryFilter = false;
 				activeMarkerId = null;
 				hasAutoOpenedMainMarker = false;
-				console.log('Places data loaded successfully:', {
-					totalCategories: Object.keys(data.lugares).length,
-					hasMainBuilding: !!findMainBuilding(data),
-					categoriesLoaded: Object.keys(data.metadata?.categories || {}).length,
-					categories: $state.snapshot(data.metadata?.categories)
-			});
+				if (import.meta.env.DEV) {
+					console.log('Places data loaded successfully:', {
+						totalCategories: Object.keys(data.lugares).length,
+						hasMainBuilding: !!findMainBuilding(data),
+						categoriesLoaded: Object.keys(data.metadata?.categories || {}).length,
+						categories: $state.snapshot(data.metadata?.categories)
+					});
+				}
 		} catch (error) {
 			console.error('Error loading places data:', error);
 		}
@@ -246,7 +250,9 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 
 	// Handle map ready event
 	function handleMapReady(mapInstance: any) {
-		console.log('🗺️ Map is ready:', mapInstance);
+		if (import.meta.env.DEV) {
+			console.log('🗺️ Map is ready:', mapInstance);
+		}
 		
 		// Only clear user closed state and auto-open main marker on first initialization
 		if (!mapInitialized) {
@@ -318,9 +324,8 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 		}
 	});
 
-	// Debug categories loading
 	$effect(() => {
-		if (Object.keys(categories).length > 0) {
+		if (import.meta.env.DEV && Object.keys(categories).length > 0) {
 			console.log('🎨 Categories loaded:', {
 				totalCategories: Object.keys(categories).length,
 				mainBuildingCategory: $state.snapshot(categories.edificio_principal),
@@ -395,16 +400,6 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 					{@const isMainMarker = marker.isMainMarker || marker.place?.es_edificio_principal}
 					{@const categoryClass = toCategoryClass(marker.category)}
 					{@const icon = categoryIcons[marker.category]}
-					{#if isMainMarker}
-						{console.log('🎨 RENDERING MAIN MARKER SNIPPET:', {
-							title: marker.title,
-							category: marker.category,
-							icon,
-							size: isMainMarker ? 28 : 16,
-							categoryData: $state.snapshot(categories[marker.category]),
-							isAlwaysVisible: categories[marker.category]?.isAlwaysVisible
-						})}
-					{/if}
 					
 					<div class={`marker-wrapper ${isMainMarker ? 'marker-wrapper--main' : ''}`}>
 						<div
@@ -417,19 +412,9 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 								<span class={`marker-icon ${isMainMarker ? 'marker-icon--main' : ''}`}>
 									{icon}
 								</span>
-								{console.log('🎨 EMOJI ICON RENDERED:', {
-									title: marker.title,
-									category: marker.category,
-									icon,
-									isMainMarker
-								})}
 							{:else}
 								<!-- Simple fallback dot for missing icon -->
 								<span class={`marker-fallback ${isMainMarker ? 'marker-fallback--main' : ''}`}>●</span>
-								{console.log('❌ NO ICON, using dot fallback:', {
-									title: marker.title,
-									category: marker.category
-								})}
 							{/if}
 						</div>
 						

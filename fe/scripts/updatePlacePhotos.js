@@ -53,7 +53,6 @@ async function main() {
         continue;
       }
 
-      // console.log('placeEntries', placeEntries);
       const photos = placeEntries
         .filter((entry) => entry.isFile())
         .map((entry) => entry.name)
