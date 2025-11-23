@@ -5,7 +5,28 @@ export default defineConfig({
 	plugins: [sveltekit()],
 
 	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}']
+		include: ['src/**/*.{test,spec}.{js,ts}'],
+		environment: 'jsdom',
+		setupFiles: ['./src/test/setup.ts'],
+		coverage: {
+			provider: 'v8',
+			reporter: ['text', 'json', 'html'],
+			exclude: [
+				'node_modules/',
+				'src/test/',
+				'**/*.d.ts',
+				'**/*.config.*',
+				'**/dist/**',
+				'**/build/**',
+				'**/*.spec.ts' // Exclude demo spec
+			],
+			thresholds: {
+				lines: 70,
+				functions: 70,
+				branches: 70,
+				statements: 70
+			}
+		}
 	},
 	preview: {
 		allowedHosts: ['ferreyrapons.com']
