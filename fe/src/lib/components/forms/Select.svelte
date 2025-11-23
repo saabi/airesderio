@@ -10,6 +10,7 @@
 		children?: Snippet;
 		class?: string;
 		ariaLabel?: string;
+		disabled?: boolean;
 	}
 
 	let { 
@@ -20,7 +21,8 @@
 		onchange,
 		children,
 		class: className = '',
-		ariaLabel
+		ariaLabel,
+		disabled = false
 	}: Props = $props();
 
 	let selectElement: HTMLSelectElement | null = $state(null);
@@ -60,6 +62,7 @@
 	onfocus={handleFocus}
 	onblur={handleBlur}
 	aria-label={ariaLabel}
+	{disabled}
 >
 	{#if placeholder}
 		<option value='' disabled hidden>{placeholder}</option>

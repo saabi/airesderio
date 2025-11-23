@@ -4,25 +4,116 @@
 	import Select from '$lib/components/forms/Select.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
 
-	function handleSubmit(event: Event) {
+	let formElement: HTMLFormElement | null = $state(null);
+	let isLoading = $state(false);
+	let successMessage = $state<string | null>(null);
+	let errorMessage = $state<string | null>(null);
+
+	async function handleSubmit(event: Event) {
 		event.preventDefault();
-		// Form submission logic can be added here
+		
+		if (!formElement) return;
+		
+		// Reset messages
+		successMessage = null;
+		errorMessage = null;
+		
+		// Client-side validation
+		if (!formElement.checkValidity()) {
+			formElement.reportValidity();
+			return;
+		}
+		
+		// Collect form data
+		const formData = new FormData(formElement);
+		const data = {
+			nombre: formData.get('nombre') as string,
+			correo: formData.get('correo') as string,
+			telefono: formData.get('telefono') as string || '',
+			consulta: formData.get('consulta') as string,
+			mensaje: formData.get('mensaje') as string || '',
+			website: formData.get('website') as string || '' // Honeypot
+		};
+		
+		// Validate required fields
+		if (!data.nombre || !data.correo || !data.consulta) {
+			errorMessage = 'Por favor completa todos los campos requeridos.';
+			return;
+		}
+		
+		// Validate email format
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(data.correo)) {
+			errorMessage = 'Por favor ingresa un correo electrónico válido.';
+			return;
+		}
+		
+		isLoading = true;
+		
+		try {
+			const response = await fetch('/api/contact', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+			
+			const result = await response.json();
+			
+			if (!response.ok) {
+				errorMessage = result.error || 'Error al enviar el formulario. Por favor, intenta de nuevo.';
+				return;
+			}
+			
+			// Success
+			successMessage = result.message || 'Formulario enviado correctamente. Nos pondremos en contacto contigo pronto.';
+			
+			// Reset form
+			formElement.reset();
+			
+			// Clear success message after 5 seconds
+			setTimeout(() => {
+				successMessage = null;
+			}, 5000);
+			
+		} catch (error) {
+			console.error('Form submission error:', error);
+			errorMessage = 'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.';
+		} finally {
+			isLoading = false;
+		}
 	}
 </script>
 
-<form action='#' method='POST' on:submit={handleSubmit}>
+<form bind:this={formElement} action='#' method='POST' onsubmit={handleSubmit} novalidate>
+	<!-- Honeypot field for spam protection -->
+	<input type='text' name='website' autocomplete='off' tabindex='-1' aria-hidden='true' style='position: absolute; left: -9999px;' />
+	
+	{#if successMessage}
+		<div class='form-message form-message--success' role='alert'>
+			{successMessage}
+		</div>
+	{/if}
+	
+	{#if errorMessage}
+		<div class='form-message form-message--error' role='alert'>
+			{errorMessage}
+		</div>
+	{/if}
+	
 	<div class='form-group'>
 		<label for='nombre'>Nombre</label>
-		<Input type='text' id='nombre' name='nombre' required ariaLabel='Nombre completo' />
+		<Input type='text' id='nombre' name='nombre' required ariaLabel='Nombre completo' disabled={isLoading} />
 	</div>
 	<div class='form-group'>
 		<label for='correo'>Correo</label>
-		<Input type='email' id='correo' name='correo' required ariaLabel='Correo electrónico' />
+		<Input type='email' id='correo' name='correo' required ariaLabel='Correo electrónico' disabled={isLoading} />
 	</div>
 	<PhoneNumberInput id='telefono' name='telefono' />
 	<div class='form-group'>
 		<label for='consulta'>Consulta</label>
-		<Select id='consulta' name='consulta' placeholder='Seleccioná' ariaLabel='Tipo de consulta'>
+		<Select id='consulta' name='consulta' placeholder='Seleccioná' ariaLabel='Tipo de consulta' disabled={isLoading}>
 			{#snippet children()}
 				<option>Precio y Financiación</option>
 				<option>Visitar el Showroom</option>
@@ -32,10 +123,16 @@
 	</div>
 	<div class='form-group'>
 		<label for='mensaje'>Mensaje</label>
-		<Textarea id='mensaje' name='mensaje' rows={4} ariaLabel='Mensaje o consulta' />
+		<Textarea id='mensaje' name='mensaje' rows={4} ariaLabel='Mensaje o consulta' disabled={isLoading} />
 	</div>
 	<div class='form-group'>
-		<button type='submit' aria-label='Enviar formulario de contacto'>ENVIAR</button>
+		<button type='submit' disabled={isLoading} aria-label='Enviar formulario de contacto'>
+			{#if isLoading}
+				<span class='button-loading'>Enviando...</span>
+			{:else}
+				ENVIAR
+			{/if}
+		</button>
 	</div>
 </form>
 
@@ -62,8 +159,54 @@
 		cursor: pointer;
 	}
 
-	.form-group button:hover {
+	.form-group button:hover:not(:disabled) {
 		background: var(--color-accent-strong);
+	}
+	
+	.form-group button:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+	
+	.button-loading {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	
+	.button-loading::after {
+		content: '';
+		width: 1rem;
+		height: 1rem;
+		border: 2px solid currentColor;
+		border-top-color: transparent;
+		border-radius: 50%;
+		animation: spin 0.6s linear infinite;
+	}
+	
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+	
+	.form-message {
+		padding: 0.75rem;
+		border-radius: 0.25rem;
+		margin-bottom: 1rem;
+		font-size: 0.9em;
+	}
+	
+	.form-message--success {
+		background-color: var(--color-success-bg, #d4edda);
+		color: var(--color-success-text, #155724);
+		border: 1px solid var(--color-success-border, #c3e6cb);
+	}
+	
+	.form-message--error {
+		background-color: var(--color-error-bg, #f8d7da);
+		color: var(--color-error-text, #721c24);
+		border: 1px solid var(--color-error-border, #f5c6cb);
 	}
 </style>
 
