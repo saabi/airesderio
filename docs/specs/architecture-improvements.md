@@ -1,5 +1,7 @@
 # Architecture Improvements Proposal
 
+**Related:** [Architecture Documentation](./architecture.md), [Feature Specification](./feature-specification.md), [Tickets](../tickets/)
+
 ## Executive Summary
 
 This document proposes improvements to the Aires de Río frontend architecture to enhance maintainability, security, performance, developer experience, and user experience. The improvements are prioritized by impact and effort required.
@@ -291,29 +293,33 @@ src/lib/components/
 
 ## Implementation Roadmap
 
-### Phase 1: Critical Fixes (Week 1-2)
-1. Move API key to environment variables
-2. Implement form submission
-3. Fix navigation links
-4. Remove debug code
+**Note:** For the current, up-to-date implementation plan with status tracking, see [Implementation Plan](./implementation-plan.md).
 
-### Phase 2: Quality Improvements (Week 3-4)
-1. Type safety improvements
-2. Component organization
-3. Add unit tests
-4. SEO meta tags
+### Historical Roadmap (Many items completed)
 
-### Phase 3: Performance & UX (Week 5-6)
-1. Image optimization
-2. Code splitting
-3. Form validation & UX
-4. Accessibility audit
+**Phase 1: Critical Fixes** ✅ Mostly Complete
+1. ✅ Move API key to environment variables (#001)
+2. ⚠️ Implement form submission (#002 - backend done, frontend pending)
+3. ✅ Fix navigation links (#003)
+4. ✅ Remove debug code (#004)
 
-### Phase 4: Advanced Features (Week 7+)
-1. Testing infrastructure
-2. Analytics integration
-3. PWA features (if needed)
-4. Documentation
+**Phase 2: Quality Improvements** ✅ Mostly Complete
+1. ✅ Type safety improvements (#005)
+2. ⏸️ Component organization (#010 - pending)
+3. ✅ Add unit tests (#008)
+4. ✅ SEO meta tags (#006)
+
+**Phase 3: Performance & UX** 🔄 In Progress
+1. ⏸️ Image optimization (#007 - depends on #011)
+2. ⏸️ Code splitting (future)
+3. ⏸️ Form validation & UX (part of #002)
+4. ✅ Accessibility audit (#009 - mostly complete)
+
+**Phase 4: Advanced Features** ⏸️ Future
+1. ✅ Testing infrastructure (#008)
+2. ⏸️ Analytics integration (future)
+3. ⏸️ PWA features (if needed)
+4. ✅ Documentation (complete)
 
 ## Success Metrics
 

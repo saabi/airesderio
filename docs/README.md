@@ -9,7 +9,13 @@ docs/
 ├── proposals/          # Design proposals and mockups
 ├── specs/              # Technical specifications
 │   ├── architecture.md                    # Current architecture documentation
-│   └── architecture-improvements.md       # Proposed improvements
+│   ├── architecture-improvements.md       # Proposed improvements
+│   ├── feature-specification.md           # Feature specification
+│   ├── development-setup.md               # Development setup guide
+│   └── svelte-guidelines.md               # Svelte coding guidelines
+├── process/            # Development processes and conventions
+│   ├── COMMITS.md                         # Commit message conventions
+│   └── TICKETS.md                         # Ticket workflow documentation
 └── tickets/            # Improvement tickets
     ├── 001-move-api-key-to-env.md
     ├── 002-implement-form-submission.md
@@ -26,11 +32,19 @@ docs/
 
 ## Quick Start
 
-1. **Understanding the Architecture**: Start with [`specs/architecture.md`](specs/architecture.md) to understand the current system design.
+1. **Understanding the Project**: Start with [`specs/feature-specification.md`](specs/feature-specification.md) to understand what the project does and its features.
 
-2. **Reviewing Improvements**: Read [`specs/architecture-improvements.md`](specs/architecture-improvements.md) for a comprehensive overview of proposed enhancements.
+2. **Setting Up Development**: Follow [`specs/development-setup.md`](specs/development-setup.md) to get your development environment ready.
 
-3. **Working on Tickets**: Check the [`tickets/`](tickets/) directory for specific improvement tasks with detailed implementation steps.
+3. **Understanding the Architecture**: Read [`specs/architecture.md`](specs/architecture.md) to understand the current system design and technical implementation.
+
+4. **Implementation Planning**: Review [`specs/implementation-plan.md`](specs/implementation-plan.md) for the current implementation plan and priorities.
+
+5. **Reviewing Improvements**: Check [`specs/architecture-improvements.md`](specs/architecture-improvements.md) for a comprehensive overview of proposed enhancements.
+
+6. **Working on Tickets**: See the [`tickets/`](tickets/) directory for specific improvement tasks with detailed implementation steps. Use [`process/TICKET_CREATION_GUIDE.md`](process/TICKET_CREATION_GUIDE.md) when creating new tickets.
+
+7. **Development Processes**: Review [`process/COMMITS.md`](process/COMMITS.md) and [`process/TICKETS.md`](process/TICKETS.md) for development conventions.
 
 ## Documentation Overview
 
@@ -51,6 +65,37 @@ docs/
   - Success metrics
   - Risk assessment
 
+- **implementation-plan.md**: Comprehensive implementation plan with:
+  - Current project status
+  - Implementation phases
+  - Priority matrix
+  - Dependencies and critical path
+  - Success metrics
+  - Tracking progress
+
+- **feature-specification.md**: Complete feature specification including:
+  - Business goals and target audience
+  - Core features and user flows
+  - Non-functional requirements
+  - Success metrics
+  - Future enhancements
+
+- **development-setup.md**: Development environment setup guide including:
+  - Prerequisites and installation
+  - Available scripts and commands
+  - Project structure
+  - Development workflow
+  - Common issues and troubleshooting
+
+- **svelte-guidelines.md**: Svelte coding guidelines and best practices including:
+  - Svelte 5 runes API usage
+  - Component structure and organization
+  - State management patterns
+  - Event handling
+  - Styling conventions
+  - SvelteKit specifics
+  - Performance considerations
+
 ### Tickets (`tickets/`)
 
 Each ticket contains:
@@ -62,6 +107,15 @@ Each ticket contains:
 - Related files
 - Estimated effort
 - Dependencies
+
+### Process Documentation (`process/`)
+
+- **COMMITS.md**: Commit message conventions and guidelines
+- **TICKETS.md**: Ticket workflow, lifecycle, and best practices
+- **TICKET_CREATION_GUIDE.md**: Project-specific ticket templates and patterns
+- **BRANCH_MANAGEMENT.md**: Git workflow and branch naming conventions
+
+**Related:** See these documents before making commits or working on tickets.
 
 ### Proposals (`proposals/`)
 
@@ -100,6 +154,8 @@ When working on tickets:
 3. Follow the implementation steps
 4. Verify acceptance criteria are met
 5. Update documentation if needed
+6. Follow commit conventions (see [`process/COMMITS.md`](process/COMMITS.md))
+7. Reference tickets in commit messages (see [`process/TICKETS.md`](process/TICKETS.md))
 
 ## Questions?
 
