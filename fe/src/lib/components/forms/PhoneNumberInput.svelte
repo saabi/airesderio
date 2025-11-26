@@ -297,7 +297,7 @@
 			class='phone-country-select'
 		>
 			{#snippet children()}
-				{#each countries as country}
+				{#each countries as country (country.code)}
 					<option value={country.code}>{country.name}</option>
 				{/each}
 			{/snippet}

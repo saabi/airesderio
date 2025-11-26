@@ -62,7 +62,7 @@
         <Title eyebrow='Cómo están' big='EQUIPADOS' />
     </div>
     <ul class='equip-list' role='list'>
-        {#each equipmentItems as item, index}
+        {#each equipmentItems as item, index (index)}
             <li
                 class='scroll-animate'
                 style={`--scroll-animate-delay: ${140 + index * 60}ms; --scroll-animate-offset: 48px;`}

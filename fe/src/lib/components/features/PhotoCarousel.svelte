@@ -97,7 +97,7 @@
 				
 				{#if photos.length > 1}
 					<div class='photo-dots'>
-						{#each photos as _, index}
+						{#each photos as _, index (index)}
 							<button 
 								class='dot {index === currentIndex ? 'active' : ''}'
 								onclick={() => goToPhoto(index)}

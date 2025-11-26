@@ -115,7 +115,7 @@ const toCategoryClass = (category: string) =>
 		</div>
 
 		<div class='legend-categories'>
-			{#each filteredCategories as category}
+			{#each filteredCategories as category (category)}
 				{@const categoryPlaces = placesData.lugares[category]}
 				{@const placesCount = Object.keys(categoryPlaces).length}
 				{@const isActive = categoryFilter.includes(category)}
