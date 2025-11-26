@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import { createEventDispatcher } from 'svelte';
 
 	type Token = {
 		name: string;
@@ -14,9 +13,7 @@
 	let errorMessage = $state<string | null>(null);
 	let copyStatus = $state<'idle' | 'copied' | 'error'>('idle');
 
-	const dispatch = createEventDispatcher<{ close: void }>();
-
-	const props = $props<{ open?: boolean }>();
+	const props = $props<{ open?: boolean; onClose?: () => void }>();
 	let converterElement: HTMLDivElement | null = null;
 
 	onMount(() => {
@@ -233,7 +230,7 @@
 	}
 
 	function closeEditor() {
-		dispatch('close');
+		props.onClose?.();
 	}
 </script>
 
@@ -255,7 +252,7 @@
 		<p class='status'>No color variables found.</p>
 	{:else}
 		<ul>
-			{#each tokens as token}
+			{#each tokens as token (token.name)}
 				<li>
 					<div class='label'>
 						<span class='row'>

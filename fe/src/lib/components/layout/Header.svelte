@@ -157,7 +157,7 @@
 			aria-label='Navegación principal'
 		>
 			<ul class='nav__desktop'>
-				{#each navLinks as link}
+				{#each navLinks as link (link.id)}
 					<li>
 						<a 
 							href={link.href} 
@@ -245,7 +245,7 @@
 	</div>
 	{#if isDevMode && devColorEditorModule}
 		{@const DevColorEditor = devColorEditorModule.default}
-		<DevColorEditor open={colorEditorOpen} on:close={() => (colorEditorOpen = false)} />
+		<DevColorEditor open={colorEditorOpen} onClose={() => (colorEditorOpen = false)} />
 	{/if}
 </header>
 
