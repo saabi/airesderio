@@ -2,13 +2,22 @@
 
 Promotional website for **Aires de Río**, a residential development project in Santiago del Estero, Argentina.
 
+## Quick Navigation
+
+- **[Development Setup](fe/README.md)** - Get started with development
+- **[Documentation](docs/README.md)** - Full project documentation
+- **[Architecture](docs/specs/architecture.md)** - Technical architecture
+- **[Tickets](docs/tickets/)** - Improvement tickets and tasks
+- **[Process Documentation](docs/process/)** - Development processes and conventions
+- **[Deployment Guide](#production-deployment)** - Production deployment instructions
+
 ## Quick Start
 
 See [`fe/README.md`](fe/README.md) for development setup and project details.
 
 ## Production Deployment
 
-This project is built as a static site using SvelteKit with `@sveltejs/adapter-static`. The built site can be deployed to any static hosting service.
+This project is built with SvelteKit using `@sveltejs/adapter-node` for Node.js deployment. The application runs as a Node.js server using PM2 on a Linode VM with Nginx as a reverse proxy. This enables full API route support (including the contact form).
 
 ### Prerequisites
 
@@ -151,9 +160,9 @@ This project is built as a static site using SvelteKit with `@sveltejs/adapter-s
    - Go to Settings → Secrets and variables → Actions
    - Add `VITE_GOOGLE_MAPS_API_KEY`
 
-#### Option 4: VM with PM2 (Node.js Server)
+#### Option 4: VM with PM2 (Node.js Server) ✅ **CHOSEN DEPLOYMENT METHOD**
 
-This option runs the application as a Node.js server using PM2 process manager. This enables full API route support (including the contact form).
+This is the **chosen deployment method** for Aires de Río. The application runs as a Node.js server using PM2 process manager on a Linode VM running Debian, with Nginx as a reverse proxy. This enables full API route support (including the contact form).
 
 1. **Switch to Node.js adapter:**
    ```bash
@@ -519,8 +528,11 @@ If you need the full API route functionality:
 - Ensure your server is configured to serve `200.html` for all routes (see web server configuration above)
 
 #### Contact form not working
-- Remember: API routes don't work with `adapter-static`
-- Use one of the alternatives listed in the [Contact Form](#contact-form) section
+- Verify that the application is running with PM2: `pm2 status`
+- Check PM2 logs: `pm2 logs airesderio`
+- Verify environment variables are set correctly (especially `RESEND_API_KEY`)
+- Check Nginx configuration is proxying to the correct port
+- Verify API route is accessible: `curl http://localhost:3000/api/contact`
 
 #### Build fails
 - Ensure Node.js version is 18 or higher

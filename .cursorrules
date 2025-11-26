@@ -1,0 +1,200 @@
+# Aires de Río - LLM Agent Guidelines
+
+## Project Overview
+
+Aires de Río is a promotional website for a residential development project in Santiago del Estero, Argentina. The project is built with **SvelteKit** and **Svelte 5**, deployed as a Node.js server using PM2 on a Linode VM with Nginx as a reverse proxy.
+
+## Documentation Structure
+
+- **Technical Documentation**: `docs/specs/` - Architecture, feature specifications, development setup, Svelte guidelines, and implementation plan
+- **Process Documentation**: `docs/process/` - Development processes and conventions
+- **Tickets**: `docs/tickets/` - Improvement tickets and tasks
+- **Proposals**: `docs/proposals/` - Design proposals and mockups
+
+## Key Conventions
+
+### Commit Messages
+Follow conventions in `docs/process/COMMITS.md`:
+- Use conventional commit format: `<type>(<scope>): <subject>`
+- Reference tickets: `Closes #001`, `Related to #002`
+- Types: feat, fix, docs, style, refactor, test, chore, perf, ci
+
+### Tickets
+Follow workflow in `docs/process/TICKETS.md`:
+- Tickets in `docs/tickets/` with format `XXX-description.md`
+- Update status in `docs/README.md`
+- Link tickets in commits when applicable
+
+### Code Style
+- **TypeScript** with strict mode enabled
+- **Svelte 5** using runes (`$state`, `$derived`, `$effect`, `$props`)
+- **Component naming**: PascalCase (e.g., `ContactForm.svelte`)
+- **File naming**: kebab-case (e.g., `contact-form.svelte`)
+- **Variable naming**: camelCase
+- **Constants**: UPPER_SNAKE_CASE
+
+## Architecture
+
+### Technology Stack
+- **Frontend**: SvelteKit 2.16.0 with Svelte 5.0.0
+- **Build Tool**: Vite 6.0.0
+- **Adapter**: @sveltejs/adapter-node (Node.js server deployment)
+- **Deployment**: PM2 on Linode VM (Debian) with Nginx reverse proxy
+- **Testing**: Vitest 3.0.0
+- **Linting**: ESLint 9.18.0
+- **Formatting**: Prettier 3.4.2
+
+### Project Structure
+```
+fe/
+├── src/
+│   ├── lib/
+│   │   ├── components/     # Reusable Svelte components
+│   │   ├── data/           # Static data files
+│   │   └── utils/          # Utility functions
+│   ├── routes/             # SvelteKit routes
+│   ├── app.css             # Global styles and theme variables
+│   └── app.html            # HTML template
+├── static/                 # Static assets
+│   └── lugares/            # Location data and photos
+└── scripts/                # Utility scripts
+```
+
+### Key Files
+- `fe/src/routes/+page.svelte` - Home page
+- `fe/src/lib/components/` - Reusable components
+- `fe/src/app.css` - Global styles and CSS variables
+- `fe/static/lugares/lugares-direcciones.json` - Location data
+- `docs/specs/architecture.md` - Complete architecture documentation
+
+## When Making Changes
+
+### Before Starting
+1. **Check implementation plan** in `docs/specs/implementation-plan.md` for current priorities
+2. **Check existing tickets** in `docs/tickets/` for related work
+3. **Create ticket** if implementing new feature or fix
+4. **Review architecture** in `docs/specs/architecture.md` if making structural changes
+5. **Check dependencies** - ensure required tickets are complete
+
+### During Development
+1. **Follow commit conventions** - see `docs/process/COMMITS.md`
+2. **Reference tickets** in commit messages
+3. **Update documentation** if architecture or processes change
+4. **Test changes** - run `npm test` and `npm run check`
+
+### After Completing
+1. **Update ticket status** in `docs/README.md`
+2. **Close ticket** in commit message: `Closes #XXX`
+3. **Update documentation** if needed
+4. **Verify all acceptance criteria** are met
+
+## Important Patterns
+
+### Svelte 5 Runes
+```typescript
+// State
+let count = $state(0);
+
+// Derived
+let doubled = $derived(count * 2);
+
+// Effect
+$effect(() => {
+  console.log(count);
+});
+
+// Props
+let { name = $bindable() } = $props();
+```
+
+### Environment Variables
+- Use `VITE_` prefix for client-side variables
+- Access via `import.meta.env.VITE_GOOGLE_MAPS_API_KEY`
+- Never commit `.env` file (already in `.gitignore`)
+
+### Component Organization
+- Reusable components in `src/lib/components/`
+- Route-specific components in `src/routes/`
+- Form components in `src/lib/components/forms/`
+- Development tools in `src/lib/components/dev/`
+
+## Common Tasks
+
+### Adding a New Component
+1. Create component in `src/lib/components/`
+2. Export from `src/lib/index.ts` if reusable
+3. Add to appropriate route
+4. Document in architecture if significant
+
+### Updating Location Data
+1. Edit `static/lugares/lugares-direcciones.json`
+2. Run `npm run sync:photos` if photos changed
+3. Run `npm run sync:geo` if geolocation changed
+
+### Working on Tickets
+1. Read ticket in `docs/tickets/XXX-description.md`
+2. Check related files listed in ticket
+3. Follow implementation steps
+4. Verify acceptance criteria
+5. Update ticket status when complete
+
+## Documentation
+
+### Where to Document
+- **Architecture changes**: `docs/specs/architecture.md`
+- **New features**: Create or update feature spec
+- **Process changes**: `docs/process/` files
+- **Tickets**: `docs/tickets/` directory
+
+### Documentation Standards
+- Use clear, concise language
+- Include code examples when helpful
+- Add cross-references to related docs
+- Keep documentation up-to-date with code
+
+## Testing
+
+### Running Tests
+```bash
+npm test              # Run all tests
+npm run test:unit     # Run tests in watch mode
+```
+
+### Test Structure
+- Unit tests alongside source files
+- Use Vitest for testing
+- Test components, utilities, and logic
+
+## Build and Deployment
+
+### Development
+```bash
+npm run dev           # Start dev server
+npm run check         # Type check
+npm run lint          # Lint code
+npm run format        # Format code
+```
+
+### Production
+```bash
+npm run build         # Build for production
+npm run preview       # Preview production build
+```
+
+### Deployment
+- Node.js server deployment with PM2 on Linode VM (Debian) with Nginx reverse proxy
+- See root `README.md` for deployment options
+- Environment variables required: `VITE_GOOGLE_MAPS_API_KEY`
+
+## Questions?
+
+- **Architecture questions**: See `docs/specs/architecture.md`
+- **Process questions**: See `docs/process/COMMITS.md` and `TICKETS.md`
+- **Ticket questions**: See `docs/tickets/` directory
+- **General questions**: See `docs/README.md`
+
+---
+
+**Last Updated**: 2025-01-XX  
+**Related**: [Migration Improvement Plan](docs/MIGRATION_IMPROVEMENT_PLAN.md)
+

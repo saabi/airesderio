@@ -1,13 +1,10 @@
 /**
  * Contact Form API Route
  * 
- * NOTE: This API route requires a server-side adapter (adapter-node, adapter-auto, etc.)
- * The current adapter-static configuration will not support API routes at runtime.
+ * This API route works with @sveltejs/adapter-node, which is configured for
+ * Node.js deployment with PM2 on a Linode VM running Debian with Nginx.
  * 
- * Options:
- * 1. Switch to adapter-node or adapter-auto for server-side rendering
- * 2. Use a serverless function (Vercel, Netlify Functions, etc.)
- * 3. Use a third-party form service (Formspree, Netlify Forms)
+ * The application is deployed as a Node.js server, enabling full API route support.
  */
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { Resend } from 'resend';

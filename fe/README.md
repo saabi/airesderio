@@ -14,7 +14,7 @@ Aires de Río is a new residential building project offering 2 and 4-room apartm
 - **[Vite](https://vitejs.dev/)** - Build tool and dev server
 - **[mdsvex](https://mdsvex.pngwn.io/)** - Markdown support for Svelte
 - **[Vitest](https://vitest.dev/)** - Unit testing
-- **Static Site Generation** - Deployed as static site using `@sveltejs/adapter-static`
+- **Node.js Deployment** - Deployed as Node.js server using `@sveltejs/adapter-node` with PM2 on Linode VM
 
 ## Getting Started
 
@@ -164,7 +164,9 @@ fe/
 
 ## Deployment
 
-The site is configured for static deployment and is currently hosted at `ferreyrapons.com`. The build process generates a static site that can be deployed to any static hosting service (Netlify, Vercel, GitHub Pages, etc.).
+The site is configured for Node.js deployment using `@sveltejs/adapter-node`. The application runs as a Node.js server with PM2 on a Linode VM running Debian, with Nginx as a reverse proxy. This enables full API route support (including the contact form).
+
+For detailed deployment instructions, see the root [README.md](../README.md#option-4-vm-with-pm2-nodejs-server--chosen-deployment-method).
 
 ## Development Notes
 

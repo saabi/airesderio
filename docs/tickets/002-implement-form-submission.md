@@ -49,7 +49,9 @@ Choose one of the following approaches:
 - [x] Form data stored/logged appropriately
 
 ## Status
-**Complete** - Both backend API route and frontend form integration are fully implemented. Form includes client-side validation, loading states, success/error messages, honeypot spam protection, and proper form reset on success.
+**Complete** ✅ - Both backend API route and frontend form integration are fully implemented. Form includes client-side validation, loading states, success/error messages, honeypot spam protection, and proper form reset on success.
+
+**Deployment:** The project has been configured for Node.js deployment with `@sveltejs/adapter-node` to enable API routes in production. The application will run with PM2 on a Linode VM with Nginx as a reverse proxy. See [Form Submission Status](../FORM_SUBMISSION_STATUS.md) for details.
 
 ## Implementation Steps (Option A - Recommended)
 1. Install email service SDK (e.g., `@sendgrid/mail` or `resend`)

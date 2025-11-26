@@ -1,8 +1,10 @@
 # Aires de Río - Frontend Architecture Specification
 
+**Related:** [Feature Specification](./feature-specification.md), [Development Setup](./development-setup.md), [Svelte Guidelines](./svelte-guidelines.md), [Implementation Plan](./implementation-plan.md), [Process Documentation](../process/)
+
 ## Overview
 
-The Aires de Río frontend is a single-page application (SPA) built with **SvelteKit** and **Svelte 5**, designed as a promotional website for a residential development project in Santiago del Estero, Argentina. The application is statically generated and deployed as a static site.
+The Aires de Río frontend is a single-page application (SPA) built with **SvelteKit** and **Svelte 5**, designed as a promotional website for a residential development project in Santiago del Estero, Argentina. The application is deployed as a Node.js server using PM2 on a Linode VM with Nginx as a reverse proxy, enabling full API route support.
 
 ## Technology Stack
 
@@ -13,7 +15,9 @@ The Aires de Río frontend is a single-page application (SPA) built with **Svelt
 - **Vite 6.0.0** - Build tool and development server
 
 ### Build & Deployment
-- **@sveltejs/adapter-static 3.0.8** - Static site generation adapter
+- **@sveltejs/adapter-node** - Node.js adapter for server-side deployment
+- **PM2** - Process manager for Node.js applications
+- **Nginx** - Reverse proxy and web server
 - **mdsvex 0.12.3** - Markdown support for Svelte components (`.svx` files)
 
 ### Development Tools
@@ -213,14 +217,16 @@ npm run build
 ```
 - Static site generation
 - Output in `build/` directory
-- All routes pre-rendered as static HTML
-- Fallback: `200.html` for SPA routing (if needed)
+- Application runs as Node.js server
+- API routes fully supported
+- SSR capabilities available
 
 ### Build Configuration
 
-- **Adapter**: `@sveltejs/adapter-static`
-  - Generates static HTML, CSS, and JS
-  - No server required for deployment
+- **Adapter**: `@sveltejs/adapter-node`
+  - Generates Node.js server application
+  - Deployed with PM2 process manager
+  - Nginx reverse proxy for production
 
 - **Preprocessing**: 
   - `vitePreprocess()`: Vite preprocessing
@@ -343,4 +349,16 @@ npm run build
 - Analytics integration
 - Image optimization pipeline
 - Progressive Web App (PWA) features
+
+---
+
+## Related Documents
+
+- [Feature Specification](./feature-specification.md) - Project features and requirements
+- [Development Setup](./development-setup.md) - Development environment setup
+- [Svelte Guidelines](./svelte-guidelines.md) - Svelte coding conventions and best practices
+- [Implementation Plan](./implementation-plan.md) - Current implementation plan and priorities
+- [Architecture Improvements](./architecture-improvements.md) - Proposed improvements
+- [Process Documentation](../process/) - Development processes and conventions
+- [Tickets](../tickets/) - Improvement tickets and tasks
 
