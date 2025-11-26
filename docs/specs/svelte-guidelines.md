@@ -207,9 +207,11 @@ Use `$props` for component props:
 
 ### Component Template
 
+**Note:** For detailed ordering guidelines, see [Code Organization and Ordering](#code-organization-and-ordering) section.
+
 ```svelte
 <script lang="ts">
-  // Imports
+  // Imports (see ordering guidelines)
   import { onMount } from 'svelte';
   
   // Props
@@ -259,6 +261,379 @@ Use `$props` for component props:
   }
 </style>
 ```
+
+## Code Organization and Ordering
+
+### Script Block Structure
+
+Components should follow a consistent structure for readability and maintainability. Use comments to separate sections.
+
+**Recommended Order:**
+
+1. **Imports** (grouped by source)
+2. **Type Definitions** (interfaces, types)
+3. **Props** (`$props()`)
+4. **State** (`$state()`)
+5. **Derived** (`$derived()`)
+6. **Effects** (`$effect()`)
+7. **Constants** (non-reactive values)
+8. **Lifecycle Functions** (`onMount`, `onDestroy`, etc.)
+9. **Regular Functions** (event handlers, utility functions)
+
+### Import Ordering
+
+Group imports in this order:
+
+1. **Svelte core imports** (`svelte`)
+2. **SvelteKit imports** (`$app/*`)
+3. **Third-party library imports**
+4. **Local component imports** (`$lib/components/*`)
+5. **Local utility imports** (`$lib/utils/*`)
+6. **Local type imports** (`$lib/types`)
+7. **Type-only imports** (use `import type`)
+
+```typescript
+<script lang="ts">
+  // 1. Svelte core
+  import { onMount, onDestroy } from 'svelte';
+  
+  // 2. SvelteKit
+  import { browser } from '$app/environment';
+  import { page } from '$app/stores';
+  
+  // 3. Third-party (if any)
+  // import { someLib } from 'some-lib';
+  
+  // 4. Local components
+  import Button from '$lib/components/ui/Button.svelte';
+  import Input from '$lib/components/forms/Input.svelte';
+  
+  // 5. Local utilities
+  import { formatDate } from '$lib/utils/date';
+  
+  // 6. Local types
+  import type { User, Post } from '$lib/types';
+  
+  // 7. Type-only imports (if needed separately)
+  // import type { ComponentProps } from 'svelte';
+</script>
+```
+
+### Variable Declaration Order
+
+Declare variables in this order:
+
+1. **Props** - Component inputs
+2. **State** - Reactive state variables
+3. **Derived** - Computed values
+4. **Effects** - Side effects
+5. **Constants** - Non-reactive values
+6. **Refs** - DOM element references
+
+```typescript
+<script lang="ts">
+  // 1. Props
+  let { title, count = 0, onAction }: Props = $props();
+  
+  // 2. State
+  let isOpen = $state(false);
+  let items = $state<Item[]>([]);
+  let selectedId = $state<string | null>(null);
+  
+  // 3. Derived
+  let itemCount = $derived(items.length);
+  let hasItems = $derived(items.length > 0);
+  let selectedItem = $derived.by(() => 
+    items.find(item => item.id === selectedId)
+  );
+  
+  // 4. Effects
+  $effect(() => {
+    if (isOpen) {
+      // Side effect logic
+    }
+  });
+  
+  // 5. Constants
+  const MAX_ITEMS = 10;
+  const ANIMATION_DURATION = 300;
+  
+  // 6. Refs
+  let containerElement: HTMLDivElement | null = $state(null);
+  let inputElement: HTMLInputElement | null = $state(null);
+</script>
+```
+
+### Reactive Code Organization
+
+#### State Variables (`$state`)
+
+- Group related state together
+- Use descriptive names
+- Initialize with appropriate default values
+- Use TypeScript types explicitly
+
+```typescript
+// ✅ Good: Grouped by concern
+let isLoading = $state(false);
+let error = $state<string | null>(null);
+let data = $state<Data | null>(null);
+
+let isMenuOpen = $state(false);
+let activeItem = $state<string | null>(null);
+```
+
+#### Derived Values (`$derived`)
+
+- Place derived values after the state they depend on
+- Use `$derived.by()` for complex computations
+- Keep derived values simple and focused
+- Document complex derived logic
+
+```typescript
+let items = $state<Item[]>([]);
+let filter = $state('');
+
+// Simple derived
+let filteredItems = $derived(
+  items.filter(item => item.name.includes(filter))
+);
+
+// Complex derived
+let statistics = $derived.by(() => {
+  const total = items.length;
+  const filtered = filteredItems.length;
+  return {
+    total,
+    filtered,
+    percentage: total > 0 ? (filtered / total) * 100 : 0
+  };
+});
+```
+
+#### Effects (`$effect`)
+
+- Place effects after all state and derived values
+- Group related effects together
+- Use descriptive comments for complex effects
+- Clean up resources in effect cleanup functions
+
+```typescript
+let isOpen = $state(false);
+let data = $state<Data | null>(null);
+
+// Effect: Handle body class when menu opens
+$effect(() => {
+  if (isOpen) {
+    document.body.classList.add('menu-open');
+    return () => {
+      document.body.classList.remove('menu-open');
+    };
+  }
+});
+
+// Effect: Fetch data when component mounts
+$effect(() => {
+  if (data === null) {
+    fetchData().then(result => {
+      data = result;
+    });
+  }
+});
+```
+
+### Function Organization
+
+Organize functions in this order:
+
+1. **Event Handlers** - User interaction handlers
+2. **Lifecycle Functions** - Component lifecycle hooks
+3. **Utility Functions** - Helper functions
+4. **Async Functions** - Data fetching, API calls
+
+```typescript
+<script lang="ts">
+  // ... state, derived, effects ...
+  
+  // 1. Event Handlers
+  function handleClick() {
+    isOpen = !isOpen;
+  }
+  
+  function handleSubmit(event: Event) {
+    event.preventDefault();
+    // Handle submission
+  }
+  
+  // 2. Lifecycle
+  onMount(() => {
+    // Component initialization
+  });
+  
+  onDestroy(() => {
+    // Cleanup
+  });
+  
+  // 3. Utility Functions
+  function formatValue(value: number): string {
+    return value.toLocaleString();
+  }
+  
+  // 4. Async Functions
+  async function fetchData() {
+    const response = await fetch('/api/data');
+    return response.json();
+  }
+</script>
+```
+
+### Comments and Sections
+
+Use comments to separate logical sections:
+
+```typescript
+<script lang="ts">
+  // ===== IMPORTS =====
+  import { onMount } from 'svelte';
+  
+  // ===== TYPES =====
+  interface Props {
+    title: string;
+  }
+  
+  // ===== PROPS =====
+  let { title }: Props = $props();
+  
+  // ===== STATE =====
+  let isOpen = $state(false);
+  
+  // ===== DERIVED =====
+  let status = $derived(isOpen ? 'open' : 'closed');
+  
+  // ===== EFFECTS =====
+  $effect(() => {
+    // Effect logic
+  });
+  
+  // ===== FUNCTIONS =====
+  function handleClick() {
+    // Handler logic
+  }
+</script>
+```
+
+### Complete Example
+
+Here's a complete example following all ordering guidelines:
+
+```svelte
+<script lang="ts">
+  // ===== IMPORTS =====
+  // Svelte core
+  import { onMount } from 'svelte';
+  
+  // SvelteKit
+  import { browser } from '$app/environment';
+  
+  // Local components
+  import Button from '$lib/components/ui/Button.svelte';
+  import Input from '$lib/components/forms/Input.svelte';
+  
+  // Local utilities
+  import { formatDate } from '$lib/utils/date';
+  
+  // Local types
+  import type { User, Post } from '$lib/types';
+  
+  // ===== TYPES =====
+  interface Props {
+    userId: string;
+    onSave?: (data: Post) => void;
+  }
+  
+  // ===== PROPS =====
+  let { userId, onSave }: Props = $props();
+  
+  // ===== STATE =====
+  let isLoading = $state(false);
+  let error = $state<string | null>(null);
+  let post = $state<Post | null>(null);
+  let isEditing = $state(false);
+  
+  // ===== DERIVED =====
+  let canEdit = $derived(post !== null && !isLoading);
+  let formattedDate = $derived.by(() => 
+    post ? formatDate(post.createdAt) : ''
+  );
+  
+  // ===== EFFECTS =====
+  $effect(() => {
+    if (userId && !post) {
+      loadPost();
+    }
+  });
+  
+  // ===== CONSTANTS =====
+  const MAX_TITLE_LENGTH = 100;
+  
+  // ===== REFS =====
+  let titleInput: HTMLInputElement | null = $state(null);
+  
+  // ===== LIFECYCLE =====
+  onMount(() => {
+    // Initialization
+  });
+  
+  // ===== EVENT HANDLERS =====
+  function handleEdit() {
+    isEditing = true;
+  }
+  
+  function handleSave() {
+    if (post) {
+      onSave?.(post);
+      isEditing = false;
+    }
+  }
+  
+  // ===== UTILITY FUNCTIONS =====
+  function validateTitle(title: string): boolean {
+    return title.length > 0 && title.length <= MAX_TITLE_LENGTH;
+  }
+  
+  // ===== ASYNC FUNCTIONS =====
+  async function loadPost() {
+    isLoading = true;
+    error = null;
+    try {
+      const response = await fetch(`/api/posts/${userId}`);
+      post = await response.json();
+    } catch (e) {
+      error = 'Failed to load post';
+    } finally {
+      isLoading = false;
+    }
+  }
+</script>
+
+<!-- Template -->
+<div class="post-editor">
+  <!-- Component markup -->
+</div>
+
+<style>
+  /* Component styles */
+</style>
+```
+
+### Best Practices
+
+1. **Consistency**: Follow the same order in all components
+2. **Grouping**: Group related declarations together
+3. **Comments**: Use section comments for large components
+4. **Spacing**: Add blank lines between logical sections
+5. **Readability**: Keep related code close together
+6. **Dependencies**: Place derived values after their dependencies
 
 ## Component Organization
 
@@ -886,6 +1261,7 @@ test('renders correctly', () => {
 
 When updating existing components or creating new ones, ensure:
 
+### Syntax Compliance
 - [ ] All props use `$props()` instead of `export let`
 - [ ] All state uses `$state()` instead of regular `let` declarations
 - [ ] All derived values use `$derived()` instead of `$:`
@@ -897,6 +1273,16 @@ When updating existing components or creating new ones, ensure:
 - [ ] Event handlers use `onclick`, `onsubmit`, etc. (not `on:click`, `on:submit`)
 - [ ] No reactive statements (`$:`) are used
 - [ ] Component follows Svelte 5 patterns consistently
+
+### Code Organization
+- [ ] Imports are ordered correctly (Svelte → SvelteKit → third-party → local)
+- [ ] Props are declared first after imports
+- [ ] State variables are grouped logically
+- [ ] Derived values are placed after their dependencies
+- [ ] Effects are placed after state and derived values
+- [ ] Functions are organized (event handlers → lifecycle → utilities → async)
+- [ ] Section comments are used for large components
+- [ ] Related code is grouped together
 
 ## Resources
 
