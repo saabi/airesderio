@@ -171,7 +171,13 @@
 
 <header class='site'>
 	<div class='site__bar'>
-		<div class='logo' aria-label='Habitat Prime SAS'>Habitat Prime SAS</div>
+		<img
+			class='logo'
+			src='/logos/habitat-prime.svg'
+			alt='Habitat Prime SAS'
+			loading='eager'
+			decoding='async'
+		/>
 		<nav
 			id='main-nav'
 			class='main-nav'
@@ -288,25 +294,39 @@
 		box-shadow: 0 0.125rem 0.375rem var(--shadow-strong);
 	}
 
+	:global(:root[data-theme='dark']) .site {
+		/* Box/Visual */
+		background: var(--color-bg-canvas);
+		border-bottom: 1px solid var(--color-border-default);
+		box-shadow: 0 0.125rem 0.375rem var(--shadow-subtle);
+	}
+
 	.site__bar {
 		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 0.75rem 0;
+		padding: 0.75rem 2em;
 		
 		/* Box/Visual */
 		background: var(--ref-neutral-950);
+	}
+
+	:global(:root[data-theme='dark']) .site__bar {
+		/* Box/Visual */
+		background: var(--color-bg-elevated);
 	}
 
 	.logo {
 		/* Positioning */
 		z-index: 1001; /* Ensure logo is above mobile nav background */
 		
-		/* Typography */
-		font-weight: 800;
-		letter-spacing: 0.02em;
-		color: var(--color-text-inverse);
+		/* Layout */
+		height: 2rem;
+		width: auto;
+		
+		/* Box/Visual */
+		object-fit: contain;
 	}
 
 	.nav__desktop {
@@ -330,6 +350,11 @@
 		text-decoration: none;
 		text-transform: uppercase;
 		color: var(--color-text-inverse);
+	}
+
+	:global(:root[data-theme='dark']) .nav__desktop a {
+		/* Typography */
+		color: var(--color-accent-primary-text);
 	}
 
 	.nav__desktop a:hover {
@@ -377,6 +402,15 @@
 		transition: transform 0.2s ease, box-shadow 0.2s ease;
 	}
 
+	:global(:root[data-theme='dark']) .color-editor-toggle {
+		/* Box/Visual */
+		border: 1px solid var(--color-border-default);
+		background: var(--color-bg-elevated);
+		
+		/* Typography */
+		color: var(--color-accent-primary-text);
+	}
+
 	.color-editor-toggle:hover {
 		/* Box/Visual */
 		box-shadow: 0 0.5rem 1rem var(--shadow-subtle);
@@ -413,6 +447,16 @@
 	.theme-toggle:hover {
 		/* Box/Visual */
 		background-color: var(--ref-neutral-900);
+	}
+
+	:global(:root[data-theme='dark']) .theme-toggle {
+		/* Typography */
+		color: var(--color-accent-primary-text);
+	}
+
+	:global(:root[data-theme='dark']) .theme-toggle:hover {
+		/* Box/Visual */
+		background-color: var(--color-bg-muted);
 	}
 
 	.theme-toggle:focus-visible {
@@ -465,6 +509,11 @@
 		transition: all 0.2s;
 	}
 
+	:global(:root[data-theme='dark']) .nav-toggle .icon-bar {
+		/* Box/Visual */
+		background-color: var(--color-accent-primary-text);
+	}
+
 	@media (max-width: 850px) {
 		/* Mobile Nav */
 		.nav-toggle {
@@ -496,6 +545,11 @@
 			transition:
 				opacity 0.3s ease,
 				visibility 0.3s ease;
+		}
+
+		:global(:root[data-theme='dark']) .main-nav {
+			/* Box/Visual */
+			background-color: var(--overlay-white-strong);
 		}
 
 		.main-nav.is-open {
