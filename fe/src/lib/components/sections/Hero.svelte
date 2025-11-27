@@ -41,14 +41,18 @@
 <style>
 	.hero {
 		display: grid;
-		grid-template-columns: 1.2fr 0.8fr;
+		position: relative;
+		grid-template-columns: 1fr;
 		gap: var(--gap);
-		padding: 1.5rem 0;
+		padding: 1.5rem;
 		align-items: center;
+		justify-items: end;
 	}
 
 	.hero-img {
-		height: 28.125rem;
+		position: absolute;
+		width: 100%;
+		height: 100%;
 		background: url('https://placehold.co/800x600/6B4423/FFF?text=FOTO+ROTATIVA') center/cover;
 		border-radius: 0.5rem;
 	}
@@ -57,6 +61,7 @@
 		padding: 1rem;
 		border: 1px solid var(--color-border-default);
 		border-radius: 0.5rem;
+		background-color: color-mix(in oklch, var(--color-bg-contrast) 30%, transparent);
 	}
 
 	.hero-contact h1 {
