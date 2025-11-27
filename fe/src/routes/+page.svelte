@@ -1,6 +1,7 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import ContactSection from '$lib/components/sections/ContactSection.svelte';
+	import Container from '$lib/components/ui/Container.svelte';
 	import Equipment from '$lib/components/sections/Equipment.svelte';
 	import FloorPlans from '$lib/components/sections/FloorPlans.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
@@ -116,11 +117,13 @@
 	<Hero />
 
 	<p class="welcome">
-		Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto de departamentos con las
-		mejores prestaciones y estratégica ubicación.
+		Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto
+		de departamentos con las mejores prestaciones y estratégica ubicación.
 	</p>
 	
-	<Intro />
+	<div class="container">
+		<Intro />
+	</div>
 	<Location jsonUrl='/lugares/lugares-direcciones.json' showPlaceMarkers={true} />
 	<Interior />
 	<Equipment />
@@ -132,18 +135,25 @@
 	.welcome {
 		/* Layout */
 		display: block;
-		max-width: 60em;
-		padding: 1.125rem;
-		margin: 1rem auto;
+		max-width: 34em;
+		padding: 1.5rem 1.5rem;
+		margin: 2rem auto;
 		
 		/* Box/Visual */
-		background: var(--color-ink);
+		background: var(--color-accent-secondary);
 		border-radius: 0.625rem;
 		
 		/* Typography */
-		font-size: 1.2rem;
+		font-size: 1.6rem;
 		font-weight: 500;
-		color: var(--color-ink);
+		color: var(--color-text-primary);
 		text-align: center;
+		line-height: 1.6;
+	}
+	.container {
+		/* Layout */
+		max-width: var(--max);
+		margin: auto;
+		padding: 1.5rem 1.5rem;
 	}
 </style>
