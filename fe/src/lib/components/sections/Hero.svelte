@@ -333,24 +333,4 @@
 		font-size: 0.9em;
 	}
 
-	@media (max-width: 850px) {
-		.hero {
-			/* Layout */
-			grid-template-columns: 1fr;
-		}
-
-		.hero-carousel {
-			/* Layout */
-			height: 18.75rem; /* Shorter hero carousel on mobile */
-		}
-
-		.carousel-button {
-			/* Layout */
-			width: 2.5rem;
-			height: 2.5rem;
-			
-			/* Typography */
-			font-size: 1.5rem;
-		}
-	}
 </style>
