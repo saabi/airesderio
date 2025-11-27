@@ -111,7 +111,7 @@
 
 		const script = document.createElement('script');
 		script.id = GOOGLE_MAPS_SCRIPT_ID;
-		script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap&libraries=marker&v=weekly`;
+		script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap&libraries=marker&v=weekly&loading=async`;
 		script.async = true;
 		script.defer = true;
 		document.head.appendChild(script);
