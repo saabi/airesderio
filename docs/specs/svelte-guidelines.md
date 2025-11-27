@@ -210,12 +210,22 @@ Use `$props` for component props:
 **Note:** For detailed ordering guidelines, see [Code Organization and Ordering](#code-organization-and-ordering) section.
 
 ```svelte
-<script lang="ts">
+<script context="module" lang="ts">
   // Imports (see ordering guidelines)
   import { onMount } from 'svelte';
   
+  // Types
+  interface Props {
+    title?: string;
+  }
+  
+  // Static constants
+  export const MAX_ITEMS = 10;
+</script>
+
+<script lang="ts">
   // Props
-  let { title = $bindable('Default Title') } = $props();
+  let { title = $bindable('Default Title') }: Props = $props();
   
   // State
   let isOpen = $state(false);
@@ -266,19 +276,37 @@ Use `$props` for component props:
 
 ### Script Block Structure
 
-Components should follow a consistent structure for readability and maintainability. Use comments to separate sections.
+Components should use **two script blocks** for optimal organization:
 
-**Recommended Order:**
+1. **Module Script Block** (`<script context="module">`) - For shared, non-reactive code
+2. **Instance Script Block** (`<script>`) - For component instance code
 
+This separation improves legibility, performance, and makes it clear what's shared vs instance-specific.
+
+**Module Script Block Order:**
 1. **Imports** (grouped by source)
 2. **Type Definitions** (interfaces, types)
-3. **Props** (`$props()`)
-4. **State** (`$state()`)
-5. **Derived** (`$derived()`)
-6. **Effects** (`$effect()`)
-7. **Constants** (non-reactive values)
-8. **Lifecycle Functions** (`onMount`, `onDestroy`, etc.)
-9. **Regular Functions** (event handlers, utility functions)
+3. **Static Constants** (non-reactive values that don't depend on props/state)
+
+**Instance Script Block Order:**
+1. **Props** (`$props()`)
+2. **State** (`$state()`)
+3. **Derived** (`$derived()`)
+4. **Effects** (`$effect()`)
+5. **Instance Constants** (constants that depend on props/state)
+6. **Refs** (DOM element references)
+7. **Lifecycle Functions** (`onMount`, `onDestroy`, etc.)
+8. **Regular Functions** (event handlers, utility functions)
+
+### Module Script Block
+
+The module script block runs once when the module loads and is shared across all component instances. Use it for:
+
+- **Imports** - All imports go here
+- **Type Definitions** - Interfaces and types
+- **Static Constants** - Constants that don't depend on props or state
+
+**Important:** Module script blocks cannot access instance state, props, or reactive values.
 
 ### Import Ordering
 
@@ -293,13 +321,13 @@ Group imports in this order:
 7. **Type-only imports** (use `import type`)
 
 ```typescript
-<script lang="ts">
+<script context="module" lang="ts">
+  // ===== IMPORTS =====
   // 1. Svelte core
   import { onMount, onDestroy } from 'svelte';
   
   // 2. SvelteKit
   import { browser } from '$app/environment';
-  import { page } from '$app/stores';
   
   // 3. Third-party (if any)
   // import { someLib } from 'some-lib';
@@ -314,10 +342,31 @@ Group imports in this order:
   // 6. Local types
   import type { User, Post } from '$lib/types';
   
-  // 7. Type-only imports (if needed separately)
-  // import type { ComponentProps } from 'svelte';
+  // ===== TYPES =====
+  interface Props {
+    userId: string;
+    onSave?: (data: Post) => void;
+  }
+  
+  // ===== STATIC CONSTANTS =====
+  export const MAX_ITEMS = 10;
+  export const ANIMATION_DURATION = 300;
+  export const DEFAULT_CONFIG = {
+    timeout: 5000,
+    retries: 3
+  };
+  
+  // Large constant arrays/objects (shared across instances)
+  export const equipmentItems = [
+    { id: 1, name: 'Item 1' },
+    { id: 2, name: 'Item 2' }
+  ];
 </script>
 ```
+
+### Instance Script Block
+
+The instance script block runs for each component instance and contains all reactive and instance-specific code.
 
 ### Variable Declaration Order
 
@@ -327,42 +376,65 @@ Declare variables in this order:
 2. **State** - Reactive state variables
 3. **Derived** - Computed values
 4. **Effects** - Side effects
-5. **Constants** - Non-reactive values
+5. **Instance Constants** - Constants that depend on props/state
 6. **Refs** - DOM element references
 
 ```typescript
 <script lang="ts">
-  // 1. Props
+  // ===== PROPS =====
   let { title, count = 0, onAction }: Props = $props();
   
-  // 2. State
+  // ===== STATE =====
   let isOpen = $state(false);
   let items = $state<Item[]>([]);
   let selectedId = $state<string | null>(null);
   
-  // 3. Derived
+  // ===== DERIVED =====
   let itemCount = $derived(items.length);
   let hasItems = $derived(items.length > 0);
   let selectedItem = $derived.by(() => 
     items.find(item => item.id === selectedId)
   );
   
-  // 4. Effects
+  // ===== EFFECTS =====
   $effect(() => {
     if (isOpen) {
       // Side effect logic
     }
   });
   
-  // 5. Constants
-  const MAX_ITEMS = 10;
-  const ANIMATION_DURATION = 300;
+  // ===== INSTANCE CONSTANTS =====
+  // Constants that depend on props or state go here
+  const maxItems = MAX_ITEMS; // Using module constant
+  const computedConfig = $derived.by(() => ({
+    ...DEFAULT_CONFIG,
+    userId: title // Depends on prop
+  }));
   
-  // 6. Refs
+  // ===== REFS =====
   let containerElement: HTMLDivElement | null = $state(null);
   let inputElement: HTMLInputElement | null = $state(null);
 </script>
 ```
+
+### When to Use Module vs Instance Script
+
+**Module Script (`<script context="module">`):**
+- ✅ All imports
+- ✅ Type definitions
+- ✅ Static constants (configuration, magic numbers)
+- ✅ Large constant arrays/objects (shared data)
+- ✅ Constants that never change
+
+**Instance Script (`<script>`):**
+- ✅ Props (`$props()`)
+- ✅ State (`$state()`)
+- ✅ Derived (`$derived()`)
+- ✅ Effects (`$effect()`)
+- ✅ Constants that depend on props or state
+- ✅ Refs
+- ✅ Lifecycle functions
+- ✅ Event handlers and functions
 
 ### Reactive Code Organization
 
@@ -489,10 +561,10 @@ Organize functions in this order:
 
 ### Comments and Sections
 
-Use comments to separate logical sections:
+Use comments to separate logical sections in both module and instance script blocks:
 
 ```typescript
-<script lang="ts">
+<script context="module" lang="ts">
   // ===== IMPORTS =====
   import { onMount } from 'svelte';
   
@@ -501,6 +573,11 @@ Use comments to separate logical sections:
     title: string;
   }
   
+  // ===== STATIC CONSTANTS =====
+  export const MAX_ITEMS = 10;
+</script>
+
+<script lang="ts">
   // ===== PROPS =====
   let { title }: Props = $props();
   
@@ -524,10 +601,10 @@ Use comments to separate logical sections:
 
 ### Complete Example
 
-Here's a complete example following all ordering guidelines:
+Here's a complete example following all ordering guidelines with module and instance script blocks:
 
 ```svelte
-<script lang="ts">
+<script context="module" lang="ts">
   // ===== IMPORTS =====
   // Svelte core
   import { onMount } from 'svelte';
@@ -551,6 +628,16 @@ Here's a complete example following all ordering guidelines:
     onSave?: (data: Post) => void;
   }
   
+  // ===== STATIC CONSTANTS =====
+  export const MAX_TITLE_LENGTH = 100;
+  export const ANIMATION_DURATION = 300;
+  export const DEFAULT_CONFIG = {
+    timeout: 5000,
+    retries: 3
+  };
+</script>
+
+<script lang="ts">
   // ===== PROPS =====
   let { userId, onSave }: Props = $props();
   
@@ -573,8 +660,13 @@ Here's a complete example following all ordering guidelines:
     }
   });
   
-  // ===== CONSTANTS =====
-  const MAX_TITLE_LENGTH = 100;
+  // ===== INSTANCE CONSTANTS =====
+  // Constants that depend on props/state go here
+  const maxTitle = MAX_TITLE_LENGTH; // Using module constant
+  const computedConfig = $derived.by(() => ({
+    ...DEFAULT_CONFIG,
+    userId // Depends on prop
+  }));
   
   // ===== REFS =====
   let titleInput: HTMLInputElement | null = $state(null);
@@ -628,12 +720,16 @@ Here's a complete example following all ordering guidelines:
 
 ### Best Practices
 
-1. **Consistency**: Follow the same order in all components
-2. **Grouping**: Group related declarations together
-3. **Comments**: Use section comments for large components
-4. **Spacing**: Add blank lines between logical sections
-5. **Readability**: Keep related code close together
-6. **Dependencies**: Place derived values after their dependencies
+1. **Use Module Script**: Put imports, types, and static constants in `<script context="module">`
+2. **Separate Concerns**: Module script = shared code, instance script = component-specific code
+3. **Consistency**: Follow the same order in all components
+4. **Grouping**: Group related declarations together
+5. **Comments**: Use section comments for large components
+6. **Spacing**: Add blank lines between logical sections
+7. **Readability**: Keep related code close together
+8. **Dependencies**: Place derived values after their dependencies
+9. **Static Constants**: Use module script for constants that don't depend on props/state
+10. **Instance Constants**: Keep constants that depend on props/state in instance script
 
 ## Component Organization
 
@@ -1275,8 +1371,12 @@ When updating existing components or creating new ones, ensure:
 - [ ] Component follows Svelte 5 patterns consistently
 
 ### Code Organization
+- [ ] Module script block is used for imports, types, and static constants
+- [ ] Instance script block contains props, state, derived, effects, and functions
 - [ ] Imports are ordered correctly (Svelte → SvelteKit → third-party → local)
-- [ ] Props are declared first after imports
+- [ ] Static constants are in module script (don't depend on props/state)
+- [ ] Instance constants are in instance script (depend on props/state)
+- [ ] Props are declared first in instance script
 - [ ] State variables are grouped logically
 - [ ] Derived values are placed after their dependencies
 - [ ] Effects are placed after state and derived values
