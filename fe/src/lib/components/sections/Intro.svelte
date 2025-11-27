@@ -48,6 +48,7 @@
 
 <style>
 	.intro {
+		/* Layout */
 		display: grid;
 		grid-template-columns: 1.08fr 0.92fr;
 		gap: 1.5rem;
@@ -56,26 +57,35 @@
 	}
 
 	.intro__kpis {
-		padding-left: 0;
+		/* Layout */
 		display: grid;
 		gap: 0.625rem;
+		padding-left: 0;
+		
+		/* Typography */
 		color: var(--color-ink);
 	}
 
 	.intro__kpis dl {
+		/* Layout */
 		display: contents;
 	}
 
 	.intro__kpis dt {
+		/* Layout */
 		display: contents;
 	}
 
 	.intro__kpis dd {
+		/* Layout */
 		display: none;
 	}
 
 	.kpi strong {
+		/* Layout */
 		display: block;
+		
+		/* Typography */
 		font-size: 4rem;
 		font-weight: 700;
 		line-height: 1;
@@ -83,7 +93,10 @@
 	}
 
 	.kpi small {
+		/* Layout */
 		display: block;
+		
+		/* Typography */
 		color: var(--color-ink);
 		text-transform: uppercase;
 		letter-spacing: 0.12em;
@@ -91,9 +104,11 @@
 
 	@media (max-width: 850px) {
 		.intro {
+			/* Layout */
 			grid-template-columns: 1fr;
 		}
 		.kpi strong {
+			/* Typography */
 			font-size: 3.75rem; /* smaller KPI numbers */
 		}
 	}

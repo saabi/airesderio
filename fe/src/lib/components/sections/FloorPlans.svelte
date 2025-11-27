@@ -35,9 +35,12 @@
 
 <style>
 	.plan-ph {
-		background: var(--color-neutral-250);
+		/* Layout */
 		height: 27.5rem;
-		border-radius: 0.5rem;
+		
+		/* Box/Visual */
+		background: var(--color-neutral-250);
 		border: 1px solid var(--color-border-default);
+		border-radius: 0.5rem;
 	}
 </style>

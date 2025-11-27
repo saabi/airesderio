@@ -88,20 +88,23 @@
 
 <style>
 	.equip {
+		/* Layout */
 		margin: 1.625rem 0;
 	}
 
 	.equip-list {
-		list-style: none;
-		padding: 0;
-		margin:2rem 0;
+		/* Layout */
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 1.5rem 3rem;
 		align-items: start;
+		list-style: none;
+		padding: 0;
+		margin: 2rem 0;
 	}
 
 	.equip-list li {
+		/* Layout */
 		display: grid;
 		grid-template-columns: 3rem 1fr;
 		gap: 3rem;
@@ -109,10 +112,14 @@
 		padding: 1rem 0;
 	}
 
-
 	.equip-list li span {
+		/* Positioning */
 		position: relative;
+		
+		/* Layout */
 		padding: 0.75rem 0;
+		
+		/* Typography */
 		font-size: 1.75rem;
 		line-height: 1.4;
 		color: var(--color-contrast-low);
@@ -120,24 +127,34 @@
 
 	.equip-list li span::before,
 	.equip-list li span::after {
-		content: '';
+		/* Positioning */
 		position: absolute;
 		left: 0;
 		right: 0;
+		
+		/* Layout */
 		height: 0.25rem;
+		
+		/* Box/Visual */
 		background-color: var(--color-border-default);
+		
+		/* Misc/Overrides */
+		content: '';
 	}
 
 	.equip-list li span::before {
+		/* Positioning */
 		top: 0;
 	}
 
 	.equip-list li span::after {
+		/* Positioning */
 		bottom: 0;
 	}
 
 	@media (max-width: 850px) {
 		.equip-list {
+			/* Layout */
 			grid-template-columns: 1fr;
 		}
 	}

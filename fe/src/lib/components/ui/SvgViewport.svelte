@@ -38,6 +38,7 @@
 
 <style>
 	svg {
+		/* Layout */
 		display: inline-block;
 		vertical-align: middle;
 	}

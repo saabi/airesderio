@@ -130,15 +130,20 @@
 
 <style>
 	.welcome {
+		/* Layout */
+		display: block;
+		max-width: 60em;
+		padding: 1.125rem;
+		margin: 1rem auto;
+		
+		/* Box/Visual */
 		background: var(--color-neutral-200);
 		border-radius: 0.625rem;
-		padding: 1.125rem;
-		display: block;
-		margin: 1rem auto;
-		color: var(--color-ink);
-		text-align: center;
-		max-width: 60em;
+		
+		/* Typography */
 		font-size: 1.2rem;
 		font-weight: 500;
+		color: var(--color-ink);
+		text-align: center;
 	}
 </style>

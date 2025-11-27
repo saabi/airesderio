@@ -585,10 +585,13 @@
 
 <style>
 	.google-map {
-		height: 100%;
+		/* Layout */
 		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		
+		/* Box/Visual */
 		background-color: var(--color-neutral-275);
 		border-radius: 0.5rem;
-		overflow: hidden;
 	}
 </style>

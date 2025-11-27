@@ -54,31 +54,41 @@
 
 <style>
 	.form-textarea {
+		/* Layout */
 		width: 100%;
 		min-width: 0;
 		padding: 0.625rem;
+		resize: vertical;
+		
+		/* Box/Visual */
 		border: 1px solid var(--color-border-default);
 		border-radius: 0.25rem;
 		background-color: field;
-		color: text;
 		outline: none;
-		resize: vertical;
+		
+		/* Typography */
 		font-family: inherit;
 		font-size: inherit;
+		color: text;
 	}
 
 	.form-textarea::placeholder {
+		/* Typography */
 		color: var(--color-text-tertiary);
 	}
 
 	.form-textarea:focus-visible {
+		/* Box/Visual */
 		border-color: var(--color-border-strong);
 		outline: 1px solid var(--color-border-strong);
 		outline-offset: 0;
 	}
 
 	.form-textarea:disabled {
+		/* Box/Visual */
 		opacity: 0.6;
+		
+		/* Misc/Overrides */
 		cursor: not-allowed;
 	}
 </style>

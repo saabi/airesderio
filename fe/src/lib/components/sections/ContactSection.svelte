@@ -20,12 +20,16 @@
 
 <style>
 	.contact-section {
+		/* Layout */
 		margin: 2rem 0;
 		padding: 2rem 0;
+		
+		/* Box/Visual */
 		border-top: 1px solid var(--color-border-subtle);
 	}
 
 	.contact-section__container {
+		/* Layout */
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 2rem;
@@ -33,35 +37,46 @@
 	}
 
 	.contact-section__form h2 {
+		/* Layout */
+		margin: 0 0 0.5rem;
+		
+		/* Typography */
 		font-size: 1.5em;
 		font-weight: 600;
 		letter-spacing: 0.1em;
 		color: var(--color-accent-primary);
-		margin: 0 0 0.5rem;
 	}
 
 	.contact-section__form p {
+		/* Layout */
 		margin: 0 0 1.5rem;
+		
+		/* Typography */
 		font-size: 0.95em;
 		color: var(--color-text-secondary);
 	}
 
 	.contact-section__logo {
+		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		min-height: 200px;
+		
+		/* Box/Visual */
 		background: var(--color-neutral-100);
-		border-radius: 0.5rem;
 		border: 1px dashed var(--color-border-default);
+		border-radius: 0.5rem;
 	}
 
 	@media (max-width: 850px) {
 		.contact-section__container {
+			/* Layout */
 			grid-template-columns: 1fr;
 		}
 
 		.contact-section__logo {
+			/* Layout */
 			min-height: 150px;
 			margin-top: 1rem;
 		}

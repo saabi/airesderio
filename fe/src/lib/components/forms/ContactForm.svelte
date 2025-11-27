@@ -145,75 +145,110 @@
 
 <style>
 	.form-group {
+		/* Layout */
 		margin-bottom: 0.75rem;
 	}
 
 	.form-group label {
+		/* Layout */
 		display: block;
-		font-size: 0.85em;
 		margin-bottom: 0.25rem;
+		
+		/* Typography */
+		font-size: 0.85em;
 		color: var(--color-text-secondary);
 	}
 
 	.form-group button {
+		/* Layout */
 		width: 100%;
 		padding: 0.75rem;
+		
+		/* Box/Visual */
 		border: none;
-		background: var(--color-accent-primary);
-		color: var(--color-text-inverse);
-		font-weight: 600;
 		border-radius: 0.25rem;
+		background: var(--color-accent-primary);
+		
+		/* Typography */
+		font-weight: 600;
+		color: var(--color-text-inverse);
+		
+		/* Misc/Overrides */
 		cursor: pointer;
 	}
 
 	.form-group button:hover:not(:disabled) {
+		/* Box/Visual */
 		background: var(--color-accent-strong);
 	}
 	
 	.form-group button:disabled {
+		/* Box/Visual */
 		opacity: 0.6;
+		
+		/* Misc/Overrides */
 		cursor: not-allowed;
 	}
 	
 	.button-loading {
+		/* Layout */
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
 	}
 	
 	.button-loading::after {
-		content: '';
+		/* Layout */
 		width: 1rem;
 		height: 1rem;
+		
+		/* Box/Visual */
 		border: 2px solid currentColor;
 		border-top-color: transparent;
 		border-radius: 50%;
+		
+		/* Misc/Overrides */
+		content: '';
+		
+		/* Effects & Motion */
 		animation: spin 0.6s linear infinite;
 	}
 	
 	@keyframes spin {
 		to {
+			/* Effects & Motion */
 			transform: rotate(360deg);
 		}
 	}
 	
 	.form-message {
+		/* Layout */
 		padding: 0.75rem;
-		border-radius: 0.25rem;
 		margin-bottom: 1rem;
+		
+		/* Box/Visual */
+		border-radius: 0.25rem;
+		
+		/* Typography */
 		font-size: 0.9em;
 	}
 	
 	.form-message--success {
+		/* Box/Visual */
 		background-color: var(--color-success-bg, #d4edda);
-		color: var(--color-success-text, #155724);
 		border: 1px solid var(--color-success-border, #c3e6cb);
+		
+		/* Typography */
+		color: var(--color-success-text, #155724);
 	}
 	
 	.form-message--error {
+		/* Box/Visual */
 		background-color: var(--color-error-bg, #f8d7da);
-		color: var(--color-error-text, #721c24);
 		border: 1px solid var(--color-error-border, #f5c6cb);
+		
+		/* Typography */
+		color: var(--color-error-text, #721c24);
 	}
 </style>
 

@@ -127,130 +127,185 @@
 <style>
 	/* Photo Carousel Styles */
 	.photo-carousel-overlay {
+		/* Positioning */
 		position: fixed;
 		top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0;
+		z-index: 10000;
+		
+		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		z-index: 10000;
+		
+		/* Box/Visual */
 		backdrop-filter: blur(4px);
 	}
 
 	.photo-carousel-overlay-backdrop {
+		/* Positioning */
 		position: absolute;
 		top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0;
+		z-index: 1;
+		
+		/* Layout */
 		width: 100%;
 		height: 100%;
+		padding: 0;
+		
+		/* Box/Visual */
 		background: var(--overlay-black-80);
 		border: none;
-		padding: 0;
+		
+		/* Misc/Overrides */
 		cursor: pointer;
-		z-index: 1;
 	}
 
 	.photo-carousel-modal {
-		background: var(--color-bg-contrast);
-		border-radius: 0.75rem;
-		max-width: 90vw;
-		max-height: 90vh;
-		width: 600px;
-		box-shadow: 0 20px 25px -5px var(--shadow-soft);
-		overflow: hidden;
+		/* Positioning */
 		position: relative;
 		z-index: 2;
+		
+		/* Layout */
+		width: 600px;
+		max-width: 90vw;
+		max-height: 90vh;
+		overflow: hidden;
+		
+		/* Box/Visual */
+		background: var(--color-bg-contrast);
+		border-radius: 0.75rem;
+		box-shadow: 0 20px 25px -5px var(--shadow-soft);
 	}
 
 	.photo-carousel-header {
+		/* Layout */
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		padding: 1rem 1.5rem;
+		
+		/* Box/Visual */
 		border-bottom: 1px solid var(--color-neutral-300);
 		background: var(--color-neutral-125);
 	}
 
 	.photo-carousel-header h3 {
+		/* Layout */
 		margin: 0;
-		color: var(--color-neutral-800);
+		
+		/* Typography */
 		font-size: 1.125rem;
 		font-weight: 600;
+		color: var(--color-neutral-800);
 	}
 
 	.close-button {
+		/* Layout */
+		padding: 0.25rem;
+		
+		/* Box/Visual */
 		background: none;
 		border: none;
-		font-size: 1.5rem;
-		cursor: pointer;
-		color: var(--color-muted);
-		padding: 0.25rem;
 		border-radius: 0.25rem;
+		
+		/* Typography */
+		font-size: 1.5rem;
+		color: var(--color-muted);
+		
+		/* Misc/Overrides */
+		cursor: pointer;
+		
+		/* Effects & Motion */
 		transition: background-color 0.2s;
 	}
 
 	.close-button:hover {
+		/* Box/Visual */
 		background: var(--color-neutral-300);
 		color: var(--color-neutral-800);
 	}
 
 	.photo-carousel-content {
+		/* Layout */
 		padding: 1.5rem;
 	}
 
 	.photo-container {
+		/* Positioning */
 		position: relative;
+		
+		/* Layout */
 		width: 100%;
 		height: 400px;
-		border-radius: 0.5rem;
-		overflow: hidden;
-		background: var(--color-neutral-200);
 		margin-bottom: 1rem;
+		overflow: hidden;
+		
+		/* Box/Visual */
+		background: var(--color-neutral-200);
+		border-radius: 0.5rem;
 	}
 
 	.carousel-image {
+		/* Layout */
+		display: block;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		display: block;
 	}
 
 	.nav-button {
+		/* Positioning */
 		position: absolute;
 		top: 50%;
-		transform: translateY(-50%);
-		background: var(--overlay-black-60);
-		color: var(--color-text-inverse);
-		border: none;
-		border-radius: 50%;
-		width: 40px;
-		height: 40px;
-		cursor: pointer;
+		z-index: 10;
+		
+		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		width: 40px;
+		height: 40px;
+		
+		/* Box/Visual */
+		background: var(--overlay-black-60);
+		border: none;
+		border-radius: 50%;
+		
+		/* Typography */
 		font-size: 1.25rem;
+		color: var(--color-text-inverse);
+		
+		/* Misc/Overrides */
+		cursor: pointer;
+		
+		/* Effects & Motion */
+		transform: translateY(-50%);
 		transition: background-color 0.2s;
-		z-index: 10;
 	}
 
 	.nav-button:hover {
+		/* Box/Visual */
 		background: var(--overlay-black-80);
 	}
 
 	.nav-button.prev {
+		/* Positioning */
 		left: 1rem;
 	}
 
 	.nav-button.next {
+		/* Positioning */
 		right: 1rem;
 	}
 
 	.photo-dots {
+		/* Layout */
 		display: flex;
 		justify-content: center;
 		gap: 0.5rem;
@@ -258,38 +313,53 @@
 	}
 
 	.dot {
+		/* Layout */
 		width: 12px;
 		height: 12px;
-		border-radius: 50%;
+		
+		/* Box/Visual */
 		border: none;
+		border-radius: 50%;
 		background: var(--color-neutral-400);
+		
+		/* Misc/Overrides */
 		cursor: pointer;
+		
+		/* Effects & Motion */
 		transition: background-color 0.2s;
 	}
 
 	.dot.active {
+		/* Box/Visual */
 		background: var(--color-accent-primary);
 	}
 
 	.dot:hover {
+		/* Box/Visual */
 		background: var(--color-neutral-500);
 	}
 
 	.dot.active:hover {
+		/* Box/Visual */
 		background: var(--color-accent-strong);
 	}
 
 	.photo-info {
+		/* Typography */
 		text-align: center;
 	}
 
 	.photo-info p {
+		/* Layout */
 		margin: 0.25rem 0;
-		color: var(--color-muted);
+		
+		/* Typography */
 		font-size: 0.875rem;
+		color: var(--color-muted);
 	}
 
 	.photo-description {
+		/* Typography */
 		font-style: italic;
 		color: var(--color-neutral-500) !important;
 	}
@@ -297,33 +367,42 @@
 	/* Mobile responsiveness */
 	@media (max-width: 640px) {
 		.photo-carousel-modal {
+			/* Layout */
 			width: 95vw;
 			max-height: 95vh;
 		}
 
 		.photo-container {
+			/* Layout */
 			height: 300px;
 		}
 
 		.photo-carousel-header {
+			/* Layout */
 			padding: 0.75rem 1rem;
 		}
 
 		.photo-carousel-content {
+			/* Layout */
 			padding: 1rem;
 		}
 
 		.nav-button {
+			/* Layout */
 			width: 35px;
 			height: 35px;
+			
+			/* Typography */
 			font-size: 1rem;
 		}
 
 		.nav-button.prev {
+			/* Positioning */
 			left: 0.5rem;
 		}
 
 		.nav-button.next {
+			/* Positioning */
 			right: 0.5rem;
 		}
 	}

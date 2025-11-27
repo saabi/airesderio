@@ -49,6 +49,7 @@
 
 <style>
 	.interior-gallery {
+		/* Layout */
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 1.125rem;
@@ -56,42 +57,63 @@
 	}
 
 	.interior-gallery figure {
+		/* Layout */
 		display: contents;
 	}
 
 	.ph {
-		background: var(--color-neutral-275);
-		height: 16.25rem;
-		border-radius: 0.5rem;
+		/* Positioning */
 		position: relative;
+		
+		/* Layout */
+		height: 16.25rem;
+		
+		/* Box/Visual */
+		background: var(--color-neutral-275);
+		border-radius: 0.5rem;
 	}
 
 	.ph::after {
-		content: 'FOTOS 4-9 VAN DESPLAZANDOSE HORIZONTALMENTE';
+		/* Positioning */
 		position: absolute;
 		left: 0.5rem;
 		bottom: 0.5rem;
-		font-size: 0.78rem;
-		background: var(--color-bg-contrast);
+		
+		/* Layout */
 		padding: 0.25rem 0.375rem;
-		border-radius: 0.375rem;
+		
+		/* Box/Visual */
+		background: var(--color-bg-contrast);
 		border: 1px solid var(--color-neutral-350);
+		border-radius: 0.375rem;
+		
+		/* Typography */
+		content: 'FOTOS 4-9 VAN DESPLAZANDOSE HORIZONTALMENTE';
+		font-size: 0.78rem;
 		color: var(--color-ink);
 	}
 
 	.ph .arrow {
+		/* Positioning */
 		position: absolute;
 		right: -2.75rem;
 		top: 50%;
-		transform: translateY(-50%);
+		
+		/* Layout */
 		width: 0;
 		height: 0;
+		
+		/* Box/Visual */
 		border-top: 1.625rem solid transparent;
 		border-bottom: 1.625rem solid transparent;
 		border-left: 2.75rem solid var(--color-red-accent);
+		
+		/* Effects & Motion */
+		transform: translateY(-50%);
 	}
 	@media (max-width: 850px) {
 		.interior-gallery {
+			/* Layout */
 			grid-template-columns: 1fr;
 		}
 	}

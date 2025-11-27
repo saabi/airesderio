@@ -532,46 +532,63 @@
 
 <style>
 	.ubi {
+		/* Layout */
 		margin: 1.625rem 0;
 	}
 
 	.location-block {
+		/* Layout */
 		display: grid;
 		grid-template-columns: min-content 1fr;
 		gap: 0;
-		background: var(--color-accent-primary);
-		border-radius: 0.625rem;
 		overflow: hidden;
+		
+		/* Box/Visual */
+		background: var(--color-accent-primary);
 		border: 1px solid var(--color-border-strong);
+		border-radius: 0.625rem;
 	}
 
 	.location-text {
+		/* Layout */
 		max-width: 40ch;
 		padding: 1.75rem;
+		
+		/* Typography */
 		color: var(--color-text-on-accent);
 	}
 
 	.location-eyebrow {
+		/* Layout */
+		display: inline-block;
+		margin-bottom: 0.5rem;
+		
+		/* Typography */
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		font-size: 0.9em;
-		display: inline-block;
-		margin-bottom: 0.5rem;
 		color: var(--color-text-on-accent);
+		
+		/* Box/Visual */
 		opacity: 0.95;
 	}
 
 	.location-text h3 {
+		/* Layout */
+		margin: 0 0 1rem;
+		
+		/* Typography */
 		font-size: 2.5em;
 		line-height: 1.1;
-		margin: 0 0 1rem;
 	}
 
 	.location-text p {
+		/* Typography */
 		font-size: 0.95em;
 	}
 
 	.map-container {
+		/* Layout */
 		display: grid;
 		grid-template-columns: 1fr min-content;
 		width: 100%;
@@ -579,40 +596,51 @@
 	}
 
 	.location-map {
+		/* Layout */
 		min-height: 25rem;
-		border-radius: 0.5rem;
 		overflow: hidden;
+		
+		/* Box/Visual */
 		background: var(--color-bg-contrast);
+		border-radius: 0.5rem;
 	}
 
 	.location-map--placeholder {
+		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		
+		/* Box/Visual */
 		background: var(--color-bg-muted);
 	}
 
 	.location-map__message {
-		color: var(--color-text-secondary);
+		/* Typography */
 		font-size: 0.95rem;
+		color: var(--color-text-secondary);
 	}
 
 
 
 	@media (max-width: 850px) {
 		.location-block {
+			/* Layout */
 			grid-template-columns: 1fr;
 			/* Invert order on mobile */
 			grid-template-rows: auto auto;
 		}
 		.location-text {
+			/* Layout */
 			max-width: 100%;
 		}
 		.location-text h3 {
+			/* Typography */
 			font-size: 2em; /* smaller location title */
 		}
 
 		.map-container {
+			/* Layout */
 			grid-template-columns: 1fr;
 			grid-template-rows: 50vh min-content;
 		}
@@ -620,13 +648,17 @@
 
 	/* Info Window Snippet Styles */
 	:global(.info-window) {
+		/* Layout */
 		max-width: 280px;
-		font-family: system-ui, sans-serif;
 		padding: 0;
 		margin: 0;
+		
+		/* Typography */
+		font-family: system-ui, sans-serif;
 	}
 
 	:global(.info-header) {
+		/* Layout */
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
@@ -634,116 +666,160 @@
 	}
 
 	:global(.category-indicator) {
-		width: 16px;
-		height: 16px;
-		border-radius: 50%;
-		flex-shrink: 0;
+		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+		
+		/* Box/Visual */
 		border: 1px solid var(--overlay-white-medium);
+		border-radius: 50%;
 		background-color: var(--category-color, var(--color-accent-primary));
 		box-shadow: 0 1px 2px var(--shadow-medium);
+		
+		/* Typography */
 		color: var(--color-text-inverse);
 	}
 
 	:global(.category-icon) {
+		/* Typography */
 		font-size: 8px;
 		line-height: 1;
 		text-shadow: 0 0 2px var(--overlay-black-40);
 	}
 
 	:global(.category-name) {
-		font-size: 0.75rem;
-		color: var(--color-text-secondary-dark);
-		font-weight: 400;
+		/* Layout */
 		margin-left: 0.5rem;
+		
+		/* Typography */
+		font-size: 0.75rem;
+		font-weight: 400;
+		color: var(--color-text-secondary-dark);
 	}
 
 	:global(.place-name) {
+		/* Layout */
 		margin: 0;
-		color: var(--color-text-on-light);
+		
+		/* Typography */
 		font-size: 1rem;
 		font-weight: 600;
 		line-height: 1.2;
+		color: var(--color-text-on-light);
 	}
 
 	:global(.info-content) {
+		/* Layout */
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 	}
 
 	:global(.address) {
+		/* Layout */
 		margin: 0;
+		
+		/* Typography */
 		font-size: 0.875rem;
-		color: var(--color-text-secondary-dark);
 		line-height: 1.4;
+		color: var(--color-text-secondary-dark);
 	}
 
 	:global(.badges) {
+		/* Layout */
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem;
 	}
 
 	:global(.marker-wrapper) {
+		/* Positioning */
 		position: relative;
+		z-index: 1000;
+		
+		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		z-index: 1000;
 	}
 
 	:global(.marker-wrapper--main) {
+		/* Positioning */
 		z-index: 1001;
 	}
 
 	:global(.marker-dot) {
+		/* Layout */
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		width: 16px;
 		height: 16px;
+		
+		/* Box/Visual */
 		background-color: var(--category-color, var(--color-accent-primary));
 		border: 2px solid var(--color-text-inverse);
 		border-radius: 50%;
 		box-shadow: 0 2px 4px var(--shadow-strong);
-		cursor: pointer;
-		transition: transform 0.2s ease;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		
+		/* Typography */
 		font-size: 10px;
 		line-height: 1;
 		font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+		
+		/* Misc/Overrides */
+		cursor: pointer;
+		
+		/* Effects & Motion */
+		transition: transform 0.2s ease;
 	}
 
 	:global(.marker-dot--main) {
+		/* Layout */
 		width: 28px;
 		height: 28px;
+		
+		/* Box/Visual */
 		border-width: 4px;
+		
+		/* Typography */
 		font-size: 14px;
+		
+		/* Effects & Motion */
 		animation: marker-pulse 2s infinite;
 	}
 
 	:global(.marker-icon) {
+		/* Layout */
 		display: inline-block;
+		
+		/* Typography */
 		font-size: 12px;
 		line-height: 1;
-		color: var(--color-text-inverse);
-		text-shadow: 0 0 2px var(--overlay-black-40);
-		font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif;
 		font-weight: normal;
 		font-style: normal;
+		font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif;
+		color: var(--color-text-inverse);
+		text-shadow: 0 0 2px var(--overlay-black-40);
 		text-rendering: optimizeLegibility;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
 
 	:global(.marker-icon--main) {
+		/* Typography */
 		font-size: 16px;
 	}
 
 	:global(.marker-fallback) {
+		/* Layout */
 		display: inline-block;
+		
+		/* Typography */
 		font-size: 8px;
 		line-height: 1;
 		font-family: system-ui, sans-serif;
@@ -753,119 +829,169 @@
 	}
 
 	:global(.marker-fallback--main) {
+		/* Typography */
 		font-size: 12px;
 	}
 
 	:global(.photo-trigger) {
+		/* Positioning */
 		position: absolute;
 		top: -8px;
 		right: -8px;
-		width: 16px;
-		height: 16px;
-		background: var(--color-bg-contrast);
-		border: 1px solid var(--color-border-subtle);
-		border-radius: 50%;
+		z-index: 10;
+		
+		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 8px;
-		cursor: pointer;
-		box-shadow: 0 1px 3px var(--shadow-medium);
-		z-index: 10;
+		width: 16px;
+		height: 16px;
 		padding: 0;
+		
+		/* Box/Visual */
+		background: var(--color-bg-contrast);
+		border: 1px solid var(--color-border-subtle);
+		border-radius: 50%;
+		box-shadow: 0 1px 3px var(--shadow-medium);
+		
+		/* Typography */
+		font-size: 8px;
+		
+		/* Misc/Overrides */
+		cursor: pointer;
+		
+		/* Effects & Motion */
 		transition: transform 0.2s ease, box-shadow 0.2s ease;
 	}
 
 	:global(.photo-trigger:hover) {
-		transform: scale(1.05);
+		/* Box/Visual */
 		box-shadow: 0 2px 6px var(--shadow-strong);
+		
+		/* Effects & Motion */
+		transform: scale(1.05);
 	}
 
 	:global(.distance-badge) {
-		color: var(--color-text-inverse);
+		/* Layout */
 		padding: 0.125rem 0.5rem;
+		
+		/* Box/Visual */
 		border-radius: 0.25rem;
+		
+		/* Typography */
 		font-size: 0.75rem;
 		font-weight: 500;
+		color: var(--color-text-inverse);
 	}
 
 	:global(.distance-badge--very-near) {
+		/* Box/Visual */
 		background: var(--color-success-strong);
 	}
 
 	:global(.distance-badge--near) {
+		/* Box/Visual */
 		background: var(--color-warning);
 	}
 
 	:global(.distance-badge--far) {
+		/* Box/Visual */
 		background: var(--color-danger);
 	}
 
 	:global(.distance-detail) {
-		background-color: var(--color-bg-muted);
-		color: var(--color-text-on-light);
+		/* Layout */
 		padding: 0.125rem 0.5rem;
+		
+		/* Box/Visual */
+		background-color: var(--color-bg-muted);
 		border-radius: 0.25rem;
+		
+		/* Typography */
 		font-size: 0.75rem;
+		color: var(--color-text-on-light);
 	}
 
 	:global(.description) {
+		/* Layout */
 		margin: 0;
+		
+		/* Typography */
 		font-size: 0.8rem;
-		color: var(--color-text-tertiary);
-		font-style: italic;
 		line-height: 1.3;
+		font-style: italic;
+		color: var(--color-text-tertiary);
 	}
 
 	:global(.photo-button) {
-		background: var(--color-info);
-		color: var(--color-text-inverse);
-		border: none;
+		/* Layout */
 		padding: 0.5rem 0.75rem;
-		border-radius: 0.375rem;
-		font-size: 0.875rem;
-		cursor: pointer;
-		transition: background-color 0.2s;
 		align-self: flex-start;
+		
+		/* Box/Visual */
+		background: var(--color-info);
+		border: none;
+		border-radius: 0.375rem;
+		
+		/* Typography */
+		font-size: 0.875rem;
+		color: var(--color-text-inverse);
+		
+		/* Misc/Overrides */
+		cursor: pointer;
+		
+		/* Effects & Motion */
+		transition: background-color 0.2s;
 	}
 
 	:global(.photo-button:hover) {
+		/* Box/Visual */
 		background: var(--color-info);
 		opacity: 0.9;
 	}
 
 	:global(.photo-button:active) {
+		/* Box/Visual */
 		background: var(--color-info);
 		opacity: 0.8;
 	}
 
 	:global(.custom-map-marker) {
+		/* Positioning */
 		position: absolute;
 		top: 0;
 		left: 0;
+		
+		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
 	:global(.custom-map-marker .marker-dot) {
+		/* Effects & Motion */
 		transition: transform 0.2s ease;
 		transform-origin: center;
 	}
 
 	:global(.custom-map-marker:hover .marker-dot) {
+		/* Effects & Motion */
 		transform: scale(1.08);
 	}
 
 	/* Pulse animation for main marker */
 	@keyframes marker-pulse {
 		0% {
+			/* Box/Visual */
 			box-shadow: 0 4px 8px var(--overlay-black-40), 0 0 0 0 var(--brand-overlay-70);
 		}
 		50% {
+			/* Box/Visual */
 			box-shadow: 0 4px 8px var(--overlay-black-40), 0 0 0 8px var(--brand-overlay-30);
 		}
 		100% {
+			/* Box/Visual */
 			box-shadow: 0 4px 8px var(--overlay-black-40), 0 0 0 0 var(--brand-overlay-70);
 		}
 	}

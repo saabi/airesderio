@@ -345,24 +345,32 @@
 
 <style>
 	.phone-input-group {
+		/* Layout */
 		margin-bottom: 0.75rem;
 	}
 
 	.phone-input-group label {
+		/* Layout */
 		display: block;
-		font-size: 1em;
 		margin-bottom: 0.25rem;
-		color: var(--color-text-primary);
+		
+		/* Typography */
+		font-size: 1em;
 		font-weight: 600;
+		color: var(--color-text-primary);
 	}
 
 	.phone-input-hint {
+		/* Layout */
+		margin: 0 0 0.5rem;
+		
+		/* Typography */
 		font-size: 0.85em;
 		color: var(--color-text-secondary);
-		margin: 0 0 0.5rem;
 	}
 
 	.phone-input-container {
+		/* Layout */
 		display: flex;
 		gap: 0.5rem;
 		align-items: stretch;
@@ -371,6 +379,7 @@
 	/* Override Select component width for phone number country selector */
 	/* Using !important is necessary here to override scoped component styles */
 	:global(.phone-country-select.select-input) {
+		/* Layout */
 		width: auto !important;
 		flex: 0 0 auto;
 		min-width: 140px;
@@ -378,69 +387,97 @@
 	}
 
 	.phone-number-wrapper {
-		flex: 1 1 auto;
+		/* Layout */
 		display: flex;
 		align-items: center;
+		flex: 1 1 auto;
+		overflow: hidden;
+		
+		/* Box/Visual */
 		border: 1px solid var(--color-border-default);
 		border-radius: 0.25rem;
 		background-color: field;
+		
+		/* Typography */
 		color: text;
-		overflow: hidden;
 	}
 
 	.phone-number-wrapper:has(.phone-number-input:focus-visible),
 	.phone-number-wrapper:has(.phone-dial-code-input:focus-visible) {
+		/* Box/Visual */
 		border-color: var(--color-border-strong);
 		outline: 1px solid var(--color-border-strong);
 		outline-offset: 0;
 	}
 
 	.phone-dial-code {
+		/* Layout */
 		padding: 0.625rem 0.5rem;
-		background: var(--color-bg-muted);
-		color: var(--color-text-primary);
-		font-size: 0.875em;
-		border-right: 1px solid var(--color-border-default);
 		flex-shrink: 0;
+		
+		/* Box/Visual */
+		background: var(--color-bg-muted);
+		border-right: 1px solid var(--color-border-default);
+		
+		/* Typography */
+		font-size: 0.875em;
+		color: var(--color-text-primary);
+		
+		/* Misc/Overrides */
 		user-select: none;
 		pointer-events: none;
 	}
 
 	.phone-dial-code-input {
+		/* Layout */
 		padding: 0.625rem 0.5rem;
-		background: var(--color-bg-muted);
-		color: var(--color-text-primary);
-		font-size: 0.875em;
-		border: none;
-		border-right: 1px solid var(--color-border-strong);
 		flex-shrink: 0;
 		min-width: 60px;
 		max-width: 80px;
+		
+		/* Box/Visual */
+		background: var(--color-bg-muted);
+		border: none;
+		border-right: 1px solid var(--color-border-strong);
 		outline: none;
+		
+		/* Typography */
+		font-size: 0.875em;
+		color: var(--color-text-primary);
 	}
 
 	.phone-number-input {
-		flex: 1 1 auto;
+		/* Layout */
+		width: 100%;
 		padding: 0.625rem;
+		flex: 1 1 auto;
+		
+		/* Box/Visual */
 		border: none;
 		outline: none;
-		width: 100%;
 		background-color: transparent;
+		
+		/* Typography */
 		color: text;
 	}
 
 	.phone-number-input::placeholder {
+		/* Typography */
 		color: var(--color-text-tertiary);
 	}
 
 	.phone-validation-error {
-		font-size: 0.75em;
-		color: var(--color-danger-strong);
+		/* Layout */
 		margin: 0.25rem 0 0;
 		padding: 0;
+		
+		/* Typography */
+		font-size: 0.75em;
+		color: var(--color-danger-strong);
 	}
 
 	.phone-number-wrapper:has(.phone-number-input.invalid) {
+		/* Box/Visual */
 		border-color: var(--color-danger);
 	}
 </style>

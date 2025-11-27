@@ -12,10 +12,15 @@
 
 <style>
 	footer {
-		border-top: 1px solid var(--color-border-subtle);
+		/* Layout */
 		padding: 1.5rem 0;
+		margin-top: 1.75rem;
+		
+		/* Box/Visual */
+		border-top: 1px solid var(--color-border-subtle);
+		
+		/* Typography */
 		color: var(--color-text-tertiary);
 		text-align: center;
-		margin-top: 1.75rem;
 	}
 </style>

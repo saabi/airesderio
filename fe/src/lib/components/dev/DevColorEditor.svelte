@@ -304,35 +304,49 @@
 
 <style>
 	aside {
+		/* Positioning */
 		position: fixed;
 		top: 0;
 		right: -360px;
-		width: 360px;
-		height: 100vh;
-		background: var(--color-bg-elevated, #111);
-		color: var(--color-text-default, #fff);
-		box-shadow: -0.5rem 0 1.5rem rgba(0, 0, 0, 0.3);
-		padding: 1rem;
-		transition: right 0.3s ease;
+		z-index: 2000;
+		
+		/* Layout */
 		display: flex;
 		flex-direction: column;
+		width: 360px;
+		height: 100vh;
+		padding: 1rem;
 		gap: 1rem;
-		z-index: 2000;
+		
+		/* Box/Visual */
+		background: var(--color-bg-elevated, #111);
 		border-left: 1px solid rgba(255, 255, 255, 0.1);
+		box-shadow: -0.5rem 0 1.5rem rgba(0, 0, 0, 0.3);
+		
+		/* Typography */
+		color: var(--color-text-default, #fff);
+		
+		/* Effects & Motion */
+		transition: right 0.3s ease;
 	}
 
 	aside.visible {
+		/* Positioning */
 		right: 0;
 	}
 
 	.overlay {
+		/* Positioning */
 		position: fixed;
 		inset: 0;
-		background: rgba(0, 0, 0, 0.25);
 		z-index: 1999;
+		
+		/* Box/Visual */
+		background: rgba(0, 0, 0, 0.25);
 	}
 
 	.panel-header {
+		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -340,52 +354,71 @@
 	}
 
 	.panel-header h2 {
+		/* Layout */
 		margin: 0;
+		
+		/* Typography */
 		font-size: 1.1rem;
 	}
 
 	.close {
-		border: none;
+		/* Layout */
+		padding: 0.25rem 0.5rem;
+		
+		/* Box/Visual */
 		background: transparent;
-		color: inherit;
-		cursor: pointer;
+		border: none;
+		
+		/* Typography */
 		font-size: 1.5rem;
 		line-height: 1;
-		padding: 0.25rem 0.5rem;
+		color: inherit;
+		
+		/* Misc/Overrides */
+		cursor: pointer;
 	}
 
 	.status {
+		/* Layout */
 		margin: 0;
+		
+		/* Typography */
 		font-size: 0.95rem;
 		color: var(--color-text-muted, #ccc);
 	}
 
 	.status.error {
+		/* Typography */
 		color: #ff8080;
 	}
 
 	ul {
-		list-style: none;
-		padding: 0;
-		margin: 0;
+		/* Layout */
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;
 		flex: 1;
 		overflow-y: auto;
+		list-style: none;
+		padding: 0;
+		margin: 0;
 	}
 
 	li {
+		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		gap: 0.75rem;
+		padding: 0.5rem 0.75rem;
+		
+		/* Box/Visual */
 		background: rgba(0, 0, 0, 0.15);
 		border-radius: 0.5rem;
-		padding: 0.5rem 0.75rem;
 	}
 
 	.label {
+		/* Layout */
 		display: flex;
 		flex-direction: column;
 		gap: 0.15rem;
@@ -393,66 +426,97 @@
 	}
 
 	.row {
+		/* Layout */
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
 	}
 
 	.swatch {
+		/* Layout */
+		display: inline-block;
 		width: 24px;
 		height: 24px;
-		border-radius: 0.25rem;
+		
+		/* Box/Visual */
 		border: 1px solid rgba(255, 255, 255, 0.3);
-		display: inline-block;
+		border-radius: 0.25rem;
 	}
 
 	.name {
-		font-weight: 600;
+		/* Layout */
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
+		
+		/* Typography */
+		font-weight: 600;
 	}
 
 	.code {
+		/* Typography */
 		font-size: 0.75rem;
-		color: var(--color-text-muted, #bbb);
 		font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+		color: var(--color-text-muted, #bbb);
 	}
 
 	input[type='color'] {
-		border: none;
+		/* Layout */
 		width: 42px;
 		height: 32px;
 		padding: 0;
+		
+		/* Box/Visual */
+		border: none;
 		background: transparent;
+		
+		/* Misc/Overrides */
 		cursor: pointer;
 	}
 
 	.panel-footer {
+		/* Layout */
 		display: flex;
 		padding-top: 0.5rem;
+		
+		/* Box/Visual */
 		border-top: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
 	.copy {
-		border: none;
-		background: var(--color-accent-secondary, #fff);
-		color: var(--color-bg-canvas, #111);
-		font-weight: 600;
-		padding: 0.75rem 1rem;
-		border-radius: 0.5rem;
-		cursor: pointer;
+		/* Layout */
 		width: 100%;
+		padding: 0.75rem 1rem;
+		
+		/* Box/Visual */
+		border: none;
+		border-radius: 0.5rem;
+		background: var(--color-accent-secondary, #fff);
+		
+		/* Typography */
+		font-weight: 600;
+		color: var(--color-bg-canvas, #111);
+		
+		/* Misc/Overrides */
+		cursor: pointer;
+		
+		/* Effects & Motion */
 		transition: transform 0.15s ease, box-shadow 0.15s ease;
 	}
 
 	.copy:disabled {
+		/* Box/Visual */
 		opacity: 0.6;
+		
+		/* Misc/Overrides */
 		cursor: not-allowed;
 	}
 
 	.copy:not(:disabled):hover {
-		transform: translateY(-1px);
+		/* Box/Visual */
 		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+		
+		/* Effects & Motion */
+		transform: translateY(-1px);
 	}
 </style>

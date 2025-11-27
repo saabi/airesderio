@@ -84,26 +84,34 @@
 
 <style>
 	.select-input {
+		/* Layout */
 		width: 100%;
 		min-width: 0;
 		padding: 0.625rem;
+		padding-right: 2rem;
+		
+		/* Box/Visual */
 		border: 1px solid var(--color-border-default);
 		border-radius: 0.25rem;
 		background-color: field;
-		color: text;
-		cursor: pointer;
-		appearance: none;
-		-moz-appearance: none;
-		-webkit-appearance: none;
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
 		background-repeat: no-repeat;
 		background-position: right 0.625rem center;
-		padding-right: 2rem;
 		outline: 2px solid transparent;
 		outline-offset: 0;
+		
+		/* Typography */
+		color: text;
+		
+		/* Misc/Overrides */
+		appearance: none;
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		cursor: pointer;
 	}
 
 	.select-input:focus-visible {
+		/* Box/Visual */
 		border-color: var(--color-border-strong);
 		outline: 1px solid var(--color-border-strong);
 		outline-offset: 0;
@@ -111,6 +119,7 @@
 
 	/* Firefox-specific focus ring support */
 	.select-input:-moz-focusring {
+		/* Box/Visual */
 		border-color: var(--color-border-strong) !important;
 		outline: 1px solid var(--color-border-strong) !important;
 		outline-offset: 0 !important;
@@ -118,6 +127,7 @@
 
 	/* JavaScript-based keyboard focus detection for Firefox fallback */
 	.select-input.keyboard-focus:focus {
+		/* Box/Visual */
 		border-color: var(--color-border-strong);
 		outline: 1px solid var(--color-border-strong);
 		outline-offset: 0;
@@ -125,15 +135,20 @@
 
 	/* Suppress default Firefox inner focus styling */
 	.select-input::-moz-focus-inner {
+		/* Box/Visual */
 		border: 0;
 	}
 
 	.select-input:disabled {
+		/* Box/Visual */
 		opacity: 0.6;
+		
+		/* Misc/Overrides */
 		cursor: not-allowed;
 	}
 
 	:global([data-theme='dark']) .select-input {
+		/* Box/Visual */
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ccc' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
 	}
 </style>
