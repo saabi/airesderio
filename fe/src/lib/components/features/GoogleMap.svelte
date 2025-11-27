@@ -59,6 +59,13 @@
 	// ===== REFS =====
 	let mapElement: HTMLDivElement;
 
+	// ===== UTILITY FUNCTIONS =====
+	// Declare utility functions before they're used in state initialization
+	const readCssColor = (token: string, fallback: string) =>
+		browser
+			? getComputedStyle(document.documentElement).getPropertyValue(token)?.trim() || fallback
+			: fallback;
+
 	// ===== STATE =====
 	let scriptLoaded = $state(false);
 	let map: google.maps.Map | null = null;
@@ -74,12 +81,6 @@
 	let lastMarkerCount = 0;
 	let markerFillColor = $state(readCssColor('--color-accent-primary', 'var(--color-accent-primary)'));
 	let markerStrokeColor = $state(readCssColor('--color-text-inverse', 'var(--color-text-inverse)'));
-
-	// ===== UTILITY FUNCTIONS =====
-	const readCssColor = (token: string, fallback: string) =>
-		browser
-			? getComputedStyle(document.documentElement).getPropertyValue(token)?.trim() || fallback
-			: fallback;
 
 	const ensureMarkerColors = () => {
 		if (!browser) return;
