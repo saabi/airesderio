@@ -1,6 +1,11 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import Select from '$lib/components/forms/Select.svelte';
+	import {
+		formatPhoneNumberPartial,
+		validatePhoneNumber,
+		numberingPlans
+	} from '$lib/utils/multiCountryPhone';
 
 	// ===== TYPES =====
 	interface Country {
@@ -29,27 +34,22 @@
 		{ name: 'México', code: 'MX', dialCode: '+52' },
 		{ name: 'España', code: 'ES', dialCode: '+34' },
 		{ name: 'Estados Unidos', code: 'US', dialCode: '+1' },
-		{ name: 'Otro País', code: 'OTHER', dialCode: '+' },
+		{ name: 'Otro País', code: 'OTHER', dialCode: '+' }
 	];
 </script>
 
 <script lang="ts">
-	// ===== IMPORTS =====
-	import { formatPhoneNumberPartial, validatePhoneNumber, numberingPlans } from '$lib/utils/multiCountryPhone';
-
 	// ===== PROPS =====
 	let { name = 'telefono', id = 'telefono' }: Props = $props();
 
 	// ===== STATE =====
-	let selectedCountry = $state<Country>(
-		countries.find((c) => c.code === 'AR') || countries[0]
-	);
-	
+	let selectedCountry = $state<Country>(countries.find((c) => c.code === 'AR') || countries[0]);
+
 	// Store only the raw digits (without dial code and formatting)
 	let phoneNumberDigits = $state('');
 	let phoneInputRef: HTMLInputElement | null = $state(null);
 	let customDialCodeRef: HTMLInputElement | null = $state(null);
-	
+
 	// Custom dial code for "Otro País" option
 	let customDialCode = $state('+');
 
@@ -64,7 +64,7 @@
 	// Format phone number using multiCountryPhone utility
 	function formatPhoneNumberDisplay(digits: string, countryCode: string, dialCode: string): string {
 		if (!digits) return '';
-		
+
 		// Handle "Otro País" case with generic format
 		if (countryCode === 'OTHER') {
 			// Use simple 3-3-4 grouping for unknown countries
@@ -83,15 +83,17 @@
 			}
 			return formatted;
 		}
-		
+
 		// Build full phone number with country code for utility
 		const countryCodeDigits = dialCode.replace(/^\+/, '');
 		const fullNumber = '+' + countryCodeDigits + digits;
-		
+
 		// Use formatPhoneNumberPartial which handles partial numbers gracefully
 		// Pass the country code directly (e.g., 'AR', 'US') - utility now uses ISO codes
-		const formatted = formatPhoneNumberPartial(fullNumber, countryCode, { includeCountryCode: false });
-		
+		const formatted = formatPhoneNumberPartial(fullNumber, countryCode, {
+			includeCountryCode: false
+		});
+
 		// Utility returns space-separated groups, convert format based on country
 		if (countryCode === 'US') {
 			// Convert to (XXX) XXX-XXXX format
@@ -104,7 +106,7 @@
 				return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
 			}
 		}
-		
+
 		// Convert spaces to dashes for all other countries
 		return formatted.replace(/\s+/g, '-');
 	}
@@ -127,23 +129,23 @@
 	// Validate phone number using multiCountryPhone utility
 	let isValidPhoneNumber = $derived.by(() => {
 		if (!phoneNumberDigits) return true; // Empty is valid (not required until submit)
-		
+
 		// Handle "Otro País" case - skip validation for custom countries
 		if (selectedCountry.code === 'OTHER') {
 			return true;
 		}
-		
+
 		// Get country plan to check expected lengths (using ISO code directly)
 		const plan = numberingPlans[selectedCountry.code];
 		if (!plan) {
 			return true; // Unknown country, skip validation
 		}
-		
+
 		// Only validate if number length matches one of the expected lengths
 		// This prevents false negatives while user is typing
 		const expectedLengths = plan.nsnLengths;
 		const currentLength = phoneNumberDigits.length;
-		
+
 		// For Argentina, also check for special/specific service codes
 		if (selectedCountry.code === 'AR') {
 			// Check if it matches special/specific patterns (they have different lengths)
@@ -156,7 +158,7 @@
 				}
 			}
 		}
-		
+
 		// Only validate if the number has reached a valid length
 		if (!expectedLengths.includes(currentLength)) {
 			// If it's shorter than the minimum, allow it (user is still typing)
@@ -172,19 +174,21 @@
 			// If it's between lengths, might be a valid intermediate state
 			return true;
 		}
-		
+
 		try {
 			// Build full phone number with country code for validation
 			const countryCodeDigits = currentDialCode.replace(/^\+/, '');
 			const fullNumber = '+' + countryCodeDigits + phoneNumberDigits;
-			
+
 			// Validate using utility - only validate complete numbers
 			// Pass the country code directly (e.g., 'AR', 'US')
 			return validatePhoneNumber(fullNumber, selectedCountry.code);
 		} catch {
 			// If validation throws, and we're at expected length, consider invalid
 			// Otherwise might be a partial number that can't parse yet
-			return !expectedLengths.includes(currentLength) || currentLength < Math.min(...expectedLengths);
+			return (
+				!expectedLengths.includes(currentLength) || currentLength < Math.min(...expectedLengths)
+			);
 		}
 	});
 
@@ -236,39 +240,39 @@
 		const target = event.target as HTMLInputElement;
 		const oldCursorPosition = target.selectionStart || 0;
 		const oldValue = target.value;
-		
+
 		// Get raw digits from current input
 		let digits = stripFormatting(target.value);
-		
+
 		// Store raw digits (no formatting)
 		phoneNumberDigits = digits;
-		
+
 		// Calculate new cursor position after formatting
 		// Count non-digit characters before the old cursor position
 		let digitsBeforeCursor = 0;
 		let charsBeforeCursor = 0;
-		
+
 		while (charsBeforeCursor < oldCursorPosition && charsBeforeCursor < oldValue.length) {
 			if (/\d/.test(oldValue[charsBeforeCursor])) {
 				digitsBeforeCursor++;
 			}
 			charsBeforeCursor++;
 		}
-		
+
 		// Get formatted value for cursor position calculation
 		const formatted = formatPhoneNumberDisplay(digits, selectedCountry.code, currentDialCode);
-		
+
 		// Calculate new cursor position in formatted string
 		let newCursorPosition = 0;
 		let digitsCounted = 0;
-		
+
 		for (let i = 0; i < formatted.length && digitsCounted < digitsBeforeCursor; i++) {
 			newCursorPosition++;
 			if (/\d/.test(formatted[i])) {
 				digitsCounted++;
 			}
 		}
-		
+
 		// Update cursor position after DOM update
 		requestAnimationFrame(() => {
 			if (phoneInputRef) {
@@ -290,19 +294,19 @@
 	}
 </script>
 
-	<div class='phone-input-group'>
-		<label for={id}>Número de teléfono</label>
-		<p class='phone-input-hint'>Con código de área. Ej: +54 3512334353</p>
-		{#if showValidationError}
-			<p class='phone-validation-error' role='alert'>Número de teléfono inválido</p>
-		{/if}
-	<div class='phone-input-container'>
+<div class="phone-input-group">
+	<label for={id}>Número de teléfono</label>
+	<p class="phone-input-hint">Con código de área. Ej: +54 3512334353</p>
+	{#if showValidationError}
+		<p class="phone-validation-error" role="alert">Número de teléfono inválido</p>
+	{/if}
+	<div class="phone-input-container">
 		<Select
 			id={`${id}-country`}
 			name={`${name}-country`}
 			value={selectedCountry.code}
 			onchange={handleCountryChange}
-			class='phone-country-select'
+			class="phone-country-select"
 		>
 			{#snippet children()}
 				{#each countries as country (country.code)}
@@ -310,35 +314,39 @@
 				{/each}
 			{/snippet}
 		</Select>
-		<div class='phone-number-wrapper'>
+		<div class="phone-number-wrapper">
 			{#if selectedCountry.code === 'OTHER'}
 				<input
-					type='text'
-					class='phone-dial-code-input'
+					type="text"
+					class="phone-dial-code-input"
 					bind:this={customDialCodeRef}
 					value={customDialCode}
 					oninput={handleCustomDialCodeInput}
-					placeholder='+'
-					aria-label='Country code'
+					placeholder="+"
+					aria-label="Country code"
 				/>
 			{:else}
-				<span class='phone-dial-code'>{selectedCountry.dialCode}</span>
+				<span class="phone-dial-code">{selectedCountry.dialCode}</span>
 			{/if}
 			<input
-				type='tel'
-				class='phone-number-input'
+				type="tel"
+				class="phone-number-input"
 				class:invalid={showValidationError}
 				bind:this={phoneInputRef}
 				value={formattedPhoneNumber}
 				oninput={handlePhoneInput}
 				onkeydown={handleKeyDown}
-				placeholder={selectedCountry.code === 'US' ? '(385) 500-1635' : selectedCountry.code === 'AR' ? '3512-3343-53' : '3512-3343-53'}
-				aria-label='Phone number'
+				placeholder={selectedCountry.code === 'US'
+					? '(385) 500-1635'
+					: selectedCountry.code === 'AR'
+						? '3512-3343-53'
+						: '3512-3343-53'}
+				aria-label="Phone number"
 				aria-invalid={showValidationError}
-				inputmode='numeric'
+				inputmode="numeric"
 			/>
 			<!-- Hidden input for form submission with full phone number -->
-			<input type='hidden' {id} {name} value={fullPhoneNumber} />
+			<input type="hidden" {id} {name} value={fullPhoneNumber} />
 		</div>
 	</div>
 </div>
@@ -353,7 +361,7 @@
 		/* Layout */
 		display: block;
 		margin-bottom: 0.25rem;
-		
+
 		/* Typography */
 		font-size: 1em;
 		font-weight: 600;
@@ -363,10 +371,10 @@
 	.phone-input-hint {
 		/* Layout */
 		margin: 0 0 0.5rem;
-		
+
 		/* Typography */
 		font-size: 0.85em;
-		color: var(--color-text-secondary);
+		color: var(--color-text-primary);
 	}
 
 	.phone-input-container {
@@ -392,12 +400,12 @@
 		align-items: center;
 		flex: 1 1 auto;
 		overflow: hidden;
-		
+
 		/* Box/Visual */
 		border: 1px solid var(--color-border-default);
 		border-radius: 0.25rem;
 		background-color: field;
-		
+
 		/* Typography */
 		color: text;
 	}
@@ -414,15 +422,15 @@
 		/* Layout */
 		padding: 0.625rem 0.5rem;
 		flex-shrink: 0;
-		
+
 		/* Box/Visual */
 		background: var(--color-bg-muted);
 		border-right: 1px solid var(--color-border-default);
-		
+
 		/* Typography */
 		font-size: 0.875em;
 		color: var(--color-text-primary);
-		
+
 		/* Misc/Overrides */
 		user-select: none;
 		pointer-events: none;
@@ -434,13 +442,13 @@
 		flex-shrink: 0;
 		min-width: 60px;
 		max-width: 80px;
-		
+
 		/* Box/Visual */
 		background: var(--color-bg-muted);
 		border: none;
 		border-right: 1px solid var(--color-border-strong);
 		outline: none;
-		
+
 		/* Typography */
 		font-size: 0.875em;
 		color: var(--color-text-primary);
@@ -451,12 +459,12 @@
 		width: 100%;
 		padding: 0.625rem;
 		flex: 1 1 auto;
-		
+
 		/* Box/Visual */
 		border: none;
 		outline: none;
 		background-color: transparent;
-		
+
 		/* Typography */
 		color: text;
 	}
@@ -470,7 +478,7 @@
 		/* Layout */
 		margin: 0.25rem 0 0;
 		padding: 0;
-		
+
 		/* Typography */
 		font-size: 0.75em;
 		color: var(--color-danger-strong);
