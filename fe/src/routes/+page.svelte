@@ -112,21 +112,21 @@
 	{@html `<script type="application/ld+json">${JSON.stringify(structuredData)}</script>`}
 </svelte:head>
 
-<div class="wrap page">
+<main>
 	<Hero />
 
 	<p class="welcome">
 		Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto de departamentos con las
 		mejores prestaciones y estratégica ubicación.
 	</p>
-
+	
 	<Intro />
 	<Location jsonUrl='/lugares/lugares-direcciones.json' showPlaceMarkers={true} />
 	<Interior />
 	<Equipment />
 	<FloorPlans />
 	<ContactSection />
-</div>
+</main>
 
 <style>
 	.welcome {
@@ -137,7 +137,7 @@
 		margin: 1rem auto;
 		
 		/* Box/Visual */
-		background: var(--color-neutral-200);
+		background: var(--color-ink);
 		border-radius: 0.625rem;
 		
 		/* Typography */

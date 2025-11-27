@@ -28,8 +28,21 @@
 
 <Header />
 
-<main id="main-content">
-	{@render children()}
-</main>
+{@render children()}
 
 <Footer />
+
+<style>
+	.content {
+		display: grid;
+		grid-template-rows: auto 1fr;
+		height: 100vh;
+	}
+	.main-content {
+		/* Layout */
+		padding: 1.5rem;
+		max-width: var(--max);
+		margin: auto;
+	}
+</style>
+
