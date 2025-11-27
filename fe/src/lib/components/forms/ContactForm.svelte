@@ -156,7 +156,7 @@
 		
 		/* Typography */
 		font-size: 0.85em;
-		color: var(--color-text-secondary);
+		color: var(--color-text-primary);
 	}
 
 	.form-group button {
