@@ -994,6 +994,61 @@ let { value = $bindable('') } = $props();
 
 ## Styling
 
+### CSS Declaration Order
+
+Follow a consistent, logical order for CSS properties. This improves readability, makes styles easier to maintain, and reduces merge conflicts.
+
+**Order:**
+1. **Positioning** — `position`, `top`/`right`/`bottom`/`left`, `z-index`
+2. **Layout** — `display`, `flex`/`grid`, `float`, `width`/`height`, `margin`/`padding`
+3. **Box/Visual** — `border`, `background`, `box-shadow`
+4. **Typography** — `font-*`, `line-height`, `text-*`
+5. **Effects & Motion** — `transform`, `transition`, `animation`
+6. **Misc/Overrides** — anything special, custom properties, hacks
+
+**Reason:** It flows from "where it is" → "how big it is" → "what it looks like" → "how it behaves." Clear, predictable, low-friction.
+
+**Example:**
+```css
+.button {
+  /* Positioning */
+  position: relative;
+  z-index: 10;
+  
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  
+  /* Box/Visual */
+  border: 1px solid var(--color-border-default);
+  border-radius: 0.25rem;
+  background: var(--color-accent-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  /* Typography */
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--color-text-inverse);
+  
+  /* Effects & Motion */
+  transition: background-color 0.2s, transform 0.1s;
+  
+  /* Misc/Overrides */
+  cursor: pointer;
+  --custom-property: value;
+}
+
+.button:hover {
+  background: var(--color-accent-strong);
+  transform: translateY(-1px);
+}
+```
+
 ### Scoped Styles
 
 Styles in Svelte components are automatically scoped:
