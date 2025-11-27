@@ -1,31 +1,47 @@
-<script lang="ts">
-	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
-
+<script module lang="ts">
+	// ===== TYPES =====
 	type Token = {
 		name: string;
 		displayName: string;
 		value: string;
 	};
 
+	interface Props {
+		open?: boolean;
+		onClose?: () => void;
+	}
+</script>
+
+<script lang="ts">
+	// ===== IMPORTS =====
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+
+	// ===== PROPS =====
+	const props = $props<Props>();
+
+	// ===== STATE =====
 	let tokens = $state<Token[]>([]);
 	let loading = $state(false);
 	let errorMessage = $state<string | null>(null);
 	let copyStatus = $state<'idle' | 'copied' | 'error'>('idle');
 
-	const props = $props<{ open?: boolean; onClose?: () => void }>();
+	// ===== REFS =====
 	let converterElement: HTMLDivElement | null = null;
 
-	onMount(() => {
-		if (!browser) return;
-
-		$effect(() => {
-			if (props.open) {
-				void loadTokens();
-			}
-		});
+	// ===== EFFECTS =====
+	$effect(() => {
+		if (props.open) {
+			void loadTokens();
+		}
 	});
 
+	// ===== LIFECYCLE =====
+	onMount(() => {
+		if (!browser) return;
+	});
+
+	// ===== ASYNC FUNCTIONS =====
 	async function loadTokens() {
 		loading = true;
 		errorMessage = null;
@@ -40,6 +56,7 @@
 		}
 	}
 
+	// ===== UTILITY FUNCTIONS =====
 	function collectColorTokens(): Token[] {
 		const vars = new Map<string, string>();
 
@@ -205,6 +222,7 @@
 		);
 	}
 
+	// ===== EVENT HANDLERS =====
 	function handleColorChange(token: Token, value: string) {
 		token.value = value;
 		document.documentElement.style.setProperty(token.name, value);

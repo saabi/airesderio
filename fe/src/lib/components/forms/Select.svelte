@@ -1,6 +1,8 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import type { Snippet } from 'svelte';
 
+	// ===== TYPES =====
 	interface Props {
 		id?: string;
 		name?: string;
@@ -13,6 +15,12 @@
 		disabled?: boolean;
 	}
 
+	// ===== STATIC CONSTANTS =====
+	const BLUR_DELAY = 100; // Delay to keep focus state briefly to avoid flicker
+</script>
+
+<script lang="ts">
+	// ===== PROPS =====
 	let { 
 		id,
 		name,
@@ -25,9 +33,11 @@
 		disabled = false
 	}: Props = $props();
 
+	// ===== REFS =====
 	let selectElement: HTMLSelectElement | null = $state(null);
 	let isKeyboardFocus = $state(false);
 
+	// ===== EVENT HANDLERS =====
 	function handleFocus(event: FocusEvent) {
         // For Firefox, show focus ring on click too since :-moz-focusring doesn't work
         // with appearance: none. This provides needed visual feedback.
@@ -47,7 +57,7 @@
 		// Keep the state briefly to avoid flicker
 		setTimeout(() => {
 			isKeyboardFocus = false;
-		}, 100);
+		}, BLUR_DELAY);
 	}
 </script>
 

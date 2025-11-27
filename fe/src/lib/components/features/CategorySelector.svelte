@@ -1,6 +1,8 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import type { PlacesData, Place } from '$lib/types';
 
+	// ===== TYPES =====
 	interface Props {
 		placesData: PlacesData;
 		showPlaceMarkers: boolean;
@@ -14,6 +16,13 @@
 		onSetCategoryFilter: (categories: string[]) => void;
 	}
 
+	// ===== STATIC CONSTANTS =====
+	const toCategoryClass = (category: string) =>
+		`category-${category.replace(/[^a-z0-9]+/gi, '-')}`;
+</script>
+
+<script lang="ts">
+	// ===== PROPS =====
 	let {
 		placesData,
 		showPlaceMarkers = true,
@@ -27,8 +36,7 @@
 		onSetCategoryFilter
 	}: Props = $props();
 
-	// Category data is now passed as props from Location component
-
+	// ===== DERIVED =====
 	// Get filtered categories (exclude categories with isAlwaysVisible: true)
 	let filteredCategories = $derived.by(() => {
 		if (!placesData) return [];
@@ -39,15 +47,12 @@
 		});
 	});
 
-let selectedCount = $derived(categoryFilter.length);
-let allSelected = $derived(
-	filteredCategories.length > 0 && selectedCount === filteredCategories.length
-);
-let noneSelected = $derived(selectedCount === 0);
-let someSelected = $derived(!noneSelected && !allSelected);
-
-const toCategoryClass = (category: string) =>
-	`category-${category.replace(/[^a-z0-9]+/gi, '-')}`;
+	let selectedCount = $derived(categoryFilter.length);
+	let allSelected = $derived(
+		filteredCategories.length > 0 && selectedCount === filteredCategories.length
+	);
+	let noneSelected = $derived(selectedCount === 0);
+	let someSelected = $derived(!noneSelected && !allSelected);
 
 	// Calculate total places count (excluding categories with isAlwaysVisible: true)
 	let totalPlacesCount = $derived.by(() => {

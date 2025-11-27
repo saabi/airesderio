@@ -1,24 +1,37 @@
+<script module lang="ts">
+	// ===== TYPES =====
+	type NavLink = {
+		href: string;
+		text: string;
+		id: string;
+	};
+
+	// ===== STATIC CONSTANTS =====
+	const isDevMode = import.meta.env.DEV;
+	const HEADER_HEIGHT = 80; // Approximate header height
+
+	const navLinks: NavLink[] = [
+		{ href: '#top', text: 'Home', id: 'top' },
+		{ href: '#ubicacion', text: 'Ubicación', id: 'ubicacion' },
+		{ href: '#planos', text: 'Planos', id: 'planos' },
+		{ href: '#equipados', text: 'Equipamiento', id: 'equipados' },
+		{ href: '#top', text: 'Preventa', id: 'preventa' }, // Links to top (hero section) for now
+		{ href: '#contacto', text: 'Contacto', id: 'contacto' }
+	];
+</script>
+
 <script lang="ts">
+	// ===== IMPORTS =====
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { resolveInitialTheme, setTheme, type Theme } from '$lib/utils/theme';
 
+	// ===== STATE =====
 	let isMenuOpen = $state(false);
 	let currentTheme = $state<Theme>('light');
 	let colorEditorOpen = $state(false);
 	let devColorEditorModule =
 		$state<typeof import('$lib/components/dev/DevColorEditor.svelte') | null>(null);
-	const isDevMode = import.meta.env.DEV;
-
-	const navLinks = [
-		{ href: '#top', text: 'Home', id: 'top' },
-		{ href: '#ubicacion', text: 'Ubicación', id: 'ubicacion' },
-		{ href: '#planos', text: 'Planos', id: 'planos' },
-		{ href: '#equipados', text: 'Equipamiento', id: 'equipados' },
-		{ href: '#top', text: 'Preventa', id: 'top' }, // Links to top (hero section) for now
-		{ href: '#contacto', text: 'Contacto', id: 'contacto' }
-	];
-
 	let activeLinkId = $state<string>('top');
 
 	function toggleMenu() {
@@ -43,8 +56,7 @@
 			const targetElement = document.getElementById(targetId);
 			
 			if (targetElement) {
-				const headerHeight = 80; // Approximate header height
-				const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+				const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - HEADER_HEIGHT;
 				
 				window.scrollTo({
 					top: targetPosition,

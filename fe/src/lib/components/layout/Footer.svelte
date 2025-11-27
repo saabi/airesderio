@@ -1,4 +1,6 @@
 <script lang="ts">
+	// ===== DERIVED =====
+	// Year is derived from current date, so it stays in instance script
 	const year = new Date().getFullYear();
 </script>
 

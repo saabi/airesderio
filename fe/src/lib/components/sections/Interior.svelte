@@ -1,10 +1,16 @@
-<script lang="ts">
-    import Title from '$lib/components/ui/Title.svelte';
-    import { createSectionObserver } from '$lib/utils/sectionVisibility';
+<script module lang="ts">
+	// ===== IMPORTS =====
+	import Title from '$lib/components/ui/Title.svelte';
+</script>
 
-    const { action: interiorObserver, visible: interiorVisible } = createSectionObserver('interior', {
-        threshold: 0.35
-    });
+<script lang="ts">
+	// ===== IMPORTS =====
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+
+	// ===== INSTANCE CONSTANTS =====
+	const { action: interiorObserver, visible: interiorVisible } = createSectionObserver('interior', {
+		threshold: 0.35
+	});
 </script>
 
 <section

@@ -1,9 +1,17 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import Input from '$lib/components/forms/Input.svelte';
 	import PhoneNumberInput from '$lib/components/forms/PhoneNumberInput.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
 
+	// ===== STATIC CONSTANTS =====
+	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const SUCCESS_MESSAGE_TIMEOUT = 5000;
+</script>
+
+<script lang="ts">
+	// ===== STATE =====
 	let formElement: HTMLFormElement | null = $state(null);
 	let isLoading = $state(false);
 	let successMessage = $state<string | null>(null);
@@ -42,8 +50,7 @@
 		}
 		
 		// Validate email format
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		if (!emailRegex.test(data.correo)) {
+		if (!EMAIL_REGEX.test(data.correo)) {
 			errorMessage = 'Por favor ingresa un correo electrónico válido.';
 			return;
 		}
@@ -72,10 +79,10 @@
 			// Reset form
 			formElement.reset();
 			
-			// Clear success message after 5 seconds
+			// Clear success message after timeout
 			setTimeout(() => {
 				successMessage = null;
-			}, 5000);
+			}, SUCCESS_MESSAGE_TIMEOUT);
 			
 		} catch (error) {
 			console.error('Form submission error:', error);

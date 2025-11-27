@@ -1,6 +1,8 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import type { Place } from '$lib/types';
 
+	// ===== TYPES =====
 	interface Props {
 		visible: boolean;
 		place: Place;
@@ -10,7 +12,10 @@
 		currentIndex?: number;
 		onClose: () => void;
 	}
+</script>
 
+<script lang="ts">
+	// ===== PROPS =====
 	let {
 		visible = false,
 		place,
@@ -21,6 +26,7 @@
 		onClose
 	}: Props = $props();
 
+	// ===== FUNCTIONS =====
 	// Navigate carousel
 	function navigateCarousel(direction: number) {
 		const newIndex = currentIndex + direction;

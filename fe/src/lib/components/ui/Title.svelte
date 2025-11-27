@@ -1,5 +1,14 @@
+<script module lang="ts">
+	// ===== TYPES =====
+	interface Props {
+		eyebrow: string;
+		big: string;
+	}
+</script>
+
 <script lang="ts">
-	let { eyebrow, big }: { eyebrow: string; big: string } = $props();
+	// ===== PROPS =====
+	let { eyebrow, big }: Props = $props();
 </script>
 
 <div class='boxed'>

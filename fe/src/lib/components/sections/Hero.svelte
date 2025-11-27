@@ -1,7 +1,13 @@
-<script lang="ts">
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
+</script>
 
+<script lang="ts">
+	// ===== IMPORTS =====
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+
+	// ===== INSTANCE CONSTANTS =====
 	const { action: heroObserver, visible: heroVisible } = createSectionObserver('hero', {
 		threshold: 0.45
 	});

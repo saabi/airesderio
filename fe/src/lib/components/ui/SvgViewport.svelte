@@ -1,6 +1,8 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import type { Snippet } from 'svelte';
 
+	// ===== TYPES =====
 	interface Props {
 		width?: string;
 		height?: string;
@@ -8,7 +10,10 @@
 		class?: string;
 		children?: Snippet;
 	}
+</script>
 
+<script lang="ts">
+	// ===== PROPS =====
 	let {
 		width = '4.5em',
 		height = '4.5em',

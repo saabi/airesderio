@@ -1,5 +1,5 @@
-<script lang="ts">
-	import { page } from '$app/stores';
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import ContactSection from '$lib/components/sections/ContactSection.svelte';
 	import Equipment from '$lib/components/sections/Equipment.svelte';
 	import FloorPlans from '$lib/components/sections/FloorPlans.svelte';
@@ -8,12 +8,21 @@
 	import Intro from '$lib/components/sections/Intro.svelte';
 	import Location from '$lib/components/sections/Location.svelte';
 
+	// ===== STATIC CONSTANTS =====
+	const DEFAULT_SITE_URL = 'https://airesderio.com';
+</script>
+
+<script lang="ts">
+	// ===== IMPORTS =====
+	import { page } from '$app/stores';
+
+	// ===== DERIVED =====
 	// Base URL for the site
-	const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://airesderio.com';
-	const canonicalUrl = `${siteUrl}${$page.url.pathname}`;
+	const siteUrl = import.meta.env.PUBLIC_SITE_URL || DEFAULT_SITE_URL;
+	const canonicalUrl = $derived(`${siteUrl}${$page.url.pathname}`);
 
 	// Structured data for real estate (JSON-LD)
-	const structuredData = {
+	const structuredData = $derived.by(() => ({
 		'@context': 'https://schema.org',
 		'@type': 'RealEstateAgent',
 		name: 'Aires de Río',
@@ -54,7 +63,7 @@
 				}
 			]
 		}
-	};
+	}));
 </script>
 
 <svelte:head>

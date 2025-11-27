@@ -1,4 +1,5 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== TYPES =====
 	interface Props {
 		id?: string;
 		name?: string;
@@ -17,7 +18,10 @@
 		ariaInvalid?: boolean | 'grammar' | 'spelling';
 		elementRef?: (element: HTMLInputElement | null) => void;
 	}
+</script>
 
+<script lang="ts">
+	// ===== PROPS =====
 	let {
 		id,
 		name,
@@ -37,8 +41,10 @@
 		elementRef
 	}: Props = $props();
 
+	// ===== REFS =====
 	let inputElement: HTMLInputElement | null = $state(null);
 
+	// ===== EFFECTS =====
 	$effect(() => {
 		if (elementRef) {
 			elementRef(inputElement);

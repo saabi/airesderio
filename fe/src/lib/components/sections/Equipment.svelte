@@ -1,7 +1,7 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import Title from '$lib/components/ui/Title.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import Ascensores from '$lib/components/icons/Ascensores.svelte';
 	import Banos from '$lib/components/icons/Banos.svelte';
 	import CerraduraDigital from '$lib/components/icons/CerraduraDigital.svelte';
@@ -14,13 +14,17 @@
 	import Termotanque from '$lib/components/icons/Termotanque.svelte';
 	import Vestidor from '$lib/components/icons/Vestidor.svelte';
 
+	// ===== TYPES =====
 	// Note: Using 'any' for component type is acceptable here as Svelte components
 	// don't have a perfect TypeScript representation that works with svelte:component
-	const equipmentItems: Array<{
+	type EquipmentItem = {
 		icon: string;
 		component: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 		text: string;
-	}> = [
+	};
+
+	// ===== STATIC CONSTANTS =====
+	const equipmentItems: EquipmentItem[] = [
 		{ icon: '🖼️', component: Ascensores, text: 'Carpintería de Aluminio Línea A30 NEW de Aluar.' },
 		{ icon: '🍳', component: Horno, text: 'Unidades separadas de anafe y horno a gas empotrados.' },
 		{ icon: '🚪', component: Puerta, text: 'Puertas de madera de diseño exclusivo y elegante.' },
@@ -45,10 +49,16 @@
 		{ icon: '⬜', component: Lavasecarropas, text: 'Pisos de porcelanato en todos los ambientes.' },
 		{ icon: '🍽️', component: Cocina, text: 'Cocina equipada con muebles altos y bajos.' }
 	];
+</script>
 
-    const { action: equipmentObserver, visible: equipmentVisible } = createSectionObserver('equipment', {
-        threshold: 0.3
-    });
+<script lang="ts">
+	// ===== IMPORTS =====
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+
+	// ===== INSTANCE CONSTANTS =====
+	const { action: equipmentObserver, visible: equipmentVisible } = createSectionObserver('equipment', {
+		threshold: 0.3
+	});
 </script>
 
 <section

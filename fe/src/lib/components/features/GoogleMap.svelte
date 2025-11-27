@@ -1,10 +1,9 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import type { Snippet } from 'svelte';
-
-	import { browser } from '$app/environment';
-	import { tick } from 'svelte';
 	import type { GenericMarker } from '$lib/types';
 
+	// ===== TYPES =====
 	interface Props {
 		apiKey: string;
 		mapId?: string;
@@ -25,12 +24,24 @@
 		width?: string;
 	}
 
+	// ===== STATIC CONSTANTS =====
+	const DEFAULT_ZOOM = 15;
+	const DEFAULT_MAP_TYPE = 'roadmap';
+	const GOOGLE_MAPS_SCRIPT_ID = 'google-maps-script';
+</script>
+
+<script lang="ts">
+	// ===== IMPORTS =====
+	import { browser } from '$app/environment';
+	import { tick } from 'svelte';
+
+	// ===== PROPS =====
 	let {
 		apiKey,
 		mapId,
 		center,
-		zoom = 15,
-		mapTypeId = 'roadmap',
+		zoom = DEFAULT_ZOOM,
+		mapTypeId = DEFAULT_MAP_TYPE,
 		markers = [],
 		activeMarkerId = null,
 		markerElement,
@@ -45,47 +56,50 @@
 		width = '100%'
 	}: Props = $props();
 
+	// ===== REFS =====
 	let mapElement: HTMLDivElement;
+
+	// ===== STATE =====
 	let scriptLoaded = $state(false);
 	let map: google.maps.Map | null = null;
 	let mapReady = $state(false);
 	const markerInstances = new Map<string, google.maps.Marker | google.maps.marker.AdvancedMarkerElement>();
 	const infoWindowInstances = new Map<string, google.maps.InfoWindow>();
 	let snippetContainers = $state<Record<string, HTMLElement>>({});
-let markerSnippetContainers = $state<Record<string, HTMLElement>>({});
-let currentActiveInfoWindow: string | null = null;
-let isInitialFitPending = $state(true);
-let syncGeneration = 0;
-let lastMarkerSignature = '';
-let lastMarkerCount = 0;
+	let markerSnippetContainers = $state<Record<string, HTMLElement>>({});
+	let currentActiveInfoWindow: string | null = null;
+	let isInitialFitPending = $state(true);
+	let syncGeneration = 0;
+	let lastMarkerSignature = '';
+	let lastMarkerCount = 0;
+	let markerFillColor = $state(readCssColor('--color-accent-primary', 'var(--color-accent-primary)'));
+	let markerStrokeColor = $state(readCssColor('--color-text-inverse', 'var(--color-text-inverse)'));
 
-const readCssColor = (token: string, fallback: string) =>
-	browser
-		? getComputedStyle(document.documentElement).getPropertyValue(token)?.trim() || fallback
-		: fallback;
+	// ===== UTILITY FUNCTIONS =====
+	const readCssColor = (token: string, fallback: string) =>
+		browser
+			? getComputedStyle(document.documentElement).getPropertyValue(token)?.trim() || fallback
+			: fallback;
 
-let markerFillColor = readCssColor('--color-accent-primary', 'var(--color-accent-primary)');
-let markerStrokeColor = readCssColor('--color-text-inverse', 'var(--color-text-inverse)');
+	const ensureMarkerColors = () => {
+		if (!browser) return;
+		if (!markerFillColor || markerFillColor.startsWith('var(')) {
+			markerFillColor = readCssColor('--color-accent-primary', markerFillColor || 'var(--color-accent-primary)');
+		}
+		if (!markerStrokeColor || markerStrokeColor.startsWith('var(')) {
+			markerStrokeColor = readCssColor('--color-text-inverse', markerStrokeColor || 'var(--color-text-inverse)');
+		}
+	};
 
-const ensureMarkerColors = () => {
-	if (!browser) return;
-	if (!markerFillColor || markerFillColor.startsWith('var(')) {
-		markerFillColor = readCssColor('--color-accent-primary', markerFillColor || 'var(--color-accent-primary)');
-	}
-	if (!markerStrokeColor || markerStrokeColor.startsWith('var(')) {
-		markerStrokeColor = readCssColor('--color-text-inverse', markerStrokeColor || 'var(--color-text-inverse)');
-	}
-};
-
-$effect(() => {
-	ensureMarkerColors();
-});
+	// ===== EFFECTS =====
+	$effect(() => {
+		ensureMarkerColors();
+	});
 
 	$effect(() => {
 		if (!browser || !apiKey) return;
 
-		const scriptId = 'google-maps-script';
-		if (document.getElementById(scriptId)) {
+		if (document.getElementById(GOOGLE_MAPS_SCRIPT_ID)) {
 			scriptLoaded = true;
 			return;
 		}
@@ -95,7 +109,7 @@ $effect(() => {
 		};
 
 		const script = document.createElement('script');
-		script.id = scriptId;
+		script.id = GOOGLE_MAPS_SCRIPT_ID;
 		script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap&libraries=marker&v=weekly`;
 		script.async = true;
 		script.defer = true;

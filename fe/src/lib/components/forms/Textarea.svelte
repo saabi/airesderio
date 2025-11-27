@@ -1,4 +1,5 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== TYPES =====
 	interface Props {
 		id?: string;
 		name?: string;
@@ -14,7 +15,10 @@
 		ariaLabel?: string;
 		ariaInvalid?: boolean | 'grammar' | 'spelling';
 	}
+</script>
 
+<script lang="ts">
+	// ===== PROPS =====
 	let {
 		id,
 		name,

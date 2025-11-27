@@ -1,7 +1,8 @@
-<script lang="ts">
-	import { formatPhoneNumberPartial, validatePhoneNumber, numberingPlans } from '$lib/utils/multiCountryPhone';
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import Select from '$lib/components/forms/Select.svelte';
 
+	// ===== TYPES =====
 	interface Country {
 		name: string;
 		code: string;
@@ -13,8 +14,7 @@
 		id?: string;
 	}
 
-	let { name = 'telefono', id = 'telefono' }: Props = $props();
-
+	// ===== STATIC CONSTANTS =====
 	const countries: Country[] = [
 		{ name: 'Argentina', code: 'AR', dialCode: '+54' },
 		{ name: 'Bolivia', code: 'BO', dialCode: '+591' },
@@ -31,8 +31,16 @@
 		{ name: 'Estados Unidos', code: 'US', dialCode: '+1' },
 		{ name: 'Otro País', code: 'OTHER', dialCode: '+' },
 	];
+</script>
 
+<script lang="ts">
+	// ===== IMPORTS =====
+	import { formatPhoneNumberPartial, validatePhoneNumber, numberingPlans } from '$lib/utils/multiCountryPhone';
 
+	// ===== PROPS =====
+	let { name = 'telefono', id = 'telefono' }: Props = $props();
+
+	// ===== STATE =====
 	let selectedCountry = $state<Country>(
 		countries.find((c) => c.code === 'AR') || countries[0]
 	);

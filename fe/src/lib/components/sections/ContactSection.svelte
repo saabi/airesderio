@@ -1,4 +1,5 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== IMPORTS =====
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
 </script>
 

@@ -1,26 +1,16 @@
-<script lang="ts">
-import { browser } from '$app/environment';
+<script module lang="ts">
+	// ===== IMPORTS =====
+	import CategorySelector from '$lib/components/features/CategorySelector.svelte';
+	import GoogleMap from '$lib/components/features/GoogleMap.svelte';
+	import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
+	import type { PlacesData, MarkerData, Place, MainBuilding, Category } from '$lib/types';
 
-import CategorySelector from '$lib/components/features/CategorySelector.svelte';
-import GoogleMap from '$lib/components/features/GoogleMap.svelte';
-import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
-import { createSectionObserver } from '$lib/utils/sectionVisibility';
-import type { PlacesData, MarkerData, Place, MainBuilding, Category } from '$lib/types';
-
-// Type for GoogleMap component instance
-interface GoogleMapInstance {
-	fitToMarkers: () => void;
-}
-
-	const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-
-	if (import.meta.env.DEV && !GOOGLE_MAPS_API_KEY) {
-		console.error(
-			'Missing VITE_GOOGLE_MAPS_API_KEY environment variable. Please create a .env file with your Google Maps API key.'
-		);
+	// ===== TYPES =====
+	// Type for GoogleMap component instance
+	interface GoogleMapInstance {
+		fitToMarkers: () => void;
 	}
 
-	// Component props
 	interface Props {
 		jsonUrl?: string;
 		showPlaceMarkers?: boolean;
@@ -28,31 +18,47 @@ interface GoogleMapInstance {
 		categoryFilter?: string[];
 	}
 
+	// ===== STATIC CONSTANTS =====
+	const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+	const DEFAULT_JSON_URL = '/lugares/lugares-direcciones.json';
+	const DEFAULT_MAP_CENTER = { lat: -27.779686, lng: -64.258992 };
+
+	if (import.meta.env.DEV && !GOOGLE_MAPS_API_KEY) {
+		console.error(
+			'Missing VITE_GOOGLE_MAPS_API_KEY environment variable. Please create a .env file with your Google Maps API key.'
+		);
+	}
+</script>
+
+<script lang="ts">
+	// ===== IMPORTS =====
+	import { browser } from '$app/environment';
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+
+	// ===== PROPS =====
 	let { 
-		jsonUrl = '/lugares/lugares-direcciones.json',
+		jsonUrl = DEFAULT_JSON_URL,
 		showPlaceMarkers = true,
 		enableClustering = false,
 		categoryFilter = []
 	}: Props = $props();
 
-	// --- COMPONENT STATE VARIABLES ---
-	// @fold:start(state-vars)
+	// ===== STATE =====
 	let placesData = $state<PlacesData | null>(null);
 	let googleMapRef = $state<GoogleMapInstance | null>(null);
-	let mapCenter = $state({ lat: -27.779686, lng: -64.258992 });
+	let mapCenter = $state(DEFAULT_MAP_CENTER);
 	let photoCarouselVisible = $state(false);
 	let carouselPlace = $state<Place | null>(null);
 	let carouselCategory = $state<string>('');
 	let carouselPlaceId = $state<string>('');
 	let carouselPhotos = $state<string[]>([]);
 	let carouselCurrentIndex = $state(0);
-	// @fold:end
-
 	let hasInitializedCategoryFilter = $state(false);
 	let activeMarkerId = $state<string | null>(null);
 	let mapInitialized = $state(false);
 	let hasAutoOpenedMainMarker = $state(false);
 
+	// ===== DERIVED =====
 	// All category data is now loaded from JSON metadata
 	let categories = $derived<Record<string, Category>>(placesData?.metadata?.categories || {});
 	
@@ -72,23 +78,25 @@ interface GoogleMapInstance {
 		return names;
 	});
 	
-const toCategoryClass = (category: string) =>
-	`category-${category.replace(/[^a-z0-9]+/gi, '-')}`;
+	// ===== INSTANCE CONSTANTS =====
+	const { action: locationObserver, visible: locationVisible } = createSectionObserver('location', {
+		threshold: 0.3
+	});
 
-const getDistanceBadgeClass = (value: string | undefined) => {
-	switch (value) {
-		case 'MUY CERCA':
-			return 'distance-badge--very-near';
-		case 'CERCANO':
-			return 'distance-badge--near';
-		default:
-			return 'distance-badge--far';
-	}
-};
+	// ===== UTILITY FUNCTIONS =====
+	const toCategoryClass = (category: string) =>
+		`category-${category.replace(/[^a-z0-9]+/gi, '-')}`;
 
-const { action: locationObserver, visible: locationVisible } = createSectionObserver('location', {
-    threshold: 0.3
-});
+	const getDistanceBadgeClass = (value: string | undefined) => {
+		switch (value) {
+			case 'MUY CERCA':
+				return 'distance-badge--very-near';
+			case 'CERCANO':
+				return 'distance-badge--near';
+			default:
+				return 'distance-badge--far';
+		}
+	};
 
 	let selectableCategories = $derived.by(() => {
 		if (!placesData) return [];
@@ -155,7 +163,10 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 		});
 	});
 
+	// ===== EFFECTS =====
+	// (Effects will be added here if needed)
 
+	// ===== ASYNC FUNCTIONS =====
 	// Load places data from JSON
 	async function loadPlacesData() {
 		if (!browser || !jsonUrl) return;
@@ -184,6 +195,7 @@ const { action: locationObserver, visible: locationVisible } = createSectionObse
 		}
 	}
 
+	// ===== EVENT HANDLERS =====
 	// Open photo carousel
 	function openPhotoCarousel(place: Place, category: string, placeId: string) {
 		if (!place.photos || place.photos.length === 0) return;

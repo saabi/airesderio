@@ -1,6 +1,8 @@
 <script lang="ts">
+	// ===== IMPORTS =====
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 
+	// ===== INSTANCE CONSTANTS =====
 	const { action: introObserver, visible: introVisible } = createSectionObserver('intro', {
 		threshold: 0.35
 	});
