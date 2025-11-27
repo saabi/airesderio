@@ -283,9 +283,9 @@
 		height: var(--header-height);
 		
 		/* Box/Visual */
-		background: var(--color-bg-canvas);
-		border-bottom: 1px solid var(--color-border-default);
-		box-shadow: 0 0.125rem 0.375rem var(--shadow-subtle);
+		background: var(--ref-neutral-980);
+		border-bottom: 1px solid var(--ref-neutral-900);
+		box-shadow: 0 0.125rem 0.375rem var(--shadow-strong);
 	}
 
 	.site__bar {
@@ -296,7 +296,7 @@
 		padding: 0.75rem 0;
 		
 		/* Box/Visual */
-		background: var(--color-bg-elevated);
+		background: var(--ref-neutral-950);
 	}
 
 	.logo {
@@ -306,7 +306,7 @@
 		/* Typography */
 		font-weight: 800;
 		letter-spacing: 0.02em;
-		color: var(--color-accent-primary-text);
+		color: var(--color-text-inverse);
 	}
 
 	.nav__desktop {
@@ -329,7 +329,7 @@
 		font-weight: 600;
 		text-decoration: none;
 		text-transform: uppercase;
-		color: var(--color-accent-primary-text);
+		color: var(--color-text-inverse);
 	}
 
 	.nav__desktop a:hover {
@@ -362,13 +362,13 @@
 		height: 2.25rem;
 		
 		/* Box/Visual */
-		border: 1px solid var(--color-border-default);
+		border: 1px solid var(--ref-neutral-900);
 		border-radius: 999px;
-		background: var(--color-bg-elevated);
+		background: var(--ref-neutral-900);
 		
 		/* Typography */
 		font-size: 1.1rem;
-		color: var(--color-accent-primary-text);
+		color: var(--color-text-inverse);
 		
 		/* Misc/Overrides */
 		cursor: pointer;
@@ -401,7 +401,7 @@
 		border-radius: 0.375rem;
 		
 		/* Typography */
-		color: var(--color-accent-primary-text);
+		color: var(--color-text-inverse);
 		
 		/* Misc/Overrides */
 		cursor: pointer;
@@ -412,7 +412,7 @@
 
 	.theme-toggle:hover {
 		/* Box/Visual */
-		background-color: var(--color-bg-muted);
+		background-color: var(--ref-neutral-900);
 	}
 
 	.theme-toggle:focus-visible {
@@ -459,7 +459,7 @@
 		margin: 0.3125rem 0;
 		
 		/* Box/Visual */
-		background-color: var(--color-accent-primary-text);
+		background-color: var(--color-text-inverse);
 		
 		/* Effects & Motion */
 		transition: all 0.2s;
@@ -486,7 +486,7 @@
 			height: 100%;
 			
 			/* Box/Visual */
-			background-color: var(--overlay-white-strong);
+			background-color: var(--overlay-black-80);
 			-webkit-backdrop-filter: blur(0.3125rem);
 			backdrop-filter: blur(0.3125rem);
 			opacity: 0;
