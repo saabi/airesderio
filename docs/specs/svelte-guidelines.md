@@ -210,17 +210,17 @@ Use `$props` for component props:
 **Note:** For detailed ordering guidelines, see [Code Organization and Ordering](#code-organization-and-ordering) section.
 
 ```svelte
-<script context="module" lang="ts">
+<script module lang="ts">
   // Imports (see ordering guidelines)
   import { onMount } from 'svelte';
   
-  // Types
+  // Types (no export needed - available across script blocks)
   interface Props {
     title?: string;
   }
   
-  // Static constants
-  export const MAX_ITEMS = 10;
+  // Static constants (no export needed for same-file usage)
+  const MAX_ITEMS = 10;
 </script>
 
 <script lang="ts">
@@ -278,7 +278,7 @@ Use `$props` for component props:
 
 Components should use **two script blocks** for optimal organization:
 
-1. **Module Script Block** (`<script context="module">`) - For shared, non-reactive code
+1. **Module Script Block** (`<script module>`) - For shared, non-reactive code
 2. **Instance Script Block** (`<script>`) - For component instance code
 
 This separation improves legibility, performance, and makes it clear what's shared vs instance-specific.
@@ -306,7 +306,38 @@ The module script block runs once when the module loads and is shared across all
 - **Type Definitions** - Interfaces and types
 - **Static Constants** - Constants that don't depend on props or state
 
-**Important:** Module script blocks cannot access instance state, props, or reactive values.
+**Important:** 
+- Module script blocks cannot access instance state, props, or reactive values.
+- **Types and constants are automatically accessible** in the instance script and template of the same file - you don't need to `export` them unless you want to use them from other files.
+
+### When to Export from Module Script
+
+**Don't export** (for same-file usage):
+- ✅ Types/interfaces used only in the same component
+- ✅ Constants used only in the same component's instance script or template
+- ✅ Helper functions used only within the component
+
+**Do export** (for cross-file usage):
+- ✅ Types/interfaces that other components need to import
+- ✅ Constants that other files need to use
+- ✅ Shared utilities that multiple components use
+
+**Example:**
+```typescript
+<script module lang="ts">
+  // ✅ No export needed - used only in this file
+  interface Props {
+    title: string;
+  }
+  const MAX_ITEMS = 10;
+  
+  // ✅ Export needed - used from other files
+  export interface SharedType {
+    id: string;
+  }
+  export const SHARED_CONSTANT = 'value';
+</script>
+```
 
 ### Import Ordering
 
@@ -321,7 +352,7 @@ Group imports in this order:
 7. **Type-only imports** (use `import type`)
 
 ```typescript
-<script context="module" lang="ts">
+<script module lang="ts">
   // ===== IMPORTS =====
   // 1. Svelte core
   import { onMount, onDestroy } from 'svelte';
@@ -343,21 +374,23 @@ Group imports in this order:
   import type { User, Post } from '$lib/types';
   
   // ===== TYPES =====
+  // Types don't need export - they're compile-time only and available across script blocks
   interface Props {
     userId: string;
     onSave?: (data: Post) => void;
   }
   
   // ===== STATIC CONSTANTS =====
-  export const MAX_ITEMS = 10;
-  export const ANIMATION_DURATION = 300;
-  export const DEFAULT_CONFIG = {
+  // Constants don't need export for same-file usage - only export if used from other files
+  const MAX_ITEMS = 10;
+  const ANIMATION_DURATION = 300;
+  const DEFAULT_CONFIG = {
     timeout: 5000,
     retries: 3
   };
   
   // Large constant arrays/objects (shared across instances)
-  export const equipmentItems = [
+  const equipmentItems = [
     { id: 1, name: 'Item 1' },
     { id: 2, name: 'Item 2' }
   ];
@@ -419,7 +452,7 @@ Declare variables in this order:
 
 ### When to Use Module vs Instance Script
 
-**Module Script (`<script context="module">`):**
+**Module Script (`<script module>`):**
 - ✅ All imports
 - ✅ Type definitions
 - ✅ Static constants (configuration, magic numbers)
@@ -564,17 +597,20 @@ Organize functions in this order:
 Use comments to separate logical sections in both module and instance script blocks:
 
 ```typescript
-<script context="module" lang="ts">
+<script module lang="ts">
   // ===== IMPORTS =====
   import { onMount } from 'svelte';
   
   // ===== TYPES =====
+  // Types are automatically available in instance script - no export needed
   interface Props {
     title: string;
   }
   
   // ===== STATIC CONSTANTS =====
-  export const MAX_ITEMS = 10;
+  // Constants are automatically available in instance script and template - no export needed
+  // Only export if you want to use them from other files
+  const MAX_ITEMS = 10;
 </script>
 
 <script lang="ts">
@@ -604,7 +640,7 @@ Use comments to separate logical sections in both module and instance script blo
 Here's a complete example following all ordering guidelines with module and instance script blocks:
 
 ```svelte
-<script context="module" lang="ts">
+<script module lang="ts">
   // ===== IMPORTS =====
   // Svelte core
   import { onMount } from 'svelte';
@@ -623,15 +659,18 @@ Here's a complete example following all ordering guidelines with module and inst
   import type { User, Post } from '$lib/types';
   
   // ===== TYPES =====
+  // Types are automatically available in instance script - no export needed
   interface Props {
     userId: string;
     onSave?: (data: Post) => void;
   }
   
   // ===== STATIC CONSTANTS =====
-  export const MAX_TITLE_LENGTH = 100;
-  export const ANIMATION_DURATION = 300;
-  export const DEFAULT_CONFIG = {
+  // Constants are automatically available in instance script and template - no export needed
+  // Only export if you want to use them from other files
+  const MAX_TITLE_LENGTH = 100;
+  const ANIMATION_DURATION = 300;
+  const DEFAULT_CONFIG = {
     timeout: 5000,
     retries: 3
   };
@@ -720,7 +759,7 @@ Here's a complete example following all ordering guidelines with module and inst
 
 ### Best Practices
 
-1. **Use Module Script**: Put imports, types, and static constants in `<script context="module">`
+1. **Use Module Script**: Put imports, types, and static constants in `<script module>`
 2. **Separate Concerns**: Module script = shared code, instance script = component-specific code
 3. **Consistency**: Follow the same order in all components
 4. **Grouping**: Group related declarations together
@@ -730,6 +769,7 @@ Here's a complete example following all ordering guidelines with module and inst
 8. **Dependencies**: Place derived values after their dependencies
 9. **Static Constants**: Use module script for constants that don't depend on props/state
 10. **Instance Constants**: Keep constants that depend on props/state in instance script
+11. **No Unnecessary Exports**: Types and constants don't need `export` for same-file usage - only export if used from other files
 
 ## Component Organization
 
