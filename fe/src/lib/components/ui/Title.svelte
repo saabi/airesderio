@@ -28,7 +28,7 @@
 		border-radius: 0.25rem;
 		
 		/* Typography */
-		font-size: 2rem;
+		font-size: 1.7rem;
 	}
 
 	.boxed .eyebrow {
@@ -45,8 +45,8 @@
 		display: block;
 		
 		/* Typography */
-		font-size: 1.75em;
+		font-size: 1.6em;
 		font-weight: 800;
-		letter-spacing: 0.06em;
+		letter-spacing: 0.04em;
 	}
 </style>

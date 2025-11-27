@@ -1,7 +1,6 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import ContactSection from '$lib/components/sections/ContactSection.svelte';
-	import Container from '$lib/components/ui/Container.svelte';
 	import Equipment from '$lib/components/sections/Equipment.svelte';
 	import FloorPlans from '$lib/components/sections/FloorPlans.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
@@ -125,9 +124,11 @@
 		<Intro />
 	</div>
 	<Location jsonUrl='/lugares/lugares-direcciones.json' showPlaceMarkers={true} />
-	<Interior />
-	<Equipment />
-	<FloorPlans />
+	<div class="container">
+		<Interior />
+		<Equipment />
+		<FloorPlans />
+	</div>
 	<ContactSection />
 </main>
 
@@ -152,8 +153,8 @@
 	}
 	.container {
 		/* Layout */
-		max-width: var(--max);
-		margin: auto;
 		padding: 1.5rem 1.5rem;
+		box-sizing: border-box;
+		width: 100vw;
 	}
 </style>
