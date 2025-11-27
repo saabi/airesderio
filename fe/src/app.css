@@ -146,6 +146,7 @@
     /* Layout metrics */
     --max: 1200px;
     --gap: 1.75rem;
+    --header-height: 2.4lh;
 }
 
 :root[data-theme='dark'] {
@@ -310,6 +311,7 @@ body {
     line-height: 1.6;
     color: var(--color-text-primary);
     background: var(--color-bg-canvas);
+    overflow-x: hidden;
 }
 
 /* ===== helpers ===== */

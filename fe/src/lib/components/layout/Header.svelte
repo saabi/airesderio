@@ -1,4 +1,9 @@
 <script module lang="ts">
+	// ===== IMPORTS =====
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+	import { resolveInitialTheme, setTheme, type Theme } from '$lib/utils/theme';
+
 	// ===== TYPES =====
 	type NavLink = {
 		href: string;
@@ -8,7 +13,6 @@
 
 	// ===== STATIC CONSTANTS =====
 	const isDevMode = import.meta.env.DEV;
-	const HEADER_HEIGHT = 80; // Approximate header height
 
 	const navLinks: NavLink[] = [
 		{ href: '#top', text: 'Home', id: 'top' },
@@ -22,11 +26,6 @@
 </script>
 
 <script lang="ts">
-	// ===== IMPORTS =====
-	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
-	import { resolveInitialTheme, setTheme, type Theme } from '$lib/utils/theme';
-
 	// ===== STATE =====
 	let isMenuOpen = $state(false);
 	let currentTheme = $state<Theme>('light');
@@ -34,6 +33,7 @@
 	let devColorEditorModule =
 		$state<typeof import('$lib/components/dev/DevColorEditor.svelte') | null>(null);
 	let activeLinkId = $state<string>('top');
+	let HEADER_HEIGHT = $state(80); // Will be set from CSS variable on mount
 
 	function toggleMenu() {
 		isMenuOpen = !isMenuOpen;
@@ -127,6 +127,15 @@
 			});
 		}
 		
+		// Get header height from CSS variable
+		if (browser) {
+			const headerElement = document.querySelector('.site') as HTMLElement;
+			if (headerElement) {
+				const computedHeight = getComputedStyle(headerElement).height;
+				HEADER_HEIGHT = parseFloat(computedHeight) || 80;
+			}
+		}
+		
 		// Sync with theme changes from other sources (e.g., system preference changes)
 		if (browser) {
 			const updateTheme = () => {
@@ -161,7 +170,7 @@
 </script>
 
 <header class='site'>
-	<div class='wrap site__bar'>
+	<div class='site__bar'>
 		<div class='logo' aria-label='Habitat Prime SAS'>Habitat Prime SAS</div>
 		<nav
 			id='main-nav'
@@ -265,9 +274,13 @@
 <style>
 	.site {
 		/* Positioning */
-		position: sticky;
+		position: fixed;
 		top: 0;
 		z-index: 50;
+		
+		/* Layout */
+		width: 100%;
+		height: var(--header-height);
 		
 		/* Box/Visual */
 		background: var(--color-bg-canvas);
