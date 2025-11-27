@@ -12,10 +12,11 @@
 
 	const navLinks: NavLink[] = [
 		{ href: '#top', text: 'Home', id: 'top' },
+		{ href: '#proyecto', text: 'Proyecto', id: 'proyecto' },
 		{ href: '#ubicacion', text: 'Ubicación', id: 'ubicacion' },
-		{ href: '#planos', text: 'Planos', id: 'planos' },
+		{ href: '#interior', text: 'Interior', id: 'interior' },
 		{ href: '#equipados', text: 'Equipamiento', id: 'equipados' },
-		{ href: '#top', text: 'Preventa', id: 'preventa' }, // Links to top (hero section) for now
+		{ href: '#planos', text: 'Planos', id: 'planos' },
 		{ href: '#contacto', text: 'Contacto', id: 'contacto' }
 	];
 </script>
