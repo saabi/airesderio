@@ -113,7 +113,7 @@
 </svelte:head>
 
 <main>
-	<Hero />
+	<Hero ctaUrl="#contacto" ctaText="Contactanos" />
 
 	<p class="welcome">
 		Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto

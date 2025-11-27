@@ -6,6 +6,13 @@
 </script>
 
 <script lang="ts">
+	// ===== PROPS =====
+	interface Props {
+		ctaUrl?: string;
+		ctaText?: string;
+	}
+
+	let { ctaUrl = '#contacto', ctaText = 'Contactanos' }: Props = $props();
 
 	// ===== STATIC CONSTANTS =====
 	const carouselImageFiles = [
@@ -140,8 +147,15 @@
 			decoding="async"
 			width="100%"
 		/>
-		<p>Comunicate con nosotros</p>
-		<ContactForm />
+		<div class="hero-contact-desktop-only">
+			<p>Comunicate con nosotros</p>
+			<ContactForm />
+		</div>
+		{#if ctaUrl}
+			<a href={ctaUrl} class="hero-cta scroll-animate" style='--scroll-animate-delay: 200ms; --scroll-animate-offset: 36px; --scroll-animate-duration: 520ms;'>
+				{ctaText}
+			</a>
+		{/if}
 	</div>
 </section>
 
@@ -331,6 +345,54 @@
 		
 		/* Typography */
 		font-size: 0.9em;
+	}
+
+	.hero-cta {
+		/* Layout */
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.875rem 2rem;
+		margin-top: 1rem;
+		
+		/* Box/Visual */
+		border: none;
+		border-radius: 0.375rem;
+		background: var(--color-accent-primary);
+		box-shadow: 0 0.125rem 0.375rem var(--shadow-subtle);
+		
+		/* Typography */
+		font-size: 1rem;
+		font-weight: 600;
+		text-decoration: none;
+		color: var(--color-text-on-accent);
+		
+		/* Misc/Overrides */
+		cursor: pointer;
+		
+		/* Effects & Motion */
+		transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.hero-cta:hover {
+		/* Box/Visual */
+		background: var(--color-accent-hover);
+		box-shadow: 0 0.25rem 0.5rem var(--shadow-soft);
+		
+		/* Effects & Motion */
+		transform: translateY(-1px);
+	}
+
+	.hero-cta:active {
+		/* Effects & Motion */
+		transform: translateY(0);
+	}
+
+	@media (max-width: 850px) {
+		.hero-contact-desktop-only {
+			/* Layout */
+			display: none;
+		}
 	}
 
 </style>
