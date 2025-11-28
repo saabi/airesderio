@@ -153,8 +153,6 @@
 	}
 	.container {
 		/* Layout */
-		padding: 1.5rem 1.5rem;
-		box-sizing: border-box;
-		width: 100vw;
+		margin: 1.5rem 1.5rem;
 	}
 </style>

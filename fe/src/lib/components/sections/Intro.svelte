@@ -26,9 +26,6 @@
 			comodidades han sido pensadas para satisfacer a quienes quieran una vida cómoda y a un paso de
 			todo.
 		</p>
-		<p>
-			Ubicado en el centro de Santiago del Estero, Aires de Río combina practicidad, modernidad y un entorno privilegiado, para que cada día sea una experiencia única.
-		</p>
 	</div>
 	<aside
 		class='intro__kpis scroll-animate'
@@ -41,7 +38,7 @@
 			<dd class='vh'>Superficie total del proyecto</dd>
 			<dt class='kpi'><strong>1/2 + 1</strong><small>dorms · estudio</small></dt>
 			<dd class='vh'>Tipos de unidades disponibles</dd>
-			<dt class='kpi'><strong>TERRAZA CON</strong><small>PISCINA Y SOLARIUM HÚMEDO</small></dt>
+			<dt class='kpi'><strong>TERRAZA</strong><small>PISCINA Y SOLARIUM HÚMEDO</small></dt>
 			<dd class='vh'>Amenities en terraza con piscina y solarium húmedo</dd>
 			<dt class='kpi'><strong>CAFETERÍA</strong><small>&nbsp;</small></dt>
 			<dd class='vh'>Servicio de cafetería incluido</dd>
@@ -56,8 +53,12 @@
 		grid-template-columns: 1.08fr 0.92fr;
 		gap: 1.5rem;
 		align-items: start;
-		padding: 1.5rem 0;
+		padding: 0;
 		font-size: 1.2rem;
+	}
+	.intro p {
+		/* Layout */
+		margin-top: 0;
 	}
 
 	.intro__kpis {
@@ -72,7 +73,7 @@
 
 	.intro__kpis dl {
 		/* Layout */
-		display: contents;
+		display: contents;	
 	}
 
 	.intro__kpis dt {
