@@ -9,14 +9,15 @@
 		{ label: 'Interior', href: '#interior' },
 		{ label: 'Equipamiento', href: '#equipados' },
 		{ label: 'Planos', href: '#planos' },
-		{ label: 'Contacto', href: '#contacto' }
+		{ label: 'Contacto', href: '#contacto' },
+		{ label: 'Habitat Prime', href: 'https://habitatprime.com', external: true }
 	];
 
 	const contactInfo = [
-		{ label: 'Oficina comercial', value: 'Av. Rivadavia 1520 · Santiago del Estero' },
-		{ label: 'Whatsapp', value: '+54 9 385 555 0000' },
+		{ label: 'Oficina Habitat Prime', value: 'Av. Rivadavia 1520 · Santiago del Estero' },
+		{ label: 'Whatsapp ventas', value: '+54 9 385 555 0000' },
 		{ label: 'Teléfono', value: '+54 385 421 1111' },
-		{ label: 'Email', value: 'hola@airesderio.com' }
+		{ label: 'Email comercial', value: 'hola@habitatprime.com' }
 	];
 
 	const projectHighlights = [
@@ -26,20 +27,23 @@
 	];
 
 	const socialLinks = [
-		{ label: 'Instagram', href: 'https://instagram.com/airesderio' },
-		{ label: 'Facebook', href: 'https://facebook.com/airesderio' },
-		{ label: 'LinkedIn', href: 'https://linkedin.com/company/airesderio' }
+		{ label: 'Instagram', href: 'https://instagram.com/habitatprime' },
+		{ label: 'LinkedIn', href: 'https://linkedin.com/company/habitatprime' },
+		{ label: 'YouTube', href: 'https://youtube.com/@habitatprime' }
 	];
 </script>
 
 <footer class="site-footer">
 	<div class="wrap">
 		<div class="footer-grid">
-			<section class="footer-column footer-brand" aria-label="Resumen del proyecto">
-				<img src="/logos/aires-de-rio.svg" alt="Aires de Río" class="footer-logo" loading="lazy" decoding="async" />
+			<section class="footer-column footer-brand" aria-label="Resumen corporativo">
+				<div class="footer-logo">
+					<img src="/logos/habitat-prime.svg" alt="Habitat Prime SAS" loading="lazy" decoding="async" />
+				</div>
 				<p>
-					Proyecto residencial boutique ubicado en el corazón de Santiago del Estero. Diseño contemporáneo,
-					amenities premium y espacios pensados para vivir al ritmo del río.
+					Habitat Prime SAS desarrolla experiencias residenciales premium en Santiago del Estero. Aires de Río
+					es uno de nuestros productos insignia, diseñado para vivir con vistas privilegiadas al río y acceso
+					a amenities de alto nivel.
 				</p>
 				<ul class="project-highlights">
 					{#each projectHighlights as item (item.label)}
@@ -56,7 +60,13 @@
 				<ul class="footer-links">
 					{#each navigationLinks as link (link.href)}
 						<li>
-							<a href={link.href}>{link.label}</a>
+							<a
+								href={link.href}
+								rel={link.external ? 'noreferrer' : undefined}
+								target={link.external ? '_blank' : undefined}
+							>
+								{link.label}
+							</a>
 						</li>
 					{/each}
 				</ul>
@@ -75,7 +85,7 @@
 				<div class="footer-social">
 					<span>Seguinos</span>
 					<ul>
-						{#each socialLinks as link (link.label)}
+					{#each socialLinks as link (link.label)}
 							<li>
 								<a rel="noreferrer" target="_blank" href={link.href}>
 									{link.label}
@@ -88,12 +98,7 @@
 		</div>
 
 		<div class="footer-bottom">
-			<p>© {year} Aires de Río — Render y contenido demostrativo.</p>
-			<ul>
-				<li><a href="/aviso-legal">Aviso legal</a></li>
-				<li><a href="/privacidad">Privacidad</a></li>
-				<li><a href="/terminos">Términos de uso</a></li>
-			</ul>
+			<p>© {year} Habitat Prime SAS · Aires de Río es una marca registrada.</p>
 		</div>
 	</div>
 </footer>
@@ -106,7 +111,12 @@
 
 		/* Box/Visual */
 		border-top: 1px solid var(--color-border-subtle);
-		background: var(--color-bg-canvas);
+		background: linear-gradient(
+			180deg,
+			color-mix(in oklch, var(--color-bg-muted) 85%, var(--color-bg-canvas) 15%) 0%,
+			var(--color-bg-muted) 100%
+		);
+		box-shadow: 0 -12px 32px var(--shadow-soft);
 
 		/* Typography */
 		color: var(--color-text-secondary);
@@ -134,7 +144,16 @@
 	}
 
 	.footer-logo {
+		width: fit-content;
+		padding: 0.75rem 1.25rem;
+		border-radius: 0.5rem;
+		background: var(--color-bg-interactive);
+		box-shadow: 0 6px 16px color-mix(in oklch, var(--color-bg-interactive) 45%, transparent);
+	}
+
+	.footer-logo img {
 		width: 9.5rem;
+		display: block;
 		filter: drop-shadow(0 2px 4px var(--shadow-subtle));
 	}
 
