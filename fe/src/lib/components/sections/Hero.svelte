@@ -17,6 +17,9 @@
 </script>
 
 <script lang="ts">
+	// ===== IMPORTS =====
+	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
+
 	// ===== PROPS =====
 	interface Props {
 		ctaUrl?: string;
@@ -27,7 +30,7 @@
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: heroObserver, visible: heroVisible } = createSectionObserver('hero', {
-		threshold: 0.45
+		threshold: ANIMATION.threshold.hero
 	});
 </script>
 
@@ -42,7 +45,7 @@
 	<h2 id='hero-heading' class='vh'>Presentación y Contacto - Aires de Río</h2>
 	<div
 		class='hero-carousel scroll-animate'
-		style='--scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;'
+		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<Carousel
 			images={CAROUSEL_IMAGES}
@@ -56,7 +59,7 @@
 	</svg>
 	<div
 		class='hero-contact scroll-animate'
-		style='--scroll-animate-delay: 80ms; --scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'
+		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<img
 			src="/logos/aires-de-rio.svg"
@@ -70,7 +73,11 @@
 			<ContactForm />
 		</div>
 		{#if ctaUrl}
-			<a href={ctaUrl} class="hero-contact-mobile-only hero-cta scroll-animate" style='--scroll-animate-delay: 160ms; --scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'>
+			<a
+				href={ctaUrl}
+				class="hero-contact-mobile-only hero-cta scroll-animate"
+				style={`--scroll-animate-delay: ${animationDelay(2)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+			>
 				{ctaText}
 			</a>
 		{/if}

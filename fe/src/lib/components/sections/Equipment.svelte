@@ -55,10 +55,11 @@
 	// ===== IMPORTS =====
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { browser } from '$app/environment';
+	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: equipmentObserver, visible: equipmentVisible } = createSectionObserver('equipment', {
-		threshold: 0.3
+		threshold: ANIMATION.threshold.section
 	});
 
 	// ===== STATE =====
@@ -153,7 +154,7 @@
         use:createTitleObserver
         class='scroll-animate' 
         data-item-active={titleVisible || undefined}
-        style='--scroll-animate-delay: 0ms; --scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'
+        style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
     >
         <Title eyebrow='Cómo están' big='EQUIPADOS' />
     </div>
@@ -163,7 +164,7 @@
                 use:createItemObserver(index)
                 class='scroll-animate'
                 data-item-active={visibleItems.has(index) || undefined}
-                style={`--scroll-animate-delay: ${80 + index * 80}ms; --scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;`}
+                style={`--scroll-animate-delay: ${animationDelay(index + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
             >
                 <SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
                     <svelte:component this={item.component} />

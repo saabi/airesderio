@@ -34,6 +34,7 @@
 	// ===== IMPORTS =====
 	import { browser } from '$app/environment';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
 
 	// ===== PROPS =====
 	let { 
@@ -80,7 +81,7 @@
 	
 	// ===== INSTANCE CONSTANTS =====
 	const { action: locationObserver, visible: locationVisible } = createSectionObserver('location', {
-		threshold: 0.3
+		threshold: ANIMATION.threshold.section
 	});
 
 	// ===== UTILITY FUNCTIONS =====
@@ -372,7 +373,7 @@
     <div class='location-block'>
         <div
             class='location-text scroll-animate'
-            style='--scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'
+            style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
         >
             <span class='location-eyebrow'>Ubicación</span>
             <h3>¿DÓNDE SE ENCUENTRA?</h3>
@@ -391,7 +392,7 @@
         </div>
         <div
             class='map-container scroll-animate'
-            style='--scroll-animate-delay: 80ms; --scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;'
+            style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
         >
 			{#if placesData && visibleMarkers.length > 0}
 				<GoogleMap

@@ -5,9 +5,12 @@
 </script>
 
 <script lang="ts">
+	// ===== IMPORTS =====
+	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
+
 	// ===== INSTANCE CONSTANTS =====
 	const { action: contactObserver, visible: contactVisible } = createSectionObserver('contact', {
-		threshold: 0.3
+		threshold: ANIMATION.threshold.section
 	});
 </script>
 
@@ -22,7 +25,7 @@
 		<div class='contact-section__container'>
 			<div 
 				class='contact-section__form scroll-animate'
-				style='--scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				<h2 id='contact-heading'>Contacto</h2>
 				<p>Comunicate con nosotros</p>
@@ -30,7 +33,7 @@
 			</div>
 			<div 
 				class='contact-section__logo scroll-animate'
-				style='--scroll-animate-delay: 80ms; --scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;'
+				style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				<!-- Logo placeholder - replace with actual logo component or img tag -->
 			</div>
@@ -102,4 +105,3 @@
 		}
 	}
 </style>
-

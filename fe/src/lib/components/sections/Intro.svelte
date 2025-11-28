@@ -1,10 +1,11 @@
 <script lang="ts">
 	// ===== IMPORTS =====
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: introObserver, visible: introVisible } = createSectionObserver('intro', {
-		threshold: 0.35
+		threshold: ANIMATION.threshold.section
 	});
 </script>
 
@@ -16,7 +17,10 @@
 	data-section-active={$introVisible}
 >
 	<h2 id='proyecto-heading' class='vh'>Sobre el Proyecto</h2>
-	<div class='scroll-animate' style='--scroll-animate-offset: 40px; --scroll-animate-duration: 480ms;'>
+	<div
+		class='scroll-animate'
+		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+	>
 		<p>
 			Quienes vivan en Aires de Río gozarán de una multi-oferta de entretenimiento, shopping, áreas
 			verdes, deportes, confiterías y eventos culturales.
@@ -29,7 +33,7 @@
 	</div>
 	<aside
 		class='intro__kpis scroll-animate'
-		style='--scroll-animate-delay: 80ms; --scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;'
+		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 		aria-labelledby='kpis-heading'
 	>
 		<h3 id='kpis-heading' class='vh'>Características principales del proyecto</h3>

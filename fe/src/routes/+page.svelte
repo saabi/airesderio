@@ -16,10 +16,11 @@
 <script lang="ts">
 	// ===== IMPORTS =====
 	import { page } from '$app/stores';
+	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: welcomeObserver, visible: welcomeVisible } = createSectionObserver('welcome', {
-		threshold: 0.3
+		threshold: ANIMATION.threshold.section
 	});
 
 	// ===== DERIVED =====
@@ -121,16 +122,20 @@
 <main>
 	<Hero ctaUrl="#contacto" ctaText="Contactanos" />
 
-	<p 
+	<section
 		id="welcome"
-		class="welcome scroll-animate"
+		class="welcome-section"
 		use:welcomeObserver
 		data-section-active={$welcomeVisible}
-		style="--scroll-animate-offset: 40px; --scroll-animate-duration: 500ms; --scroll-animate-delay: 80ms;"
 	>
-		Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto
-		de departamentos con las mejores prestaciones y estratégica ubicación.
-	</p>
+		<p
+			class="welcome scroll-animate"
+			style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()}; --scroll-animate-delay: ${animationDelay(1)};`}
+		>
+			Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto
+			de departamentos con las mejores prestaciones y estratégica ubicación.
+		</p>
+	</section>
 	
 	<div class="container">
 		<Intro />
