@@ -1,16 +1,11 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import CategorySelector from '$lib/components/features/CategorySelector.svelte';
-	import GoogleMap from '$lib/components/features/GoogleMap.svelte';
+	import MapClean from '$lib/components/features/MapClean.svelte';
 	import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
 	import type { PlacesData, MarkerData, Place, MainBuilding, Category } from '$lib/types';
 
 	// ===== TYPES =====
-	// Type for GoogleMap component instance
-	interface GoogleMapInstance {
-		fitToMarkers: () => void;
-	}
-
 	interface Props {
 		jsonUrl?: string;
 		showPlaceMarkers?: boolean;
@@ -19,15 +14,7 @@
 	}
 
 	// ===== STATIC CONSTANTS =====
-	const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 	const DEFAULT_JSON_URL = '/lugares/lugares-direcciones.json';
-	const DEFAULT_MAP_CENTER = { lat: -27.779686, lng: -64.258992 };
-
-	if (import.meta.env.DEV && !GOOGLE_MAPS_API_KEY) {
-		console.error(
-			'Missing VITE_GOOGLE_MAPS_API_KEY environment variable. Please create a .env file with your Google Maps API key.'
-		);
-	}
 </script>
 
 <script lang="ts">
@@ -46,8 +33,6 @@
 
 	// ===== STATE =====
 	let placesData = $state<PlacesData | null>(null);
-	let googleMapRef = $state<GoogleMapInstance | null>(null);
-	let mapCenter = $state(DEFAULT_MAP_CENTER);
 	let photoCarouselVisible = $state(false);
 	let carouselPlace = $state<Place | null>(null);
 	let carouselCategory = $state<string>('');
@@ -55,9 +40,6 @@
 	let carouselPhotos = $state<string[]>([]);
 	let carouselCurrentIndex = $state(0);
 	let hasInitializedCategoryFilter = $state(false);
-	let activeMarkerId = $state<string | null>(null);
-	let mapInitialized = $state(false);
-	let hasAutoOpenedMainMarker = $state(false);
 
 	// ===== DERIVED =====
 	// All category data is now loaded from JSON metadata
@@ -181,8 +163,6 @@
 				const data = await response.json();
 				placesData = data;
 				hasInitializedCategoryFilter = false;
-				activeMarkerId = null;
-				hasAutoOpenedMainMarker = false;
 				if (import.meta.env.DEV) {
 					console.log('Places data loaded successfully:', {
 						totalCategories: Object.keys(data.lugares).length,
@@ -237,50 +217,6 @@
 		categoryFilter = categories;
 	}
 
-	// Marker creation is now handled by snippets in GoogleMap component
-
-	// Handle marker click from GoogleMap component
-	function handleMarkerClick(marker: MarkerData | { id: string; [key: string]: unknown }) {
-		activeMarkerId = marker.id;
-	}
-
-	function handleMarkerPhotoClick(marker: MarkerData | { place?: Place; category?: string; placeId?: string; [key: string]: unknown }) {
-		if ('place' in marker && marker.place && 'category' in marker && 'placeId' in marker) {
-			const typedMarker = marker as MarkerData;
-			if (typedMarker.place?.photos && typedMarker.place.photos.length > 0) {
-				openPhotoCarousel(typedMarker.place, typedMarker.category, typedMarker.placeId);
-			}
-		}
-	}
-
-	// Handle info window close from GoogleMap component
-	function handleInfoWindowClose(markerId: string) {
-		if (activeMarkerId === markerId) {
-			activeMarkerId = null;
-		}
-	}
-
-	// Handle map ready event
-	function handleMapReady(mapInstance: google.maps.Map) {
-		if (import.meta.env.DEV) {
-			console.log('🗺️ Map is ready:', mapInstance);
-		}
-		
-		// Only clear user closed state and auto-open main marker on first initialization
-		if (!mapInitialized) {
-			mapInitialized = true;
-			
-			// Allow auto-open effect to run once data and markers are ready
-			hasAutoOpenedMainMarker = false;
-		}
-	}
-
-	// Fit map bounds using GoogleMap component
-	function fitMapToMarkers() {
-		if (googleMapRef) {
-			googleMapRef.fitToMarkers();
-		}
-	}
 
 	// Find the main building from JSON data
 	function findMainBuilding(data: PlacesData | null = placesData): MainBuilding | null {
@@ -307,35 +243,6 @@
 		loadPlacesData();
 	});
 
-	// Update map center when main marker is available
-	$effect(() => {
-		if (mainMarker?.place?.coordenadas_aproximadas) {
-			const { lat, lng } = mainMarker.place.coordenadas_aproximadas;
-			mapCenter = { lat, lng };
-		}
-	});
-
-	// Ensure the main marker opens once when the map and data are ready
-	$effect(() => {
-		if (!mapInitialized || hasAutoOpenedMainMarker) return;
-		if (!mainMarkerId) return;
-
-		const visibleIds = new Set(visibleMarkers.map((marker) => marker.id));
-		if (!visibleIds.has(mainMarkerId)) return;
-
-		activeMarkerId = mainMarkerId;
-		hasAutoOpenedMainMarker = true;
-	});
-
-	// Keep the active marker in sync with the currently visible markers
-	$effect(() => {
-		if (!activeMarkerId) return;
-
-		const visibleIds = new Set(visibleMarkers.map((marker) => marker.id));
-		if (!visibleIds.has(activeMarkerId)) {
-			activeMarkerId = null;
-		}
-	});
 
 	$effect(() => {
 		if (import.meta.env.DEV && Object.keys(categories).length > 0) {
@@ -394,126 +301,10 @@
             class='map-container scroll-animate'
             style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
         >
-			{#if placesData && visibleMarkers.length > 0}
-				<GoogleMap
-					bind:this={googleMapRef}
-					apiKey={GOOGLE_MAPS_API_KEY}
-					mapId='AIRES_DE_RIO_MAP'
-					center={mapCenter}
-					zoom={15}
-					markers={visibleMarkers}
-					activeMarkerId={activeMarkerId}
-					onMarkerClick={handleMarkerClick}
-					onMapReady={handleMapReady}
-					onInfoWindowClose={handleInfoWindowClose}
-					onMarkerPhotoClick={handleMarkerPhotoClick}
-					containerClass='location-map'
-				>
-				{#snippet markerElement(marker)}
-					{@const typedMarker = marker as MarkerData}
-					{@const isMainMarker = typedMarker.isMainMarker || typedMarker.place?.es_edificio_principal}
-					{@const categoryClass = toCategoryClass(typedMarker.category)}
-					{@const icon = categoryIcons[typedMarker.category]}
-					
-					<div class={`marker-wrapper ${isMainMarker ? 'marker-wrapper--main' : ''}`}>
-						<div
-							class={`marker-dot category-color ${categoryClass} ${isMainMarker ? 'marker-dot--main' : ''}`}
-							role='button'
-							tabindex='0'
-							aria-label={icon ? `Location marker: ${icon} ${typedMarker.title}` : `Location marker: ${typedMarker.title}`}
-						>
-							{#if icon}
-								<span class={`marker-icon ${isMainMarker ? 'marker-icon--main' : ''}`}>
-									{icon}
-								</span>
-							{:else}
-								<!-- Simple fallback dot for missing icon -->
-								<span class={`marker-fallback ${isMainMarker ? 'marker-fallback--main' : ''}`}>●</span>
-							{/if}
-						</div>
-						
-						{#if typedMarker.place?.photos && typedMarker.place.photos.length > 0}
-							<button 
-								data-photo-trigger
-								type='button'
-								class='photo-trigger'
-								aria-label={`View ${typedMarker.place.photos.length} photo${typedMarker.place.photos.length > 1 ? 's' : ''} for ${typedMarker.title}`}
-							>
-								📷
-							</button>
-						{/if}
-					</div>
-				{/snippet}
-
-				{#snippet markerInfoWindow(marker)}
-					{@const typedMarker = marker as MarkerData}
-					{@const categoryClass = toCategoryClass(typedMarker.category)}
-					{@const distanceClass = getDistanceBadgeClass(typedMarker.place.distancia_categoria || '')}
-					{@const placeNameId = `place-name-${typedMarker.id}`}
-					<div class='info-window' role='dialog' aria-labelledby={placeNameId} aria-label={`Information about ${typedMarker.place.nombre}`}>
-						<div class='info-header'>
-							<div class={`category-indicator category-color ${categoryClass}`}>
-								{#if categoryIcons[typedMarker.category]}
-									<span class='category-icon'>{categoryIcons[typedMarker.category]}</span>
-								{/if}
-							</div>
-							<h3 class='place-name' id={placeNameId}>{typedMarker.place.nombre}</h3>
-							{#if categoryNames[typedMarker.category]}
-								<span class='category-name'>({categoryNames[typedMarker.category]})</span>
-							{/if}
-						</div>
-						
-						<div class='info-content'>
-							<p class='address'>
-								📍 {typedMarker.place.direccion || typedMarker.place.direccion_aproximada || ''}
-							</p>
-							
-							<div class='badges'>
-								<span class={`distance-badge ${distanceClass}`}>
-									{typedMarker.place.distancia_categoria || ''}
-								</span>
-								<span class='distance-detail'>
-									{typedMarker.place.distancia_cuadras || typedMarker.place.distancia_aproximada || ''}
-								</span>
-							</div>
-							
-							{#if typedMarker.place.descripcion}
-								<p class='description'>{typedMarker.place.descripcion}</p>
-							{/if}
-							
-							{#if typedMarker.place.photos && typedMarker.place.photos.length > 0}
-								<button 
-									class='photo-button' 
-									onclick={() => openPhotoCarousel(typedMarker.place, typedMarker.category, typedMarker.placeId)}
-									aria-label={`Ver ${typedMarker.place.photos.length} foto${typedMarker.place.photos.length > 1 ? 's' : ''} de ${typedMarker.place.nombre}`}
-								>
-									📷 Ver {typedMarker.place.photos.length} foto{typedMarker.place.photos.length > 1 ? 's' : ''}
-								</button>
-							{/if}
-						</div>
-					</div>
-				{/snippet}
-			</GoogleMap>
-			{:else}
-				<div class='location-map location-map--placeholder'>
-					<p class='location-map__message'>Cargando mapa...</p>
-				</div>
-			{/if}
-			
-				{#if placesData}
-					<CategorySelector 
-						placesData={placesData}
-						{showPlaceMarkers}
-						{categoryFilter}
-						{categoryIcons}
-						{categoryNames}
-						markersCount={visibleMarkers.length}
-						onToggleMarkers={toggleMarkers}
-						onCategoryToggle={toggleCategory}
-						onSetCategoryFilter={setCategoryFilter}
-						onFitToView={fitMapToMarkers}
-					/>
-				{/if}
+			<MapClean
+				class='location-map'
+				ariaLabel='Mapa de ubicación del proyecto Aires de Río'
+			/>
 		</div>
 	</div>
 </section>
@@ -589,6 +380,9 @@
 	}
 
 	.map-container {
+		/* Positioning */
+		position: relative;
+		overflow: hidden;
 		/* Layout */
 		display: grid;
 		grid-template-columns: 1fr min-content;
@@ -604,22 +398,6 @@
 		/* Box/Visual */
 		background: var(--color-bg-contrast);
 		border-radius: 0.5rem;
-	}
-
-	.location-map--placeholder {
-		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		
-		/* Box/Visual */
-		background: var(--color-bg-muted);
-	}
-
-	.location-map__message {
-		/* Typography */
-		font-size: 0.95rem;
-		color: var(--color-text-secondary);
 	}
 
 
