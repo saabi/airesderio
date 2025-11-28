@@ -54,11 +54,92 @@
 <script lang="ts">
 	// ===== IMPORTS =====
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { browser } from '$app/environment';
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: equipmentObserver, visible: equipmentVisible } = createSectionObserver('equipment', {
 		threshold: 0.3
 	});
+
+	// ===== STATE =====
+	let visibleItems = $state<Set<number>>(new Set());
+	let titleVisible = $state(false);
+
+	// ===== FUNCTIONS =====
+	function createTitleObserver(element: HTMLElement) {
+		if (!browser) return;
+
+		let observer: IntersectionObserver | null = null;
+
+		requestAnimationFrame(() => {
+			observer = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						if (entry.isIntersecting) {
+							titleVisible = true;
+							if (observer) {
+								observer.unobserve(entry.target);
+							}
+						}
+					}
+				},
+				{
+					threshold: 0.1,
+					rootMargin: '0px'
+				}
+			);
+
+			observer.observe(element);
+		});
+
+		return {
+			destroy() {
+				if (observer) {
+					observer.disconnect();
+				}
+			}
+		};
+	}
+
+	function createItemObserver(index: number) {
+		return (element: HTMLElement) => {
+			if (!browser) return;
+
+			let observer: IntersectionObserver | null = null;
+
+			// Use requestAnimationFrame to ensure element is fully rendered
+			requestAnimationFrame(() => {
+				observer = new IntersectionObserver(
+					(entries) => {
+						for (const entry of entries) {
+							if (entry.isIntersecting) {
+								// Create new Set to trigger reactivity
+								visibleItems = new Set([...visibleItems, index]);
+								// Unobserve after first intersection for "once" behavior
+								if (observer) {
+									observer.unobserve(entry.target);
+								}
+							}
+						}
+					},
+					{
+						threshold: 0.1, // Trigger when 10% of item is visible
+						rootMargin: '0px' // No margin - trigger when item enters viewport
+					}
+				);
+
+				observer.observe(element);
+			});
+
+			return {
+				destroy() {
+					if (observer) {
+						observer.disconnect();
+					}
+				}
+			};
+		};
+	}
 </script>
 
 <section
@@ -68,14 +149,21 @@
     use:equipmentObserver
     data-section-active={$equipmentVisible}
 >
-    <div class='scroll-animate' style='--scroll-animate-offset: 36px;'>
+    <div 
+        use:createTitleObserver
+        class='scroll-animate' 
+        data-item-active={titleVisible || undefined}
+        style='--scroll-animate-delay: 100ms; --scroll-animate-offset: 18px;'
+    >
         <Title eyebrow='Cómo están' big='EQUIPADOS' />
     </div>
     <ul class='equip-list' role='list'>
         {#each equipmentItems as item, index (index)}
             <li
+                use:createItemObserver(index)
                 class='scroll-animate'
-                style={`--scroll-animate-delay: ${140 + index * 60}ms; --scroll-animate-offset: 48px;`}
+                data-item-active={visibleItems.has(index) || undefined}
+                style={`--scroll-animate-delay: ${250 + index * 60}ms; --scroll-animate-offset: 48px;`}
             >
                 <SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
                     <svelte:component this={item.component} />
