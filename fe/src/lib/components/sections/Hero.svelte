@@ -42,7 +42,7 @@
 	<h2 id='hero-heading' class='vh'>Presentación y Contacto - Aires de Río</h2>
 	<div
 		class='hero-carousel scroll-animate'
-		style='--scroll-animate-offset: 48px; --scroll-animate-duration: 520ms;'
+		style='--scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;'
 	>
 		<Carousel
 			images={CAROUSEL_IMAGES}
@@ -56,7 +56,7 @@
 	</svg>
 	<div
 		class='hero-contact scroll-animate'
-		style='--scroll-animate-delay: 120ms; --scroll-animate-offset: 36px; --scroll-animate-duration: 520ms;'
+		style='--scroll-animate-delay: 80ms; --scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'
 	>
 		<img
 			src="/logos/aires-de-rio.svg"
@@ -70,7 +70,7 @@
 			<ContactForm />
 		</div>
 		{#if ctaUrl}
-			<a href={ctaUrl} class="hero-cta scroll-animate" style='--scroll-animate-delay: 200ms; --scroll-animate-offset: 36px; --scroll-animate-duration: 520ms;'>
+			<a href={ctaUrl} class="hero-contact-mobile-only hero-cta scroll-animate" style='--scroll-animate-delay: 160ms; --scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'>
 				{ctaText}
 			</a>
 		{/if}
@@ -166,6 +166,7 @@
 		font-weight: 600;
 		text-decoration: none;
 		color: var(--color-text-on-accent);
+		text-align: center;
 		
 		/* Misc/Overrides */
 		cursor: pointer;
@@ -188,11 +189,22 @@
 		transform: translateY(0);
 	}
 
+	.hero-contact-mobile-only {
+		/* Layout */
+		display: none;
+	}
 	@media (max-width: 850px) {
+		.hero {
+			justify-items: center;
+		}
 		.hero-contact-desktop-only {
 			/* Layout */
 			display: none;
 		}
+		
+		.hero-contact-mobile-only {
+			/* Layout */
+			display: block;
+		}
 	}
-
 </style>

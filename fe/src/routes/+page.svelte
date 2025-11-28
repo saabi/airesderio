@@ -7,6 +7,7 @@
 	import Interior from '$lib/components/sections/Interior.svelte';
 	import Intro from '$lib/components/sections/Intro.svelte';
 	import Location from '$lib/components/sections/Location.svelte';
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 
 	// ===== STATIC CONSTANTS =====
 	const DEFAULT_SITE_URL = 'https://airesderio.com';
@@ -15,6 +16,11 @@
 <script lang="ts">
 	// ===== IMPORTS =====
 	import { page } from '$app/stores';
+
+	// ===== INSTANCE CONSTANTS =====
+	const { action: welcomeObserver, visible: welcomeVisible } = createSectionObserver('welcome', {
+		threshold: 0.3
+	});
 
 	// ===== DERIVED =====
 	// Base URL for the site
@@ -115,7 +121,13 @@
 <main>
 	<Hero ctaUrl="#contacto" ctaText="Contactanos" />
 
-	<p class="welcome">
+	<p 
+		id="welcome"
+		class="welcome scroll-animate"
+		use:welcomeObserver
+		data-section-active={$welcomeVisible}
+		style="--scroll-animate-offset: 40px; --scroll-animate-duration: 500ms; --scroll-animate-delay: 80ms;"
+	>
 		Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto
 		de departamentos con las mejores prestaciones y estratégica ubicación.
 	</p>

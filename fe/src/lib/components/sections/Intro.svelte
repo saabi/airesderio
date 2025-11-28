@@ -29,7 +29,7 @@
 	</div>
 	<aside
 		class='intro__kpis scroll-animate'
-		style='--scroll-animate-delay: 120ms; --scroll-animate-offset: 52px; --scroll-animate-duration: 520ms;'
+		style='--scroll-animate-delay: 80ms; --scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;'
 		aria-labelledby='kpis-heading'
 	>
 		<h3 id='kpis-heading' class='vh'>Características principales del proyecto</h3>

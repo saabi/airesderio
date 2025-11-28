@@ -35,22 +35,22 @@
 	data-section-active={$interiorVisible}
 >
 	<h2 id="interior-heading" class="vh">Diseño Interior</h2>
-	<div class="scroll-animate" style="--scroll-animate-offset: 40px;">
+	<div class="scroll-animate" style="--scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;">
 		<Title eyebrow="Diseño" big="INTERIOR" />
 	</div>
-	<p class="scroll-animate" style="--scroll-animate-offset: 48px; --scroll-animate-delay: 80ms;">
+	<p class="scroll-animate" style="--scroll-animate-offset: 40px; --scroll-animate-delay: 80ms; --scroll-animate-duration: 500ms;">
 		Ambientes generosos para unidades de un dormitorio que integran estética y funcionalidad
 		explorando tendencias contemporáneas, incorporando las nuevas tecnologías y los recursos más
 		elegantes en interiorismo.
 	</p>
-	<p class="scroll-animate" style="--scroll-animate-offset: 52px; --scroll-animate-delay: 120ms;">
+	<p class="scroll-animate" style="--scroll-animate-offset: 40px; --scroll-animate-delay: 160ms; --scroll-animate-duration: 500ms;">
 		El proyecto incorporó materiales ecológicos y formas curvas, buscando conectar los espacios
 		interiores con los colores que ofrece la naturaleza a través de la inclusión de vegetación, luz
 		natural y materiales orgánicos como la madera.
 	</p>
 	<div
 		class="interior-gallery scroll-animate"
-		style="--scroll-animate-delay: 200ms; --scroll-animate-offset: 60px; --scroll-animate-duration: 600ms; --scroll-animate-scale: 0.95;"
+		style="--scroll-animate-delay: 240ms; --scroll-animate-offset: 48px; --scroll-animate-duration: 600ms; --scroll-animate-scale: 0.95;"
 	>
 		<Carousel
 			images={INTERIOR_IMAGES}
@@ -59,13 +59,13 @@
 			imageAriaLabel={(index) => `Imagen del diseño interior - ${index + 1}`}
 		/>
 	</div>
-	<p class="scroll-animate" style="--scroll-animate-offset: 48px; --scroll-animate-delay: 280ms;">
+	<p class="scroll-animate" style="--scroll-animate-offset: 40px; --scroll-animate-delay: 320ms; --scroll-animate-duration: 500ms;">
 		La luz juega un papel clave en la funcionalidad del diseño interior de las unidades y de los espacios comunes. Las grandes aberturas optimizan la luz y la ventilación natural, lo cual permite reducir la dependencia de la iluminación y ventilación artificiales, promoviendo la eficiencia energética y el confort en los espacios, incluso prolongando la iluminación natural hasta el anochecer.
 	</p>
-	<p class="scroll-animate" style="--scroll-animate-offset: 48px; --scroll-animate-delay: 360ms;">
+	<p class="scroll-animate" style="--scroll-animate-offset: 40px; --scroll-animate-delay: 400ms; --scroll-animate-duration: 500ms;">
 		La iluminación artificial fue diseñada para realzar el elegante estilo en la arquitectura de los departamentos. La combinación de tonos de luces LEDs en gargantas semicolgantes, como fuente de luz indirecta y de acento, crea profundidad y logra ambientes armónicos y relajantes.
 	</p>
-	<p class="scroll-animate" style="--scroll-animate-offset: 48px; --scroll-animate-delay: 440ms;">
+	<p class="scroll-animate" style="--scroll-animate-offset: 40px; --scroll-animate-delay: 480ms; --scroll-animate-duration: 500ms;">
 		Quien habite los departamentos solo tendrá que incorporar los artefactos de iluminación directa a su gusto, ya que toda la iluminación de efecto estará incorporada en cada unidad habitacional.
 	</p>
 </section>

@@ -1,17 +1,37 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 </script>
 
-<section id='contacto' class='contact-section' aria-labelledby='contact-heading'>
+<script lang="ts">
+	// ===== INSTANCE CONSTANTS =====
+	const { action: contactObserver, visible: contactVisible } = createSectionObserver('contact', {
+		threshold: 0.3
+	});
+</script>
+
+<section 
+	id='contacto' 
+	class='contact-section' 
+	aria-labelledby='contact-heading'
+	use:contactObserver
+	data-section-active={$contactVisible}
+>
 	<div class='wrap'>
 		<div class='contact-section__container'>
-			<div class='contact-section__form'>
+			<div 
+				class='contact-section__form scroll-animate'
+				style='--scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'
+			>
 				<h2 id='contact-heading'>Contacto</h2>
 				<p>Comunicate con nosotros</p>
 				<ContactForm />
 			</div>
-			<div class='contact-section__logo'>
+			<div 
+				class='contact-section__logo scroll-animate'
+				style='--scroll-animate-delay: 80ms; --scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;'
+			>
 				<!-- Logo placeholder - replace with actual logo component or img tag -->
 			</div>
 		</div>

@@ -372,7 +372,7 @@
     <div class='location-block'>
         <div
             class='location-text scroll-animate'
-            style='--scroll-animate-offset: 48px; --scroll-animate-duration: 520ms;'
+            style='--scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'
         >
             <span class='location-eyebrow'>Ubicación</span>
             <h3>¿DÓNDE SE ENCUENTRA?</h3>
@@ -391,7 +391,7 @@
         </div>
         <div
             class='map-container scroll-animate'
-            style='--scroll-animate-delay: 140ms; --scroll-animate-offset: 60px; --scroll-animate-duration: 540ms;'
+            style='--scroll-animate-delay: 80ms; --scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;'
         >
 			{#if placesData && visibleMarkers.length > 0}
 				<GoogleMap

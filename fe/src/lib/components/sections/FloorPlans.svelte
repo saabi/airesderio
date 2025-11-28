@@ -20,10 +20,10 @@
     data-section-active={$floorPlansVisible}
 >
     <h2 id='planos-heading' class='vh'>Planos</h2>
-    <div class='scroll-animate' style='--scroll-animate-offset: 40px;'>
+    <div class='scroll-animate' style='--scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'>
         <Title eyebrow='Distribución y' big='PLANOS' />
     </div>
-    <figure class='scroll-animate' style='--scroll-animate-delay: 120ms; --scroll-animate-offset: 52px;'>
+    <figure class='scroll-animate' style='--scroll-animate-delay: 80ms; --scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;'>
         <div
             class='plan-ph'
             role='img'

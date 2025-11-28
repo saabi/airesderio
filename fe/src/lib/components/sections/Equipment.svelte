@@ -153,7 +153,7 @@
         use:createTitleObserver
         class='scroll-animate' 
         data-item-active={titleVisible || undefined}
-        style='--scroll-animate-delay: 100ms; --scroll-animate-offset: 18px;'
+        style='--scroll-animate-delay: 0ms; --scroll-animate-offset: 40px; --scroll-animate-duration: 500ms;'
     >
         <Title eyebrow='Cómo están' big='EQUIPADOS' />
     </div>
@@ -163,7 +163,7 @@
                 use:createItemObserver(index)
                 class='scroll-animate'
                 data-item-active={visibleItems.has(index) || undefined}
-                style={`--scroll-animate-delay: ${250 + index * 60}ms; --scroll-animate-offset: 48px;`}
+                style={`--scroll-animate-delay: ${80 + index * 80}ms; --scroll-animate-offset: 48px; --scroll-animate-duration: 500ms;`}
             >
                 <SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
                     <svelte:component this={item.component} />
