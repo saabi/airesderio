@@ -179,9 +179,17 @@
 			onmouseleave={handlePathMouseLeave}
 		/>
 	</g>
-	<g id="building">
+	<g id="building" class="building-group" class:svg-hovered={isHovered}>
 		<path
-			style="vector-effect:non-scaling-stroke;fill:#00be4d;fill-opacity:0.471002;stroke-width:0.1997;-inkscape-stroke:hairline"
+			class="building-path"
+			fill="#00be4d"
+			fill-opacity="0.471002"
+			stroke="none"
+			stroke-width="0.1997"
+			vector-effect="non-scaling-stroke"
+			role="button"
+			tabindex="0"
+			aria-label="Aires de Río"
 			d="m 111.26556,71.791805 1.52949,-1.228227 1.59901,0.463483 2.47962,3.058973 0.30126,0.115865 0.7184,0.880615 -1.52949,1.251402 -0.60252,-0.787914 -1.50631,-0.301271 z"
 			id="airesderio"
 		/>
@@ -237,5 +245,26 @@
 		fill-opacity: 0.471002;
 		stroke: #000000;
 		stroke-width: 2;
+	}
+
+	.building-group {
+		/* Box/Visual */
+		opacity: 0;
+		
+		/* Effects & Motion */
+		transition: opacity 0.4s ease;
+	}
+
+	.building-group.svg-hovered {
+		/* Box/Visual */
+		opacity: 1;
+	}
+
+	.building-path {
+		/* Box/Visual */
+		fill-opacity: 0.471002;
+		
+		/* Effects & Motion */
+		transition: fill-opacity 0.3s ease;
 	}
 </style>
