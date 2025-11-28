@@ -1,26 +1,273 @@
 <script lang="ts">
-	// ===== DERIVED =====
-	// Year is derived from current date, so it stays in instance script
+	// ===== DATA =====
 	const year = new Date().getFullYear();
+
+	const navigationLinks = [
+		{ label: 'Home', href: '#top' },
+		{ label: 'Proyecto', href: '#proyecto' },
+		{ label: 'Ubicación', href: '#ubicacion' },
+		{ label: 'Interior', href: '#interior' },
+		{ label: 'Equipamiento', href: '#equipados' },
+		{ label: 'Planos', href: '#planos' },
+		{ label: 'Contacto', href: '#contacto' }
+	];
+
+	const contactInfo = [
+		{ label: 'Oficina comercial', value: 'Av. Rivadavia 1520 · Santiago del Estero' },
+		{ label: 'Whatsapp', value: '+54 9 385 555 0000' },
+		{ label: 'Teléfono', value: '+54 385 421 1111' },
+		{ label: 'Email', value: 'hola@airesderio.com' }
+	];
+
+	const projectHighlights = [
+		{ label: 'Entrega estimada', value: 'Q1 · 2026' },
+		{ label: 'Unidades disponibles', value: '2 y 4 ambientes' },
+		{ label: 'Amenities', value: 'Piscina · Cowork · Rooftop' }
+	];
+
+	const socialLinks = [
+		{ label: 'Instagram', href: 'https://instagram.com/airesderio' },
+		{ label: 'Facebook', href: 'https://facebook.com/airesderio' },
+		{ label: 'LinkedIn', href: 'https://linkedin.com/company/airesderio' }
+	];
 </script>
 
-<footer>
-	<div class='wrap'>
-		<p><small>© {year} Aires de Río — Maqueta. Todos los derechos reservados.</small></p>
+<footer class="site-footer">
+	<div class="wrap">
+		<div class="footer-grid">
+			<section class="footer-column footer-brand" aria-label="Resumen del proyecto">
+				<img src="/logos/aires-de-rio.svg" alt="Aires de Río" class="footer-logo" loading="lazy" decoding="async" />
+				<p>
+					Proyecto residencial boutique ubicado en el corazón de Santiago del Estero. Diseño contemporáneo,
+					amenities premium y espacios pensados para vivir al ritmo del río.
+				</p>
+				<ul class="project-highlights">
+					{#each projectHighlights as item (item.label)}
+						<li>
+							<strong>{item.value}</strong>
+							<small>{item.label}</small>
+						</li>
+					{/each}
+				</ul>
+			</section>
+
+			<section class="footer-column" aria-label="Navegación de secciones">
+				<h3>Navegación</h3>
+				<ul class="footer-links">
+					{#each navigationLinks as link (link.href)}
+						<li>
+							<a href={link.href}>{link.label}</a>
+						</li>
+					{/each}
+				</ul>
+			</section>
+
+			<section class="footer-column" aria-label="Información de contacto">
+				<h3>Contacto</h3>
+				<ul class="footer-contact">
+					{#each contactInfo as item (item.label)}
+						<li>
+							<span>{item.label}</span>
+							<strong>{item.value}</strong>
+						</li>
+					{/each}
+				</ul>
+				<div class="footer-social">
+					<span>Seguinos</span>
+					<ul>
+						{#each socialLinks as link (link.label)}
+							<li>
+								<a rel="noreferrer" target="_blank" href={link.href}>
+									{link.label}
+								</a>
+							</li>
+						{/each}
+					</ul>
+				</div>
+			</section>
+		</div>
+
+		<div class="footer-bottom">
+			<p>© {year} Aires de Río — Render y contenido demostrativo.</p>
+			<ul>
+				<li><a href="/aviso-legal">Aviso legal</a></li>
+				<li><a href="/privacidad">Privacidad</a></li>
+				<li><a href="/terminos">Términos de uso</a></li>
+			</ul>
+		</div>
 	</div>
 </footer>
 
 <style>
-	footer {
+	.site-footer {
 		/* Layout */
-		padding: 1.5rem 0;
-		margin-top: 1.75rem;
-		
+		padding: 3rem 0 2rem;
+		margin-top: 4rem;
+
 		/* Box/Visual */
 		border-top: 1px solid var(--color-border-subtle);
-		
+		background: var(--color-bg-canvas);
+
 		/* Typography */
+		color: var(--color-text-secondary);
+	}
+
+	.footer-grid {
+		/* Layout */
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 2rem;
+	}
+
+	.footer-column h3 {
+		margin: 0 0 0.75rem;
+		font-size: 1rem;
+		letter-spacing: 0.08em;
+		color: var(--color-text-primary);
+		text-transform: uppercase;
+	}
+
+	.footer-brand {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.footer-logo {
+		width: 9.5rem;
+		filter: drop-shadow(0 2px 4px var(--shadow-subtle));
+	}
+
+	.project-highlights {
+		display: flex;
+		gap: 1rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		flex-wrap: wrap;
+	}
+
+	.project-highlights li {
+		display: flex;
+		flex-direction: column;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border-subtle);
+		border-radius: 0.5rem;
+		padding: 0.75rem 1rem;
+		min-width: 10rem;
+	}
+
+	.project-highlights strong {
+		font-size: 1.05rem;
+		color: var(--color-text-primary);
+	}
+
+	.project-highlights small {
 		color: var(--color-text-tertiary);
-		text-align: center;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+
+	.footer-links,
+	.footer-contact {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.footer-links a {
+		text-decoration: none;
+		color: var(--color-text-secondary);
+		font-weight: 500;
+	}
+
+	.footer-links a:hover {
+		color: var(--color-accent-primary);
+	}
+
+	.footer-contact span {
+		display: block;
+		font-size: 0.85rem;
+		color: var(--color-text-tertiary);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+
+	.footer-contact strong {
+		display: block;
+		font-size: 1rem;
+		color: var(--color-text-primary);
+	}
+
+	.footer-social {
+		margin-top: 1.5rem;
+	}
+
+	.footer-social span {
+		display: block;
+		font-size: 0.85rem;
+		text-transform: uppercase;
+		color: var(--color-text-tertiary);
+		margin-bottom: 0.5rem;
+	}
+
+	.footer-social ul {
+		display: flex;
+		gap: 0.75rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.footer-social a {
+		text-decoration: none;
+		color: var(--color-text-secondary);
+		font-weight: 600;
+	}
+
+	.footer-bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 2.5rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--color-border-subtle);
+		font-size: 0.9rem;
+		color: var(--color-text-tertiary);
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.footer-bottom ul {
+		list-style: none;
+		display: flex;
+		gap: 1rem;
+		margin: 0;
+		padding: 0;
+	}
+
+	.footer-bottom a {
+		text-decoration: none;
+		color: inherit;
+	}
+
+	@media (max-width: 1000px) {
+		.footer-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 640px) {
+		.footer-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.footer-bottom {
+			flex-direction: column;
+			align-items: flex-start;
+		}
 	}
 </style>
