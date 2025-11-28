@@ -35,7 +35,13 @@
 				class='contact-section__logo scroll-animate'
 				style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
-				<!-- Logo placeholder - replace with actual logo component or img tag -->
+				<img
+					src="/logos/aires-de-rio.svg"
+					alt="Aires de Río"
+					loading="lazy"
+					decoding="async"
+					class="contact-logo"
+				/>
 			</div>
 		</div>
 	</div>
@@ -85,11 +91,16 @@
 		align-items: center;
 		justify-content: center;
 		min-height: 200px;
+	}
+
+	.contact-logo {
+		/* Layout */
+		width: 100%;
+		max-width: 20rem;
+		height: auto;
 		
 		/* Box/Visual */
-		background: var(--color-neutral-100);
-		border: 1px dashed var(--color-border-default);
-		border-radius: 0.5rem;
+		object-fit: contain;
 	}
 
 	@media (max-width: 850px) {
