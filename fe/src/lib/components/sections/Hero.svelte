@@ -138,13 +138,6 @@
 		-webkit-backdrop-filter: blur(8px);
 	}
 
-	.hero-contact h1 {
-		/* Typography */
-		font-size: 1.1em;
-		font-weight: 600;
-		letter-spacing: 0.1em;
-		color: var(--color-accent-primary);
-	}
 
 	.hero-contact p {
 		/* Layout */

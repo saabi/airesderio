@@ -167,7 +167,8 @@
                 style={`--scroll-animate-delay: ${animationDelay(index + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
             >
                 <SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
-                    <svelte:component this={item.component} />
+                    {@const Component = item.component}
+                    <Component />
                 </SvgViewport>
                 <span>{item.text}</span>
             </li>

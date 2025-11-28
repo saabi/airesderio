@@ -18,7 +18,7 @@
 	import { browser } from '$app/environment';
 
 	// ===== PROPS =====
-	const props = $props<Props>();
+	let { open = false, onClose }: Props = $props();
 
 	// ===== STATE =====
 	let tokens = $state<Token[]>([]);
@@ -31,7 +31,7 @@
 
 	// ===== EFFECTS =====
 	$effect(() => {
-		if (props.open) {
+		if (open) {
 			void loadTokens();
 		}
 	});
@@ -248,15 +248,15 @@
 	}
 
 	function closeEditor() {
-		props.onClose?.();
+		onClose?.();
 	}
 </script>
 
-{#if props.open}
+{#if open}
 	<div class='overlay' role='presentation' onclick={closeEditor}></div>
 {/if}
 
-<aside class:visible={props.open}>
+<aside class:visible={open}>
 	<header class='panel-header'>
 		<h2>Color Tokens</h2>
 		<button class='close' onclick={closeEditor} aria-label='Close color editor'>&times;</button>

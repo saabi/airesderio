@@ -260,18 +260,6 @@
 		flex-wrap: wrap;
 	}
 
-	.footer-bottom ul {
-		list-style: none;
-		display: flex;
-		gap: 1rem;
-		margin: 0;
-		padding: 0;
-	}
-
-	.footer-bottom a {
-		text-decoration: none;
-		color: inherit;
-	}
 
 	@media (max-width: 1000px) {
 		.footer-grid {

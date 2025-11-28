@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom/vitest';
 import ContactForm from './ContactForm.svelte';
 
 // Mock $app/environment to ensure browser mode
