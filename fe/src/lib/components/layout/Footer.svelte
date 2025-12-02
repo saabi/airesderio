@@ -134,14 +134,15 @@
 
 	.footer-logo {
 		width: fit-content;
-		padding: 0.75rem 1.25rem;
+		padding: 0.5rem 0.875rem;
 		border-radius: 0.5rem;
 		background: var(--color-bg-interactive);
 		box-shadow: 0 6px 16px color-mix(in oklch, var(--color-bg-interactive) 45%, transparent);
 	}
 
-	.footer-logo :global(img) {
-		width: 9.5rem;
+	.footer-logo :global(svg) {
+		width: 5rem; /* Significantly smaller than Aires de Río logo to maintain brand hierarchy */
+		height: auto;
 		display: block;
 		filter: drop-shadow(0 2px 4px var(--shadow-subtle));
 	}
