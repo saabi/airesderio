@@ -35,13 +35,22 @@
 				class='contact-section__logo scroll-animate'
 				style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
-				<img
-					src="/logos/aires-de-rio.svg"
-					alt="Aires de Río"
-					loading="lazy"
-					decoding="async"
-					class="contact-logo"
-				/>
+				<div class="contact-section__logo-wrapper">
+					<img
+						src="/exteriores/DB_EXTERIOR_01%20(0).png"
+						alt="Aires de Río exterior"
+						loading="lazy"
+						decoding="async"
+						class="contact-exterior"
+					/>
+					<img
+						src="/logos/aires-de-rio.svg"
+						alt="Aires de Río"
+						loading="lazy"
+						decoding="async"
+						class="contact-logo"
+					/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -93,6 +102,14 @@
 		min-height: 200px;
 	}
 
+	.contact-section__logo-wrapper {
+		/* Layout */
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+	}
+
 	.contact-logo {
 		/* Layout */
 		width: 100%;
@@ -101,6 +118,16 @@
 		
 		/* Box/Visual */
 		object-fit: contain;
+	}
+
+	.contact-exterior {
+		/* Layout */
+		margin-top: 2rem;
+		max-width: 90%;
+		
+		/* Box/Visual */
+		border-radius: 0.5rem;
+		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 	}
 
 	@media (max-width: 850px) {

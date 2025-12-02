@@ -1,7 +1,8 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import CategorySelector from '$lib/components/features/CategorySelector.svelte';
-	import MapClean from '$lib/components/features/MapClean.svelte';
+	import Map from '$lib/components/features/Map.svelte';
+	import type { MapComponent } from '$lib/components/features/Map.svelte';
 	import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
 	import type { PlacesData, MarkerData, Place, MainBuilding, Category } from '$lib/types';
 
@@ -40,6 +41,8 @@
 	let carouselPhotos = $state<string[]>([]);
 	let carouselCurrentIndex = $state(0);
 	let hasInitializedCategoryFilter = $state(false);
+	let mapComponent: MapComponent | null = $state(null);
+	let galleryCarouselVisible = $state(false);
 
 	// ===== DERIVED =====
 	// All category data is now loaded from JSON metadata
@@ -292,16 +295,149 @@
 				Ubicado en un área de modernos y elegantes desarrollos edilicios, centro de convenciones, de
 				parques y hermosas zonas verdes.
 			</p>
-			<p>
+            <p>
                 Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
                 de cercanía a solo una cuadra.
             </p>
+            <div class="map-navigation">
+                <div class="map-navigation__row">
+                    <button
+                        class="nav-button nav-button--prev"
+                        onclick={() => mapComponent?.prev()}
+                        aria-label="Anterior ubicación"
+                        type="button"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M12.5 15L7.5 10L12.5 5"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    </button>
+                    <div class="map-navigation__center">
+                        <button
+                            class="nav-button nav-button--up"
+                            onclick={() => mapComponent?.reset()}
+                            aria-label="Volver al estado inicial"
+                            type="button"
+                        >
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M10 5L5 10L10 15"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    transform="rotate(90 10 10)"
+                                />
+                            </svg>
+                        </button>
+                        <button
+                            class="nav-button nav-button--gallery"
+                            onclick={() => galleryCarouselVisible = true}
+                            aria-label="Abrir galería"
+                            type="button"
+                        >
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <rect
+                                    x="3"
+                                    y="3"
+                                    width="5"
+                                    height="5"
+                                    rx="1"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    fill="none"
+                                />
+                                <rect
+                                    x="12"
+                                    y="3"
+                                    width="5"
+                                    height="5"
+                                    rx="1"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    fill="none"
+                                />
+                                <rect
+                                    x="3"
+                                    y="12"
+                                    width="5"
+                                    height="5"
+                                    rx="1"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    fill="none"
+                                />
+                                <rect
+                                    x="12"
+                                    y="12"
+                                    width="5"
+                                    height="5"
+                                    rx="1"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    fill="none"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                    <button
+                        class="nav-button nav-button--next"
+                        onclick={() => mapComponent?.next()}
+                        aria-label="Siguiente ubicación"
+                        type="button"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M7.5 5L12.5 10L7.5 15"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
         <div
             class='map-container scroll-animate'
             style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
         >
-			<MapClean
+			<Map
+				bind:this={mapComponent}
 				class='location-map'
 				ariaLabel='Mapa de ubicación del proyecto Aires de Río'
 			/>
@@ -322,6 +458,63 @@
 	/>
 {/if}
 
+<!-- Gallery Carousel Placeholder -->
+{#if galleryCarouselVisible}
+	<div 
+		class="gallery-carousel-overlay" 
+		role="button"
+		tabindex="0"
+		onclick={(e) => {
+			if (e.target === e.currentTarget) {
+				galleryCarouselVisible = false;
+			}
+		}}
+		onkeydown={(e) => {
+			if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				galleryCarouselVisible = false;
+			}
+		}}
+		aria-label="Cerrar galería"
+	>
+		<div 
+			class="gallery-carousel" 
+			role="dialog" 
+			aria-modal="true" 
+			aria-labelledby="gallery-title"
+		>
+			<div class="gallery-carousel__header">
+				<h3 id="gallery-title">Galería</h3>
+				<button
+					class="gallery-carousel__close"
+					onclick={() => galleryCarouselVisible = false}
+					aria-label="Cerrar galería"
+					type="button"
+				>
+					<svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M18 6L6 18M6 6L18 18"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="gallery-carousel__content">
+				<p>Galería de imágenes (placeholder)</p>
+			</div>
+		</div>
+	</div>
+{/if}
+
 <style>
 	.ubi {
 		/* Layout */
@@ -334,6 +527,9 @@
 		grid-template-columns: min-content 1fr;
 		gap: 0;
 		overflow: hidden;
+		position: relative;
+		height: calc(100vh - var(--header-height));
+		margin-top: var(--header-height);
 		
 		/* Box/Visual */
 		background: var(--color-accent-primary);
@@ -379,10 +575,205 @@
 		font-size: 0.95em;
 	}
 
+	.map-navigation {
+		/* Layout */
+		margin-top: 1.5rem;
+	}
+
+	.map-navigation__row {
+		/* Layout */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+	}
+
+	.map-navigation__center {
+		/* Layout */
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.nav-button {
+		/* Layout */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		padding: 0;
+		
+		/* Box/Visual */
+		background: var(--color-bg-contrast);
+		border: 1px solid var(--color-border-strong);
+		border-radius: 50%;
+		color: var(--color-accent-primary);
+		
+		/* Misc/Overrides */
+		cursor: pointer;
+		
+		/* Effects & Motion */
+		transition: 
+			background-color 0.2s ease,
+			border-color 0.2s ease,
+			color 0.2s ease,
+			transform 0.2s ease;
+	}
+
+	.nav-button:hover {
+		/* Box/Visual */
+		background: var(--color-accent-hover);
+		border-color: var(--color-accent-strong);
+		color: var(--color-text-on-accent);
+		
+		/* Effects & Motion */
+		transform: scale(1.05);
+	}
+
+	.nav-button:active {
+		/* Box/Visual */
+		background: var(--color-accent-strong);
+		
+		/* Effects & Motion */
+		transform: scale(0.95);
+	}
+
+	.nav-button:focus-visible {
+		/* Box/Visual */
+		outline: 2px solid var(--color-accent-primary);
+		outline-offset: 2px;
+	}
+
+	.nav-button svg {
+		/* Layout */
+		width: 1.25rem;
+		height: 1.25rem;
+	}
+
+	.gallery-carousel-overlay {
+		/* Positioning */
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1000;
+		
+		/* Layout */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 2rem;
+		
+		/* Box/Visual */
+		background: rgba(0, 0, 0, 0.75);
+		backdrop-filter: blur(4px);
+		
+		/* Effects & Motion */
+		animation: fadeIn 0.3s ease;
+	}
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	.gallery-carousel {
+		/* Layout */
+		display: flex;
+		flex-direction: column;
+		max-width: 90vw;
+		max-height: 90vh;
+		width: 100%;
+		padding: 2rem;
+		
+		/* Box/Visual */
+		background: var(--color-bg-contrast);
+		border-radius: 0.625rem;
+		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+		
+		/* Effects & Motion */
+		animation: slideUp 0.3s ease;
+	}
+
+	@keyframes slideUp {
+		from {
+			transform: translateY(2rem);
+			opacity: 0;
+		}
+		to {
+			transform: translateY(0);
+			opacity: 1;
+		}
+	}
+
+	.gallery-carousel__header {
+		/* Layout */
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1.5rem;
+	}
+
+	.gallery-carousel__header h3 {
+		/* Layout */
+		margin: 0;
+		
+		/* Typography */
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: var(--color-text-on-light);
+	}
+
+	.gallery-carousel__close {
+		/* Layout */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		
+		/* Box/Visual */
+		background: transparent;
+		border: none;
+		border-radius: 50%;
+		color: var(--color-text-on-light);
+		
+		/* Misc/Overrides */
+		cursor: pointer;
+		
+		/* Effects & Motion */
+		transition: background-color 0.2s ease;
+	}
+
+	.gallery-carousel__close:hover {
+		/* Box/Visual */
+		background: var(--color-bg-muted);
+	}
+
+	.gallery-carousel__content {
+		/* Layout */
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 20rem;
+		
+		/* Typography */
+		color: var(--color-text-secondary);
+	}
+
 	.map-container {
 		/* Positioning */
 		position: relative;
 		overflow: hidden;
+		
 		/* Layout */
 		display: grid;
 		grid-template-columns: 1fr min-content;
