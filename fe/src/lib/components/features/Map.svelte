@@ -32,7 +32,7 @@
 	}: Props = $props();
 
 	// ===== STATIC CONSTANTS =====
-	// Full viewBox (hover state)
+	// Full viewBox (entire map)
 	const FULL_VIEWBOX = {
 		x: 0,
 		y: 0,
@@ -52,8 +52,6 @@
 	const PLACE_PATH_IDS = ['terminal', 'forum', 'casagob', 'plazavea', 'parque', 'avroca'] as const;
 
 	// ===== STATE =====
-	let isHovered = $state(false);
-	let hoveredPathId = $state<string | null>(null);
 	let currentZoomedIndex = $state<number | null>(null);
 	
 	// Tweened values for smooth animation
@@ -100,37 +98,14 @@
 
 	// ===== EFFECTS =====
 	$effect(() => {
-		// Only auto-zoom to hover state if not programmatically zoomed
+		// Reset to near viewBox if not programmatically zoomed
 		if (currentZoomedIndex === null) {
-			const target = isHovered ? FULL_VIEWBOX : NEAR_VIEWBOX;
-			viewBoxX.set(target.x);
-			viewBoxY.set(target.y);
-			viewBoxWidth.set(target.width);
-			viewBoxHeight.set(target.height);
+			viewBoxX.set(NEAR_VIEWBOX.x);
+			viewBoxY.set(NEAR_VIEWBOX.y);
+			viewBoxWidth.set(NEAR_VIEWBOX.width);
+			viewBoxHeight.set(NEAR_VIEWBOX.height);
 		}
 	});
-
-	// ===== EVENT HANDLERS =====
-	function handleMouseEnter() {
-		isHovered = true;
-	}
-
-	function handleMouseLeave() {
-		isHovered = false;
-		hoveredPathId = null;
-		// Reset zoomed index when leaving hover so auto-zoom works again
-		if (currentZoomedIndex !== null) {
-			currentZoomedIndex = null;
-		}
-	}
-
-	function handlePathMouseEnter(pathId: string) {
-		hoveredPathId = pathId;
-	}
-
-	function handlePathMouseLeave() {
-		hoveredPathId = null;
-	}
 
 	// ===== ZOOM FUNCTIONS =====
 	function zoomToBoundingBox(pathId: string) {
@@ -237,7 +212,6 @@
 		currentZoomedIndex = nextIndex;
 		const pathId = PLACE_PATH_IDS[nextIndex];
 		zoomToBoundingBox(pathId);
-		hoveredPathId = pathId;
 	}
 
 	function prev() {
@@ -248,12 +222,10 @@
 		currentZoomedIndex = prevIndex;
 		const pathId = PLACE_PATH_IDS[prevIndex];
 		zoomToBoundingBox(pathId);
-		hoveredPathId = pathId;
 	}
 
 	function reset() {
 		currentZoomedIndex = null;
-		hoveredPathId = null;
 		viewBoxX.set(NEAR_VIEWBOX.x);
 		viewBoxY.set(NEAR_VIEWBOX.y);
 		viewBoxWidth.set(NEAR_VIEWBOX.width);
@@ -274,8 +246,6 @@
 	aria-label={ariaLabel}
 	role="img"
 	xmlns="http://www.w3.org/2000/svg"
-	onmouseenter={handleMouseEnter}
-	onmouseleave={handleMouseLeave}
 >
 	<g id="maps">
 		<image
@@ -297,12 +267,11 @@
 			preserveAspectRatio="none"
 		/>
 	</g>
-	<g id="places" class="places-group" class:svg-hovered={isHovered} class:zoom-active={currentZoomedIndex !== null}>
+	<g id="places" class="places-group" class:zoom-active={currentZoomedIndex !== null}>
 		<g id="gterminal" data-name="Terminal de Omnibus" class:group-active={currentPathId === 'terminal'}>
 			<path
 				bind:this={terminalPath}
 				class="place-path"
-				class:path-hovered={hoveredPathId === 'terminal'}
 				fill="#00be4d"
 				fill-opacity="0.471002"
 				stroke="transparent"
@@ -313,8 +282,6 @@
 				aria-label="Terminal"
 				d="m 28.247054,37.089611 4.175651,0.491252 6.509105,2.824708 3.070333,2.210638 3.070331,2.579079 1.473761,1.596573 1.228132,1.719384 0.36844,2.456267 -0.614068,2.579079 -1.596573,1.842199 -2.70189,1.719387 c 0,0 -3.807212,-0.491255 -4.05284,-0.614067 C 38.93181,56.371296 33.2824,53.546591 33.2824,53.546591 l -3.930025,-3.193145 -3.807212,-4.42128 -2.824706,-4.666903 z"
 				id="terminal"
-				onmouseenter={() => handlePathMouseEnter('terminal')}
-				onmouseleave={handlePathMouseLeave}
 			/>
 			<circle
 				class="pin-circle"
@@ -328,7 +295,6 @@
 			<path
 				bind:this={forumPath}
 				class="place-path"
-				class:path-hovered={hoveredPathId === 'forum'}
 				fill="#00be4d"
 				fill-opacity="0.471002"
 				stroke="transparent"
@@ -339,8 +305,6 @@
 				aria-label="Forum"
 				d="M 43.421053,72.078947 61.310527,57.663159 87.884211,89.447369 87.363159,90.489473 70.863157,104.38421 69.299999,103.86316 43.594736,72.947368 Z"
 				id="forum"
-				onmouseenter={() => handlePathMouseEnter('forum')}
-				onmouseleave={handlePathMouseLeave}
 			/>
 			<circle
 				class="pin-circle"
@@ -354,7 +318,6 @@
 			<path
 				bind:this={casagobPath}
 				class="place-path"
-				class:path-hovered={hoveredPathId === 'casagob'}
 				fill="#00be4d"
 				fill-opacity="0.471002"
 				stroke="transparent"
@@ -365,8 +328,6 @@
 				aria-label="Casa de Gobierno"
 				d="M 37.212426,158.92039 9.4566228,123.9186 7.9828632,123.42735 0,129.69083 v 6.26347 l 27.510176,30.94895 z"
 				id="casagob"
-				onmouseenter={() => handlePathMouseEnter('casagob')}
-				onmouseleave={handlePathMouseLeave}
 			/>
 			<circle
 				class="pin-circle"
@@ -387,7 +348,6 @@
 			<path
 				bind:this={plazaveaPath}
 				class="place-path"
-				class:path-hovered={hoveredPathId === 'plazavea'}
 				fill="#00be4d"
 				fill-opacity="0.471002"
 				stroke="transparent"
@@ -398,8 +358,6 @@
 				aria-label="Plaza Vea"
 				d="m 139.27026,5.7722243 19.65013,16.4569797 c 0,0 -2.7019,2.210639 -1.96502,1.965012 0.73688,-0.245626 3.43878,4.421278 3.43878,4.421278 l -27.75581,23.088897 -20.387,-24.317029 z"
 				id="plazavea"
-				onmouseenter={() => handlePathMouseEnter('plazavea')}
-				onmouseleave={handlePathMouseLeave}
 			/>
 			<circle
 				class="pin-circle"
@@ -413,7 +371,6 @@
 			<path
 				bind:this={parquePath}
 				class="place-path"
-				class:path-hovered={hoveredPathId === 'parque'}
 				fill="#00be4d"
 				fill-opacity="0.471002"
 				stroke="transparent"
@@ -424,8 +381,6 @@
 				aria-label="Parque"
 				d="m 199.0421,0 0.69474,4.5157895 1.38947,4.8631577 6.25264,7.2947368 -23.62106,35.569919 18.41053,24.090312 0.26053,3.387138 -29.96053,20.494737 22.23158,26.05263 0.20468,4.15928 -20.63263,17.43949 v 3.6844 l 61.77508,74.13799 h 138.0737 V 86.460551 L 350.8421,67.910527 329.65263,54.710525 319.57893,48.110526 317.49473,44.63684 309.85264,43.594736 304.98946,40.815789 292.4842,30.394738 291.78948,27.268421 290.4,26.226315 285.88422,26.573683 278.58947,23.1 l -2.0842,-3.473685 -2.4316,-0.694736 h -1.38946 l -1.73686,-1.389474 0.34737,-1.736842 -0.34737,-1.389474 h -1.38946 l -3.47368,1.389474 -3.47369,-1.042105 -1.73684,-3.473684 -0.69474,-2.4315794 -1.73684,0.6947368 -3.82105,2.4315786 -7.29474,-5.5578942 V 5.3842104 L 243.85263,5.0368422 238.6421,0 Z"
 				id="parque"
-				onmouseenter={() => handlePathMouseEnter('parque')}
-				onmouseleave={handlePathMouseLeave}
 			/>
 			<circle
 				class="pin-circle"
@@ -439,7 +394,6 @@
 			<path
 				bind:this={avrocaPath}
 				class="place-path"
-				class:path-hovered={hoveredPathId === 'avroca'}
 				fill="#00be4d"
 				fill-opacity="0.471002"
 				stroke="transparent"
@@ -450,8 +404,6 @@
 				aria-label="Avenida Roca"
 				d="m 89.273683,91.18421 109.808187,134.44005 4.47726,0.12282 L 91.950889,89.142142 Z"
 				id="avroca"
-				onmouseenter={() => handlePathMouseEnter('avroca')}
-				onmouseleave={handlePathMouseLeave}
 			/>
 			<circle
 				class="pin-circle"
@@ -462,7 +414,7 @@
 			/>
 		</g>
 	</g>
-	<g id="building" class="building-group" class:svg-hovered={isHovered} class:zoom-active={currentZoomedIndex !== null}>
+	<g id="building" class="building-group" class:zoom-active={currentZoomedIndex !== null}>
 		<g id="gairesderio">
 			<circle
 				class="pin-airesderio"
@@ -497,10 +449,6 @@
 		transition: opacity 0.4s ease;
 	}
 
-	.places-group.svg-hovered {
-		/* Box/Visual */
-		opacity: 1;
-	}
 
 	.place-path {
 		/* Box/Visual */
@@ -517,20 +465,6 @@
 			stroke-width 0.3s ease;
 	}
 
-	/* When SVG is hovered, show black outlines */
-	.places-group.svg-hovered .place-path {
-		/* Box/Visual */
-		stroke: #000000;
-		stroke-width: 2;
-	}
-
-	/* When a specific path is hovered, show fill */
-	.place-path.path-hovered {
-		/* Box/Visual */
-		fill-opacity: 0.471002;
-		stroke: #000000;
-		stroke-width: 2;
-	}
 
 	/* When zoomed to a path, show the places group */
 	.places-group.zoom-active {
@@ -554,10 +488,6 @@
 		transition: opacity 0.4s ease;
 	}
 
-	.building-group.svg-hovered {
-		/* Box/Visual */
-		opacity: 1;
-	}
 
 	/* When zoomed (viewbox not in initial state), show the building */
 	.building-group.zoom-active {
@@ -592,11 +522,6 @@
 		transition: fill-opacity 0.3s ease;
 	}
 
-	/* Show pins when SVG is hovered */
-	.places-group.svg-hovered .pin-circle {
-		/* Box/Visual */
-		fill-opacity: 1;
-	}
 
 	/* Show pins in the active group when zoomed */
 	.places-group.zoom-active .group-active .pin-circle {
