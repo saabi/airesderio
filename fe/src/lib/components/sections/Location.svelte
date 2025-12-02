@@ -339,13 +339,51 @@
                                 xmlns="http://www.w3.org/2000/svg"
                                 aria-hidden="true"
                             >
-                                <path
-                                    d="M10 5L5 10L10 15"
+                                <!-- Building icon -->
+                                <rect
+                                    x="4"
+                                    y="7"
+                                    width="12"
+                                    height="10"
                                     stroke="currentColor"
-                                    stroke-width="2"
+                                    stroke-width="1.5"
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
-                                    transform="rotate(90 10 10)"
+                                />
+                                <path
+                                    d="M4 7L10 3L16 7"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <line
+                                    x1="7"
+                                    y1="10"
+                                    x2="7"
+                                    y2="17"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                />
+                                <line
+                                    x1="13"
+                                    y1="10"
+                                    x2="13"
+                                    y2="17"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                />
+                                <rect
+                                    x="8.5"
+                                    y="12"
+                                    width="3"
+                                    height="3"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
                                 />
                             </svg>
                         </button>
