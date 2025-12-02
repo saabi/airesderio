@@ -1,11 +1,13 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import HabitatPrimeLogo from '$lib/components/ui/HabitatPrimeLogo.svelte';
+	import { theme } from '$lib/stores/theme';
 </script>
 
 <script lang="ts">
 	// ===== DATA =====
 	const year = new Date().getFullYear();
+
 
 	const navigationLinks = [
 		{ label: 'Home', href: '#top' },
@@ -37,7 +39,7 @@
 		<div class="footer-grid">
 			<section class="footer-column footer-brand" aria-label="Resumen corporativo">
 				<div class="footer-logo">
-					<HabitatPrimeLogo />
+					<HabitatPrimeLogo theme={$theme}/>
 				</div>
 				<p>
 					Habitat Prime SAS desarrolla experiencias residenciales premium en Santiago del Estero. Aires de Río

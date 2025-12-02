@@ -3,6 +3,7 @@
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { theme } from '$lib/stores/theme';
 </script>
 
 <script lang="ts">
@@ -44,7 +45,7 @@
 						decoding="async"
 						class="contact-exterior"
 					/>
-					<AiresDeRioLogo class="contact-logo" />
+					<AiresDeRioLogo class="contact-logo" theme={$theme}/>
 				</div>
 			</div>
 		</div>

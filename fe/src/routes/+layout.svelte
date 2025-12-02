@@ -4,22 +4,25 @@
 
 	import Footer from '$lib/components/layout/Footer.svelte';
 	import Header from '$lib/components/layout/Header.svelte';
-	import { applyTheme, resolveInitialTheme, startThemeObserver } from '$lib/utils/theme';
 </script>
 
 <script lang="ts">
 	// ===== IMPORTS =====
 	import type { Snippet } from 'svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
+	// Import store to initialize theme system (initializes on import)
+	import { theme } from '$lib/stores/theme';
 
 	// ===== PROPS =====
 	let { children }: { children: Snippet } = $props();
 
 	// ===== LIFECYCLE =====
-	onMount(() => {
-		applyTheme(resolveInitialTheme());
-		const stop = startThemeObserver();
-		return () => stop();
+	// Store initializes theme automatically on import
+	// Theme is already applied and observers are set up
+
+	onDestroy(() => {
+		// Cleanup observers when layout is destroyed
+		theme.cleanup();
 	});
 </script>
 
