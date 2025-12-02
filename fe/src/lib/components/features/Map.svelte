@@ -20,6 +20,7 @@
 <script lang="ts">
 	// ===== IMPORTS =====
 	import { tweened } from 'svelte/motion';
+	import PinLabel from '$lib/components/ui/PinLabel.svelte';
 
 	// ===== PROPS =====
 	let {
@@ -520,12 +521,12 @@
 </svg>
 
 	{#if selectedGroupName && pinCoordinates}
-		<div
-			class="pin-label"
-			style="left: {pinCoordinates.x}px; top: {pinCoordinates.y}px;"
-		>
-			{selectedGroupName}
-		</div>
+		<PinLabel
+			x={pinCoordinates.x}
+			y={pinCoordinates.y}
+			text={selectedGroupName}
+			arrowPosition="bottom"
+		/>
 	{/if}
 </div>
 
@@ -542,55 +543,6 @@
 		display: block;
 		width: 100%;
 		height: 100%;
-	}
-
-	.pin-label {
-		/* Layout */
-		position: absolute;
-		transform: translate(-50%, -100%);
-		margin-bottom: 8px;
-		
-		/* Box/Visual */
-		background-color: rgba(0, 0, 0, 0.8);
-		color: white;
-		padding: 6px 12px;
-		border-radius: 4px;
-		font-size: 14px;
-		font-weight: 500;
-		white-space: nowrap;
-		pointer-events: none;
-		
-		/* Effects & Motion */
-		transition: opacity 0.3s ease, transform 0.3s ease;
-		opacity: 0;
-		animation: fadeInLabel 0.3s ease forwards;
-	}
-
-	.pin-label::after {
-		/* Layout */
-		content: '';
-		position: absolute;
-		top: 100%;
-		left: 50%;
-		transform: translateX(-50%);
-		
-		/* Box/Visual */
-		width: 0;
-		height: 0;
-		border-left: 6px solid transparent;
-		border-right: 6px solid transparent;
-		border-top: 6px solid rgba(0, 0, 0, 0.8);
-	}
-
-	@keyframes fadeInLabel {
-		from {
-			opacity: 0;
-			transform: translate(-50%, -100%) translateY(-4px);
-		}
-		to {
-			opacity: 1;
-			transform: translate(-50%, -100%) translateY(0);
-		}
 	}
 
 	.places-group {
