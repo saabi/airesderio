@@ -165,7 +165,7 @@
 			class="logo"
 			loading="eager"
 			height="2.2em"
-			theme={currentTheme === 'light' ? 'dark' : 'light'}
+			theme="dark"
 		/>
 		<nav
 			id='main-nav'
