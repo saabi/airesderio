@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
-	import { resolveInitialTheme, setTheme, type Theme } from '$lib/utils/theme';
+	import { theme, type Theme } from '$lib/stores/theme';
 
 	// ===== TYPES =====
 	type NavLink = {
@@ -36,12 +36,14 @@
 
 	// ===== STATE =====
 	let isMenuOpen = $state(false);
-	let currentTheme = $state<Theme>('light');
 	let colorEditorOpen = $state(false);
 	let devColorEditorModule =
 		$state<typeof import('$lib/components/dev/DevColorEditor.svelte') | null>(null);
 	let activeLinkId = $state<string>('top');
 	let HEADER_HEIGHT = $state(80); // Will be set from CSS variable on mount
+
+	// ===== DERIVED =====
+	let currentTheme = $derived($theme);
 
 	// ===== EFFECTS =====
 	$effect(() => {
@@ -54,7 +56,6 @@
 
 	// ===== LIFECYCLE =====
 	onMount(() => {
-		currentTheme = resolveInitialTheme();
 		if (isDevMode) {
 			void import('$lib/components/dev/DevColorEditor.svelte').then((module) => {
 				devColorEditorModule = module;
@@ -68,26 +69,6 @@
 				const computedHeight = getComputedStyle(headerElement).height;
 				HEADER_HEIGHT = parseFloat(computedHeight) || 80;
 			}
-		}
-		
-		// Sync with theme changes from other sources (e.g., system preference changes)
-		if (browser) {
-			const updateTheme = () => {
-				const themeAttr = document.documentElement.dataset.theme;
-				if (themeAttr === 'light' || themeAttr === 'dark') {
-					currentTheme = themeAttr;
-				}
-			};
-			
-			// Check initial state
-			updateTheme();
-			
-			// Watch for changes
-			const observer = new MutationObserver(updateTheme);
-			observer.observe(document.documentElement, {
-				attributes: true,
-				attributeFilter: ['data-theme']
-			});
 
 			// Update active link on scroll
 			updateActiveLink();
@@ -95,7 +76,6 @@
 			window.addEventListener('resize', updateActiveLink, { passive: true });
 			
 			return () => {
-				observer.disconnect();
 				window.removeEventListener('scroll', updateActiveLink);
 				window.removeEventListener('resize', updateActiveLink);
 			};
@@ -108,8 +88,7 @@
 	}
 
 	function toggleTheme() {
-		currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-		setTheme(currentTheme);
+		theme.toggle();
 	}
 
 	function handleNavClick(event: MouseEvent, href: string) {

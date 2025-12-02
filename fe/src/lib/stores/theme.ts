@@ -1,12 +1,42 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import {
-	resolveInitialTheme,
-	setTheme as setThemeUtil,
-	applyTheme,
-	clearThemePreference,
-	type Theme
-} from '$lib/utils/theme';
+
+// ===== TYPES =====
+export type Theme = 'light' | 'dark';
+
+// ===== CONSTANTS =====
+const STORAGE_KEY = 'aires-theme';
+
+// ===== UTILITIES =====
+const isTheme = (value: unknown): value is Theme => value === 'light' || value === 'dark';
+
+const getSystemPreference = (): Theme => {
+	if (!browser) return 'light';
+	return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+
+const resolveInitialTheme = (): Theme => {
+	if (!browser) return 'light';
+	const stored = window.localStorage.getItem(STORAGE_KEY);
+	if (isTheme(stored)) return stored;
+	return getSystemPreference();
+};
+
+const applyThemeToDOM = (theme: Theme): void => {
+	if (!browser) return;
+	document.documentElement.dataset.theme = theme;
+	document.documentElement.style.colorScheme = theme;
+};
+
+const saveThemeToStorage = (theme: Theme): void => {
+	if (!browser) return;
+	window.localStorage.setItem(STORAGE_KEY, theme);
+};
+
+const clearThemeFromStorage = (): void => {
+	if (!browser) return;
+	window.localStorage.removeItem(STORAGE_KEY);
+};
 
 // ===== STORE =====
 function createThemeStore() {
@@ -14,9 +44,9 @@ function createThemeStore() {
 	const initialTheme = resolveInitialTheme();
 	const { subscribe, set, update } = writable<Theme>(initialTheme);
 
-	// Apply initial theme
+	// Apply initial theme to DOM
 	if (browser) {
-		setThemeUtil(initialTheme);
+		applyThemeToDOM(initialTheme);
 	}
 
 	// Watch for DOM changes (in case theme is changed elsewhere)
@@ -41,12 +71,11 @@ function createThemeStore() {
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 		const handleSystemPreferenceChange = (event: MediaQueryListEvent) => {
 			// Only update if user hasn't set a preference
-			// Uses same storage key as theme utilities ('aires-theme')
-			const stored = window.localStorage.getItem('aires-theme');
+			const stored = window.localStorage.getItem(STORAGE_KEY);
 			if (stored === 'light' || stored === 'dark') return;
 
 			const newTheme = event.matches ? 'dark' : 'light';
-			applyTheme(newTheme);
+			applyThemeToDOM(newTheme);
 			set(newTheme);
 		};
 
@@ -59,18 +88,22 @@ function createThemeStore() {
 	return {
 		subscribe,
 		set: (theme: Theme) => {
-			setThemeUtil(theme);
+			saveThemeToStorage(theme);
+			applyThemeToDOM(theme);
 			set(theme);
 		},
 		toggle: () => {
 			update((current) => {
 				const newTheme = current === 'light' ? 'dark' : 'light';
-				setThemeUtil(newTheme);
+				saveThemeToStorage(newTheme);
+				applyThemeToDOM(newTheme);
 				return newTheme;
 			});
 		},
 		clear: () => {
-			const newTheme = clearThemePreference();
+			clearThemeFromStorage();
+			const newTheme = getSystemPreference();
+			applyThemeToDOM(newTheme);
 			set(newTheme);
 		},
 		cleanup: () => {
@@ -81,4 +114,3 @@ function createThemeStore() {
 }
 
 export const theme = createThemeStore();
-

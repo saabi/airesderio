@@ -111,6 +111,7 @@
 		color: var(--color-ink);
 		text-transform: uppercase;
 		letter-spacing: 0.12em;
+		font-weight: 700;
 	}
 
 	@media (max-width: 850px) {
