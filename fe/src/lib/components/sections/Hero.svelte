@@ -87,13 +87,13 @@
 	.hero {
 		/* Positioning */
 		position: relative;
-		height: calc(100vh - var(--header-height));
-		margin-top: var(--header-height);
 		
 		/* Layout */
 		display: grid;
 		grid-template-columns: 1fr;
 		gap: var(--gap);
+		height: calc(100vh - var(--header-height));
+		margin-top: var(--header-height);
 		padding: 1.5rem;
 		align-items: center;
 		justify-items: end;

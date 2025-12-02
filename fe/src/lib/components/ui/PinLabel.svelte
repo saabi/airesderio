@@ -35,97 +35,135 @@
 
 <style>
 	.pin-label {
-		/* Layout */
+		/* Positioning */
 		position: absolute;
+		
+		/* Layout */
+		padding: 6px 12px;
 		
 		/* Box/Visual */
 		background-color: rgba(0, 0, 0, 0.8);
-		color: white;
-		padding: 6px 12px;
 		border-radius: 4px;
+		opacity: 0;
+		
+		/* Typography */
+		color: white;
 		font-size: 14px;
 		font-weight: 500;
 		white-space: nowrap;
-		pointer-events: none;
 		
 		/* Effects & Motion */
 		transition: opacity 0.3s ease, transform 0.3s ease;
-		opacity: 0;
+		
+		/* Misc/Overrides */
+		pointer-events: none;
 	}
 
 	/* Positioning for each arrow direction */
 	.pin-label.arrow-bottom {
-		transform: translate(-50%, -100%);
+		/* Layout */
 		margin-bottom: 8px;
+		
+		/* Effects & Motion */
+		transform: translate(-50%, -100%);
 		animation: fadeInLabelBottom 0.3s ease forwards;
 	}
 
 	.pin-label.arrow-top {
-		transform: translate(-50%, 0);
+		/* Layout */
 		margin-top: 8px;
+		
+		/* Effects & Motion */
+		transform: translate(-50%, 0);
 		animation: fadeInLabelTop 0.3s ease forwards;
 	}
 
 	.pin-label.arrow-left {
-		transform: translate(0, -50%);
+		/* Layout */
 		margin-right: 8px;
+		
+		/* Effects & Motion */
+		transform: translate(0, -50%);
 		animation: fadeInLabelLeft 0.3s ease forwards;
 	}
 
 	.pin-label.arrow-right {
-		transform: translate(-100%, -50%);
+		/* Layout */
 		margin-left: 8px;
+		
+		/* Effects & Motion */
+		transform: translate(-100%, -50%);
 		animation: fadeInLabelRight 0.3s ease forwards;
 	}
 
 	.pin-label::after {
-		/* Layout */
-		content: '';
+		/* Positioning */
 		position: absolute;
 		
-		/* Box/Visual */
+		/* Layout */
+		content: '';
 		width: 0;
 		height: 0;
 	}
 
 	/* Arrow pointing down (bottom) */
 	.pin-label.arrow-bottom::after {
+		/* Positioning */
 		top: 100%;
 		left: 50%;
-		transform: translateX(-50%);
+		
+		/* Box/Visual */
 		border-left: 6px solid transparent;
 		border-right: 6px solid transparent;
 		border-top: 6px solid rgba(0, 0, 0, 0.8);
+		
+		/* Effects & Motion */
+		transform: translateX(-50%);
 	}
 
 	/* Arrow pointing up (top) */
 	.pin-label.arrow-top::after {
+		/* Positioning */
 		bottom: 100%;
 		left: 50%;
-		transform: translateX(-50%);
+		
+		/* Box/Visual */
 		border-left: 6px solid transparent;
 		border-right: 6px solid transparent;
 		border-bottom: 6px solid rgba(0, 0, 0, 0.8);
+		
+		/* Effects & Motion */
+		transform: translateX(-50%);
 	}
 
 	/* Arrow pointing right (left) */
 	.pin-label.arrow-left::after {
+		/* Positioning */
 		right: 100%;
 		top: 50%;
-		transform: translateY(-50%);
+		
+		/* Box/Visual */
 		border-top: 6px solid transparent;
 		border-bottom: 6px solid transparent;
 		border-right: 6px solid rgba(0, 0, 0, 0.8);
+		
+		/* Effects & Motion */
+		transform: translateY(-50%);
 	}
 
 	/* Arrow pointing left (right) */
 	.pin-label.arrow-right::after {
+		/* Positioning */
 		left: 100%;
 		top: 50%;
-		transform: translateY(-50%);
+		
+		/* Box/Visual */
 		border-top: 6px solid transparent;
 		border-bottom: 6px solid transparent;
 		border-left: 6px solid rgba(0, 0, 0, 0.8);
+		
+		/* Effects & Motion */
+		transform: translateY(-50%);
 	}
 
 
