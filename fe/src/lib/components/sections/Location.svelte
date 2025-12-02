@@ -781,7 +781,7 @@
 		gap: 0;
 	}
 
-	.location-map {
+	:global(.location-map) {
 		/* Layout */
 		min-height: 25rem;
 		overflow: hidden;
