@@ -147,6 +147,11 @@
     --max: 1200px;
     --gap: 1.75rem;
     --header-height: 2.4lh;
+    
+    /* Floating CTA positioning */
+    --floating-cta-right-padding: 1.5rem;
+    --floating-cta-top-padding: 1rem;
+    --floating-cta-fade-duration: 300ms;
 }
 
 :root[data-theme='dark'] {
@@ -302,6 +307,13 @@
     [data-section-active] .scroll-animate {
         transform: none;
         transition-duration: 0ms;
+    }
+}
+
+/* Mobile overrides for Floating CTA */
+@media (max-width: 850px) {
+    :root {
+        --floating-cta-right-padding: 1rem;
     }
 }
 

@@ -7,6 +7,7 @@
 	import ContactSection from '$lib/components/sections/ContactSection.svelte';
 	import Equipment from '$lib/components/sections/Equipment.svelte';
 	import FloorPlans from '$lib/components/sections/FloorPlans.svelte';
+	import FloatingCTA from '$lib/components/ui/FloatingCTA.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
 	import Interior from '$lib/components/sections/Interior.svelte';
 	import Intro from '$lib/components/sections/Intro.svelte';
@@ -123,7 +124,8 @@
 </svelte:head>
 
 <main>
-	<Hero ctaUrl="#contacto" ctaText="Contactanos" />
+	<Hero />
+	<FloatingCTA />
 
 	<section
 		id="welcome"
