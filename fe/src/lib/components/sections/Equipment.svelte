@@ -191,7 +191,7 @@
 		/* Layout */
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 1.5rem 3rem;
+		gap: 0 3rem;
 		align-items: start;
 		list-style: none;
 		padding: 0;
