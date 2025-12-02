@@ -5,18 +5,27 @@
 	import Select from '$lib/components/forms/Select.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
 
+	// ===== TYPES =====
+	interface Props {
+		// No props currently, but interface exists for future extensibility
+	}
+
 	// ===== STATIC CONSTANTS =====
 	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	const SUCCESS_MESSAGE_TIMEOUT = 5000;
 </script>
 
 <script lang="ts">
+	// ===== PROPS =====
+	let {}: Props = $props();
+
 	// ===== STATE =====
 	let formElement: HTMLFormElement | null = $state(null);
 	let isLoading = $state(false);
 	let successMessage = $state<string | null>(null);
 	let errorMessage = $state<string | null>(null);
 
+	// ===== EVENT HANDLERS =====
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 		

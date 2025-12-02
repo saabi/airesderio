@@ -3,6 +3,13 @@
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
 	import Carousel from '$lib/components/ui/Carousel.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
+
+	// ===== TYPES =====
+	interface Props {
+		ctaUrl?: string;
+		ctaText?: string;
+	}
 
 	// ===== STATIC CONSTANTS =====
 	const carouselImageFiles = [
@@ -17,15 +24,7 @@
 </script>
 
 <script lang="ts">
-	// ===== IMPORTS =====
-	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
-
 	// ===== PROPS =====
-	interface Props {
-		ctaUrl?: string;
-		ctaText?: string;
-	}
-
 	let { ctaUrl = '#contacto', ctaText = 'Contactanos' }: Props = $props();
 
 	// ===== INSTANCE CONSTANTS =====

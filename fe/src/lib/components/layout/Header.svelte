@@ -11,6 +11,10 @@
 		id: string;
 	};
 
+	interface Props {
+		// No props currently, but interface exists for future extensibility
+	}
+
 	// ===== STATIC CONSTANTS =====
 	const isDevMode = import.meta.env.DEV;
 
@@ -26,6 +30,9 @@
 </script>
 
 <script lang="ts">
+	// ===== PROPS =====
+	let {}: Props = $props();
+
 	// ===== STATE =====
 	let isMenuOpen = $state(false);
 	let currentTheme = $state<Theme>('light');
@@ -35,6 +42,66 @@
 	let activeLinkId = $state<string>('top');
 	let HEADER_HEIGHT = $state(80); // Will be set from CSS variable on mount
 
+	// ===== EFFECTS =====
+	$effect(() => {
+		if (isMenuOpen) {
+			document.body.classList.add('nav-open');
+		} else {
+			document.body.classList.remove('nav-open');
+		}
+	});
+
+	// ===== LIFECYCLE =====
+	onMount(() => {
+		currentTheme = resolveInitialTheme();
+		if (isDevMode) {
+			void import('$lib/components/dev/DevColorEditor.svelte').then((module) => {
+				devColorEditorModule = module;
+			});
+		}
+		
+		// Get header height from CSS variable
+		if (browser) {
+			const headerElement = document.querySelector('.site') as HTMLElement;
+			if (headerElement) {
+				const computedHeight = getComputedStyle(headerElement).height;
+				HEADER_HEIGHT = parseFloat(computedHeight) || 80;
+			}
+		}
+		
+		// Sync with theme changes from other sources (e.g., system preference changes)
+		if (browser) {
+			const updateTheme = () => {
+				const themeAttr = document.documentElement.dataset.theme;
+				if (themeAttr === 'light' || themeAttr === 'dark') {
+					currentTheme = themeAttr;
+				}
+			};
+			
+			// Check initial state
+			updateTheme();
+			
+			// Watch for changes
+			const observer = new MutationObserver(updateTheme);
+			observer.observe(document.documentElement, {
+				attributes: true,
+				attributeFilter: ['data-theme']
+			});
+
+			// Update active link on scroll
+			updateActiveLink();
+			window.addEventListener('scroll', updateActiveLink, { passive: true });
+			window.addEventListener('resize', updateActiveLink, { passive: true });
+			
+			return () => {
+				observer.disconnect();
+				window.removeEventListener('scroll', updateActiveLink);
+				window.removeEventListener('resize', updateActiveLink);
+			};
+		}
+	});
+
+	// ===== FUNCTIONS =====
 	function toggleMenu() {
 		isMenuOpen = !isMenuOpen;
 	}
@@ -110,63 +177,6 @@
 
 		activeLinkId = currentSection;
 	}
-
-	$effect(() => {
-		if (isMenuOpen) {
-			document.body.classList.add('nav-open');
-		} else {
-			document.body.classList.remove('nav-open');
-		}
-	});
-
-	onMount(() => {
-		currentTheme = resolveInitialTheme();
-		if (isDevMode) {
-			void import('$lib/components/dev/DevColorEditor.svelte').then((module) => {
-				devColorEditorModule = module;
-			});
-		}
-		
-		// Get header height from CSS variable
-		if (browser) {
-			const headerElement = document.querySelector('.site') as HTMLElement;
-			if (headerElement) {
-				const computedHeight = getComputedStyle(headerElement).height;
-				HEADER_HEIGHT = parseFloat(computedHeight) || 80;
-			}
-		}
-		
-		// Sync with theme changes from other sources (e.g., system preference changes)
-		if (browser) {
-			const updateTheme = () => {
-				const themeAttr = document.documentElement.dataset.theme;
-				if (themeAttr === 'light' || themeAttr === 'dark') {
-					currentTheme = themeAttr;
-				}
-			};
-			
-			// Check initial state
-			updateTheme();
-			
-			// Watch for changes
-			const observer = new MutationObserver(updateTheme);
-			observer.observe(document.documentElement, {
-				attributes: true,
-				attributeFilter: ['data-theme']
-			});
-
-			// Update active link on scroll
-			updateActiveLink();
-			window.addEventListener('scroll', updateActiveLink, { passive: true });
-			window.addEventListener('resize', updateActiveLink, { passive: true });
-			
-			return () => {
-				observer.disconnect();
-				window.removeEventListener('scroll', updateActiveLink);
-				window.removeEventListener('resize', updateActiveLink);
-			};
-		}
-	});
 </script>
 
 <header class='site'>

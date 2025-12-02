@@ -1,4 +1,4 @@
-<script lang="ts">
+<script module lang="ts">
 	// ===== TYPES =====
 	type ArrowPosition = 'bottom' | 'top' | 'left' | 'right';
 
@@ -9,7 +9,9 @@
 		arrowPosition?: ArrowPosition;
 		class?: string;
 	}
+</script>
 
+<script lang="ts">
 	// ===== PROPS =====
 	let {
 		x,

@@ -1,5 +1,9 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
+	// SvelteKit
+	import { page } from '$app/stores';
+	
+	// Local components
 	import ContactSection from '$lib/components/sections/ContactSection.svelte';
 	import Equipment from '$lib/components/sections/Equipment.svelte';
 	import FloorPlans from '$lib/components/sections/FloorPlans.svelte';
@@ -7,17 +11,16 @@
 	import Interior from '$lib/components/sections/Interior.svelte';
 	import Intro from '$lib/components/sections/Intro.svelte';
 	import Location from '$lib/components/sections/Location.svelte';
+	
+	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
 
 	// ===== STATIC CONSTANTS =====
 	const DEFAULT_SITE_URL = 'https://airesderio.com';
 </script>
 
 <script lang="ts">
-	// ===== IMPORTS =====
-	import { page } from '$app/stores';
-	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
-
 	// ===== INSTANCE CONSTANTS =====
 	const { action: welcomeObserver, visible: welcomeVisible } = createSectionObserver('welcome', {
 		threshold: ANIMATION.threshold.section

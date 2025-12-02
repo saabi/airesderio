@@ -24,6 +24,18 @@
 	let currentImageIndex = $state(0);
 	let carouselInterval: ReturnType<typeof setInterval> | null = null;
 
+	// ===== LIFECYCLE =====
+	onMount(() => {
+		startCarousel();
+		return () => {
+			stopCarousel();
+		};
+	});
+
+	onDestroy(() => {
+		stopCarousel();
+	});
+
 	// ===== FUNCTIONS =====
 	function nextImage() {
 		currentImageIndex = (currentImageIndex + 1) % images.length;
@@ -50,18 +62,6 @@
 			carouselInterval = null;
 		}
 	}
-
-	// ===== LIFECYCLE =====
-	onMount(() => {
-		startCarousel();
-		return () => {
-			stopCarousel();
-		};
-	});
-
-	onDestroy(() => {
-		stopCarousel();
-	});
 </script>
 
 <div

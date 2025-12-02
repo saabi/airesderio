@@ -1,4 +1,8 @@
 <script module lang="ts">
+	// ===== IMPORTS =====
+	import { tweened } from 'svelte/motion';
+	import PinLabel from '$lib/components/ui/PinLabel.svelte';
+
 	// ===== TYPES =====
 	interface Props {
 		width?: string | number;
@@ -15,22 +19,6 @@
 		reset: () => void;
 		currentPathId: string | null;
 	}
-</script>
-
-<script lang="ts">
-	// ===== IMPORTS =====
-	import { tweened } from 'svelte/motion';
-	import PinLabel from '$lib/components/ui/PinLabel.svelte';
-
-	// ===== PROPS =====
-	let {
-		width = '100%',
-		height = '100%',
-		class: className = '',
-		ariaLabel = 'Mapa de ubicación',
-		zoomMargin = 0.1,
-		includeAiresderio = true
-	}: Props = $props();
 
 	// ===== STATIC CONSTANTS =====
 	// Full viewBox (entire map)
@@ -71,6 +59,18 @@
 		parque: { cx: 276.63824, cy: 127.52752 },
 		avroca: { cx: 145.09337, cy: 156.96059 }
 	};
+</script>
+
+<script lang="ts">
+	// ===== PROPS =====
+	let {
+		width = '100%',
+		height = '100%',
+		class: className = '',
+		ariaLabel = 'Mapa de ubicación',
+		zoomMargin = 0.1,
+		includeAiresderio = true
+	}: Props = $props();
 
 	// ===== STATE =====
 	let currentZoomedIndex = $state<number | null>(null);
