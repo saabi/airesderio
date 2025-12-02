@@ -42,12 +42,18 @@ The theming logic can be greatly simplified by consolidating all functionality i
 ### Simplified Store Structure
 ```typescript
 // All logic in store:
+- Theme type definition (moved from utils/theme.ts)
 - Initialize from localStorage or system preference
 - Watch system preference changes (only when no user preference)
 - Apply theme to DOM automatically
 - Manage localStorage
 - Provide reactive interface
 ```
+
+### Type Migration
+- Move `Theme` type from `$lib/utils/theme.ts` to `$lib/stores/theme.ts`
+- Export `Theme` type from store for backwards compatibility
+- Remove type export from `theme.ts` after migration
 
 ### Benefits
 - Single source of truth for theme logic
@@ -95,7 +101,8 @@ None
 
 ## Notes
 - The store already has most of the functionality, just needs to be self-contained
-- Consider keeping `Theme` type export for backwards compatibility
+- `Theme` type should be moved to store file and exported for backwards compatibility
 - May need to update tests to work with store instead of individual functions
 - This is a good opportunity to improve test coverage of the store
+- After migration, `theme.ts` utility file can be removed entirely (or kept minimal if needed for tests)
 
