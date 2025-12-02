@@ -51,8 +51,30 @@
 	// Place paths in order for navigation
 	const PLACE_PATH_IDS = ['terminal', 'forum', 'casagob', 'plazavea', 'parque', 'avroca'] as const;
 
+	// Map of path IDs to their data-name attributes
+	const PLACE_NAMES: Record<string, string> = {
+		terminal: 'Terminal de Omnibus',
+		forum: 'Forum',
+		casagob: 'Casa de Gobierno',
+		plazavea: 'Plaza Vea',
+		parque: 'Parque Aguirre',
+		avroca: 'Avenida Roca'
+	};
+
+	// Map of path IDs to pin coordinates (in SVG viewBox coordinates)
+	const PIN_COORDINATES: Record<string, { cx: number; cy: number }> = {
+		terminal: { cx: 36.098015, cy: 46.98563 },
+		forum: { cx: 58.824978, cy: 79.12207 },
+		casagob: { cx: 9.6377773, cy: 136.76311 },
+		plazavea: { cx: 138.37157, cy: 29.165194 },
+		parque: { cx: 276.63824, cy: 127.52752 },
+		avroca: { cx: 145.09337, cy: 156.96059 }
+	};
+
 	// ===== STATE =====
 	let currentZoomedIndex = $state<number | null>(null);
+	let selectedGroupName = $state<string | null>(null);
+	let pinCoordinates = $state<{ x: number; y: number } | null>(null);
 	
 	// Tweened values for smooth animation
 	let viewBoxX = tweened(NEAR_VIEWBOX.x, { duration: 600, easing: (t) => t * (2 - t) });
@@ -96,6 +118,43 @@
 			: null
 	);
 
+	// ===== FUNCTIONS =====
+	/**
+	 * Converts SVG viewBox coordinates to parent offset coordinates
+	 */
+	function convertToParentOffset(svgX: number, svgY: number): { x: number; y: number } | null {
+		if (!svgElement) return null;
+
+		try {
+			// Create a point in SVG coordinates
+			const point = svgElement.createSVGPoint();
+			point.x = svgX;
+			point.y = svgY;
+
+			// Get the transformation matrix from SVG coordinates to screen coordinates
+			const ctm = svgElement.getScreenCTM();
+			if (!ctm) return null;
+
+			// Transform the point
+			const transformedPoint = point.matrixTransform(ctm);
+
+			// Get the SVG element's parent to calculate offset
+			const parent = svgElement.parentElement;
+			if (!parent) return null;
+
+			const parentRect = parent.getBoundingClientRect();
+
+			// Calculate offset relative to parent
+			return {
+				x: transformedPoint.x - parentRect.left,
+				y: transformedPoint.y - parentRect.top
+			};
+		} catch (error) {
+			console.error('Error converting coordinates:', error);
+			return null;
+		}
+	}
+
 	// ===== EFFECTS =====
 	$effect(() => {
 		// Reset to near viewBox if not programmatically zoomed
@@ -104,6 +163,50 @@
 			viewBoxY.set(NEAR_VIEWBOX.y);
 			viewBoxWidth.set(NEAR_VIEWBOX.width);
 			viewBoxHeight.set(NEAR_VIEWBOX.height);
+			selectedGroupName = null;
+			pinCoordinates = null;
+		}
+	});
+
+	$effect(() => {
+		// Update selected group name and pin coordinates when currentPathId changes
+		if (currentPathId) {
+			selectedGroupName = PLACE_NAMES[currentPathId] || null;
+			
+			const pinCoords = PIN_COORDINATES[currentPathId];
+			if (pinCoords) {
+				// Recalculate coordinates when viewBox or SVG element changes
+				const updateCoordinates = () => {
+					const converted = convertToParentOffset(pinCoords.cx, pinCoords.cy);
+					if (converted) {
+						pinCoordinates = converted;
+					}
+				};
+				
+				// Update immediately and also after a small delay to catch viewBox animations
+				updateCoordinates();
+				setTimeout(updateCoordinates, 50);
+			} else {
+				pinCoordinates = null;
+			}
+		} else {
+			selectedGroupName = null;
+			pinCoordinates = null;
+		}
+	});
+
+	// Recalculate pin coordinates when viewBox changes (for smooth updates during animation)
+	$effect(() => {
+		if (currentPathId) {
+			const pinCoords = PIN_COORDINATES[currentPathId];
+			if (pinCoords) {
+				// Access viewBox values to trigger recalculation when they change
+				const _ = $viewBoxX + $viewBoxY + $viewBoxWidth + $viewBoxHeight;
+				const converted = convertToParentOffset(pinCoords.cx, pinCoords.cy);
+				if (converted) {
+					pinCoordinates = converted;
+				}
+			}
 		}
 	});
 
@@ -232,11 +335,12 @@
 		viewBoxHeight.set(NEAR_VIEWBOX.height);
 	}
 
-	// Export functions and current path id
-	export { next, prev, reset, currentPathId };
+	// Export functions, current path id, and state variables
+	export { next, prev, reset, currentPathId, selectedGroupName, pinCoordinates };
 </script>
 
-<svg
+<div class="map-container">
+	<svg
 	bind:this={svgElement}
 	width={widthAttr}
 	height={heightAttr}
@@ -415,12 +519,78 @@
 	</g>
 </svg>
 
+	{#if selectedGroupName && pinCoordinates}
+		<div
+			class="pin-label"
+			style="left: {pinCoordinates.x}px; top: {pinCoordinates.y}px;"
+		>
+			{selectedGroupName}
+		</div>
+	{/if}
+</div>
+
 <style>
+	.map-container {
+		/* Layout */
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
 	svg {
 		/* Layout */
 		display: block;
 		width: 100%;
 		height: 100%;
+	}
+
+	.pin-label {
+		/* Layout */
+		position: absolute;
+		transform: translate(-50%, -100%);
+		margin-bottom: 8px;
+		
+		/* Box/Visual */
+		background-color: rgba(0, 0, 0, 0.8);
+		color: white;
+		padding: 6px 12px;
+		border-radius: 4px;
+		font-size: 14px;
+		font-weight: 500;
+		white-space: nowrap;
+		pointer-events: none;
+		
+		/* Effects & Motion */
+		transition: opacity 0.3s ease, transform 0.3s ease;
+		opacity: 0;
+		animation: fadeInLabel 0.3s ease forwards;
+	}
+
+	.pin-label::after {
+		/* Layout */
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		/* Box/Visual */
+		width: 0;
+		height: 0;
+		border-left: 6px solid transparent;
+		border-right: 6px solid transparent;
+		border-top: 6px solid rgba(0, 0, 0, 0.8);
+	}
+
+	@keyframes fadeInLabel {
+		from {
+			opacity: 0;
+			transform: translate(-50%, -100%) translateY(-4px);
+		}
+		to {
+			opacity: 1;
+			transform: translate(-50%, -100%) translateY(0);
+		}
 	}
 
 	.places-group {
