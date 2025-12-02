@@ -39,7 +39,7 @@
 			>
 				<div class="contact-section__logo-wrapper">
 					<img
-						src="/exteriores/DB_EXTERIOR_01%20(0).png"
+						src="/exteriores/exterior_03.png"
 						alt="Aires de Río exterior"
 						loading="lazy"
 						decoding="async"
@@ -108,12 +108,7 @@
 
 	.contact-exterior {
 		/* Layout */
-		margin-top: 2rem;
-		max-width: 90%;
-		
-		/* Box/Visual */
-		border-radius: 0.5rem;
-		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+		max-width: 80%;
 	}
 
 	@media (max-width: 850px) {
