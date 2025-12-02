@@ -39,7 +39,7 @@
 		<div class="footer-grid">
 			<section class="footer-column footer-brand" aria-label="Resumen corporativo">
 				<div class="footer-logo">
-					<HabitatPrimeLogo theme={$theme}/>
+					<HabitatPrimeLogo theme={$theme} width="8rem"/>
 				</div>
 				<p>
 					Habitat Prime SAS desarrolla experiencias residenciales premium en Santiago del Estero. Aires de Río
@@ -138,13 +138,6 @@
 		border-radius: 0.5rem;
 		background: var(--color-bg-interactive);
 		box-shadow: 0 6px 16px color-mix(in oklch, var(--color-bg-interactive) 45%, transparent);
-	}
-
-	.footer-logo :global(svg) {
-		width: 5rem; /* Significantly smaller than Aires de Río logo to maintain brand hierarchy */
-		height: auto;
-		display: block;
-		filter: drop-shadow(0 2px 4px var(--shadow-subtle));
 	}
 
 	.project-highlights {
