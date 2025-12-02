@@ -13,19 +13,11 @@
 	import Intro from '$lib/components/sections/Intro.svelte';
 	import Location from '$lib/components/sections/Location.svelte';
 	
-	// Local utilities
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
-	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
-
 	// ===== STATIC CONSTANTS =====
 	const DEFAULT_SITE_URL = 'https://airesderio.com';
 </script>
 
 <script lang="ts">
-	// ===== INSTANCE CONSTANTS =====
-	const { action: welcomeObserver, visible: welcomeVisible } = createSectionObserver('welcome', {
-		threshold: ANIMATION.threshold.section
-	});
 
 	// ===== DERIVED =====
 	// Base URL for the site
@@ -126,21 +118,6 @@
 <main>
 	<Hero />
 	<FloatingCTA />
-
-	<section
-		id="welcome"
-		class="welcome-section"
-		use:welcomeObserver
-		data-section-active={$welcomeVisible}
-	>
-		<p
-			class="welcome scroll-animate"
-			style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()}; --scroll-animate-delay: ${animationDelay(1)};`}
-		>
-			Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto
-			de departamentos con las mejores prestaciones y estratégica ubicación.
-		</p>
-	</section>
 	
 	<div class="container">
 		<Intro />
@@ -155,24 +132,6 @@
 </main>
 
 <style>
-	.welcome {
-		/* Layout */
-		display: block;
-		max-width: 34em;
-		padding: 1.5rem 1.5rem;
-		margin: 2rem auto;
-		
-		/* Box/Visual */
-		background: var(--color-accent-secondary);
-		border-radius: 0.625rem;
-		
-		/* Typography */
-		font-size: 1.6rem;
-		font-weight: 500;
-		color: var(--color-text-primary);
-		text-align: center;
-		line-height: 1.6;
-	}
 	.container {
 		/* Layout */
 		margin: 1.5rem 1.5rem;

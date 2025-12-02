@@ -20,7 +20,7 @@
 	.title {
 		/* Layout */
 		display: inline-block;
-		margin: 2rem 0 0.25rem 0;
+		margin: 4rem 0 2rem 0;
 		
 		/* Typography */
 		font-size: 1.7rem;

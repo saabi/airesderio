@@ -4,6 +4,9 @@
 	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
 
 	// ===== INSTANCE CONSTANTS =====
+	const { action: welcomeObserver, visible: welcomeVisible } = createSectionObserver('welcome', {
+		threshold: ANIMATION.threshold.section
+	});
 	const { action: introObserver, visible: introVisible } = createSectionObserver('intro', {
 		threshold: ANIMATION.threshold.section
 	});
@@ -21,14 +24,28 @@
 		class='scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
+		<section
+			id="welcome"
+			class="welcome-section"
+			use:welcomeObserver
+			data-section-active={$welcomeVisible}
+		>
+			<p
+				class="welcome scroll-animate"
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()}; --scroll-animate-delay: ${animationDelay(1)};`}
+			>
+				Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto
+				de departamentos con las mejores prestaciones y estratégica ubicación.
+			</p>
+		</section>
 		<p>
-			En Aires de Río, los residentes disfrutarán de una amplia oferta de entretenimiento, compras y actividades al aire libre, con acceso a áreas verdes, espacios deportivos y eventos culturales que enriquecen la vida cotidiana.
+			Quienes vivan en Aires de Río gozarán de una multi-oferta de entretenimiento, shopping, áreas
+			verdes, deportes, confiterías y eventos culturales.
 		</p>
 		<p>
-			El edificio cuenta con departamentos de 2 y 4 ambientes, amplios y luminosos, donde el diseño y las comodidades han sido pensados para brindar una experiencia confortable, moderna y funcional.
-		</p>
-		<p>
-			La ubicación permite gozar de un entorno tranquilo, sin perder la cercanía a servicios, comercios y todo lo necesario para una vida práctica y cómoda.
+			El edificio ofrece departamentos de 2 y 4 ambientes amplios y luminosos, donde el diseño y las
+			comodidades han sido pensadas para satisfacer a quienes quieran una vida cómoda y a un paso de
+			todo.
 		</p>
 	</div>
 	<aside
@@ -54,13 +71,31 @@
 	.intro {
 		/* Layout */
 		display: grid;
-		grid-template-columns: 1.08fr 0.92fr;
-		gap: 1.5rem;
+		grid-template-columns: 1fr min-content;
+		gap: 4rem;
 		align-items: start;
 		padding: 0;
 		font-size: 1.2rem;
 		max-width: var(--max);
 		margin: 0 auto;
+	}
+	.welcome {
+		/* Layout */
+		display: block;
+		max-width: 34em;
+		padding: 1.5rem 1.5rem;
+		margin: 2rem auto;
+		
+		/* Box/Visual */
+		background: var(--color-accent-secondary);
+		border-radius: 0.625rem;
+		
+		/* Typography */
+		font-size: 1.6rem;
+		font-weight: 500;
+		color: var(--color-text-primary);
+		text-align: center;
+		line-height: 1.6;
 	}
 	.intro p {
 		/* Layout */
