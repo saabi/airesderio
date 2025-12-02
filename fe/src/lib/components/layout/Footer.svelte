@@ -25,12 +25,6 @@
 		{ label: 'Unidades disponibles', value: '2 y 4 ambientes' },
 		{ label: 'Amenities', value: 'Piscina · Cowork · Rooftop' }
 	];
-
-	const socialLinks = [
-		{ label: 'Instagram', href: 'https://instagram.com/habitatprime' },
-		{ label: 'LinkedIn', href: 'https://linkedin.com/company/habitatprime' },
-		{ label: 'YouTube', href: 'https://youtube.com/@habitatprime' }
-	];
 </script>
 
 <footer class="site-footer">
@@ -82,18 +76,6 @@
 						</li>
 					{/each}
 				</ul>
-				<div class="footer-social">
-					<span>Seguinos</span>
-					<ul>
-					{#each socialLinks as link (link.label)}
-							<li>
-								<a rel="noreferrer" target="_blank" href={link.href}>
-									{link.label}
-								</a>
-							</li>
-						{/each}
-					</ul>
-				</div>
 			</section>
 		</div>
 
@@ -219,32 +201,6 @@
 		display: block;
 		font-size: 1rem;
 		color: var(--color-text-primary);
-	}
-
-	.footer-social {
-		margin-top: 1.5rem;
-	}
-
-	.footer-social span {
-		display: block;
-		font-size: 0.85rem;
-		text-transform: uppercase;
-		color: var(--color-text-tertiary);
-		margin-bottom: 0.5rem;
-	}
-
-	.footer-social ul {
-		display: flex;
-		gap: 0.75rem;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-
-	.footer-social a {
-		text-decoration: none;
-		color: var(--color-text-secondary);
-		font-weight: 600;
 	}
 
 	.footer-bottom {
