@@ -273,9 +273,6 @@
 				bind:this={terminalPath}
 				class="place-path"
 				fill="#00be4d"
-				fill-opacity="0.471002"
-				stroke="transparent"
-				stroke-width="2"
 				vector-effect="non-scaling-stroke"
 				role="button"
 				tabindex="0"
@@ -296,9 +293,6 @@
 				bind:this={forumPath}
 				class="place-path"
 				fill="#00be4d"
-				fill-opacity="0.471002"
-				stroke="transparent"
-				stroke-width="2"
 				vector-effect="non-scaling-stroke"
 				role="button"
 				tabindex="0"
@@ -319,9 +313,6 @@
 				bind:this={casagobPath}
 				class="place-path"
 				fill="#00be4d"
-				fill-opacity="0.471002"
-				stroke="transparent"
-				stroke-width="2"
 				vector-effect="non-scaling-stroke"
 				role="button"
 				tabindex="0"
@@ -349,9 +340,6 @@
 				bind:this={plazaveaPath}
 				class="place-path"
 				fill="#00be4d"
-				fill-opacity="0.471002"
-				stroke="transparent"
-				stroke-width="2"
 				vector-effect="non-scaling-stroke"
 				role="button"
 				tabindex="0"
@@ -372,9 +360,6 @@
 				bind:this={parquePath}
 				class="place-path"
 				fill="#00be4d"
-				fill-opacity="0.471002"
-				stroke="transparent"
-				stroke-width="2"
 				vector-effect="non-scaling-stroke"
 				role="button"
 				tabindex="0"
@@ -395,9 +380,6 @@
 				bind:this={avrocaPath}
 				class="place-path"
 				fill="#00be4d"
-				fill-opacity="0.471002"
-				stroke="transparent"
-				stroke-width="2"
 				vector-effect="non-scaling-stroke"
 				role="button"
 				tabindex="0"
@@ -452,17 +434,14 @@
 
 	.place-path {
 		/* Box/Visual */
-		fill-opacity: 0;
-		stroke: transparent;
-		
+        vector-effect: non-scaling-stroke;
+        fill: #008ef2;
+        fill-opacity: 0;
 		/* Misc/Overrides */
 		cursor: pointer;
 		
 		/* Effects & Motion */
-		transition:
-			fill-opacity 0.3s ease,
-			stroke 0.3s ease,
-			stroke-width 0.3s ease;
+		transition: fill-opacity 0.3s ease;
 	}
 
 
@@ -476,8 +455,6 @@
 	.group-active .place-path {
 		/* Box/Visual */
 		fill-opacity: 0.471002;
-		stroke: #000000;
-		stroke-width: 2;
 	}
 
 	.building-group {
