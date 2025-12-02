@@ -76,6 +76,13 @@
 	let currentZoomedIndex = $state<number | null>(null);
 	let selectedGroupName = $state<string | null>(null);
 	let pinCoordinates = $state<{ x: number; y: number } | null>(null);
+	let arrowPosition = $state<'bottom' | 'top' | 'left' | 'right'>('bottom');
+	
+	// Reference to map container for boundary calculations
+	let mapContainer: HTMLDivElement | null = $state(null);
+	
+	// Reference to measurement label for getting dimensions
+	let measurementLabel: HTMLDivElement | null = $state(null);
 	
 	// Tweened values for smooth animation
 	let viewBoxX = tweened(NEAR_VIEWBOX.x, { duration: 600, easing: (t) => t * (2 - t) });
@@ -156,6 +163,71 @@
 		}
 	}
 
+	/**
+	 * Calculates the best arrow position based on available space around the pin
+	 */
+	function calculateBestArrowPosition(
+		pinX: number,
+		pinY: number,
+		labelWidth: number,
+		labelHeight: number
+	): 'bottom' | 'top' | 'left' | 'right' {
+		if (!mapContainer) return 'bottom';
+
+		const containerRect = mapContainer.getBoundingClientRect();
+		const containerWidth = containerRect.width;
+		const containerHeight = containerRect.height;
+
+		// Calculate available space in each direction
+		// For each direction, we need space for the label + arrow + margin
+		const arrowSize = 6; // Arrow height/width
+		const margin = 8; // Margin between label and pin
+		const totalVerticalSpace = labelHeight + arrowSize + margin;
+		const totalHorizontalSpace = labelWidth + arrowSize + margin;
+
+		// Space above pin (for label with arrow pointing down)
+		const spaceAbove = pinY;
+		
+		// Space below pin (for label with arrow pointing up)
+		const spaceBelow = containerHeight - pinY;
+		
+		// Space to the left of pin (for label with arrow pointing right)
+		const spaceLeft = pinX;
+		
+		// Space to the right of pin (for label with arrow pointing left)
+		const spaceRight = containerWidth - pinX;
+
+		// Calculate effective available space for each direction
+		// We need to account for label positioning (centered for top/bottom, middle for left/right)
+		const availableSpace = {
+			bottom: spaceAbove - totalVerticalSpace, // Label above pin, arrow down
+			top: spaceBelow - totalVerticalSpace,    // Label below pin, arrow up
+			right: spaceLeft - totalHorizontalSpace, // Label left of pin, arrow right
+			left: spaceRight - totalHorizontalSpace   // Label right of pin, arrow left
+		};
+
+		// Find the direction with the most available space
+		let bestPosition: 'bottom' | 'top' | 'left' | 'right' = 'bottom';
+		let maxSpace = availableSpace.bottom;
+
+		if (availableSpace.top > maxSpace) {
+			maxSpace = availableSpace.top;
+			bestPosition = 'top';
+		}
+		if (availableSpace.left > maxSpace) {
+			maxSpace = availableSpace.left;
+			bestPosition = 'left';
+		}
+		if (availableSpace.right > maxSpace) {
+			maxSpace = availableSpace.right;
+			bestPosition = 'right';
+		}
+
+		// If no direction has enough space, still return the best option
+		// (The label will be clipped, but at least we tried)
+		return bestPosition;
+	}
+
 	// ===== EFFECTS =====
 	$effect(() => {
 		// Reset to near viewBox if not programmatically zoomed
@@ -208,6 +280,39 @@
 					pinCoordinates = converted;
 				}
 			}
+		}
+	});
+
+	// Calculate best arrow position based on available space
+	$effect(() => {
+		if (pinCoordinates && measurementLabel && mapContainer && selectedGroupName) {
+			// Use a small delay to ensure the measurement label is rendered
+			const updateArrowPosition = () => {
+				if (!measurementLabel || !mapContainer || !pinCoordinates) return;
+
+				// Measure the label dimensions
+				const labelRect = measurementLabel.getBoundingClientRect();
+				const labelWidth = labelRect.width;
+				const labelHeight = labelRect.height;
+
+				// Calculate best arrow position
+				const bestPosition = calculateBestArrowPosition(
+					pinCoordinates.x,
+					pinCoordinates.y,
+					labelWidth,
+					labelHeight
+				);
+
+				arrowPosition = bestPosition;
+			};
+
+			// Update immediately and after a small delay to ensure rendering
+			updateArrowPosition();
+			// Also update after viewBox animations complete
+			setTimeout(updateArrowPosition, 100);
+		} else if (!pinCoordinates) {
+			// Reset to default when no pin is selected
+			arrowPosition = 'bottom';
 		}
 	});
 
@@ -340,7 +445,7 @@
 	export { next, prev, reset, currentPathId, selectedGroupName, pinCoordinates };
 </script>
 
-<div class="map-container">
+<div class="map-container" bind:this={mapContainer}>
 	<svg
 	bind:this={svgElement}
 	width={widthAttr}
@@ -521,11 +626,21 @@
 </svg>
 
 	{#if selectedGroupName && pinCoordinates}
+		<!-- Hidden label for measurement -->
+		<div
+			bind:this={measurementLabel}
+			class="pin-label-measure"
+			aria-hidden="true"
+		>
+			{selectedGroupName}
+		</div>
+		
+		<!-- Actual label -->
 		<PinLabel
 			x={pinCoordinates.x}
 			y={pinCoordinates.y}
 			text={selectedGroupName}
-			arrowPosition="bottom"
+			arrowPosition={arrowPosition}
 		/>
 	{/if}
 </div>
@@ -543,6 +658,73 @@
 		display: block;
 		width: 100%;
 		height: 100%;
+	}
+
+	.pin-label-measure {
+		/* Layout */
+		position: absolute;
+		visibility: hidden;
+		top: -9999px;
+		left: -9999px;
+		
+		/* Box/Visual */
+		background-color: rgba(0, 0, 0, 0.8);
+		color: white;
+		padding: 6px 12px;
+		border-radius: 4px;
+		font-size: 14px;
+		font-weight: 500;
+		white-space: nowrap;
+		pointer-events: none;
+	}
+
+	.pin-label {
+		/* Layout */
+		position: absolute;
+		transform: translate(-50%, -100%);
+		margin-bottom: 8px;
+		
+		/* Box/Visual */
+		background-color: rgba(0, 0, 0, 0.8);
+		color: white;
+		padding: 6px 12px;
+		border-radius: 4px;
+		font-size: 14px;
+		font-weight: 500;
+		white-space: nowrap;
+		pointer-events: none;
+		
+		/* Effects & Motion */
+		transition: opacity 0.3s ease, transform 0.3s ease;
+		opacity: 0;
+		animation: fadeInLabel 0.3s ease forwards;
+	}
+
+	.pin-label::after {
+		/* Layout */
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		/* Box/Visual */
+		width: 0;
+		height: 0;
+		border-left: 6px solid transparent;
+		border-right: 6px solid transparent;
+		border-top: 6px solid rgba(0, 0, 0, 0.8);
+	}
+
+	@keyframes fadeInLabel {
+		from {
+			opacity: 0;
+			transform: translate(-50%, -100%) translateY(-4px);
+		}
+		to {
+			opacity: 1;
+			transform: translate(-50%, -100%) translateY(0);
+		}
 	}
 
 	.places-group {
