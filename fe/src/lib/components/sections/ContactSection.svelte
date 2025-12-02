@@ -1,5 +1,6 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
+	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 </script>
@@ -43,13 +44,7 @@
 						decoding="async"
 						class="contact-exterior"
 					/>
-					<img
-						src="/logos/aires-de-rio.svg"
-						alt="Aires de Río"
-						loading="lazy"
-						decoding="async"
-						class="contact-logo"
-					/>
+					<AiresDeRioLogo class="contact-logo" />
 				</div>
 			</div>
 		</div>

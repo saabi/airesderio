@@ -1,3 +1,8 @@
+<script module lang="ts">
+	// ===== IMPORTS =====
+	import HabitatPrimeLogo from '$lib/components/ui/HabitatPrimeLogo.svelte';
+</script>
+
 <script lang="ts">
 	// ===== DATA =====
 	const year = new Date().getFullYear();
@@ -32,7 +37,7 @@
 		<div class="footer-grid">
 			<section class="footer-column footer-brand" aria-label="Resumen corporativo">
 				<div class="footer-logo">
-					<img src="/logos/habitat-prime.svg" alt="Habitat Prime SAS" loading="lazy" decoding="async" />
+					<HabitatPrimeLogo />
 				</div>
 				<p>
 					Habitat Prime SAS desarrolla experiencias residenciales premium en Santiago del Estero. Aires de Río
@@ -133,7 +138,7 @@
 		box-shadow: 0 6px 16px color-mix(in oklch, var(--color-bg-interactive) 45%, transparent);
 	}
 
-	.footer-logo img {
+	.footer-logo :global(img) {
 		width: 9.5rem;
 		display: block;
 		filter: drop-shadow(0 2px 4px var(--shadow-subtle));

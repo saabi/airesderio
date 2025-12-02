@@ -51,9 +51,11 @@
 			imageAriaLabel={(index) => `Fachada del edificio Aires de Río - Imagen ${index + 1}`}
 		/>
 	</div>
-	<svg class="corner-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
-		<polygon points="100,0 100,100 50,0" fill="var(--color-bg-canvas)" />
-	</svg>
+	<!--
+		<svg class="corner-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
+			<polygon points="100,0 100,100 50,0" fill="var(--color-bg-canvas)" />
+		</svg>
+	-->
 </section>
 
 <style>

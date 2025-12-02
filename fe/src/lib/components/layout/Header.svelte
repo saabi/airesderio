@@ -2,6 +2,7 @@
 	// ===== IMPORTS =====
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import { resolveInitialTheme, setTheme, type Theme } from '$lib/utils/theme';
 
 	// ===== TYPES =====
@@ -181,12 +182,11 @@
 
 <header class='site'>
 	<div class='site__bar'>
-		<img
-			class='logo'
-			src='/logos/habitat-prime.svg'
-			alt='Habitat Prime SAS'
-			loading='eager'
-			decoding='async'
+		<AiresDeRioLogo
+			class="logo"
+			loading="eager"
+			height="2.2em"
+			theme={currentTheme === 'light' ? 'dark' : 'light'}
 		/>
 		<nav
 			id='main-nav'
