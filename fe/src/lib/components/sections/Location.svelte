@@ -532,7 +532,6 @@
 		margin-top: var(--header-height);
 		
 		/* Box/Visual */
-		background: var(--color-accent-primary);
 		border: 1px solid var(--color-border-strong);
 		border-radius: 0.625rem;
 	}
@@ -542,8 +541,13 @@
 		max-width: 40ch;
 		padding: 1.75rem;
 		
+		/* Box/Visual */
+		/* Light, semi-transparent cream overlay with dark text for light theme */
+		background: color-mix(in oklch, var(--ref-cream) 90%, transparent);
+		backdrop-filter: blur(8px);
+		
 		/* Typography */
-		color: var(--color-text-on-accent);
+		color: var(--color-text-on-light);
 	}
 
 	.location-eyebrow {
@@ -555,7 +559,7 @@
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		font-size: 0.9em;
-		color: var(--color-text-on-accent);
+		color: var(--color-text-secondary-dark);
 		
 		/* Box/Visual */
 		opacity: 0.95;
@@ -568,6 +572,7 @@
 		/* Typography */
 		font-size: 2.5em;
 		line-height: 1.1;
+		color: var(--color-text-on-light);
 	}
 
 	.location-text p {
@@ -792,6 +797,27 @@
 	}
 
 
+
+	/* Dark mode styles for location overlay */
+	:global([data-theme='dark']) .location-text {
+		/* Box/Visual */
+		/* Darker semi-transparent overlay for dark mode */
+		background: color-mix(in oklch, oklch(0.20 0 0deg) 85%, transparent);
+		backdrop-filter: blur(8px);
+		
+		/* Typography */
+		color: var(--color-text-primary);
+	}
+
+	:global([data-theme='dark']) .location-eyebrow {
+		/* Typography */
+		color: var(--color-text-secondary);
+	}
+
+	:global([data-theme='dark']) .location-text h3 {
+		/* Typography */
+		color: var(--color-text-primary);
+	}
 
 	@media (max-width: 850px) {
 		.location-block {
