@@ -3,15 +3,15 @@ import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
 	plugins: [sveltekit()],
-	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}'],
-		environment: 'jsdom',
-		setupFiles: ['./src/test/setup.ts'],
-		server: {
-			deps: {
-				inline: ['@sveltejs/kit']
-			}
-		},
+		test: {
+			include: ['src/**/*.{test,spec}.{js,ts}'],
+			environment: 'jsdom',
+			setupFiles: ['./src/test/setup.ts'],
+			server: {
+				deps: {
+					inline: ['@sveltejs/kit']
+				}
+			},
 		coverage: {
 			provider: 'v8',
 			reporter: ['text', 'json', 'html'],

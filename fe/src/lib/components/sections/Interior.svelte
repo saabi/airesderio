@@ -82,6 +82,7 @@
 	#interior {
 		max-width: var(--max);
 		margin: 0 auto;
+		font-size: 1.2rem;
 	}
 
 	.interior-container {
@@ -97,7 +98,10 @@
 		/* Layout */
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+	}
+	.interior-text p {
+		/* Layout */
+		margin-top: 0;
 	}
 
 	.interior-gallery {
