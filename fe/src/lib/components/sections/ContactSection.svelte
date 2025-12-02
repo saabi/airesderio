@@ -106,16 +106,6 @@
 		width: 100%;
 	}
 
-	.contact-logo {
-		/* Layout */
-		width: 100%;
-		max-width: 20rem;
-		height: auto;
-		
-		/* Box/Visual */
-		object-fit: contain;
-	}
-
 	.contact-exterior {
 		/* Layout */
 		margin-top: 2rem;

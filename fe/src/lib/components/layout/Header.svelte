@@ -327,18 +327,6 @@
 		background: var(--color-bg-elevated);
 	}
 
-	.logo {
-		/* Positioning */
-		z-index: 1001; /* Ensure logo is above mobile nav background */
-		
-		/* Layout */
-		height: 2rem;
-		width: auto;
-		
-		/* Box/Visual */
-		object-fit: contain;
-	}
-
 	.nav__desktop {
 		/* Layout */
 		display: flex;

@@ -83,17 +83,4 @@
 		height: 100%;
 	}
 
-	.corner-overlay {
-		/* Positioning */
-		position: absolute;
-		top: 0;
-		right: 0;
-		
-		/* Layout */
-		width: 100%;
-		height: 100%;
-		
-		/* Misc/Overrides */
-		pointer-events: none;
-	}
 </style>
