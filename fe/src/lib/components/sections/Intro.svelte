@@ -22,13 +22,13 @@
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<p>
-			Quienes vivan en Aires de Río gozarán de una multi-oferta de entretenimiento, shopping, áreas
-			verdes, deportes, confiterías y eventos culturales.
+			En Aires de Río, los residentes disfrutarán de una amplia oferta de entretenimiento, compras y actividades al aire libre, con acceso a áreas verdes, espacios deportivos y eventos culturales que enriquecen la vida cotidiana.
 		</p>
 		<p>
-			El edificio ofrece departamentos de 2 y 4 ambientes amplios y luminosos, donde el diseño y las
-			comodidades han sido pensadas para satisfacer a quienes quieran una vida cómoda y a un paso de
-			todo.
+			El edificio cuenta con departamentos de 2 y 4 ambientes, amplios y luminosos, donde el diseño y las comodidades han sido pensados para brindar una experiencia confortable, moderna y funcional.
+		</p>
+		<p>
+			La ubicación permite gozar de un entorno tranquilo, sin perder la cercanía a servicios, comercios y todo lo necesario para una vida práctica y cómoda.
 		</p>
 	</div>
 	<aside
