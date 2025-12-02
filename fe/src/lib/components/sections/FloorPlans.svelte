@@ -41,6 +41,11 @@
 </section>
 
 <style>
+	#planos {
+		max-width: var(--max);
+		margin: 0 auto;
+	}
+
 	.plan-ph {
 		/* Layout */
 		height: 27.5rem;

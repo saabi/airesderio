@@ -59,6 +59,8 @@
 		align-items: start;
 		padding: 0;
 		font-size: 1.2rem;
+		max-width: var(--max);
+		margin: 0 auto;
 	}
 	.intro p {
 		/* Layout */

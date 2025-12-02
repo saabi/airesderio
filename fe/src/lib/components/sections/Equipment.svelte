@@ -177,6 +177,11 @@
 </section>
 
 <style>
+	#equipados {
+		max-width: var(--max);
+		margin: 0 auto;
+	}
+
 	.equip {
 		/* Layout */
 		margin: 1.625rem 0;

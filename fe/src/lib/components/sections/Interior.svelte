@@ -42,58 +42,68 @@
 	>
 		<Title eyebrow="Diseño" big="INTERIOR" />
 	</div>
-	<p
-		class="scroll-animate"
-		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-duration: ${animationDuration()};`}
-	>
-		Ambientes generosos para unidades de un dormitorio que integran estética y funcionalidad
-		explorando tendencias contemporáneas, incorporando las nuevas tecnologías y los recursos más
-		elegantes en interiorismo.
-	</p>
-	<p
-		class="scroll-animate"
-		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(2)}; --scroll-animate-duration: ${animationDuration()};`}
-	>
-		El proyecto incorporó materiales ecológicos y formas curvas, buscando conectar los espacios
-		interiores con los colores que ofrece la naturaleza a través de la inclusión de vegetación, luz
-		natural y materiales orgánicos como la madera.
-	</p>
-	<div
-		class="interior-gallery scroll-animate"
-		style={`--scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
-	>
-		<Carousel
-			images={INTERIOR_IMAGES}
-			interval={2500}
-			ariaLabel="Galería de imágenes del diseño interior"
-			imageAriaLabel={(index) => `Imagen del diseño interior - ${index + 1}`}
-		/>
+	<div class="interior-container">
+		<div class="interior-text">
+			<p
+				class="scroll-animate"
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-duration: ${animationDuration()};`}
+			>
+				Ambientes amplios de un dormitorio que combinan diseño contemporáneo y funcionalidad, con materiales ecológicos, formas curvas y detalles en madera y vegetación.
+			</p>
+			<p
+				class="scroll-animate"
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(2)}; --scroll-animate-duration: ${animationDuration()};`}
+			>
+				Grandes aberturas optimizan luz y ventilación natural, mejorando el confort y la eficiencia energética.
+			</p>
+			<p
+				class="scroll-animate"
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-duration: ${animationDuration()};`}
+			>
+				La iluminación LED, ya integrada, resalta los ambientes con luz indirecta, creando espacios armónicos y relajantes. Solo será necesario sumar artefactos de luz directa a gusto de cada usuario.
+			</p>
+		</div>
+		<div
+			class="interior-gallery scroll-animate"
+			style={`--scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
+		>
+			<Carousel
+				images={INTERIOR_IMAGES}
+				interval={2500}
+				ariaLabel="Galería de imágenes del diseño interior"
+				imageAriaLabel={(index) => `Imagen del diseño interior - ${index + 1}`}
+			/>
+		</div>
 	</div>
-	<p
-		class="scroll-animate"
-		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(4)}; --scroll-animate-duration: ${animationDuration()};`}
-	>
-		La luz juega un papel clave en la funcionalidad del diseño interior de las unidades y de los espacios comunes. Las grandes aberturas optimizan la luz y la ventilación natural, lo cual permite reducir la dependencia de la iluminación y ventilación artificiales, promoviendo la eficiencia energética y el confort en los espacios, incluso prolongando la iluminación natural hasta el anochecer.
-	</p>
-	<p
-		class="scroll-animate"
-		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(5)}; --scroll-animate-duration: ${animationDuration()};`}
-	>
-		La iluminación artificial fue diseñada para realzar el elegante estilo en la arquitectura de los departamentos. La combinación de tonos de luces LEDs en gargantas semicolgantes, como fuente de luz indirecta y de acento, crea profundidad y logra ambientes armónicos y relajantes.
-	</p>
-	<p
-		class="scroll-animate"
-		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(6)}; --scroll-animate-duration: ${animationDuration()};`}
-	>
-		Quien habite los departamentos solo tendrá que incorporar los artefactos de iluminación directa a su gusto, ya que toda la iluminación de efecto estará incorporada en cada unidad habitacional.
-	</p>
+
 </section>
 
 <style>
+	#interior {
+		max-width: var(--max);
+		margin: 0 auto;
+	}
+
+	.interior-container {
+		/* Layout */
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2rem;
+		align-items: start;
+		margin-top: 1.5rem;
+	}
+
+	.interior-text {
+		/* Layout */
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
 	.interior-gallery {
 		/* Layout */
-		height: 16.25rem;
-		margin-top: 0.75rem;
+		aspect-ratio: 16 / 9;
+		width: 100%;
 		
 		/* Box/Visual */
 		border-radius: 0.5rem;
@@ -105,8 +115,15 @@
 	}
 	
 	@media (max-width: 850px) {
+		.interior-container {
+			/* Layout */
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
 		.interior-gallery {
 			/* Layout */
+			aspect-ratio: auto;
 			height: 12rem;
 		}
 	}
