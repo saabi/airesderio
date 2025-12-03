@@ -135,8 +135,9 @@ Design proposals, mockups, and visual assets for the project.
 - **#006**: ✅ Add SEO Meta Tags (SEO) - **Complete**
 - **#008**: ✅ Add Unit Tests (Quality Assurance) - **Complete**
 - **#012**: ✅ Simplify Theming Logic (Code Quality, Refactoring) - **Complete**
+- **#015**: ⏸️ Remove CategorySelector Component and Related Code (Code Cleanup) - **Not Started** - *Do before #014*
 - **#013**: ⏸️ Refactor Unnecessary :global CSS Selectors (Code Quality, Refactoring) - **Not Started**
-- **#014**: ⏸️ Refactor app.css Classes into Components (Code Quality, Component Architecture) - **Not Started**
+- **#014**: ⏸️ Refactor app.css Classes into Components (Code Quality, Component Architecture) - **Not Started** - *Depends on #015*
 - **#011**: ⏸️ Organize Place Photo Carousel Files (Content Management) - **Not Started** - *Do before #007*
 - **#007**: ⏸️ Image Optimization (Performance) - **Pending** - *Depends on #011*
 
