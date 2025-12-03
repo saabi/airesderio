@@ -136,6 +136,7 @@ Design proposals, mockups, and visual assets for the project.
 - **#008**: ✅ Add Unit Tests (Quality Assurance) - **Complete**
 - **#012**: ✅ Simplify Theming Logic (Code Quality, Refactoring) - **Complete**
 - **#013**: ⏸️ Refactor Unnecessary :global CSS Selectors (Code Quality, Refactoring) - **Not Started**
+- **#014**: ⏸️ Refactor app.css Classes into Components (Code Quality, Component Architecture) - **Not Started**
 - **#011**: ⏸️ Organize Place Photo Carousel Files (Content Management) - **Not Started** - *Do before #007*
 - **#007**: ⏸️ Image Optimization (Performance) - **Pending** - *Depends on #011*
 
