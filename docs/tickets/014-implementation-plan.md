@@ -14,7 +14,8 @@ The refactoring will be done in this order (from simplest to most complex):
 1. **`.wrap` → Footer component** (Simplest - single usage)
 2. **`.skip-link` → SkipLink component** (Simple - single usage, reusable)
 3. **`body.nav-open` → Svelte action** (Simple - single usage, better pattern)
-4. **`.scroll-animate` → Decision needed** (Complex - 36 instances across 7 components)
+
+**Note:** The `.scroll-animate` class has been moved to a separate ticket (#016) due to its complexity (36 instances across 7 components).
 
 ---
 
@@ -277,188 +278,11 @@ The refactoring will be done in this order (from simplest to most complex):
 
 ---
 
-## Phase 4: Refactor `.scroll-animate` Class
-
-### Current State
-- **Location:** `fe/src/app.css:244-272`
-- **Usage:** 36 instances across 7 section components
-- **Complexity:** ⭐⭐⭐ Complex
-
-### Decision Point: Component vs Utility Class
-
-**Option A: Keep as Utility Class (Recommended)**
-- **Pros:**
-  - Minimal changes required
-  - Works well with existing section observer pattern
-  - No breaking changes to component APIs
-  - Easier to maintain current behavior
-- **Cons:**
-  - Still global CSS
-  - Less encapsulated
-
-**Option B: Componentize as ScrollAnimate.svelte**
-- **Pros:**
-  - Better encapsulation
-  - TypeScript props for animation parameters
-  - Reusable component
-- **Cons:**
-  - Requires wrapping 36 elements
-  - More complex implementation
-  - Potential performance impact (36 wrapper components)
-  - Need to handle `data-section-active` and `data-item-active` attributes
-
-### Recommended Approach: Keep as Utility Class
-
-Given the extensive usage (36 instances) and the tight integration with section observers (`data-section-active`, `data-item-active`), **keeping it as a utility class is recommended**. However, we can improve it by:
-
-1. Moving CSS to a shared utility CSS file (if project structure supports it)
-2. OR keeping it in `app.css` but documenting it as a global utility
-3. Adding better comments explaining the pattern
-
-### Alternative: If Componentizing
-
-If the decision is to componentize, here's the implementation plan:
-
-#### Step 4.1: Create ScrollAnimate Component
-1. Create `fe/src/lib/components/ui/ScrollAnimate.svelte`
-2. Component structure:
-   ```svelte
-   <script module lang="ts">
-       // ===== TYPES =====
-       type OffsetType = 'text' | 'visual' | number;
-       
-       interface Props {
-           delay?: number;
-           offset?: OffsetType;
-           duration?: number;
-           scale?: number;
-           easing?: string;
-           class?: string;
-           children: import('svelte').Snippet;
-       }
-   </script>
-   
-   <script lang="ts">
-       import { animationOffset, animationDuration, animationDelay } from '$lib/constants/animation';
-       
-       // ===== PROPS =====
-       let {
-           delay,
-           offset,
-           duration,
-           scale = 0.98,
-           easing = 'cubic-bezier(0.22, 1, 0.36, 1)',
-           class: className = '',
-           children
-       }: Props = $props();
-       
-       // ===== DERIVED =====
-       let computedOffset = $derived.by(() => {
-           if (typeof offset === 'number') return `${offset}px`;
-           if (offset === 'text' || offset === 'visual') {
-               return animationOffset(offset);
-           }
-           return animationOffset('text');
-       });
-       
-       let computedDuration = $derived(duration ?? animationDuration());
-       let computedDelay = $derived(delay ?? 0);
-   </script>
-   
-   <div
-       class="scroll-animate {className}"
-       style="--scroll-animate-delay: {computedDelay}ms; --scroll-animate-offset: {computedOffset}; --scroll-animate-duration: {computedDuration}ms; --scroll-animate-scale: {scale}; --scroll-animate-easing: {easing};"
-   >
-       {@render children()}
-   </div>
-   
-   <style>
-       /* Move CSS from app.css here */
-   </style>
-   ```
-
-#### Step 4.2: Update All Components (36 instances)
-For each component using `scroll-animate`:
-1. Import `ScrollAnimate` component
-2. Replace:
-   ```svelte
-   <div class="scroll-animate" style="...">
-       <!-- content -->
-   </div>
-   ```
-   with:
-   ```svelte
-   <ScrollAnimate offset="text" delay={animationDelay(1)}>
-       <!-- content -->
-   </ScrollAnimate>
-   ```
-
-**Components to update:**
-- `Location.svelte` - 6 instances
-- `Intro.svelte` - 6 instances
-- `ContactSection.svelte` - 4 instances
-- `Equipment.svelte` - 4 instances
-- `Interior.svelte` - 10 instances
-- `Hero.svelte` - 2 instances
-- `FloorPlans.svelte` - 4 instances
-
-#### Step 4.3: Handle data-item-active Attribute
-The component needs to support `data-item-active` for title observers. This requires:
-- Adding prop for `dataItemActive?: boolean`
-- Applying attribute conditionally
-- Ensuring section observer pattern still works
-
-#### Step 4.4: Remove CSS from app.css
-1. Remove all `.scroll-animate` rules
-2. Remove `[data-section-active] .scroll-animate` rules
-3. Remove media query for reduced motion
-
-### Recommended: Keep as Utility (Simpler Approach)
-
-#### Step 4.1: Document the Pattern
-1. Add comprehensive comments to `app.css` explaining:
-   - How `scroll-animate` works
-   - The relationship with section observers
-   - Required CSS variables
-   - Usage pattern
-
-#### Step 4.2: Verify No Refactoring Needed
-1. Review all 36 usages
-2. Confirm they all follow the same pattern
-3. Verify no component-specific customizations
-4. If all consistent, keep as-is
-
-### Expected Outcome (If Keeping as Utility)
-- `.scroll-animate` remains in `app.css` with better documentation
-- All animations continue to work
-- No breaking changes
-- Clearer understanding of the pattern
-
-### Expected Outcome (If Componentizing)
-- `ScrollAnimate.svelte` component created
-- All 36 instances updated
-- `.scroll-animate` CSS moved to component
-- TypeScript props for better type safety
-- More maintainable but more complex
-
-### Files Modified (If Componentizing)
-- `fe/src/lib/components/ui/ScrollAnimate.svelte` (new)
-- `fe/src/lib/components/sections/Location.svelte`
-- `fe/src/lib/components/sections/Intro.svelte`
-- `fe/src/lib/components/sections/ContactSection.svelte`
-- `fe/src/lib/components/sections/Equipment.svelte`
-- `fe/src/lib/components/sections/Interior.svelte`
-- `fe/src/lib/components/sections/Hero.svelte`
-- `fe/src/lib/components/sections/FloorPlans.svelte`
-- `fe/src/app.css`
-
-### Estimated Time
-- **If keeping as utility:** 30 minutes (documentation)
-- **If componentizing:** 3-4 hours (36 instances + testing)
+**Note:** The `.scroll-animate` class refactoring has been moved to ticket #016 due to its complexity (36 instances across 7 components). See `016-refactor-scroll-animate.md` for details.
 
 ---
 
-## Phase 5: Final Verification
+## Phase 4: Final Verification
 
 ### Step 5.1: Code Quality Checks
 1. Run `svelte-check` - must pass with 0 errors
@@ -519,11 +343,8 @@ The component needs to support `data-item-active` for title observers. This requ
 - [ ] No visual glitches
 
 ### Scroll Animations
-- [ ] All 36 instances animate correctly
-- [ ] Animations trigger when sections become visible
-- [ ] Animation parameters (delay, offset, duration) work
-- [ ] Reduced motion preference respected
-- [ ] No animation jank or stuttering
+- [ ] Note: Scroll animations are tracked in ticket #016
+- [ ] Verify animations still work (they should, as CSS remains in app.css)
 
 ---
 
@@ -544,9 +365,8 @@ If issues are discovered:
    - Revert Header.svelte changes
    - Restore `body.nav-open` in app.css
 
-4. **For `.scroll-animate` refactoring:**
-   - If componentized, revert all component changes
-   - Restore CSS in app.css
+4. **For scroll-animate refactoring:**
+   - See ticket #016 for rollback procedures
 
 ---
 
@@ -569,10 +389,9 @@ If issues are discovered:
 - Phase 1 (`.wrap`): 15-20 minutes
 - Phase 2 (`.skip-link`): 20-30 minutes
 - Phase 3 (`body.nav-open`): 15-20 minutes
-- Phase 4 (`.scroll-animate`): 30 minutes - 4 hours (depending on approach)
-- Phase 5 (Verification): 30-45 minutes
+- Phase 4 (Verification): 30-45 minutes
 
-**Total: 2-6 hours** (depending on scroll-animate approach)
+**Total: 1-2 hours**
 
 ---
 
@@ -582,5 +401,5 @@ If issues are discovered:
 - Test thoroughly after each phase before moving to next
 - Consider committing after each phase for easier rollback
 - Document any deviations from this plan
-- Update ticket #014 with actual approach taken for `.scroll-animate`
+- Scroll-animate refactoring is tracked in ticket #016
 
