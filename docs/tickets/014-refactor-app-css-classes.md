@@ -9,56 +9,13 @@ Refactoring, CSS Architecture
 ## Description
 Several utility classes in `app.css` are used across components and could be better encapsulated within component files or converted to reusable components. This refactoring will improve component encapsulation, reduce global CSS pollution, and make the codebase more maintainable.
 
+**Note:** Category-related classes (`.category-color`, `.category-border`, `.category-text`, and `.category-*` modifier classes) have been removed in ticket #015. This ticket focuses on the remaining utility classes.
+
 ## Current State
 
 ### Classes in `app.css` and Their Usage
 
-#### 1. Category Utility Classes
-**Location:** `fe/src/app.css:245-255`
-
-```css
-.category-color {
-    background-color: var(--category-color, var(--color-accent-primary));
-}
-
-.category-border {
-    border-color: var(--category-color, var(--color-accent-primary));
-}
-
-.category-text {
-    color: var(--category-color, var(--color-accent-primary));
-}
-```
-
-**Usage:**
-- `CategorySelector.svelte:134` - Uses `category-color` class
-- `Location.svelte:928, 1012` - Uses `--category-color` CSS variable directly (not the classes)
-
-**Analysis:**
-- Utility classes that apply category colors
-- Only used in `CategorySelector` component
-- Could be moved to component-specific styles
-
-#### 2. Category Modifier Classes
-**Location:** `fe/src/app.css:257-299`
-
-```css
-.category-edificio-principal {
-    --category-color: var(--category-edificio-principal);
-}
-/* ... 10 more category classes ... */
-```
-
-**Usage:**
-- `CategorySelector.svelte:134` - Uses `toCategoryClass()` function to generate class names dynamically
-- Function converts category names to kebab-case class names
-
-**Analysis:**
-- These classes set CSS variables (`--category-color`)
-- Used only in `CategorySelector` component
-- Could be replaced with inline styles or component logic
-
-#### 3. `.scroll-animate` Class
+#### 1. `.scroll-animate` Class
 **Location:** `fe/src/app.css:301-329`
 
 ```css
@@ -153,36 +110,7 @@ body.nav-open {
 
 ## Proposed Solution
 
-### Solution 1: Move Category Classes to `CategorySelector.svelte`
-
-**Approach:**
-1. Move `.category-color`, `.category-border`, `.category-text` to `CategorySelector.svelte`
-2. Replace category modifier classes (`.category-*`) with inline styles or computed CSS variables
-3. Update `toCategoryClass()` function to set inline `style` attribute instead of class
-
-**Benefits:**
-- Better component encapsulation
-- Reduces global CSS
-- Category styling lives with category component
-
-**Implementation:**
-```svelte
-<!-- CategorySelector.svelte -->
-<span 
-  class="legend-color category-color"
-  style="--category-color: var(--category-{category})"
->
-  <!-- content -->
-</span>
-
-<style>
-  .category-color {
-    background-color: var(--category-color, var(--color-accent-primary));
-  }
-</style>
-```
-
-### Solution 2: Componentize `.scroll-animate` as `ScrollAnimate.svelte`
+### Solution 1: Componentize `.scroll-animate` as `ScrollAnimate.svelte`
 
 **Approach:**
 1. Create `ScrollAnimate.svelte` wrapper component
@@ -224,7 +152,7 @@ body.nav-open {
 
 **Alternative:** Keep as utility class but move to component-specific CSS file if used in single component.
 
-### Solution 3: Move `.wrap` to `Footer.svelte`
+### Solution 2: Move `.wrap` to `Footer.svelte`
 
 **Approach:**
 1. Move `.wrap` styles to `Footer.svelte` component
@@ -236,7 +164,7 @@ body.nav-open {
 - No global CSS pollution
 - Clearer intent
 
-### Solution 4: Componentize `.skip-link` as `SkipLink.svelte`
+### Solution 3: Componentize `.skip-link` as `SkipLink.svelte`
 
 **Approach:**
 1. Create `SkipLink.svelte` component
@@ -271,7 +199,7 @@ body.nav-open {
 </style>
 ```
 
-### Solution 5: Handle `body.nav-open` with Svelte Action
+### Solution 4: Handle `body.nav-open` with Svelte Action
 
 **Approach:**
 1. Create `preventScroll` action in `Header.svelte` or utility file
@@ -305,8 +233,6 @@ body.nav-open {
 ```
 
 ## Acceptance Criteria
-- [ ] Category utility classes (`.category-color`, `.category-border`, `.category-text`) moved to `CategorySelector.svelte`
-- [ ] Category modifier classes replaced with inline styles or removed
 - [ ] `.scroll-animate` either componentized or moved to appropriate component files
 - [ ] `.wrap` moved to `Footer.svelte` with component-specific name
 - [ ] `.skip-link` componentized as `SkipLink.svelte`
@@ -336,25 +262,25 @@ body.nav-open {
    - Move CSS to shared utility CSS file or keep in `app.css` if truly global
 4. Test scroll animations in all sections
 
-### Phase 3: Layout Utilities
+### Phase 2: Layout Utilities
 1. Move `.wrap` styles to `Footer.svelte`
 2. Rename class to component-specific name (e.g., `.footer-wrap`)
 3. Remove from `app.css`
 4. Test footer layout
 
-### Phase 4: Skip Link
+### Phase 3: Skip Link
 1. Create `SkipLink.svelte` component
 2. Move styles from `app.css` to component
 3. Update `+layout.svelte` to use component
 4. Test skip link functionality (keyboard navigation)
 
-### Phase 5: Body Class Management
+### Phase 4: Body Class Management
 1. Create `preventScroll` action or handle in `Header` component
 2. Replace `body.classList.toggle('nav-open')` with action
 3. Remove `body.nav-open` from `app.css`
 4. Test mobile menu scroll prevention
 
-### Phase 6: Verification
+### Phase 5: Verification
 1. Run `svelte-check` to verify no errors
 2. Manually test all affected components
 3. Verify animations work correctly
@@ -364,7 +290,6 @@ body.nav-open {
 
 ## Related Files
 - `fe/src/app.css` - Contains all classes to be refactored
-- `fe/src/lib/components/features/CategorySelector.svelte` - Uses category classes
 - `fe/src/lib/components/sections/Location.svelte` - Uses scroll-animate (6 instances)
 - `fe/src/lib/components/sections/Intro.svelte` - Uses scroll-animate (6 instances)
 - `fe/src/lib/components/sections/ContactSection.svelte` - Uses scroll-animate (4 instances)
@@ -377,10 +302,10 @@ body.nav-open {
 - `fe/src/routes/+layout.svelte` - Uses `.skip-link` class
 
 ## Estimated Effort
-4-6 hours
+3-5 hours (reduced after category classes removed in #015)
 
 ## Dependencies
-None
+- **Ticket #015** - Must be completed first (removes category classes)
 
 ## Status
 **Pending** - Not started
@@ -389,6 +314,6 @@ None
 - This refactoring improves component encapsulation and reduces global CSS
 - `.scroll-animate` is the most complex case due to extensive usage (36 instances across 7 components)
 - Consider whether `scroll-animate` should be a component or remain a utility class based on project patterns
-- Category classes are only used in one component, making them good candidates for component-specific styles
 - Layout utilities (`.wrap`, `.skip-link`) are single-use and should definitely be componentized
+- Category classes were removed in ticket #015, so they are no longer part of this refactoring
 
