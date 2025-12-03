@@ -159,21 +159,31 @@ Scan directories at build time and generate metadata:
    - Remove dependency on `lugares-direcciones.json`
    - Load `places.json` instead (or load on-demand)
    - Remove `PATH_ID_TO_PLACE_DATA` mapping
-   - Simplify `openGalleryForCurrentPlace()` to use pathId directly
+   - Simplify `openGalleryForCurrentPlace()` to use pathId directly and load place data from `places.json`
+   - **Fix gallery button**: Ensure it uses the new JSON structure to show correct photos and metadata
+   - **Disable buttons when no place selected**: Gallery button and home/reset button should be disabled when `currentPathId` is `null` (no place selected on map)
 
 3. **Update `openPhotoCarousel()`**:
    - Auto-discover photos from directory (scan `/places/${placeId}/`)
    - Or load photo list from JSON if preferred
-   - Use metadata from `places.json`
+   - Use metadata from `places.json` (nombre, descripcion, thingstodo)
+   - Ensure photos are correctly loaded from `/places/${pathId}/` directory
 
 4. **Fix Map path ID mismatch**:
    - Either rename directory `parqueaguirre` → `parque`
    - Or update Map component to use `parqueaguirre`
 
-5. **Remove unused code**:
+5. **Update navigation buttons**:
+   - Disable gallery button when `mapComponent.currentPathId` is `null`
+   - Disable home/reset button when `mapComponent.currentPathId` is `null`
+   - Add visual disabled state (opacity, cursor, etc.)
+   - Buttons should only be enabled when a place is selected on the map
+
+6. **Remove unused code**:
    - Remove `loadPlacesData()` if no longer needed
    - Remove `placesData` state if only used for carousel
    - Remove category-related code if not needed
+   - Remove `PATH_ID_TO_PLACE_DATA` mapping constant
 
 ## Acceptance Criteria
 
@@ -182,7 +192,11 @@ Scan directories at build time and generate metadata:
 - [ ] `thingstodo` contains detailed descriptions about usefulness and activities
 - [ ] PhotoCarousel works with new structure
 - [ ] PhotoCarousel displays `thingstodo` content (may need UI update)
-- [ ] Gallery button opens carousel with correct photos and metadata
+- [ ] **Gallery button uses new JSON structure to show correct photos and metadata**
+- [ ] **Gallery button is disabled when no place is selected on map**
+- [ ] **Home/reset button is disabled when no place is selected on map**
+- [ ] Buttons show visual disabled state (opacity, cursor changes)
+- [ ] Gallery button opens carousel with correct photos from `/places/${pathId}/` directory
 - [ ] No dependency on `lugares-direcciones.json` for carousel
 - [ ] Map path ID mismatch resolved (`parque` vs `parqueaguirre`)
 - [ ] Code simplified (removed unnecessary mapping logic)
@@ -203,4 +217,6 @@ Scan directories at build time and generate metadata:
 - Consider if photo filenames should be in JSON or auto-discovered from directory
 - The `thingstodo` property should be displayed in the PhotoCarousel component (may require UI update to show longer text)
 - Consider updating the `Place` type definition in `fe/src/lib/types/index.ts` to include `thingstodo?: string`
+- **Button state**: When `mapComponent.currentPathId` is `null`, both gallery and reset buttons should be disabled
+- **Gallery button fix**: The current implementation uses old JSON mapping which is incorrect. After this refactor, it should directly use `pathId` to load from `places.json` and photos from `/places/${pathId}/`
 
