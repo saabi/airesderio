@@ -325,24 +325,36 @@
 		object-fit: cover;
 	}
 
-	.nav-button {
+	:global(.nav-button) {
 		/* Positioning */
-		position: absolute;
-		top: 50%;
-		z-index: 10;
+		position: absolute !important;
+		top: 50% !important;
+		z-index: 10 !important;
 
 		/* Effects & Motion */
-		transform: translateY(-50%);
+		transform: translateY(-50%) !important;
 	}
 
-	.nav-button.prev {
-		/* Positioning */
-		left: 1rem;
+	:global(.nav-button:hover) {
+		/* Effects & Motion */
+		transform: translateY(-50%) scale(1.1) !important;
 	}
 
-	.nav-button.next {
+	:global(.nav-button:active) {
+		/* Effects & Motion */
+		transform: translateY(-50%) scale(0.95) !important;
+	}
+
+	:global(.nav-button.prev) {
 		/* Positioning */
-		right: 1rem;
+		left: 1rem !important;
+		right: auto !important;
+	}
+
+	:global(.nav-button.next) {
+		/* Positioning */
+		right: 1rem !important;
+		left: auto !important;
 	}
 
 
@@ -399,12 +411,12 @@
 			padding: 1rem;
 		}
 
-		.nav-button.prev {
+		:global(.nav-button.prev) {
 			/* Positioning */
 			left: 0.5rem;
 		}
 
-		.nav-button.next {
+		:global(.nav-button.next) {
 			/* Positioning */
 			right: 0.5rem;
 		}

@@ -4,6 +4,7 @@
 	import CircularButton from '$lib/components/ui/CircularButton.svelte';
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
+	import CarouselDots from '$lib/components/ui/CarouselDots.svelte';
 
 	// ===== TYPES =====
 	interface ImageData {
@@ -114,17 +115,14 @@
 			>
 				<ArrowLeft />
 			</CircularButton>
-			<div class='carousel-dots'>
-				{#each images as _, index}
-					<button
-						class='dot'
-						class:active={index === currentImageIndex}
-						onclick={() => goToImage(index)}
-						aria-label='Ver imagen {index + 1}'
-						type='button'
-					></button>
-				{/each}
-			</div>
+			<CarouselDots
+				total={images.length}
+				currentIndex={currentImageIndex}
+				onDotClick={goToImage}
+				ariaLabel={(index) => `Ver imagen ${index + 1}`}
+				variant='default'
+				showTransform={true}
+			/>
 			<CircularButton
 				variant="overlay"
 				size="md"
@@ -226,42 +224,4 @@
 	}
 
 
-	.carousel-dots {
-		/* Layout */
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
-	}
-
-	.dot {
-		/* Layout */
-		width: 0.75rem;
-		height: 0.75rem;
-
-		/* Box/Visual */
-		border: none;
-		border-radius: 50%;
-		background: color-mix(in oklch, var(--color-text-primary) 50%, transparent);
-
-		/* Misc/Overrides */
-		cursor: pointer;
-
-		/* Effects & Motion */
-		transition:
-			background-color 0.2s ease,
-			transform 0.2s ease;
-	}
-
-	.dot.active {
-		/* Box/Visual */
-		background: var(--color-text-inverse);
-
-		/* Effects & Motion */
-		transform: scale(1.2);
-	}
-
-	.dot:hover {
-		/* Box/Visual */
-		background: color-mix(in oklch, var(--color-text-inverse) 75%, transparent);
-	}
 </style>
