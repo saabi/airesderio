@@ -69,4 +69,15 @@
 		background: var(--color-accent-primary);
 		opacity: 0.3;
 	}
+
+	/* Responsive typography */
+	@media (max-width: 640px) {
+		.title {
+			font-size: 1.4rem;
+		}
+
+		.title .big {
+			font-size: 1.4em;
+		}
+	}
 </style>
