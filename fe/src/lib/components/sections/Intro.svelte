@@ -54,16 +54,16 @@
 		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 		aria-labelledby='kpis-heading'
 	>
-		<h3 id='kpis-heading' class='vh'>Características principales del proyecto</h3>
+		<VisuallyHidden id="kpis-heading" tag="h3">Características principales del proyecto</VisuallyHidden>
 		<dl>
 			<dt class='kpi'><strong>2.500</strong><small>metros cuadrados</small></dt>
-			<dd class='vh'>Superficie total del proyecto</dd>
+			<VisuallyHidden tag="dd">Superficie total del proyecto</VisuallyHidden>
 			<dt class='kpi'><strong>1/2 + 1</strong><small>dorms · estudio</small></dt>
-			<dd class='vh'>Tipos de unidades disponibles</dd>
+			<VisuallyHidden tag="dd">Tipos de unidades disponibles</VisuallyHidden>
 			<dt class='kpi'><strong>TERRAZA</strong><small>PISCINA Y SOLARIUM HÚMEDO</small></dt>
-			<dd class='vh'>Amenities en terraza con piscina y solarium húmedo</dd>
+			<VisuallyHidden tag="dd">Amenities en terraza con piscina y solarium húmedo</VisuallyHidden>
 			<dt class='kpi'><strong>CAFETERÍA</strong><small>&nbsp;</small></dt>
-			<dd class='vh'>Servicio de cafetería incluido</dd>
+			<VisuallyHidden tag="dd">Servicio de cafetería incluido</VisuallyHidden>
 		</dl>
 	</aside>
 </section>
@@ -121,11 +121,6 @@
 	.intro__kpis dt {
 		/* Layout */
 		display: contents;
-	}
-
-	.intro__kpis dd {
-		/* Layout */
-		display: none;
 	}
 
 	.kpi strong {

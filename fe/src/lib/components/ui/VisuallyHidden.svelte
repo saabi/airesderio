@@ -2,7 +2,7 @@
 	// ===== TYPES =====
 	interface Props {
 		id?: string;
-		tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'div' | 'span';
+		tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'div' | 'span' | 'dd' | 'dt';
 		children: import('svelte').Snippet;
 	}
 
@@ -28,6 +28,10 @@
 	<div {id} class="visually-hidden">{@render children()}</div>
 {:else if tag === 'span'}
 	<span {id} class="visually-hidden">{@render children()}</span>
+{:else if tag === 'dd'}
+	<dd {id} class="visually-hidden">{@render children()}</dd>
+{:else if tag === 'dt'}
+	<dt {id} class="visually-hidden">{@render children()}</dt>
 {/if}
 
 <style>
