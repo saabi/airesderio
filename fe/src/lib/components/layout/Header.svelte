@@ -4,6 +4,7 @@
 	import { browser } from '$app/environment';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import { theme, type Theme } from '$lib/stores/theme';
+	import { menuStore } from '$lib/stores/menu';
 
 	// ===== TYPES =====
 	type NavLink = {
@@ -35,7 +36,6 @@
 	let {}: Props = $props();
 
 	// ===== STATE =====
-	let isMenuOpen = $state(false);
 	let colorEditorOpen = $state(false);
 	let devColorEditorModule =
 		$state<typeof import('$lib/components/dev/DevColorEditor.svelte') | null>(null);
@@ -44,15 +44,6 @@
 
 	// ===== DERIVED =====
 	let currentTheme = $derived($theme);
-
-	// ===== EFFECTS =====
-	$effect(() => {
-		if (isMenuOpen) {
-			document.body.classList.add('nav-open');
-		} else {
-			document.body.classList.remove('nav-open');
-		}
-	});
 
 	// ===== LIFECYCLE =====
 	onMount(() => {
@@ -84,7 +75,7 @@
 
 	// ===== FUNCTIONS =====
 	function toggleMenu() {
-		isMenuOpen = !isMenuOpen;
+		menuStore.toggle();
 	}
 
 	function toggleTheme() {
@@ -93,8 +84,8 @@
 
 	function handleNavClick(event: MouseEvent, href: string) {
 		// Close mobile menu if open
-		if (isMenuOpen) {
-			isMenuOpen = false;
+		if ($menuStore) {
+			menuStore.close();
 		}
 
 		// Handle anchor links
@@ -170,7 +161,7 @@
 		<nav
 			id='main-nav'
 			class='main-nav'
-			class:is-open={isMenuOpen}
+			class:is-open={$menuStore}
 			aria-label='Navegación principal'
 		>
 			<ul class='desktop-nav'>
@@ -248,9 +239,9 @@
 			<button
 				id='nav-toggle'
 				class='nav-toggle'
-				class:is-open={isMenuOpen}
+				class:is-open={$menuStore}
 				aria-label='Abrir menú'
-				aria-expanded={isMenuOpen}
+				aria-expanded={$menuStore}
 				aria-controls='main-nav'
 				onclick={toggleMenu}
 			>

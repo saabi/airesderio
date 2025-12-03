@@ -11,8 +11,9 @@
 	// ===== IMPORTS =====
 	import type { Snippet } from 'svelte';
 	import { onDestroy } from 'svelte';
-	// Import store to initialize theme system (initializes on import)
+	// Import stores to initialize systems (initializes on import)
 	import { theme } from '$lib/stores/theme';
+	import { menuStore } from '$lib/stores/menu';
 
 	// ===== PROPS =====
 	let { children }: { children: Snippet } = $props();
@@ -24,6 +25,7 @@
 	onDestroy(() => {
 		// Cleanup observers when layout is destroyed
 		theme.cleanup();
+		menuStore.cleanup();
 	});
 </script>
 
