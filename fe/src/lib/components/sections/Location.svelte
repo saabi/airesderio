@@ -4,6 +4,11 @@
 	import type { MapComponent } from '$lib/components/features/Map.svelte';
 	import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
 	import Title from '$lib/components/ui/Title.svelte';
+	import CircularButton from '$lib/components/ui/CircularButton.svelte';
+	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
+	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
+	import Building from '$lib/components/icons/Building.svelte';
+	import Gallery from '$lib/components/icons/Gallery.svelte';
 	import type { PlacesCarouselData, PlaceMetadata } from '$lib/types';
 
 	// ===== TYPES =====
@@ -193,176 +198,42 @@
 			</p>
 			<div class='map-navigation'>
 				<div class='navigation-row'>
-					<button
-						class='nav-button nav-button--prev'
-						onclick={() => mapComponent?.prev()}
-						aria-label='Anterior ubicación'
-						type='button'
+					<CircularButton
+						variant="solid"
+						size="sm"
+						ariaLabel="Anterior ubicación"
+						onClick={() => mapComponent?.prev()}
 					>
-						<svg
-							width='20'
-							height='20'
-							viewBox='0 0 20 20'
-							fill='none'
-							xmlns='http://www.w3.org/2000/svg'
-							aria-hidden='true'
-						>
-							<path
-								d='M12.5 15L7.5 10L12.5 5'
-								stroke='currentColor'
-								stroke-width='2'
-								stroke-linecap='round'
-								stroke-linejoin='round'
-							/>
-						</svg>
-					</button>
+						<ArrowLeft />
+					</CircularButton>
 					<div class='navigation-center'>
-						<button
-							class='nav-button nav-button--up'
-							class:disabled={!hasPlaceSelected}
-							onclick={() => mapComponent?.reset()}
-							aria-label='Volver al estado inicial'
-							type='button'
+						<CircularButton
+							variant="solid"
+							size="sm"
+							ariaLabel="Volver al estado inicial"
+							onClick={() => mapComponent?.reset()}
 							disabled={!hasPlaceSelected}
 						>
-							<svg
-								width='20'
-								height='20'
-								viewBox='0 0 20 20'
-								fill='none'
-								xmlns='http://www.w3.org/2000/svg'
-								aria-hidden='true'
-							>
-								<!-- Building icon -->
-								<rect
-									x='4'
-									y='7'
-									width='12'
-									height='10'
-									stroke='currentColor'
-									stroke-width='1.5'
-									stroke-linecap='round'
-									stroke-linejoin='round'
-								/>
-								<path
-									d='M4 7L10 3L16 7'
-									stroke='currentColor'
-									stroke-width='1.5'
-									stroke-linecap='round'
-									stroke-linejoin='round'
-								/>
-								<line
-									x1='7'
-									y1='10'
-									x2='7'
-									y2='17'
-									stroke='currentColor'
-									stroke-width='1.5'
-									stroke-linecap='round'
-								/>
-								<line
-									x1='13'
-									y1='10'
-									x2='13'
-									y2='17'
-									stroke='currentColor'
-									stroke-width='1.5'
-									stroke-linecap='round'
-								/>
-								<rect
-									x='8.5'
-									y='12'
-									width='3'
-									height='3'
-									stroke='currentColor'
-									stroke-width='1.5'
-									stroke-linecap='round'
-									stroke-linejoin='round'
-								/>
-							</svg>
-						</button>
-						<button
-							class='nav-button nav-button--gallery'
-							class:disabled={!hasPlaceSelected}
-							onclick={openGalleryForCurrentPlace}
-							aria-label='Abrir galería de fotos'
-							type='button'
+							<Building />
+						</CircularButton>
+						<CircularButton
+							variant="solid"
+							size="sm"
+							ariaLabel="Abrir galería de fotos"
+							onClick={openGalleryForCurrentPlace}
 							disabled={!hasPlaceSelected}
 						>
-							<svg
-								width='20'
-								height='20'
-								viewBox='0 0 20 20'
-								fill='none'
-								xmlns='http://www.w3.org/2000/svg'
-								aria-hidden='true'
-							>
-								<rect
-									x='3'
-									y='3'
-									width='5'
-									height='5'
-									rx='1'
-									stroke='currentColor'
-									stroke-width='2'
-									fill='none'
-								/>
-								<rect
-									x='12'
-									y='3'
-									width='5'
-									height='5'
-									rx='1'
-									stroke='currentColor'
-									stroke-width='2'
-									fill='none'
-								/>
-								<rect
-									x='3'
-									y='12'
-									width='5'
-									height='5'
-									rx='1'
-									stroke='currentColor'
-									stroke-width='2'
-									fill='none'
-								/>
-								<rect
-									x='12'
-									y='12'
-									width='5'
-									height='5'
-									rx='1'
-									stroke='currentColor'
-									stroke-width='2'
-									fill='none'
-								/>
-							</svg>
-						</button>
+							<Gallery />
+						</CircularButton>
 					</div>
-					<button
-						class='nav-button nav-button--next'
-						onclick={() => mapComponent?.next()}
-						aria-label='Siguiente ubicación'
-						type='button'
+					<CircularButton
+						variant="solid"
+						size="sm"
+						ariaLabel="Siguiente ubicación"
+						onClick={() => mapComponent?.next()}
 					>
-						<svg
-							width='20'
-							height='20'
-							viewBox='0 0 20 20'
-							fill='none'
-							xmlns='http://www.w3.org/2000/svg'
-							aria-hidden='true'
-						>
-							<path
-								d='M7.5 5L12.5 10L7.5 15'
-								stroke='currentColor'
-								stroke-width='2'
-								stroke-linecap='round'
-								stroke-linejoin='round'
-							/>
-						</svg>
-					</button>
+						<ArrowRight />
+					</CircularButton>
 				</div>
 			</div>
 		</div>
@@ -460,85 +331,6 @@
 		gap: 0.5rem;
 	}
 
-	.nav-button {
-		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 2.5rem;
-		height: 2.5rem;
-		padding: 0;
-
-		/* Box/Visual */
-		background: var(--color-bg-contrast);
-		border: 1px solid var(--color-border-strong);
-		border-radius: 50%;
-		color: var(--color-accent-primary);
-
-		/* Misc/Overrides */
-		cursor: pointer;
-
-		/* Effects & Motion */
-		transition:
-			background-color 0.2s ease,
-			border-color 0.2s ease,
-			color 0.2s ease,
-			transform 0.2s ease;
-	}
-
-	.nav-button:hover {
-		/* Box/Visual */
-		background: var(--color-accent-hover);
-		border-color: var(--color-accent-strong);
-		color: var(--color-text-on-accent);
-
-		/* Effects & Motion */
-		transform: scale(1.05);
-	}
-
-	.nav-button:active {
-		/* Box/Visual */
-		background: var(--color-accent-strong);
-
-		/* Effects & Motion */
-		transform: scale(0.95);
-	}
-
-	.nav-button:disabled,
-	.nav-button.disabled {
-		/* Box/Visual */
-		opacity: 0.5;
-		background: var(--color-bg-muted);
-		border-color: var(--color-border-subtle);
-		color: var(--color-text-secondary);
-
-		/* Misc/Overrides */
-		cursor: not-allowed;
-		pointer-events: none;
-	}
-
-	.nav-button:disabled:hover,
-	.nav-button.disabled:hover {
-		/* Box/Visual */
-		background: var(--color-bg-muted);
-		border-color: var(--color-border-subtle);
-		color: var(--color-text-secondary);
-
-		/* Effects & Motion */
-		transform: none;
-	}
-
-	.nav-button:focus-visible {
-		/* Box/Visual */
-		outline: 2px solid var(--color-accent-primary);
-		outline-offset: 2px;
-	}
-
-	.nav-button svg {
-		/* Layout */
-		width: 1.25rem;
-		height: 1.25rem;
-	}
 
 	.map-container {
 		/* Positioning */
