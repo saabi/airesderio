@@ -46,7 +46,6 @@
 	let carouselPhotos = $state<string[]>([]);
 	let carouselCurrentIndex = $state(0);
 	let mapComponent: MapComponent | null = $state(null);
-	let galleryCarouselVisible = $state(false);
 
 	// ===== DERIVED =====
 	// All category data is now loaded from JSON metadata
@@ -229,7 +228,7 @@
 		carouselCategory = category;
 		carouselPlaceId = placeId;
 		carouselPhotos = place.photos.map(
-			(filename: string) => `/lugares/${category}/${placeId}/${filename}`
+			(filename: string) => `/places/${placeId}/${filename}`
 		);
 		carouselCurrentIndex = 0;
 		photoCarouselVisible = true;
@@ -407,62 +406,6 @@
 								/>
 							</svg>
 						</button>
-						<button
-							class='nav-button nav-button--gallery'
-							onclick={() => (galleryCarouselVisible = true)}
-							aria-label='Abrir galería'
-							type='button'
-						>
-							<svg
-								width='20'
-								height='20'
-								viewBox='0 0 20 20'
-								fill='none'
-								xmlns='http://www.w3.org/2000/svg'
-								aria-hidden='true'
-							>
-								<rect
-									x='3'
-									y='3'
-									width='5'
-									height='5'
-									rx='1'
-									stroke='currentColor'
-									stroke-width='2'
-									fill='none'
-								/>
-								<rect
-									x='12'
-									y='3'
-									width='5'
-									height='5'
-									rx='1'
-									stroke='currentColor'
-									stroke-width='2'
-									fill='none'
-								/>
-								<rect
-									x='3'
-									y='12'
-									width='5'
-									height='5'
-									rx='1'
-									stroke='currentColor'
-									stroke-width='2'
-									fill='none'
-								/>
-								<rect
-									x='12'
-									y='12'
-									width='5'
-									height='5'
-									rx='1'
-									stroke='currentColor'
-									stroke-width='2'
-									fill='none'
-								/>
-							</svg>
-						</button>
 					</div>
 					<button
 						class='nav-button nav-button--next'
@@ -516,57 +459,6 @@
 	/>
 {/if}
 
-<!-- Gallery Carousel Placeholder -->
-{#if galleryCarouselVisible}
-	<div
-		class='gallery-carousel-overlay'
-		role='button'
-		tabindex='0'
-		onclick={(e) => {
-			if (e.target === e.currentTarget) {
-				galleryCarouselVisible = false;
-			}
-		}}
-		onkeydown={(e) => {
-			if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
-				e.preventDefault();
-				galleryCarouselVisible = false;
-			}
-		}}
-		aria-label='Cerrar galería'
-	>
-		<div class='gallery-carousel' role='dialog' aria-modal='true' aria-labelledby='gallery-title'>
-			<div class='gallery-header'>
-				<h3 id='gallery-title'>Galería</h3>
-				<button
-					class='gallery-close'
-					onclick={() => (galleryCarouselVisible = false)}
-					aria-label='Cerrar galería'
-					type='button'
-				>
-					<svg
-						width='24'
-						height='24'
-						viewBox='0 0 24 24'
-						fill='none'
-						xmlns='http://www.w3.org/2000/svg'
-					>
-						<path
-							d='M18 6L6 18M6 6L18 18'
-							stroke='currentColor'
-							stroke-width='2'
-							stroke-linecap='round'
-							stroke-linejoin='round'
-						/>
-					</svg>
-				</button>
-			</div>
-			<div class='gallery-content'>
-				<p>Galería de imágenes (placeholder)</p>
-			</div>
-		</div>
-	</div>
-{/if}
 
 <style>
 	#ubicacion {
@@ -690,124 +582,6 @@
 		/* Layout */
 		width: 1.25rem;
 		height: 1.25rem;
-	}
-
-	.gallery-carousel-overlay {
-		/* Positioning */
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 1000;
-
-		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 2rem;
-
-		/* Box/Visual */
-		background: rgba(0, 0, 0, 0.75);
-		backdrop-filter: blur(4px);
-
-		/* Effects & Motion */
-		animation: fadeIn 0.3s ease;
-	}
-
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-
-	.gallery-carousel {
-		/* Layout */
-		display: flex;
-		flex-direction: column;
-		max-width: 90vw;
-		max-height: 90vh;
-		width: 100%;
-		padding: 2rem;
-
-		/* Box/Visual */
-		background: var(--color-bg-contrast);
-		border-radius: 0.625rem;
-		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-
-		/* Effects & Motion */
-		animation: slideUp 0.3s ease;
-	}
-
-	@keyframes slideUp {
-		from {
-			transform: translateY(2rem);
-			opacity: 0;
-		}
-		to {
-			transform: translateY(0);
-			opacity: 1;
-		}
-	}
-
-	.gallery-header {
-		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 1.5rem;
-	}
-
-	.gallery-header h3 {
-		/* Layout */
-		margin: 0;
-
-		/* Typography */
-		font-size: 1.5rem;
-		font-weight: 600;
-		color: var(--color-text-on-light);
-	}
-
-	.gallery-close {
-		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 2rem;
-		height: 2rem;
-		padding: 0;
-
-		/* Box/Visual */
-		background: transparent;
-		border: none;
-		border-radius: 50%;
-		color: var(--color-text-on-light);
-
-		/* Misc/Overrides */
-		cursor: pointer;
-
-		/* Effects & Motion */
-		transition: background-color 0.2s ease;
-	}
-
-	.gallery-close:hover {
-		/* Box/Visual */
-		background: var(--color-bg-muted);
-	}
-
-	.gallery-content {
-		/* Layout */
-		flex: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 20rem;
-
-		/* Typography */
-		color: var(--color-text-secondary);
 	}
 
 	.map-container {
