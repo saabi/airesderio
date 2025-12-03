@@ -172,7 +172,7 @@ None - This should be done **before** ticket #014
 1-2 hours
 
 ## Status
-**Pending** - Not started
+**Complete** ✅ - CategorySelector component and all related code have been removed. Category CSS classes removed from app.css. Category color CSS variables kept for marker styling. All markers now display when showPlaceMarkers is true.
 
 ## Notes
 - Category color CSS variables (`--category-*`) must be **kept** as they are used for styling Google Maps markers
