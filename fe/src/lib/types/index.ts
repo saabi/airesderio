@@ -92,3 +92,20 @@ export interface MainBuilding {
 	placeId: string;
 	place: Place;
 }
+
+/**
+ * Simple place metadata for photo carousel
+ */
+export interface PlaceMetadata {
+	nombre: string;
+	descripcion?: string;
+	thingstodo?: string;
+	photos?: string[];
+}
+
+/**
+ * Places data structure for photo carousel (simple structure)
+ */
+export interface PlacesCarouselData {
+	places: Record<string, PlaceMetadata>;
+}

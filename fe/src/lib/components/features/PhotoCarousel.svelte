@@ -1,12 +1,11 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
-	import type { Place } from '$lib/types';
+	import type { PlaceMetadata } from '$lib/types';
 
 	// ===== TYPES =====
 	interface Props {
 		visible: boolean;
-		place: Place;
-		category: string;
+		place: PlaceMetadata;
 		placeId: string;
 		photos: string[];
 		currentIndex?: number;
@@ -19,7 +18,6 @@
 	let {
 		visible = false,
 		place,
-		category,
 		placeId,
 		photos = [],
 		currentIndex = $bindable(0),
@@ -115,6 +113,9 @@
 					<p>{currentIndex + 1} de {photos.length} fotos</p>
 					{#if place.descripcion}
 						<p class='photo-description'>{place.descripcion}</p>
+					{/if}
+					{#if place.thingstodo}
+						<p class='photo-thingstodo'>{place.thingstodo}</p>
 					{/if}
 				</div>
 			</div>
@@ -360,6 +361,16 @@
 		/* Typography */
 		font-style: italic;
 		color: var(--color-neutral-500) !important;
+	}
+
+	.photo-thingstodo {
+		/* Layout */
+		margin-top: 1rem;
+
+		/* Typography */
+		font-size: 0.875rem;
+		line-height: 1.5;
+		color: var(--color-text-on-light);
 	}
 
 	/* Mobile responsiveness */

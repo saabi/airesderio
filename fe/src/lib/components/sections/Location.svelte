@@ -4,13 +4,11 @@
 	import type { MapComponent } from '$lib/components/features/Map.svelte';
 	import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
 	import Title from '$lib/components/ui/Title.svelte';
-	import type { PlacesData, MarkerData, Place, MainBuilding, Category } from '$lib/types';
+	import type { PlacesCarouselData, PlaceMetadata } from '$lib/types';
 
 	// ===== TYPES =====
 	interface Props {
-		jsonUrl?: string;
-		showPlaceMarkers?: boolean;
-		enableClustering?: boolean;
+		// No props needed for carousel functionality
 	}
 
 	// Local utilities
@@ -23,7 +21,7 @@
 	} from '$lib/constants/animation';
 
 	// ===== STATIC CONSTANTS =====
-	const DEFAULT_JSON_URL = '/lugares/lugares-direcciones.json';
+	const PLACES_JSON_URL = '/places/places.json';
 </script>
 
 <script lang='ts'>
@@ -31,41 +29,21 @@
 	import { browser } from '$app/environment';
 
 	// ===== PROPS =====
-	let {
-		jsonUrl = DEFAULT_JSON_URL,
-		showPlaceMarkers = true,
-		enableClustering = false
-	}: Props = $props();
+	let {}: Props = $props();
 
 	// ===== STATE =====
-	let placesData = $state<PlacesData | null>(null);
+	let placesMetadata = $state<PlacesCarouselData | null>(null);
 	let photoCarouselVisible = $state(false);
-	let carouselPlace = $state<Place | null>(null);
-	let carouselCategory = $state<string>('');
+	let carouselPlace = $state<PlaceMetadata | null>(null);
 	let carouselPlaceId = $state<string>('');
 	let carouselPhotos = $state<string[]>([]);
 	let carouselCurrentIndex = $state(0);
 	let mapComponent: MapComponent | null = $state(null);
 
 	// ===== DERIVED =====
-	// All category data is now loaded from JSON metadata
-	let categories = $derived<Record<string, Category>>(placesData?.metadata?.categories || {});
-
-	let categoryIcons = $derived.by(() => {
-		const icons: Record<string, string> = {};
-		Object.entries(categories).forEach(([key, category]: [string, any]) => {
-			icons[key] = category.icon || '';
-		});
-		return icons;
-	});
-
-	let categoryNames = $derived.by(() => {
-		const names: Record<string, string> = {};
-		Object.entries(categories).forEach(([key, category]: [string, Category]) => {
-			names[key] = category.name || key.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
-		});
-		return names;
-	});
+	// Get current place from map to determine button states
+	let currentPlaceId = $derived.by(() => mapComponent?.currentPathId ?? null);
+	let hasPlaceSelected = $derived.by(() => currentPlaceId !== null);
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: locationObserver, visible: locationVisible } = createSectionObserver('location', {
@@ -111,121 +89,39 @@
 		};
 	}
 
-	// ===== UTILITY FUNCTIONS =====
-	const toCategoryClass = (category: string) => `category-${category.replace(/[^a-z0-9]+/gi, '-')}`;
-
-	const getDistanceBadgeClass = (value: string | undefined) => {
-		switch (value) {
-			case 'MUY CERCA':
-				return 'distance-badge--very-near';
-			case 'CERCANO':
-				return 'distance-badge--near';
-			default:
-				return 'distance-badge--far';
-		}
-	};
-
-	let selectableCategories = $derived.by(() => {
-		if (!placesData) return [];
-
-		return Object.keys(placesData.lugares || {}).filter((category: string) => {
-			const categoryMeta = placesData?.metadata?.categories?.[category];
-			return !categoryMeta?.isAlwaysVisible;
-		});
-	});
-
-	let alwaysVisibleCategories = $derived.by(() => {
-		if (!placesData) return [];
-
-		const meta = placesData.metadata?.categories || {};
-		return Object.entries(meta)
-			.filter(([, category]: [string, Category]) => category?.isAlwaysVisible)
-			.map(([key]) => key);
-	});
-
-	let allMarkers = $derived.by<MarkerData[]>(() => {
-		if (!placesData) return [];
-
-		const markers: MarkerData[] = [];
-
-		Object.entries(placesData.lugares || {}).forEach(
-			([category, places]: [string, Record<string, Place>]) => {
-				Object.entries(places).forEach(([placeId, place]: [string, Place]) => {
-					if (!place?.coordenadas_aproximadas) return;
-
-					markers.push({
-						id: `${category}_${placeId}`,
-						position: place.coordenadas_aproximadas,
-						title: place.nombre,
-						category,
-						placeId,
-						place,
-						isMainMarker: !!place.es_edificio_principal
-					});
-				});
-			}
-		);
-
-		return markers;
-	});
-
-	let mainMarker = $derived.by<MarkerData | null>(
-		() => allMarkers.find((marker) => marker.isMainMarker) || null
-	);
-	let mainMarkerId = $derived.by<string | null>(() => mainMarker?.id ?? null);
-
-	let visibleMarkers = $derived.by<MarkerData[]>(() => {
-		if (!allMarkers.length) return [];
-
-		// Show all markers if showPlaceMarkers is true, otherwise show only always-visible categories
-		if (!showPlaceMarkers) {
-			const alwaysVisibleSet = new Set(alwaysVisibleCategories);
-			if (mainMarker?.category) {
-				alwaysVisibleSet.add(mainMarker.category);
-			}
-			return allMarkers.filter((marker) => alwaysVisibleSet.has(marker.category));
-		}
-
-		// Show all markers when showPlaceMarkers is true
-		return allMarkers;
-	});
 
 	// ===== EFFECTS =====
 	// (Effects will be added here if needed)
 
 	// ===== ASYNC FUNCTIONS =====
-	// Load places data from JSON
-	async function loadPlacesData() {
-		if (!browser || !jsonUrl) return;
+	// Load places metadata from JSON
+	async function loadPlacesMetadata() {
+		if (!browser) return;
 
 		if (import.meta.env.DEV) {
-			console.log('Loading places data from:', jsonUrl);
+			console.log('Loading places metadata from:', PLACES_JSON_URL);
 		}
 		try {
-			const response = await fetch(jsonUrl);
+			const response = await fetch(PLACES_JSON_URL);
 			if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 			const data = await response.json();
-			placesData = data;
+			placesMetadata = data;
 			if (import.meta.env.DEV) {
-				console.log('Places data loaded successfully:', {
-					totalCategories: Object.keys(data.lugares).length,
-					hasMainBuilding: !!findMainBuilding(data),
-					categoriesLoaded: Object.keys(data.metadata?.categories || {}).length,
-					categories: $state.snapshot(data.metadata?.categories)
+				console.log('Places metadata loaded successfully:', {
+					totalPlaces: Object.keys(data.places || {}).length
 				});
 			}
 		} catch (error) {
-			console.error('Error loading places data:', error);
+			console.error('Error loading places metadata:', error);
 		}
 	}
 
 	// ===== EVENT HANDLERS =====
 	// Open photo carousel
-	function openPhotoCarousel(place: Place, category: string, placeId: string) {
+	function openPhotoCarousel(place: PlaceMetadata, placeId: string) {
 		if (!place.photos || place.photos.length === 0) return;
 
 		carouselPlace = place;
-		carouselCategory = category;
 		carouselPlaceId = placeId;
 		carouselPhotos = place.photos.map(
 			(filename: string) => `/places/${placeId}/${filename}`
@@ -238,79 +134,27 @@
 	function closePhotoCarousel() {
 		photoCarouselVisible = false;
 		carouselPlace = null;
-		carouselCategory = '';
 		carouselPlaceId = '';
 		carouselPhotos = [];
 		carouselCurrentIndex = 0;
 	}
 
-	// Map path IDs from Map component to place data in JSON
-	// Path IDs match directory names in fe/static/places/
-	const PATH_ID_TO_PLACE_DATA: Record<string, { category: string; placeId: string }> = {
-		terminal: { category: 'transporte', placeId: 'terminal_omnibus' },
-		forum: { category: 'cultura_entretenimiento', placeId: 'forum_santiago' },
-		casagob: { category: 'lugares_historicos', placeId: 'casa_gobierno' },
-		plazavea: { category: 'supermercados', placeId: 'vea_rivadavia' },
-		parque: { category: 'parques_recreacion', placeId: 'parque_aguirre' },
-		avroca: { category: 'lugares_historicos', placeId: 'plaza_libertad' } // Avenida Roca area - using closest match
-	};
-
 	// Open gallery for current place on map
 	function openGalleryForCurrentPlace() {
-		if (!mapComponent || !placesData) return;
+		if (!mapComponent || !placesMetadata) return;
 
 		const currentPathId = mapComponent.currentPathId;
 		if (!currentPathId) return;
 
-		const placeMapping = PATH_ID_TO_PLACE_DATA[currentPathId];
-		if (!placeMapping) return;
+		const place = placesMetadata.places?.[currentPathId];
+		if (!place || !place.photos || place.photos.length === 0) return;
 
-		const { category, placeId: jsonPlaceId } = placeMapping;
-		const place = placesData.lugares?.[category]?.[jsonPlaceId] as Place | undefined;
-
-		if (place && place.photos && place.photos.length > 0) {
-			// Use pathId (directory name) for photo paths, but jsonPlaceId for place data
-			openPhotoCarousel(place, category, currentPathId);
-		}
+		openPhotoCarousel(place, currentPathId);
 	}
 
-	// Toggle markers visibility
-	function toggleMarkers() {
-		showPlaceMarkers = !showPlaceMarkers;
-	}
-
-	// Find the main building from JSON data
-	function findMainBuilding(data: PlacesData | null = placesData): MainBuilding | null {
-		if (!data) return null;
-
-		for (const [category, places] of Object.entries(data.lugares || {})) {
-			for (const [placeId, place] of Object.entries(places)) {
-				const typedPlace = place as Place;
-				if (typedPlace.es_edificio_principal) {
-					return {
-						category,
-						placeId,
-						place: typedPlace
-					};
-				}
-			}
-		}
-		return null;
-	}
-
-	// Load places data when component mounts
+	// Load places metadata when component mounts
 	$effect(() => {
-		loadPlacesData();
-	});
-
-	$effect(() => {
-		if (import.meta.env.DEV && Object.keys(categories).length > 0) {
-			console.log('🎨 Categories loaded:', {
-				totalCategories: Object.keys(categories).length,
-				mainBuildingCategory: $state.snapshot(categories.edificio_principal),
-				allCategories: Object.keys(categories)
-			});
-		}
+		loadPlacesMetadata();
 	});
 
 	// OLD FUNCTIONS - REMOVED (now handled by GoogleMap component)
@@ -376,9 +220,11 @@
 					<div class='navigation-center'>
 						<button
 							class='nav-button nav-button--up'
+							class:disabled={!hasPlaceSelected}
 							onclick={() => mapComponent?.reset()}
 							aria-label='Volver al estado inicial'
 							type='button'
+							disabled={!hasPlaceSelected}
 						>
 							<svg
 								width='20'
@@ -438,9 +284,11 @@
 						</button>
 						<button
 							class='nav-button nav-button--gallery'
+							class:disabled={!hasPlaceSelected}
 							onclick={openGalleryForCurrentPlace}
 							aria-label='Abrir galería de fotos'
 							type='button'
+							disabled={!hasPlaceSelected}
 						>
 							<svg
 								width='20'
@@ -537,7 +385,6 @@
 	<PhotoCarousel
 		visible={photoCarouselVisible}
 		place={carouselPlace}
-		category={carouselCategory}
 		placeId={carouselPlaceId}
 		photos={carouselPhotos}
 		bind:currentIndex={carouselCurrentIndex}
@@ -656,6 +503,30 @@
 
 		/* Effects & Motion */
 		transform: scale(0.95);
+	}
+
+	.nav-button:disabled,
+	.nav-button.disabled {
+		/* Box/Visual */
+		opacity: 0.5;
+		background: var(--color-bg-muted);
+		border-color: var(--color-border-subtle);
+		color: var(--color-text-secondary);
+
+		/* Misc/Overrides */
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+
+	.nav-button:disabled:hover,
+	.nav-button.disabled:hover {
+		/* Box/Visual */
+		background: var(--color-bg-muted);
+		border-color: var(--color-border-subtle);
+		color: var(--color-text-secondary);
+
+		/* Effects & Motion */
+		transform: none;
 	}
 
 	.nav-button:focus-visible {

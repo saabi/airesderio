@@ -38,7 +38,7 @@
 	};
 
 	// Place paths in order for navigation
-	const PLACE_PATH_IDS = ['terminal', 'forum', 'casagob', 'plazavea', 'parque', 'avroca'] as const;
+	const PLACE_PATH_IDS = ['terminal', 'forum', 'casagob', 'plazavea', 'parqueaguirre', 'avroca'] as const;
 
 	// Map of path IDs to their data-name attributes
 	const PLACE_NAMES: Record<string, string> = {
@@ -46,7 +46,7 @@
 		forum: 'Forum',
 		casagob: 'Casa de Gobierno',
 		plazavea: 'Plaza Vea',
-		parque: 'Parque Aguirre',
+		parqueaguirre: 'Parque Aguirre',
 		avroca: 'Avenida Roca'
 	};
 
@@ -56,7 +56,7 @@
 		forum: { cx: 58.824978, cy: 79.12207 },
 		casagob: { cx: 9.6377773, cy: 136.76311 },
 		plazavea: { cx: 138.37157, cy: 29.165194 },
-		parque: { cx: 276.63824, cy: 127.52752 },
+		parqueaguirre: { cx: 276.63824, cy: 127.52752 },
 		avroca: { cx: 145.09337, cy: 156.96059 }
 	};
 </script>
@@ -95,7 +95,7 @@
 	let forumPath: SVGPathElement | null = $state(null);
 	let casagobPath: SVGPathElement | null = $state(null);
 	let plazaveaPath: SVGPathElement | null = $state(null);
-	let parquePath: SVGPathElement | null = $state(null);
+	let parqueaguirrePath: SVGPathElement | null = $state(null);
 	let avrocaPath: SVGPathElement | null = $state(null);
 
 	// Reference to SVG element for container dimensions
@@ -112,7 +112,7 @@
 				['forum', forumPath],
 				['casagob', casagobPath],
 				['plazavea', plazaveaPath],
-				['parque', parquePath],
+				['parqueaguirre', parqueaguirrePath],
 				['avroca', avrocaPath]
 			].filter(([_, el]) => el !== null) as Array<[string, SVGPathElement]>
 		)
@@ -561,19 +561,19 @@
 				/>
 				<circle class='pin-circle' id='pin-plazavea' cx='138.37157' cy='29.165194' r='2.0137656' />
 			</g>
-			<g id='g-parque' data-name='Parque Aguirre' class:group-active={currentPathId === 'parque'}>
+			<g id='g-parqueaguirre' data-name='Parque Aguirre' class:group-active={currentPathId === 'parqueaguirre'}>
 				<path
-					bind:this={parquePath}
+					bind:this={parqueaguirrePath}
 					class='place-path'
 					fill='#00be4d'
 					vector-effect='non-scaling-stroke'
 					role='button'
 					tabindex='0'
-					aria-label='Parque'
+					aria-label='Parque Aguirre'
 					d='m 199.0421,0 0.69474,4.5157895 1.38947,4.8631577 6.25264,7.2947368 -23.62106,35.569919 18.41053,24.090312 0.26053,3.387138 -29.96053,20.494737 22.23158,26.05263 0.20468,4.15928 -20.63263,17.43949 v 3.6844 l 61.77508,74.13799 h 138.0737 V 86.460551 L 350.8421,67.910527 329.65263,54.710525 319.57893,48.110526 317.49473,44.63684 309.85264,43.594736 304.98946,40.815789 292.4842,30.394738 291.78948,27.268421 290.4,26.226315 285.88422,26.573683 278.58947,23.1 l -2.0842,-3.473685 -2.4316,-0.694736 h -1.38946 l -1.73686,-1.389474 0.34737,-1.736842 -0.34737,-1.389474 h -1.38946 l -3.47368,1.389474 -3.47369,-1.042105 -1.73684,-3.473684 -0.69474,-2.4315794 -1.73684,0.6947368 -3.82105,2.4315786 -7.29474,-5.5578942 V 5.3842104 L 243.85263,5.0368422 238.6421,0 Z'
-					id='parque'
+					id='parqueaguirre'
 				/>
-				<circle class='pin-circle' id='pin-parque' cx='276.63824' cy='127.52752' r='2.0137656' />
+				<circle class='pin-circle' id='pin-parqueaguirre' cx='276.63824' cy='127.52752' r='2.0137656' />
 			</g>
 			<g id='gavroca' data-name='Avenida Roca' class:group-active={currentPathId === 'avroca'}>
 				<path
