@@ -2,14 +2,14 @@
 	// ===== IMPORTS =====
 	import Title from '$lib/components/ui/Title.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
-	import Ascensores from '$lib/components/icons/Ascensores.svelte';
+	import Carpinteria from '$lib/components/icons/Carpinteria.svelte';
 	import Banos from '$lib/components/icons/Banos.svelte';
 	import CerraduraDigital from '$lib/components/icons/CerraduraDigital.svelte';
 	import Cocina from '$lib/components/icons/Cocina.svelte';
 	import EnergiaElectrica from '$lib/components/icons/EnergiaElectrica.svelte';
 	import GasNatural from '$lib/components/icons/GasNatural.svelte';
 	import Horno from '$lib/components/icons/Horno.svelte';
-	import Lavasecarropas from '$lib/components/icons/Lavasecarropas.svelte';
+	import Piso from '$lib/components/icons/Piso.svelte';
 	import Puerta from '$lib/components/icons/Puerta.svelte';
 	import Termotanque from '$lib/components/icons/Termotanque.svelte';
 	import Vestidor from '$lib/components/icons/Vestidor.svelte';
@@ -25,7 +25,7 @@
 
 	// ===== STATIC CONSTANTS =====
 	const equipmentItems: EquipmentItem[] = [
-		{ icon: '🖼️', component: Ascensores, text: 'Carpintería de Aluminio Línea A30 NEW de Aluar.' },
+		{ icon: '🖼️', component: Carpinteria, text: 'Carpintería de Aluminio Línea A30 NEW de Aluar.' },
 		{ icon: '🍳', component: Horno, text: 'Unidades separadas de anafe y horno a gas empotrados.' },
 		{ icon: '🚪', component: Puerta, text: 'Puertas de madera de diseño exclusivo y elegante.' },
 		{ icon: '🌡️', component: Termotanque, text: 'Termotanques a gas instalados en cada departamento.' },
@@ -46,7 +46,7 @@
 			text: 'Elegante vestidor con cajonera, zapatero, estantes e iluminación led interior.'
 		},
 		{ icon: '⚡', component: EnergiaElectrica, text: 'Energía eléctrica con transformador en el edificio.' },
-		{ icon: '⬜', component: Lavasecarropas, text: 'Pisos de porcelanato en todos los ambientes.' },
+		{ icon: '⬜', component: Piso, text: 'Pisos de porcelanato en todos los ambientes.' },
 		{ icon: '🍽️', component: Cocina, text: 'Cocina equipada con muebles altos y bajos.' }
 	];
 </script>

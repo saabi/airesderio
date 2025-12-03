@@ -1,6 +1,5 @@
 <defs>
     <style type="text/css">
-   
     .fil0 {fill:var(--svg-fill-primary)}
     .fil2 {fill:var(--svg-fill-contrast)}
    
