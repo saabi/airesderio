@@ -181,7 +181,7 @@
 		max-width: var(--max);
 		margin: 0 auto;
 	}
-
+	
 	.equip {
 		/* Layout */
 		margin: 1.625rem 0;
@@ -190,12 +190,30 @@
 	.equip-list {
 		/* Layout */
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: 1fr;
 		gap: 0 3rem;
 		align-items: start;
 		list-style: none;
 		padding: 0;
 		margin: 2rem 0;
+	}
+
+	/* This container query increases the .equip-list grid columns to 2
+	   when the --max container variable is set to 1200px (triggered by the
+	   breakpoint in app.css at min-width: 1300px). This makes the equipment
+	   grid show two columns on wider (medium+) screens. */
+	@container style(--max: 1200px) {
+		.equip-list {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	/* 3 columns on large screens using --max */
+	@container style(--max: 1750px) {
+		.equip-list {
+			/* Layout */
+			grid-template-columns: repeat(3, 1fr);
+		}
 	}
 
 	.equip-list li {
@@ -247,10 +265,4 @@
 		bottom: 0;
 	}
 
-	@media (max-width: 850px) {
-		.equip-list {
-			/* Layout */
-			grid-template-columns: 1fr;
-		}
-	}
 </style>
