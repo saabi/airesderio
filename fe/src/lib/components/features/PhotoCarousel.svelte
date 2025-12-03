@@ -5,6 +5,7 @@
 	import CircularButton from '$lib/components/ui/CircularButton.svelte';
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
+	import CarouselDots from '$lib/components/ui/CarouselDots.svelte';
 
 	// ===== TYPES =====
 	interface Props {
@@ -165,15 +166,14 @@
 				</div>
 
 				{#if photos.length > 1}
-					<div class='photo-dots'>
-						{#each photos as _, index (index)}
-							<button
-								class="dot {index === currentIndex ? 'active' : ''}"
-								onclick={() => goToPhoto(index)}
-								aria-label={`Ver foto ${index + 1}`}
-							></button>
-						{/each}
-					</div>
+					<CarouselDots
+						total={photos.length}
+						currentIndex={currentIndex}
+						onDotClick={goToPhoto}
+						ariaLabel={(index) => `Ver foto ${index + 1}`}
+						variant='accent'
+						containerClass='container'
+					/>
 				{/if}
 
 				<div class='photo-info'>
@@ -345,45 +345,6 @@
 		right: 1rem;
 	}
 
-	.photo-dots {
-		/* Layout */
-		display: flex;
-		justify-content: center;
-		gap: 0.5rem;
-		margin-bottom: 1rem;
-	}
-
-	.dot {
-		/* Layout */
-		width: 12px;
-		height: 12px;
-
-		/* Box/Visual */
-		border: none;
-		border-radius: 50%;
-		background: var(--color-neutral-400);
-
-		/* Misc/Overrides */
-		cursor: pointer;
-
-		/* Effects & Motion */
-		transition: background-color 0.2s;
-	}
-
-	.dot.active {
-		/* Box/Visual */
-		background: var(--color-accent-primary);
-	}
-
-	.dot:hover {
-		/* Box/Visual */
-		background: var(--color-neutral-500);
-	}
-
-	.dot.active:hover {
-		/* Box/Visual */
-		background: var(--color-accent-strong);
-	}
 
 	.photo-info {
 		/* Typography */
