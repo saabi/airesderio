@@ -236,6 +236,10 @@ Given the brand's warm, modern aesthetic and residential focus, **Option 1 (Play
 - `fe/src/lib/components/ui/Title.svelte` - Heading component (may need font updates)
 - All component files using typography
 
+## Implementation Plan
+
+See `021-implementation-plan.md` for detailed, step-by-step implementation instructions with specific file locations and code changes.
+
 ## Notes
 
 - **Font Loading Strategy**: Use `font-display: swap` to prevent invisible text during font load
