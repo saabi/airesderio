@@ -11,15 +11,16 @@
 	}
 
 	// ===== STATIC CONSTANTS =====
-	const carouselImageFiles = [
-		'1_DB_EXTERIOR_01 (2).jpg',
-		'2_DB_EXTERIOR_01 (8).jpg',
-		'3_DB_EXTERIOR_01 (1).jpg'
-	];
+	// Import images with ?enhanced for optimization
+	import hero1 from '$lib/assets/carousel-hero/1_DB_EXTERIOR_01 (2).jpg?enhanced';
+	import hero2 from '$lib/assets/carousel-hero/2_DB_EXTERIOR_01 (8).jpg?enhanced';
+	import hero3 from '$lib/assets/carousel-hero/3_DB_EXTERIOR_01 (1).jpg?enhanced';
 
-	const CAROUSEL_IMAGES = carouselImageFiles.map(
-		(file) => `/carrousel-hero/${encodeURIComponent(file)}`
-	);
+	const CAROUSEL_IMAGES = [
+		{ src: hero1, alt: 'Fachada del edificio Aires de Río - Imagen 1' },
+		{ src: hero2, alt: 'Fachada del edificio Aires de Río - Imagen 2' },
+		{ src: hero3, alt: 'Fachada del edificio Aires de Río - Imagen 3' }
+	];
 </script>
 
 <script lang='ts'>
@@ -49,7 +50,7 @@
 			images={CAROUSEL_IMAGES}
 			interval={5000}
 			ariaLabel='Carrusel de imágenes del edificio'
-			imageAriaLabel={(index) => `Fachada del edificio Aires de Río - Imagen ${index + 1}`}
+			imageAriaLabel={(index) => CAROUSEL_IMAGES[index].alt}
 		/>
 	</div>
 	<!--

@@ -3,8 +3,15 @@
 	import { onMount, onDestroy } from 'svelte';
 
 	// ===== TYPES =====
+	interface ImageData {
+		src: string | any; // Enhanced image type
+		alt?: string;
+	}
+
+	type ImageInput = string | ImageData;
+
 	interface Props {
-		images: string[];
+		images: ImageInput[];
 		interval?: number;
 		ariaLabel?: string;
 		imageAriaLabel?: string | ((index: number) => string);
@@ -72,13 +79,27 @@
 	onmouseleave={startCarousel}
 >
 	{#each images as image, index}
+		{@const isString = typeof image === 'string'}
+		{@const imageSrc = isString ? image : image.src}
+		{@const imageAlt = isString ? (typeof imageAriaLabel === 'function' ? imageAriaLabel(index) : imageAriaLabel) : (image.alt || (typeof imageAriaLabel === 'function' ? imageAriaLabel(index) : imageAriaLabel))}
 		<div
 			class='carousel-image'
 			class:active={index === currentImageIndex}
-			style="background-image: url('{image}')"
+			class:enhanced={!isString}
+			style={isString ? "background-image: url('{imageSrc}')" : undefined}
 			role='img'
-			aria-label={typeof imageAriaLabel === 'function' ? imageAriaLabel(index) : imageAriaLabel}
-		></div>
+			aria-label={imageAlt}
+		>
+			{#if !isString}
+				<enhanced:img
+					src={imageSrc}
+					alt={imageAlt}
+					sizes='100vw'
+					loading={index === 0 ? 'eager' : 'lazy'}
+					class='carousel-image-content'
+				/>
+			{/if}
+		</div>
 	{/each}
 	{#if images.length > 1}
 		<div class='carousel-navigation'>
@@ -159,6 +180,23 @@
 
 		/* Effects & Motion */
 		transform: scale(1);
+	}
+
+	.carousel-image.enhanced {
+		/* Layout */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.carousel-image-content {
+		/* Layout */
+		width: 100%;
+		height: 100%;
+
+		/* Box/Visual */
+		object-fit: cover;
+		object-position: center;
 	}
 
 	.carousel-navigation {
