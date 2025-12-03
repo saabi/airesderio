@@ -1,7 +1,7 @@
 # Ticket #020: Add Photos with Descriptions to Floor Plan Section
 
 ## Status
-**Pending**
+**Complete**
 
 ## Priority
 **Medium**
@@ -131,14 +131,23 @@ Located in `fe/static/planos/`:
 
 ## Acceptance Criteria
 
-- [ ] All 6 floor plan images are displayed in the Floor Plans section
-- [ ] Each floor plan has a descriptive caption
-- [ ] Users can navigate between floor plans (prev/next)
-- [ ] Floor plans are responsive and work on mobile and desktop
-- [ ] Images load properly and are appropriately sized
-- [ ] Accessibility features are maintained (ARIA labels, keyboard navigation)
-- [ ] Scroll animations continue to work
-- [ ] Implementation is ready for third floorplan addition (documented, extensible)
+- [x] All 6 floor plan images are displayed in the Floor Plans section
+- [x] Each floor plan has a descriptive caption
+- [x] Users can navigate between floor plans (prev/next)
+- [x] Floor plans are responsive and work on mobile and desktop
+- [x] Images load properly and are appropriately sized
+- [x] Accessibility features are maintained (ARIA labels, keyboard navigation)
+- [x] Scroll animations continue to work
+- [x] Implementation is ready for third floorplan addition (documented, extensible)
+
+## Implementation Notes
+
+- Implemented using Option A (Simple Carousel) as recommended
+- Created inline carousel component in `FloorPlans.svelte` for better control over current index
+- Floor plan data structure (`FLOOR_PLANS` array) is easily extensible for third floorplan
+- All 6 images are properly referenced and displayed
+- Carousel uses manual navigation (no auto-play) for focused viewing
+- Responsive design implemented with mobile-specific height adjustments
 
 ## Related Files
 
