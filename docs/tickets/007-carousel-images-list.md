@@ -151,14 +151,15 @@ This document lists all images currently used in carousels throughout the applic
 
 **Location**: `fe/static/exteriores/`  
 **Component**: `fe/src/lib/components/sections/ContactSection.svelte`  
-**Priority**: **MEDIUM** (Below-the-fold, single image)
+**Priority**: **MEDIUM** (Below-the-fold, single image)  
+**⚠️ File Size**: **8.7MB** - This is a very large image that needs aggressive optimization!
 
-| # | Filename | Full Path | Status |
-|---|----------|-----------|--------|
-| 1 | `exterior_03.png` | `/exteriores/exterior_03.png` | ✅ Used |
+| # | Filename | Full Path | Size | Status |
+|---|----------|-----------|------|--------|
+| 1 | `exterior_03.png` | `/exteriores/exterior_03.png` | 8.7MB | ✅ Used |
 
 **Total**: 1 image  
-**Optimization Priority**: **MEDIUM** - Already has lazy loading. Should add WebP with PNG fallback, responsive srcset.
+**Optimization Priority**: **HIGH** (upgraded from MEDIUM due to large file size) - Already has lazy loading. Should add WebP with PNG fallback, responsive srcset. Expected reduction: 8.7MB → ~300-500KB WebP (95%+ reduction).
 
 ---
 
@@ -170,7 +171,7 @@ This document lists all images currently used in carousels throughout the applic
 | Interior Carousel | 6 | **HIGH** | Showcases design quality |
 | Floor Plans | 6 | **MEDIUM** | Technical drawings, lower quality OK |
 | Place Photos | 34 | **CRITICAL** | Many large PNG files (5-6MB each) |
-| Contact Section | 1 | **MEDIUM** | Single image, already lazy loaded |
+| Contact Section | 1 | **HIGH** | Single image (8.7MB!), already lazy loaded |
 | **TOTAL** | **50** | - | - |
 
 ## Optimization Strategy by Priority
@@ -182,9 +183,12 @@ This document lists all images currently used in carousels throughout the applic
 ### High Priority (6 images)
 - **Interior Carousel** (6 images): WebP + JPG fallback, quality 85%, lazy loading, responsive srcset
 
-### Medium Priority (7 images)
+### High Priority (7 images)
+- **Interior Carousel** (6 images): WebP + JPG fallback, quality 85%, lazy loading, responsive srcset
+- **Contact Section** (1 image): WebP + PNG fallback, quality 85%, responsive srcset. **Critical**: 8.7MB → ~300-500KB (95%+ reduction)
+
+### Medium Priority (6 images)
 - **Floor Plans** (6 images): WebP, quality 80%, lazy loading, responsive srcset
-- **Contact Section** (1 image): WebP + PNG fallback, quality 85%, responsive srcset
 
 ## File Size Issues Identified
 

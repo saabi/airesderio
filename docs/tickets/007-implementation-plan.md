@@ -352,7 +352,19 @@ Update template:
 
 ## Phase 5: Update Contact Section Image (Medium Priority)
 
-### Step 5.1: Update ContactSection.svelte
+**Note**: The contact section image (`exterior_03.png`) is currently **8.7MB**, making it a high-priority optimization target despite being below-the-fold.
+
+### Step 5.1: Move Image to Assets
+
+```bash
+# Create directory
+mkdir -p fe/src/lib/assets/exteriores
+
+# Copy image (keep original in static/ as backup)
+cp fe/static/exteriores/exterior_03.png fe/src/lib/assets/exteriores/
+```
+
+### Step 5.2: Update ContactSection.svelte
 
 **File**: `fe/src/lib/components/sections/ContactSection.svelte`
 
@@ -364,6 +376,7 @@ Update template:
 	loading='lazy'
 	decoding='async'
 	class='exterior-image scroll-animate'
+	style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 />
 ```
 
@@ -380,8 +393,11 @@ Update template:
 	loading='lazy'
 	decoding='async'
 	class='exterior-image scroll-animate'
+	style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 />
 ```
+
+**Expected Optimization**: 8.7MB PNG → ~300-500KB WebP (95%+ reduction)
 
 ---
 
