@@ -171,7 +171,7 @@
 						currentIndex={currentIndex}
 						onDotClick={goToPhoto}
 						ariaLabel={(index) => `Ver foto ${index + 1}`}
-						variant='accent'
+						variant='inverse'
 						containerClass='container'
 					/>
 				{/if}
