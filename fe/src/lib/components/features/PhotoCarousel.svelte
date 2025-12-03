@@ -28,8 +28,15 @@
 	// ===== DERIVED =====
 	// Map photo filenames to enhanced images
 	const enhancedPhotos = $derived.by(() => {
+		if (!placeId || !photos || photos.length === 0) {
+			return [];
+		}
+
 		const placeMap = PLACE_PHOTOS_MAP[placeId];
 		if (!placeMap) {
+			if (import.meta.env.DEV) {
+				console.warn(`Place "${placeId}" not found in PLACE_PHOTOS_MAP. Using fallback paths.`);
+			}
 			// Fallback to original paths if place not in map
 			return photos.map((filename) => ({
 				src: `/places/${placeId}/${filename}`,
@@ -40,6 +47,9 @@
 
 		return photos.map((filename) => {
 			const enhanced = placeMap[filename];
+			if (!enhanced && import.meta.env.DEV) {
+				console.warn(`Photo "${filename}" not found in PLACE_PHOTOS_MAP for place "${placeId}". Using fallback.`);
+			}
 			return enhanced
 				? { src: enhanced, enhanced: true, filename }
 				: { src: `/places/${placeId}/${filename}`, enhanced: false, filename };
@@ -99,17 +109,27 @@
 
 			<div class='content'>
 				<div class='photo-container'>
-					{#if enhancedPhotos[currentIndex]?.enhanced}
-						<enhanced:img
-							src={enhancedPhotos[currentIndex].src}
-							alt={`${place.nombre} - Foto ${currentIndex + 1}`}
-							sizes='(min-width: 1024px) 90vw, 100vw'
-							loading='lazy'
-							class='carousel-image'
-						/>
+					{#if enhancedPhotos.length > 0 && enhancedPhotos[currentIndex]}
+						{#if enhancedPhotos[currentIndex].enhanced}
+							<enhanced:img
+								src={enhancedPhotos[currentIndex].src}
+								alt={`${place.nombre} - Foto ${currentIndex + 1}`}
+								sizes='(min-width: 1024px) 90vw, 100vw'
+								loading='lazy'
+								class='carousel-image'
+							/>
+						{:else}
+							<img
+								src={enhancedPhotos[currentIndex].src}
+								alt={`${place.nombre} - Foto ${currentIndex + 1}`}
+								loading='lazy'
+								class='carousel-image'
+							/>
+						{/if}
 					{:else}
+						<!-- Fallback if enhancedPhotos is empty or invalid -->
 						<img
-							src={enhancedPhotos[currentIndex]?.src || photos[currentIndex]}
+							src={photos[currentIndex] || ''}
 							alt={`${place.nombre} - Foto ${currentIndex + 1}`}
 							loading='lazy'
 							class='carousel-image'
