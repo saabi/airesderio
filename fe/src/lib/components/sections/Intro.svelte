@@ -2,6 +2,7 @@
 	// ===== IMPORTS =====
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
+	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: welcomeObserver, visible: welcomeVisible } = createSectionObserver('welcome', {
@@ -19,7 +20,7 @@
 	use:introObserver
 	data-section-active={$introVisible}
 >
-	<h2 id='proyecto-heading' class='vh'>Sobre el Proyecto</h2>
+	<VisuallyHidden id="proyecto-heading" tag="h2">Sobre el Proyecto</VisuallyHidden>
 	<div
 		class='scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}

@@ -1,6 +1,7 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import Title from '$lib/components/ui/Title.svelte';
+	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 </script>
 
 <script lang="ts">
@@ -20,7 +21,7 @@
     use:floorPlansObserver
     data-section-active={$floorPlansVisible}
 >
-    <h2 id='planos-heading' class='vh'>Planos</h2>
+    <VisuallyHidden id="planos-heading" tag="h2">Planos</VisuallyHidden>
     <div
         class='scroll-animate'
         style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}

@@ -632,7 +632,6 @@
 
 	.location-text {
 		/* Layout */
-		max-width: 40ch;
 		padding: 1.75rem;
 
 		/* Box/Visual */

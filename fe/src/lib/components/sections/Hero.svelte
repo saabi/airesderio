@@ -1,6 +1,7 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import Carousel from '$lib/components/ui/Carousel.svelte';
+	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { ANIMATION, animationDuration, animationOffset } from '$lib/constants/animation';
 
@@ -39,7 +40,7 @@
 	use:heroObserver
 	data-section-active={$heroVisible}
 >
-	<h2 id='hero-heading' class='vh'>Presentación y Contacto - Aires de Río</h2>
+	<VisuallyHidden id="hero-heading" tag="h2">Presentación y Contacto - Aires de Río</VisuallyHidden>
 	<div
 		class='hero-carousel scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}

@@ -2,6 +2,7 @@
 	// ===== IMPORTS =====
 	import Title from '$lib/components/ui/Title.svelte';
 	import Carousel from '$lib/components/ui/Carousel.svelte';
+	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 
 	// ===== STATIC CONSTANTS =====
 	const interiorImageFiles = [
@@ -35,7 +36,7 @@
 	use:interiorObserver
 	data-section-active={$interiorVisible}
 >
-	<h2 id="interior-heading" class="vh">Diseño Interior</h2>
+	<VisuallyHidden id="interior-heading" tag="h2">Diseño Interior</VisuallyHidden>
 	<div
 		class="scroll-animate"
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
