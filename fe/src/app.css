@@ -241,63 +241,6 @@
     }
 }
 
-/* Category helpers */
-.category-color {
-    background-color: var(--category-color, var(--color-accent-primary));
-}
-
-.category-border {
-    border-color: var(--category-color, var(--color-accent-primary));
-}
-
-.category-text {
-    color: var(--category-color, var(--color-accent-primary));
-}
-
-.category-edificio-principal {
-    --category-color: var(--category-edificio-principal);
-}
-
-.category-transporte {
-    --category-color: var(--category-transporte);
-}
-
-.category-cultura-entretenimiento {
-    --category-color: var(--category-cultura-entretenimiento);
-}
-
-.category-infraestructura {
-    --category-color: var(--category-infraestructura);
-}
-
-.category-lugares-historicos {
-    --category-color: var(--category-lugares-historicos);
-}
-
-.category-parques-recreacion {
-    --category-color: var(--category-parques-recreacion);
-}
-
-.category-museos {
-    --category-color: var(--category-museos);
-}
-
-.category-gastronomia {
-    --category-color: var(--category-gastronomia);
-}
-
-.category-supermercados {
-    --category-color: var(--category-supermercados);
-}
-
-.category-servicios {
-    --category-color: var(--category-servicios);
-}
-
-.category-vida-nocturna {
-    --category-color: var(--category-vida-nocturna);
-}
-
 .scroll-animate {
     transition:
         transform var(--scroll-animate-duration, 500ms) var(--scroll-animate-easing, cubic-bezier(0.22, 1, 0.36, 1)),

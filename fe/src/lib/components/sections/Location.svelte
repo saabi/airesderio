@@ -1,6 +1,5 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
-	import CategorySelector from '$lib/components/features/CategorySelector.svelte';
 	import Map from '$lib/components/features/Map.svelte';
 	import type { MapComponent } from '$lib/components/features/Map.svelte';
 	import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
@@ -12,7 +11,6 @@
 		jsonUrl?: string;
 		showPlaceMarkers?: boolean;
 		enableClustering?: boolean;
-		categoryFilter?: string[];
 	}
 
 	// ===== STATIC CONSTANTS =====
@@ -34,8 +32,7 @@
 	let {
 		jsonUrl = DEFAULT_JSON_URL,
 		showPlaceMarkers = true,
-		enableClustering = false,
-		categoryFilter = []
+		enableClustering = false
 	}: Props = $props();
 
 	// ===== STATE =====
@@ -46,7 +43,6 @@
 	let carouselPlaceId = $state<string>('');
 	let carouselPhotos = $state<string[]>([]);
 	let carouselCurrentIndex = $state(0);
-	let hasInitializedCategoryFilter = $state(false);
 	let mapComponent: MapComponent | null = $state(null);
 	let galleryCarouselVisible = $state(false);
 
@@ -180,21 +176,17 @@
 	let visibleMarkers = $derived.by<MarkerData[]>(() => {
 		if (!allMarkers.length) return [];
 
-		const alwaysVisibleSet = new Set(alwaysVisibleCategories);
-		if (mainMarker?.category) {
-			alwaysVisibleSet.add(mainMarker.category);
+		// Show all markers if showPlaceMarkers is true, otherwise show only always-visible categories
+		if (!showPlaceMarkers) {
+			const alwaysVisibleSet = new Set(alwaysVisibleCategories);
+			if (mainMarker?.category) {
+				alwaysVisibleSet.add(mainMarker.category);
+			}
+			return allMarkers.filter((marker) => alwaysVisibleSet.has(marker.category));
 		}
 
-		const selectedCategories = new Set(categoryFilter);
-		alwaysVisibleSet.forEach((category) => selectedCategories.add(category));
-
-		return allMarkers.filter((marker) => {
-			if (!showPlaceMarkers && !alwaysVisibleSet.has(marker.category)) {
-				return false;
-			}
-
-			return selectedCategories.has(marker.category);
-		});
+		// Show all markers when showPlaceMarkers is true
+		return allMarkers;
 	});
 
 	// ===== EFFECTS =====
@@ -213,7 +205,6 @@
 			if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 			const data = await response.json();
 			placesData = data;
-			hasInitializedCategoryFilter = false;
 			if (import.meta.env.DEV) {
 				console.log('Places data loaded successfully:', {
 					totalCategories: Object.keys(data.lugares).length,
@@ -257,19 +248,6 @@
 		showPlaceMarkers = !showPlaceMarkers;
 	}
 
-	// Toggle category filter
-	function toggleCategory(category: string) {
-		if (categoryFilter.includes(category)) {
-			categoryFilter = categoryFilter.filter((c) => c !== category);
-		} else {
-			categoryFilter = [...categoryFilter, category];
-		}
-	}
-
-	function setCategoryFilter(categories: string[]) {
-		categoryFilter = categories;
-	}
-
 	// Find the main building from JSON data
 	function findMainBuilding(data: PlacesData | null = placesData): MainBuilding | null {
 		if (!data) return null;
@@ -302,18 +280,6 @@
 				allCategories: Object.keys(categories)
 			});
 		}
-	});
-
-	$effect(() => {
-		if (!placesData || hasInitializedCategoryFilter) return;
-
-		// Initialize category filter - set to empty array so all categories start unselected
-		// To start with all categories selected, uncomment the line below:
-		// if (selectableCategories.length > 0 && categoryFilter.length === 0) {
-		// 	categoryFilter = [...selectableCategories];
-		// }
-
-		hasInitializedCategoryFilter = true;
 	});
 
 	// OLD FUNCTIONS - REMOVED (now handled by GoogleMap component)
