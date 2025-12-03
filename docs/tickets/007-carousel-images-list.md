@@ -1,0 +1,216 @@
+# Carousel Images Inventory - Ticket #007
+
+This document lists all images currently used in carousels throughout the application. This inventory is essential for implementing image optimization (Ticket #007).
+
+## 1. Hero Carousel (`Hero.svelte`)
+
+**Location**: `fe/static/carrousel-hero/`  
+**Component**: `fe/src/lib/components/sections/Hero.svelte`  
+**Priority**: **HIGH** (Above-the-fold, first impression)
+
+| # | Filename | Full Path | Status |
+|---|----------|-----------|--------|
+| 1 | `1_DB_EXTERIOR_01 (2).jpg` | `/carrousel-hero/1_DB_EXTERIOR_01 (2).jpg` | ✅ Used |
+| 2 | `2_DB_EXTERIOR_01 (8).jpg` | `/carrousel-hero/2_DB_EXTERIOR_01 (8).jpg` | ✅ Used |
+| 3 | `3_DB_EXTERIOR_01 (1).jpg` | `/carrousel-hero/3_DB_EXTERIOR_01 (1).jpg` | ✅ Used |
+
+**Total**: 3 images  
+**Optimization Priority**: **CRITICAL** - These are the first images users see. Should use WebP with JPG fallback, preload first image, responsive srcset.
+
+---
+
+## 2. Interior Carousel (`Interior.svelte`)
+
+**Location**: `fe/static/carrousel-interior/`  
+**Component**: `fe/src/lib/components/sections/Interior.svelte`  
+**Priority**: **MEDIUM** (Below-the-fold, but important for showcasing design)
+
+| # | Filename | Full Path | Status |
+|---|----------|-----------|--------|
+| 1 | `4_DB_Lobby.jpg` | `/carrousel-interior/4_DB_Lobby.jpg` | ✅ Used |
+| 2 | `5_DB_EXTERIOR_01 (6).jpg` | `/carrousel-interior/5_DB_EXTERIOR_01 (6).jpg` | ✅ Used |
+| 3 | `6_DB_EXTERIOR_01 (5).jpg` | `/carrousel-interior/6_DB_EXTERIOR_01 (5).jpg` | ✅ Used |
+| 4 | `7_DB_EXTERIOR_01 (7).jpg` | `/carrousel-interior/7_DB_EXTERIOR_01 (7).jpg` | ✅ Used |
+| 5 | `8_Antebaño y Lavadero.jpg` | `/carrousel-interior/8_Antebaño y Lavadero.jpg` | ✅ Used |
+| 6 | `9_DB_INT_BLANCO (5).png` | `/carrousel-interior/9_DB_INT_BLANCO (5).png` | ✅ Used |
+
+**Total**: 6 images  
+**Optimization Priority**: **HIGH** - Should use WebP with JPG fallback, lazy loading, responsive srcset.
+
+---
+
+## 3. Floor Plans Carousel (`FloorPlans.svelte`)
+
+**Location**: `fe/static/planos/`  
+**Component**: `fe/src/lib/components/sections/FloorPlans.svelte`  
+**Priority**: **MEDIUM** (Below-the-fold, informational content)
+
+| # | Filename | Full Path | Status |
+|---|----------|-----------|--------|
+| 1 | `1ra-planta-4-deptos.png` | `/planos/1ra-planta-4-deptos.png` | ✅ Used |
+| 2 | `1ra-planta-4-deptos-a.png` | `/planos/1ra-planta-4-deptos-a.png` | ✅ Used |
+| 3 | `2 OCTUBRE_MODELO 1ra PLANTA_4 DPTOS 1 DORM.jpg` | `/planos/2 OCTUBRE_MODELO 1ra PLANTA_4 DPTOS 1 DORM.jpg` | ✅ Used |
+| 4 | `2da-planta-3-deptos.png` | `/planos/2da-planta-3-deptos.png` | ✅ Used |
+| 5 | `2da-planta-3-deptos-a.png` | `/planos/2da-planta-3-deptos-a.png` | ✅ Used |
+| 6 | `2 OCTUBRE_MODELO 2da PLANTA_2 DPTOS 1 DORM_1 DEPTO DOBLE.jpg` | `/planos/2 OCTUBRE_MODELO 2da PLANTA_2 DPTOS 1 DORM_1 DEPTO DOBLE.jpg` | ✅ Used |
+
+**Total**: 6 images  
+**Optimization Priority**: **MEDIUM** - Should use WebP, lazy loading, responsive srcset. Lower quality acceptable (80%) since these are technical drawings.
+
+---
+
+## 4. Place Photos Carousel (`PhotoCarousel.svelte`)
+
+**Location**: `fe/static/places/{placeId}/`  
+**Component**: `fe/src/lib/components/features/PhotoCarousel.svelte`  
+**Data Source**: `fe/static/places/places.json`  
+**Priority**: **HIGH** (User-triggered, but many large images)
+
+### 4.1 Terminal (`terminal`)
+
+| # | Filename | Full Path | Status |
+|---|----------|-----------|--------|
+| 1 | `exterior.png` | `/places/terminal/exterior.png` | ✅ Used |
+| 2 | `interior.png` | `/places/terminal/interior.png` | ✅ Used |
+
+**Total**: 2 images
+
+### 4.2 Forum (`forum`)
+
+| # | Filename | Full Path | Status |
+|---|----------|-----------|--------|
+| 1 | `1_Forum 02.jpg` | `/places/forum/1_Forum 02.jpg` | ✅ Used |
+| 2 | `2_FORUM_03 de Tripadvisor.jpg` | `/places/forum/2_FORUM_03 de Tripadvisor.jpg` | ✅ Used |
+| 3 | `3_Forum 01.jpg` | `/places/forum/3_Forum 01.jpg` | ✅ Used |
+| 4 | `4_Forum 04.jpg` | `/places/forum/4_Forum 04.jpg` | ✅ Used |
+| 5 | `5_Forum_Santiago_del_Estero_3.jpeg` | `/places/forum/5_Forum_Santiago_del_Estero_3.jpeg` | ✅ Used |
+| 6 | `forum4.png` | `/places/forum/forum4.png` | ✅ Used |
+
+**Total**: 6 images
+
+### 4.3 Casa de Gobierno (`casagob`)
+
+| # | Filename | Full Path | Status |
+|---|----------|-----------|--------|
+| 1 | `1.jpg` | `/places/casagob/1.jpg` | ✅ Used |
+| 2 | `aerea.JPG` | `/places/casagob/aerea.JPG` | ✅ Used |
+| 3 | `casayparque2.JPG` | `/places/casagob/casayparque2.JPG` | ✅ Used |
+| 4 | `casayparque3.JPG` | `/places/casagob/casayparque3.JPG` | ✅ Used |
+| 5 | `casayplaza.png` | `/places/casagob/casayplaza.png` | ✅ Used |
+| 6 | `estatuasanmartin.jpg` | `/places/casagob/estatuasanmartin.jpg` | ✅ Used |
+| 7 | `nocturna.jpg` | `/places/casagob/nocturna.jpg` | ✅ Used |
+
+**Total**: 7 images
+
+### 4.4 Plaza Vea (`plazavea`)
+
+| # | Filename | Full Path | Status |
+|---|----------|-----------|--------|
+| 1 | `cinemas.png` | `/places/plazavea/cinemas.png` | ✅ Used |
+| 2 | `comidas.jpg` | `/places/plazavea/comidas.jpg` | ✅ Used |
+| 3 | `exterior1.png` | `/places/plazavea/exterior1.png` | ✅ Used |
+| 4 | `exterior2.png` | `/places/plazavea/exterior2.png` | ✅ Used |
+
+**Total**: 4 images
+
+### 4.5 Parque Aguirre (`parqueaguirre`)
+
+| # | Filename | Full Path | Status |
+|---|----------|-----------|--------|
+| 1 | `aerea.png` | `/places/parqueaguirre/aerea.png` | ✅ Used |
+| 2 | `calecita.png` | `/places/parqueaguirre/calecita.png` | ✅ Used |
+| 3 | `deportes.png` | `/places/parqueaguirre/deportes.png` | ✅ Used |
+| 4 | `guardavidas.png` | `/places/parqueaguirre/guardavidas.png` | ✅ Used |
+| 5 | `juegos.png` | `/places/parqueaguirre/juegos.png` | ✅ Used |
+| 6 | `recital.png` | `/places/parqueaguirre/recital.png` | ✅ Used |
+| 7 | `recital1.png` | `/places/parqueaguirre/recital1.png` | ✅ Used |
+
+**Total**: 7 images
+
+### 4.6 Avenida Roca (`avroca`)
+
+| # | Filename | Full Path | Status |
+|---|----------|-----------|--------|
+| 1 | `1_Untitled-1.jpg` | `/places/avroca/1_Untitled-1.jpg` | ✅ Used |
+| 2 | `2__Calle Roca Confiterias_08.jpg` | `/places/avroca/2__Calle Roca Confiterias_08.jpg` | ✅ Used |
+| 3 | `3__CALLE LA ROCA_ENCONTRARTE_02 de TURISMO.jpg` | `/places/avroca/3__CALLE LA ROCA_ENCONTRARTE_02 de TURISMO.jpg` | ✅ Used |
+| 4 | `4_Calle Roca Confiterias_03.jpg` | `/places/avroca/4_Calle Roca Confiterias_03.jpg` | ✅ Used |
+| 5 | `5_CALLE LA ROCA_ENCONTRARTE_03 de TURISMO.jpg` | `/places/avroca/5_CALLE LA ROCA_ENCONTRARTE_03 de TURISMO.jpg` | ✅ Used |
+| 6 | `6_Calle Roca Confiterias_01.jpg` | `/places/avroca/6_Calle Roca Confiterias_01.jpg` | ✅ Used |
+| 7 | `7_istockphoto-1091469178-612x612.jpg` | `/places/avroca/7_istockphoto-1091469178-612x612.jpg` | ✅ Used |
+| 8 | `8_CALLE LA ROCA_ENCONTRARTE_05 de TURISMO.jpg` | `/places/avroca/8_CALLE LA ROCA_ENCONTRARTE_05 de TURISMO.jpg` | ✅ Used |
+
+**Total**: 8 images
+
+**Place Photos Total**: 34 images across 6 places  
+**Optimization Priority**: **CRITICAL** - Many images are 5-6MB PNG files. These need aggressive optimization. Should use WebP with JPG fallback, lazy loading, responsive srcset. Quality can be 85% for photos.
+
+---
+
+## 5. Contact Section Image (Not a carousel)
+
+**Location**: `fe/static/exteriores/`  
+**Component**: `fe/src/lib/components/sections/ContactSection.svelte`  
+**Priority**: **MEDIUM** (Below-the-fold, single image)
+
+| # | Filename | Full Path | Status |
+|---|----------|-----------|--------|
+| 1 | `exterior_03.png` | `/exteriores/exterior_03.png` | ✅ Used |
+
+**Total**: 1 image  
+**Optimization Priority**: **MEDIUM** - Already has lazy loading. Should add WebP with PNG fallback, responsive srcset.
+
+---
+
+## Summary
+
+| Carousel Type | Image Count | Priority | Notes |
+|---------------|-------------|----------|-------|
+| Hero Carousel | 3 | **CRITICAL** | Above-the-fold, first impression |
+| Interior Carousel | 6 | **HIGH** | Showcases design quality |
+| Floor Plans | 6 | **MEDIUM** | Technical drawings, lower quality OK |
+| Place Photos | 34 | **CRITICAL** | Many large PNG files (5-6MB each) |
+| Contact Section | 1 | **MEDIUM** | Single image, already lazy loaded |
+| **TOTAL** | **50** | - | - |
+
+## Optimization Strategy by Priority
+
+### Critical Priority (37 images)
+- **Hero Carousel** (3 images): Preload first image, WebP + JPG fallback, quality 90%, responsive srcset
+- **Place Photos** (34 images): WebP + JPG fallback, quality 85%, lazy loading, responsive srcset
+
+### High Priority (6 images)
+- **Interior Carousel** (6 images): WebP + JPG fallback, quality 85%, lazy loading, responsive srcset
+
+### Medium Priority (7 images)
+- **Floor Plans** (6 images): WebP, quality 80%, lazy loading, responsive srcset
+- **Contact Section** (1 image): WebP + PNG fallback, quality 85%, responsive srcset
+
+## File Size Issues Identified
+
+Based on initial analysis, the following directories contain very large images that need optimization:
+
+- `fe/static/places/parqueaguirre/`: Multiple 5-6MB PNG files
+- `fe/static/places/plazavea/`: Multiple 5-6MB PNG files  
+- `fe/static/places/casagob/`: Multiple 5-6MB PNG files
+- `fe/static/places/forum/`: Some 3-4MB JPG files
+
+**Estimated total size before optimization**: ~150-200MB  
+**Estimated total size after optimization**: ~15-25MB (85-90% reduction)
+
+## Next Steps for Ticket #007
+
+1. Install and configure `vite-imagetools`
+2. Create image utility functions for optimized image paths
+3. Update Hero Carousel (critical priority)
+4. Update Place Photos Carousel (critical priority - largest impact)
+5. Update Interior Carousel (high priority)
+6. Update Floor Plans Carousel (medium priority)
+7. Update Contact Section image (medium priority)
+8. Test and measure performance improvements
+
+---
+
+**Last Updated**: 2025-01-XX  
+**Related**: Ticket #007 - Image Optimization
+
