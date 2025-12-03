@@ -244,6 +244,36 @@
 		carouselCurrentIndex = 0;
 	}
 
+	// Map path IDs from Map component to place data in JSON
+	// Path IDs match directory names in fe/static/places/
+	const PATH_ID_TO_PLACE_DATA: Record<string, { category: string; placeId: string }> = {
+		terminal: { category: 'transporte', placeId: 'terminal_omnibus' },
+		forum: { category: 'cultura_entretenimiento', placeId: 'forum_santiago' },
+		casagob: { category: 'lugares_historicos', placeId: 'casa_gobierno' },
+		plazavea: { category: 'supermercados', placeId: 'vea_rivadavia' },
+		parque: { category: 'parques_recreacion', placeId: 'parque_aguirre' },
+		avroca: { category: 'lugares_historicos', placeId: 'plaza_libertad' } // Avenida Roca area - using closest match
+	};
+
+	// Open gallery for current place on map
+	function openGalleryForCurrentPlace() {
+		if (!mapComponent || !placesData) return;
+
+		const currentPathId = mapComponent.currentPathId;
+		if (!currentPathId) return;
+
+		const placeMapping = PATH_ID_TO_PLACE_DATA[currentPathId];
+		if (!placeMapping) return;
+
+		const { category, placeId: jsonPlaceId } = placeMapping;
+		const place = placesData.lugares?.[category]?.[jsonPlaceId] as Place | undefined;
+
+		if (place && place.photos && place.photos.length > 0) {
+			// Use pathId (directory name) for photo paths, but jsonPlaceId for place data
+			openPhotoCarousel(place, category, currentPathId);
+		}
+	}
+
 	// Toggle markers visibility
 	function toggleMarkers() {
 		showPlaceMarkers = !showPlaceMarkers;
@@ -403,6 +433,62 @@
 									stroke-width='1.5'
 									stroke-linecap='round'
 									stroke-linejoin='round'
+								/>
+							</svg>
+						</button>
+						<button
+							class='nav-button nav-button--gallery'
+							onclick={openGalleryForCurrentPlace}
+							aria-label='Abrir galería de fotos'
+							type='button'
+						>
+							<svg
+								width='20'
+								height='20'
+								viewBox='0 0 20 20'
+								fill='none'
+								xmlns='http://www.w3.org/2000/svg'
+								aria-hidden='true'
+							>
+								<rect
+									x='3'
+									y='3'
+									width='5'
+									height='5'
+									rx='1'
+									stroke='currentColor'
+									stroke-width='2'
+									fill='none'
+								/>
+								<rect
+									x='12'
+									y='3'
+									width='5'
+									height='5'
+									rx='1'
+									stroke='currentColor'
+									stroke-width='2'
+									fill='none'
+								/>
+								<rect
+									x='3'
+									y='12'
+									width='5'
+									height='5'
+									rx='1'
+									stroke='currentColor'
+									stroke-width='2'
+									fill='none'
+								/>
+								<rect
+									x='12'
+									y='12'
+									width='5'
+									height='5'
+									rx='1'
+									stroke='currentColor'
+									stroke-width='2'
+									fill='none'
 								/>
 							</svg>
 						</button>
