@@ -8,6 +8,7 @@
 	stroke-width="1.5"
 	stroke-linecap="round"
 	stroke-linejoin="round"
+	fill="none"
 />
 <!-- Roof -->
 <path
@@ -46,4 +47,5 @@
 	stroke-width="1.5"
 	stroke-linecap="round"
 	stroke-linejoin="round"
+	fill="none"
 />
