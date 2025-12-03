@@ -1,0 +1,40 @@
+<rect
+	x="3"
+	y="3"
+	width="5"
+	height="5"
+	rx="1"
+	stroke="currentColor"
+	stroke-width="2"
+	fill="none"
+/>
+<rect
+	x="12"
+	y="3"
+	width="5"
+	height="5"
+	rx="1"
+	stroke="currentColor"
+	stroke-width="2"
+	fill="none"
+/>
+<rect
+	x="3"
+	y="12"
+	width="5"
+	height="5"
+	rx="1"
+	stroke="currentColor"
+	stroke-width="2"
+	fill="none"
+/>
+<rect
+	x="12"
+	y="12"
+	width="5"
+	height="5"
+	rx="1"
+	stroke="currentColor"
+	stroke-width="2"
+	fill="none"
+/>
