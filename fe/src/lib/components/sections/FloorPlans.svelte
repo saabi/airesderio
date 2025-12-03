@@ -5,6 +5,7 @@
 	import CircularButton from '$lib/components/ui/CircularButton.svelte';
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
+	import CarouselDots from '$lib/components/ui/CarouselDots.svelte';
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
@@ -143,17 +144,14 @@
 					>
 						<ArrowLeft />
 					</CircularButton>
-					<div class='carousel-dots'>
-						{#each FLOOR_PLANS as _, index}
-							<button
-								class='dot'
-								class:active={index === currentPlanIndex}
-								onclick={() => goToPlan(index)}
-								aria-label='Ver plano {index + 1}'
-								type='button'
-							></button>
-						{/each}
-					</div>
+					<CarouselDots
+						total={FLOOR_PLANS.length}
+						currentIndex={currentPlanIndex}
+						onDotClick={goToPlan}
+						ariaLabel={(index) => `Ver plano ${index + 1}`}
+						variant='inverse'
+						showTransform={true}
+					/>
 					<CircularButton
 						variant="bordered"
 						size="md"
@@ -265,44 +263,6 @@
 	}
 
 
-	.carousel-dots {
-		/* Layout */
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
-	}
-
-	.dot {
-		/* Layout */
-		width: 0.75rem;
-		height: 0.75rem;
-
-		/* Box/Visual */
-		border: none;
-		border-radius: 50%;
-		background: color-mix(in oklch, var(--color-text-primary) 40%, transparent);
-
-		/* Misc/Overrides */
-		cursor: pointer;
-
-		/* Effects & Motion */
-		transition:
-			background-color 0.2s ease,
-			transform 0.2s ease;
-	}
-
-	.dot.active {
-		/* Box/Visual */
-		background: var(--color-accent-primary);
-
-		/* Effects & Motion */
-		transform: scale(1.2);
-	}
-
-	.dot:hover {
-		/* Box/Visual */
-		background: color-mix(in oklch, var(--color-accent-primary) 75%, transparent);
-	}
 
 	.floor-plan-info {
 		/* Layout */
