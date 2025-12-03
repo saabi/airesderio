@@ -1,5 +1,9 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
+	// SvelteKit
+	import { browser } from '$app/environment';
+
+	// Local components
 	import Title from '$lib/components/ui/Title.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import Carpinteria from '$lib/components/icons/Carpinteria.svelte';
@@ -13,6 +17,15 @@
 	import Puerta from '$lib/components/icons/Puerta.svelte';
 	import Termotanque from '$lib/components/icons/Termotanque.svelte';
 	import Vestidor from '$lib/components/icons/Vestidor.svelte';
+
+	// Local utilities
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import {
+		ANIMATION,
+		animationDelay,
+		animationDuration,
+		animationOffset
+	} from '$lib/constants/animation';
 
 	// ===== TYPES =====
 	// Note: Using 'any' for component type is acceptable here as Svelte components
@@ -84,16 +97,6 @@
 </script>
 
 <script lang="ts">
-	// ===== IMPORTS =====
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
-	import { browser } from '$app/environment';
-	import {
-		ANIMATION,
-		animationDelay,
-		animationDuration,
-		animationOffset
-	} from '$lib/constants/animation';
-
 	// ===== INSTANCE CONSTANTS =====
 	const { action: equipmentObserver, visible: equipmentVisible } = createSectionObserver(
 		'equipment',

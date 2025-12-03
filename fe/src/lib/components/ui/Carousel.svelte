@@ -75,7 +75,7 @@
 		<div
 			class="carousel-image"
 			class:active={index === currentImageIndex}
-			style="background-image: url("{image}")"
+			style="background-image: url('{image}')"
 			role="img"
 			aria-label={typeof imageAriaLabel === 'function' ? imageAriaLabel(index) : imageAriaLabel}
 		></div>

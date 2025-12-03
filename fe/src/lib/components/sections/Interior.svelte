@@ -1,8 +1,18 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
+	// Local components
 	import Title from '$lib/components/ui/Title.svelte';
 	import Carousel from '$lib/components/ui/Carousel.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
+
+	// Local utilities
+	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import {
+		ANIMATION,
+		animationDelay,
+		animationDuration,
+		animationOffset
+	} from '$lib/constants/animation';
 
 	// ===== STATIC CONSTANTS =====
 	const interiorImageFiles = [
@@ -20,14 +30,6 @@
 </script>
 
 <script lang="ts">
-	// ===== IMPORTS =====
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
-	import {
-		ANIMATION,
-		animationDelay,
-		animationDuration,
-		animationOffset
-	} from '$lib/constants/animation';
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: interiorObserver, visible: interiorVisible } = createSectionObserver('interior', {

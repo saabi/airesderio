@@ -13,13 +13,7 @@
 		enableClustering?: boolean;
 	}
 
-	// ===== STATIC CONSTANTS =====
-	const DEFAULT_JSON_URL = '/lugares/lugares-direcciones.json';
-</script>
-
-<script lang="ts">
-	// ===== IMPORTS =====
-	import { browser } from '$app/environment';
+	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import {
 		ANIMATION,
@@ -27,6 +21,14 @@
 		animationDuration,
 		animationOffset
 	} from '$lib/constants/animation';
+
+	// ===== STATIC CONSTANTS =====
+	const DEFAULT_JSON_URL = '/lugares/lugares-direcciones.json';
+</script>
+
+<script lang="ts">
+	// ===== IMPORTS =====
+	import { browser } from '$app/environment';
 
 	// ===== PROPS =====
 	let {

@@ -1,9 +1,13 @@
-<script lang="ts">
+<script module lang="ts">
+	// ===== TYPES =====
 	interface Props {
 		targetId?: string;
 		text?: string;
 	}
+</script>
 
+<script lang="ts">
+	// ===== PROPS =====
 	let { targetId = 'main-content', text = 'Saltar al contenido principal' }: Props = $props();
 </script>
 

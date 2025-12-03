@@ -1,4 +1,7 @@
 <script module lang="ts">
+	// ===== IMPORTS =====
+	// (No imports needed for this component)
+
 	// ===== TYPES =====
 	interface Props {
 		id?: string;

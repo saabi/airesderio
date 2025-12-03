@@ -1,11 +1,13 @@
-<script lang="ts">
+<script module lang="ts">
 	// ===== TYPES =====
 	interface Props {
 		id?: string;
 		tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'div' | 'span' | 'dd' | 'dt';
 		children: import('svelte').Snippet;
 	}
+</script>
 
+<script lang="ts">
 	// ===== PROPS =====
 	let { id, tag = 'h2', children }: Props = $props();
 </script>
