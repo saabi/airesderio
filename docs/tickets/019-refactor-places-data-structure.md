@@ -48,7 +48,8 @@ The current places data structure has fundamental mismatches:
 
 ### PhotoCarousel Needs
 - `place.nombre` (required) - Display name
-- `place.descripcion` (optional) - Description text
+- `place.descripcion` (optional) - Short description text
+- `place.thingstodo` (optional) - Longer description about the usefulness and activities available at the place
 - `photos` array - Already handled by directory scanning
 
 ### Map Component Needs
@@ -65,27 +66,33 @@ Create a new `fe/static/places/places.json` that matches the directory structure
   "places": {
     "terminal": {
       "nombre": "Terminal de Ómnibus de Santiago del Estero",
-      "descripcion": "Terminal principal de ómnibus de la ciudad"
+      "descripcion": "Terminal principal de ómnibus de la ciudad",
+      "thingstodo": "La Terminal de Ómnibus es tu conexión con el resto del país. Desde aquí puedes viajar a destinos nacionales e internacionales con múltiples empresas de transporte. Ideal para residentes que necesitan desplazarse por trabajo, turismo o visitas familiares. La terminal cuenta con servicios básicos, boleterías, y está estratégicamente ubicada cerca del centro, facilitando el acceso desde Aires de Río."
     },
     "forum": {
       "nombre": "Fórum Santiago del Estero",
-      "descripcion": "Centro de convenciones y eventos culturales"
+      "descripcion": "Centro de convenciones y eventos culturales",
+      "thingstodo": "El Fórum Santiago del Estero es un espacio cultural y de convenciones que enriquece la vida de los residentes. Aquí se realizan eventos culturales, ferias, exposiciones, conciertos y conferencias. Es un lugar perfecto para disfrutar de la cultura local, asistir a eventos familiares, y participar en actividades comunitarias. Su ubicación céntrica lo convierte en un punto de encuentro cultural accesible desde Aires de Río."
     },
     "casagob": {
       "nombre": "Casa de Gobierno",
-      "descripcion": "Sede del gobierno provincial, edificio histórico"
+      "descripcion": "Sede del gobierno provincial, edificio histórico",
+      "thingstodo": "La Casa de Gobierno es un símbolo histórico y arquitectónico de Santiago del Estero. Además de ser la sede del poder ejecutivo provincial, es un punto de interés turístico y cultural. Los residentes pueden realizar trámites gubernamentales, participar en eventos oficiales, y disfrutar de la arquitectura histórica del edificio. Su proximidad a Aires de Río facilita el acceso a servicios públicos y trámites administrativos."
     },
     "plazavea": {
       "nombre": "Plaza Vea",
-      "descripcion": "Centro comercial y supermercado"
+      "descripcion": "Centro comercial y supermercado",
+      "thingstodo": "Plaza Vea es el único centro comercial dentro del área urbana, ofreciendo supermercado y shopping de cercanía a solo una cuadra de Aires de Río. Aquí puedes realizar todas tus compras diarias, desde alimentos frescos hasta productos para el hogar. El centro comercial también incluye cines, restaurantes, y tiendas diversas, convirtiéndolo en un destino completo para compras, entretenimiento y gastronomía. Su ubicación estratégica lo hace perfecto para resolver todas tus necesidades sin alejarte del edificio."
     },
     "parqueaguirre": {
       "nombre": "Parque Aguirre",
-      "descripcion": "Principal parque de la ciudad, ideal para recreación"
+      "descripcion": "Principal parque de la ciudad, ideal para recreación",
+      "thingstodo": "El Parque Aguirre es el principal espacio verde y de recreación de Santiago del Estero. Es el lugar perfecto para actividades al aire libre, caminatas, ejercicios, y tiempo en familia. El parque cuenta con áreas de juegos infantiles, espacios para deportes, zonas de descanso, y acceso al río Dulce. Ideal para escapar del ritmo urbano, disfrutar de la naturaleza, hacer ejercicio, y organizar picnics familiares. Un oasis natural que complementa perfectamente la vida urbana en Aires de Río."
     },
     "avroca": {
       "nombre": "Avenida Roca",
-      "descripcion": "Avenida principal con comercios y confiterías"
+      "descripcion": "Avenida principal con comercios y confiterías",
+      "thingstodo": "La Avenida Roca es una de las arterias comerciales más importantes de la ciudad, llena de vida y actividad. A lo largo de la avenida encontrarás una gran variedad de comercios, confiterías tradicionales, restaurantes, cafeterías, y servicios. Es el lugar perfecto para pasear, hacer compras locales, disfrutar de la gastronomía santiagueña, y experimentar la vida comercial de la ciudad. La avenida combina tradición y modernidad, ofreciendo desde establecimientos históricos hasta opciones contemporáneas, todo a poca distancia de Aires de Río."
     }
   }
 }
@@ -104,8 +111,8 @@ Create a new `fe/static/places/places.json` that matches the directory structure
 Store metadata directly in `Location.svelte` as a constant:
 
 ```typescript
-const PLACE_METADATA: Record<string, { nombre: string; descripcion?: string }> = {
-  terminal: { nombre: "Terminal de Ómnibus...", descripcion: "..." },
+const PLACE_METADATA: Record<string, { nombre: string; descripcion?: string; thingstodo?: string }> = {
+  terminal: { nombre: "Terminal de Ómnibus...", descripcion: "...", thingstodo: "..." },
   // ...
 };
 ```
@@ -144,8 +151,9 @@ Scan directories at build time and generate metadata:
 
 1. **Create `fe/static/places/places.json`**:
    - Match structure to directory names exactly
-   - Include only `nombre` and `descripcion`
+   - Include `nombre`, `descripcion`, and `thingstodo` for each place
    - Use proper Spanish names and descriptions
+   - `thingstodo` should provide longer, detailed descriptions about the usefulness and activities available at each place
 
 2. **Update `Location.svelte`**:
    - Remove dependency on `lugares-direcciones.json`
@@ -170,7 +178,10 @@ Scan directories at build time and generate metadata:
 ## Acceptance Criteria
 
 - [ ] New `places.json` created with metadata for all 6 places
+- [ ] Each place includes `nombre`, `descripcion`, and `thingstodo` properties
+- [ ] `thingstodo` contains detailed descriptions about usefulness and activities
 - [ ] PhotoCarousel works with new structure
+- [ ] PhotoCarousel displays `thingstodo` content (may need UI update)
 - [ ] Gallery button opens carousel with correct photos and metadata
 - [ ] No dependency on `lugares-direcciones.json` for carousel
 - [ ] Map path ID mismatch resolved (`parque` vs `parqueaguirre`)
@@ -190,4 +201,6 @@ Scan directories at build time and generate metadata:
 - The old `lugares-direcciones.json` may still be needed for Google Maps markers if they're still used
 - If Google Maps markers are also being refactored, this ticket should coordinate with that work
 - Consider if photo filenames should be in JSON or auto-discovered from directory
+- The `thingstodo` property should be displayed in the PhotoCarousel component (may require UI update to show longer text)
+- Consider updating the `Place` type definition in `fe/src/lib/types/index.ts` to include `thingstodo?: string`
 
