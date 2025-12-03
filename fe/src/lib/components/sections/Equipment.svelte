@@ -276,26 +276,9 @@
 		padding: 0.75rem 0;
 
 		/* Typography */
-		font-size: 1.75rem;
+		font-size: 1.4rem;
 		line-height: 1.4;
 		color: var(--color-contrast-low);
-	}
-
-	.equip-list li span::before,
-	.equip-list li span::after {
-		/* Positioning */
-		position: absolute;
-		left: 0;
-		right: 0;
-
-		/* Layout */
-		height: 0.25rem;
-
-		/* Box/Visual */
-		background-color: var(--color-border-default);
-
-		/* Misc/Overrides */
-		content: '';
 	}
 
 	.equip-list li span::before {
