@@ -43,6 +43,17 @@
 		<Title eyebrow="Diseño" big="INTERIOR" />
 	</div>
 	<div class="interior-container">
+		<div
+			class="interior-gallery scroll-animate"
+			style={`--scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
+		>
+			<Carousel
+				images={INTERIOR_IMAGES}
+				interval={2500}
+				ariaLabel="Galería de imágenes del diseño interior"
+				imageAriaLabel={(index) => `Imagen del diseño interior - ${index + 1}`}
+			/>
+		</div>
 		<div class="interior-text">
 			<p
 				class="scroll-animate"
@@ -63,17 +74,6 @@
 				La iluminación LED, ya integrada, resalta los ambientes con luz indirecta, creando espacios armónicos y relajantes. Solo será necesario sumar artefactos de luz directa a gusto de cada usuario.
 			</p>
 		</div>
-		<div
-			class="interior-gallery scroll-animate"
-			style={`--scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
-		>
-			<Carousel
-				images={INTERIOR_IMAGES}
-				interval={2500}
-				ariaLabel="Galería de imágenes del diseño interior"
-				imageAriaLabel={(index) => `Imagen del diseño interior - ${index + 1}`}
-			/>
-		</div>
 	</div>
 
 </section>
@@ -88,7 +88,7 @@
 	.interior-container {
 		/* Layout */
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: 1fr 0.5fr;
 		gap: 2rem;
 		align-items: start;
 		margin-top: 1.5rem;
