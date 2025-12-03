@@ -33,7 +33,15 @@ export default ts.config(
 	},
 	{
 		rules: {
-			'no-console': ['warn', { allow: ['warn', 'error'] }]
+			'no-console': ['warn', { allow: ['warn', 'error'] }],
+			'@typescript-eslint/quotes': [
+				'error',
+				'single',
+				{
+					avoidEscape: true,
+					allowTemplateLiterals: true
+				}
+			]
 		}
 	}
 );

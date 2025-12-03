@@ -30,7 +30,6 @@
 </script>
 
 <script lang="ts">
-
 	// ===== INSTANCE CONSTANTS =====
 	const { action: interiorObserver, visible: interiorVisible } = createSectionObserver('interior', {
 		threshold: ANIMATION.threshold.section
