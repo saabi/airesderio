@@ -168,8 +168,9 @@
 			0 0.5rem 0.25rem var(--shadow-subtle);
 
 		/* Typography */
+		font-family: var(--font-body);
 		font-size: 1rem;
-		font-weight: 600;
+		font-weight: var(--font-weight-semibold);
 		text-decoration: none;
 		color: var(--color-text-on-accent);
 		text-align: center;

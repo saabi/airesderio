@@ -97,6 +97,9 @@
 		max-width: var(--max);
 		margin: auto;
 		padding: 0 clamp(0.875rem, 3vw, 1.5rem);
+
+		/* Typography */
+		font-family: var(--font-body);
 	}
 
 	.site-footer {
@@ -125,6 +128,9 @@
 	}
 
 	.footer-column h3 {
+		/* Typography */
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-semibold);
 		margin: 0 0 0.75rem;
 		font-size: 1rem;
 		letter-spacing: 0.08em;
@@ -187,9 +193,11 @@
 	}
 
 	.footer-links a {
+		/* Typography */
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-medium);
 		text-decoration: none;
 		color: var(--color-text-secondary);
-		font-weight: 500;
 	}
 
 	.footer-links a:hover {

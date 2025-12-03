@@ -311,7 +311,8 @@
 		border-bottom: 2px solid transparent;
 
 		/* Typography */
-		font-weight: 600;
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-semibold);
 		text-decoration: none;
 		text-transform: uppercase;
 		color: var(--color-text-inverse);

@@ -358,6 +358,9 @@
 	}
 
 	.group label {
+		/* Typography */
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-medium);
 		/* Layout */
 		display: block;
 		margin-bottom: 0.25rem;

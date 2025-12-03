@@ -26,6 +26,7 @@
 		margin: 4rem 0 2rem 0;
 
 		/* Typography */
+		font-family: var(--font-heading);
 		font-size: 1.7rem;
 	}
 
@@ -34,7 +35,9 @@
 		display: block;
 
 		/* Typography */
-		letter-spacing: 0.18em;
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-medium);
+		letter-spacing: var(--letter-spacing-wider);
 		color: var(--color-text-secondary);
 		font-size: 0.6em;
 		text-transform: uppercase;
@@ -47,9 +50,10 @@
 		padding-bottom: 0.5rem;
 
 		/* Typography */
+		font-family: var(--font-heading);
 		font-size: 1.6em;
-		font-weight: 800;
-		letter-spacing: 0.04em;
+		font-weight: var(--font-weight-extrabold);
+		letter-spacing: var(--letter-spacing-wide);
 		color: var(--color-accent-primary);
 		text-transform: uppercase;
 	}

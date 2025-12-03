@@ -99,6 +99,30 @@
 	--svg-stroke-primary: var(--ref-gold);
 	--svg-stroke-contrast: var(--ref-gold-dark);
 
+	/* === Typography === */
+	--font-heading: 'Playfair Display', serif;
+	--font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	--font-accent: var(--font-body);
+
+	/* Font weights */
+	--font-weight-normal: 400;
+	--font-weight-medium: 500;
+	--font-weight-semibold: 600;
+	--font-weight-bold: 700;
+	--font-weight-extrabold: 900;
+
+	/* Letter spacing */
+	--letter-spacing-tight: -0.02em;
+	--letter-spacing-normal: 0;
+	--letter-spacing-wide: 0.04em;
+	--letter-spacing-wider: 0.18em;
+
+	/* Line heights */
+	--line-height-tight: 1.2;
+	--line-height-normal: 1.5;
+	--line-height-relaxed: 1.6;
+	--line-height-loose: 1.8;
+
 	--color-accent-primary: var(--ref-brand-primary);
 	--color-accent-secondary: var(--ref-brand-secondary);
 	--color-accent-hover: color-mix(in oklch, var(--ref-brand-primary) 85%, var(--ref-white) 15%);
@@ -313,11 +337,83 @@ html {
 
 body {
 	margin: 0;
-	font-family: Arial, Helvetica, sans-serif;
-	line-height: 1.6;
+	font-family: var(--font-body);
+	font-weight: var(--font-weight-normal);
+	line-height: var(--line-height-relaxed);
 	color: var(--color-text-primary);
 	background: var(--color-bg-canvas);
 	overflow-x: hidden;
+}
+
+/* Typography: Headings */
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--font-heading);
+	font-weight: var(--font-weight-bold);
+	line-height: var(--line-height-tight);
+	letter-spacing: var(--letter-spacing-normal);
+	color: var(--color-text-primary);
+	margin: 0;
+}
+
+h1 {
+	font-size: 2.5rem;
+	font-weight: var(--font-weight-extrabold);
+	letter-spacing: var(--letter-spacing-tight);
+}
+
+h2 {
+	font-size: 2rem;
+	font-weight: var(--font-weight-bold);
+}
+
+h3 {
+	font-size: 1.5rem;
+	font-weight: var(--font-weight-bold);
+}
+
+h4 {
+	font-size: 1.25rem;
+	font-weight: var(--font-weight-semibold);
+}
+
+h5, h6 {
+	font-size: 1rem;
+	font-weight: var(--font-weight-semibold);
+}
+
+/* Typography: Body text */
+p {
+	font-family: var(--font-body);
+	font-weight: var(--font-weight-normal);
+	line-height: var(--line-height-relaxed);
+	margin: 0 0 1rem 0;
+}
+
+/* Typography: Links */
+a {
+	font-family: var(--font-body);
+	font-weight: var(--font-weight-medium);
+	text-decoration: none;
+	color: var(--color-text-link);
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+/* Responsive typography */
+@media (max-width: 640px) {
+	h1 {
+		font-size: 2rem;
+	}
+
+	h2 {
+		font-size: 1.75rem;
+	}
+
+	h3 {
+		font-size: 1.25rem;
+	}
 }
 
 /* Focus indicators for keyboard navigation */

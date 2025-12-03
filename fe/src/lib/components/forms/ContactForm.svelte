@@ -195,6 +195,9 @@
 	}
 
 	.form-group label {
+		/* Typography */
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-medium);
 		/* Layout */
 		display: block;
 		margin-bottom: 0.25rem;
@@ -215,7 +218,8 @@
 		background: var(--color-accent-primary);
 
 		/* Typography */
-		font-weight: 600;
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-semibold);
 		color: var(--color-text-inverse);
 
 		/* Misc/Overrides */

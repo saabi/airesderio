@@ -101,6 +101,8 @@
 		outline-offset: 0;
 
 		/* Typography */
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-normal);
 		color: text;
 
 		/* Misc/Overrides */

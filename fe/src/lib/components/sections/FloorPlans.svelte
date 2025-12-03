@@ -313,17 +313,19 @@
 
 	.floor-plan-title {
 		/* Typography */
+		font-family: var(--font-heading);
 		font-size: 1.1rem;
-		font-weight: 600;
+		font-weight: var(--font-weight-bold);
 		color: var(--color-accent-primary);
 		margin-bottom: 0.5rem;
 	}
 
 	.floor-plan-description {
 		/* Typography */
+		font-family: var(--font-body);
 		font-size: 0.95rem;
 		color: var(--color-text-secondary);
-		line-height: 1.5;
+		line-height: var(--line-height-normal);
 		margin: 0;
 	}
 

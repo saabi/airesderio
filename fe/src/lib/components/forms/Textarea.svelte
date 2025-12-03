@@ -70,7 +70,8 @@
 		outline: none;
 
 		/* Typography */
-		font-family: inherit;
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-normal);
 		font-size: inherit;
 		color: text;
 	}
