@@ -2,6 +2,9 @@
 	// ===== IMPORTS =====
 	import Title from '$lib/components/ui/Title.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
+	import CircularButton from '$lib/components/ui/CircularButton.svelte';
+	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
+	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
@@ -132,14 +135,14 @@
 			{/each}
 			{#if FLOOR_PLANS.length > 1}
 				<div class='carousel-navigation'>
-					<button
-						class='carousel-button prev'
-						onclick={previousPlan}
-						aria-label='Plano anterior'
-						type='button'
+					<CircularButton
+						variant="bordered"
+						size="md"
+						ariaLabel="Plano anterior"
+						onClick={previousPlan}
 					>
-						‹
-					</button>
+						<ArrowLeft />
+					</CircularButton>
 					<div class='carousel-dots'>
 						{#each FLOOR_PLANS as _, index}
 							<button
@@ -151,14 +154,14 @@
 							></button>
 						{/each}
 					</div>
-					<button
-						class='carousel-button next'
-						onclick={nextPlan}
-						aria-label='Siguiente plano'
-						type='button'
+					<CircularButton
+						variant="bordered"
+						size="md"
+						ariaLabel="Siguiente plano"
+						onClick={nextPlan}
 					>
-						›
-					</button>
+						<ArrowRight />
+					</CircularButton>
 				</div>
 			{/if}
 		</div>
@@ -261,49 +264,6 @@
 		transform: translateX(-50%);
 	}
 
-	.carousel-button {
-		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 3rem;
-		height: 3rem;
-		flex-shrink: 0;
-
-		/* Box/Visual */
-		background: color-mix(in oklch, var(--color-bg-canvas) 80%, transparent);
-		border: 1px solid var(--color-border-default);
-		border-radius: 50%;
-
-		/* Typography */
-		font-size: 2rem;
-		line-height: 1;
-		color: var(--color-text-primary);
-
-		/* Misc/Overrides */
-		cursor: pointer;
-
-		/* Effects & Motion */
-		transition:
-			background-color 0.2s ease,
-			transform 0.2s ease,
-			border-color 0.2s ease;
-	}
-
-	.carousel-button:hover {
-		/* Box/Visual */
-		background: var(--color-accent-primary);
-		border-color: var(--color-accent-primary);
-		color: var(--color-text-on-accent);
-
-		/* Effects & Motion */
-		transform: scale(1.1);
-	}
-
-	.carousel-button:active {
-		/* Effects & Motion */
-		transform: scale(0.95);
-	}
 
 	.carousel-dots {
 		/* Layout */
@@ -382,11 +342,6 @@
 			height: 20rem;
 		}
 
-		.carousel-button {
-			width: 2.5rem;
-			height: 2.5rem;
-			font-size: 1.5rem;
-		}
 
 		.floor-plan-title {
 			font-size: 1rem;

@@ -2,6 +2,9 @@
 	// ===== IMPORTS =====
 	import type { PlaceMetadata } from '$lib/types';
 	import { PLACE_PHOTOS_MAP } from '$lib/assets/places/index';
+	import CircularButton from '$lib/components/ui/CircularButton.svelte';
+	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
+	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
 
 	// ===== TYPES =====
 	interface Props {
@@ -140,16 +143,24 @@
 					{/if}
 
 					{#if photos.length > 1}
-						<button
-							class='nav-button prev'
-							onclick={() => navigateCarousel(-1)}
-							aria-label='Foto anterior'>‹</button
+						<CircularButton
+							variant="overlay"
+							size="lg"
+							ariaLabel="Foto anterior"
+							onClick={() => navigateCarousel(-1)}
+							class="nav-button prev"
 						>
-						<button
-							class='nav-button next'
-							onclick={() => navigateCarousel(1)}
-							aria-label='Siguiente foto'>›</button
+							<ArrowLeft />
+						</CircularButton>
+						<CircularButton
+							variant="overlay"
+							size="lg"
+							ariaLabel="Siguiente foto"
+							onClick={() => navigateCarousel(1)}
+							class="nav-button next"
 						>
+							<ArrowRight />
+						</CircularButton>
 					{/if}
 				</div>
 
@@ -320,33 +331,8 @@
 		top: 50%;
 		z-index: 10;
 
-		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 40px;
-		height: 40px;
-
-		/* Box/Visual */
-		background: var(--overlay-black-60);
-		border: none;
-		border-radius: 50%;
-
-		/* Typography */
-		font-size: 1.25rem;
-		color: var(--color-text-inverse);
-
-		/* Misc/Overrides */
-		cursor: pointer;
-
 		/* Effects & Motion */
 		transform: translateY(-50%);
-		transition: background-color 0.2s;
-	}
-
-	.nav-button:hover {
-		/* Box/Visual */
-		background: var(--overlay-black-80);
 	}
 
 	.nav-button.prev {
@@ -450,15 +436,6 @@
 		.content {
 			/* Layout */
 			padding: 1rem;
-		}
-
-		.nav-button {
-			/* Layout */
-			width: 35px;
-			height: 35px;
-
-			/* Typography */
-			font-size: 1rem;
 		}
 
 		.nav-button.prev {

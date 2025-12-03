@@ -1,6 +1,9 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
 	import { onMount, onDestroy } from 'svelte';
+	import CircularButton from '$lib/components/ui/CircularButton.svelte';
+	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
+	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
 
 	// ===== TYPES =====
 	interface ImageData {
@@ -103,14 +106,14 @@
 	{/each}
 	{#if images.length > 1}
 		<div class='carousel-navigation'>
-			<button
-				class='carousel-button prev'
-				onclick={previousImage}
-				aria-label='Imagen anterior'
-				type='button'
+			<CircularButton
+				variant="overlay"
+				size="md"
+				ariaLabel="Imagen anterior"
+				onClick={previousImage}
 			>
-				‹
-			</button>
+				<ArrowLeft />
+			</CircularButton>
 			<div class='carousel-dots'>
 				{#each images as _, index}
 					<button
@@ -122,14 +125,14 @@
 					></button>
 				{/each}
 			</div>
-			<button
-				class='carousel-button next'
-				onclick={nextImage}
-				aria-label='Siguiente imagen'
-				type='button'
+			<CircularButton
+				variant="overlay"
+				size="md"
+				ariaLabel="Siguiente imagen"
+				onClick={nextImage}
 			>
-				›
-			</button>
+				<ArrowRight />
+			</CircularButton>
 		</div>
 	{/if}
 </div>
@@ -222,46 +225,6 @@
 		transform: translateX(-50%);
 	}
 
-	.carousel-button {
-		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 3rem;
-		height: 3rem;
-		flex-shrink: 0;
-
-		/* Box/Visual */
-		background: color-mix(in oklch, var(--overlay-black-60) 80%, transparent);
-		border: none;
-		border-radius: 50%;
-
-		/* Typography */
-		font-size: 2rem;
-		line-height: 1;
-		color: var(--color-text-inverse);
-
-		/* Misc/Overrides */
-		cursor: pointer;
-
-		/* Effects & Motion */
-		transition:
-			background-color 0.2s ease,
-			transform 0.2s ease;
-	}
-
-	.carousel-button:hover {
-		/* Box/Visual */
-		background: color-mix(in oklch, var(--overlay-black-80) 90%, transparent);
-
-		/* Effects & Motion */
-		transform: scale(1.1);
-	}
-
-	.carousel-button:active {
-		/* Effects & Motion */
-		transform: scale(0.95);
-	}
 
 	.carousel-dots {
 		/* Layout */
