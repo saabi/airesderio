@@ -25,29 +25,29 @@
 
 	// ===== STATIC CONSTANTS =====
 	const equipmentItems: EquipmentItem[] = [
-		{ icon: '🖼️', component: Carpinteria, text: 'Carpintería de Aluminio Línea A30 NEW de Aluar.' },
-		{ icon: '🍳', component: Horno, text: 'Unidades separadas de anafe y horno a gas empotrados.' },
-		{ icon: '🚪', component: Puerta, text: 'Puertas de madera de diseño exclusivo y elegante.' },
-		{ icon: '🌡️', component: Termotanque, text: 'Termotanques a gas instalados en cada departamento.' },
+		{ icon: '🖼️', component: Carpinteria, text: 'Carpintería de aluminio de alta prestación con aislación termoacústica superior.' },
+		{ icon: '🍳', component: Horno, text: 'Anafe y horno a gas empotrados de diseño moderno y alta funcionalidad.' },
+		{ icon: '🚪', component: Puerta, text: 'Puertas de madera con diseño exclusivo que aportan calidez y elegancia moderna.' },
+		{ icon: '🌡️', component: Termotanque, text: 'Agua caliente asegurada mediante termotanques eléctricos individuales de alta recuperación.' },
 		{
 			icon: '🔐',
 			component: CerraduraDigital,
-			text: 'Departamentos con cerradura Digital Inteligente Biométrica Electrónica con Huella Tarjeta Wifi.'
+			text: 'Acceso smart con cerradura biométrica y WiFi para máxima seguridad y confort.'
 		},
 		{
 			icon: '🛁',
 			component: Banos,
-			text: 'Baños equipados con artefactos sanitarios, vanitory y grifería de 1° calidad, mampara de vidrio color ámbar y espejo.'
+			text: 'Baños de diseño con grifería de primera calidad, vanitory, espejo y mampara de vidrio.'
 		},
-		{ icon: '🔥', component: GasNatural, text: 'Gas natural para calefón, hornallas y horno.' },
+		{ icon: '🔥', component: GasNatural, text: 'Conexión de gas natural disponible específicamente para anafe y horno empotrado.' },
 		{
 			icon: '👔',
 			component: Vestidor,
-			text: 'Elegante vestidor con cajonera, zapatero, estantes e iluminación led interior.'
+			text: 'Vestidores completos con interiores diseñados a medida e iluminación LED integrada.'
 		},
-		{ icon: '⚡', component: EnergiaElectrica, text: 'Energía eléctrica con transformador en el edificio.' },
-		{ icon: '⬜', component: Piso, text: 'Pisos de porcelanato en todos los ambientes.' },
-		{ icon: '🍽️', component: Cocina, text: 'Cocina equipada con muebles altos y bajos.' }
+		{ icon: '⚡', component: EnergiaElectrica, text: 'Suministro eléctrico confiable garantizado por transformador propio en el edificio.' },
+		{ icon: '⬜', component: Piso, text: 'Pisos de porcelanato de gran formato en la totalidad de los ambientes.' },
+		{ icon: '🍽️', component: Cocina, text: 'Cocinas completamente equipadas con modernos muebles de guardado bajo y sobre mesada.' }
 	];
 </script>
 
