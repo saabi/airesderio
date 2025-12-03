@@ -128,12 +128,15 @@
 						{/if}
 					{:else}
 						<!-- Fallback if enhancedPhotos is empty or invalid -->
-						<img
-							src={photos[currentIndex] || ''}
-							alt={`${place.nombre} - Foto ${currentIndex + 1}`}
-							loading='lazy'
-							class='carousel-image'
-						/>
+						{#if photos[currentIndex]}
+							{@const fallbackSrc = photos[currentIndex].startsWith('/') ? photos[currentIndex] : `/places/${placeId}/${photos[currentIndex]}`}
+							<img
+								src={fallbackSrc}
+								alt={`${place.nombre} - Foto ${currentIndex + 1}`}
+								loading='lazy'
+								class='carousel-image'
+							/>
+						{/if}
 					{/if}
 
 					{#if photos.length > 1}

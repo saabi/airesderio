@@ -123,9 +123,8 @@
 
 		carouselPlace = place;
 		carouselPlaceId = placeId;
-		carouselPhotos = place.photos.map(
-			(filename: string) => `/places/${placeId}/${filename}`
-		);
+		// Pass just filenames, not full paths - PhotoCarousel will construct paths
+		carouselPhotos = place.photos;
 		carouselCurrentIndex = 0;
 		photoCarouselVisible = true;
 	}
