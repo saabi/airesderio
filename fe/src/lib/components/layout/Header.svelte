@@ -4,6 +4,7 @@
 	import { browser } from '$app/environment';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import { theme, type Theme } from '$lib/stores/theme';
+	import { maxWidth } from '$lib/stores/maxWidth';
 
 	// ===== TYPES =====
 	type NavLink = {
@@ -44,6 +45,7 @@
 
 	// ===== DERIVED =====
 	let currentTheme = $derived($theme);
+	let currentMaxWidth = $derived($maxWidth);
 
 	// ===== EFFECTS =====
 	$effect(() => {
@@ -56,6 +58,9 @@
 
 	// ===== LIFECYCLE =====
 	onMount(() => {
+		// Initialize max width store
+		maxWidth.init();
+		
 		if (isDevMode) {
 			void import('$lib/components/dev/DevColorEditor.svelte').then((module) => {
 				devColorEditorModule = module;
@@ -89,6 +94,10 @@
 
 	function toggleTheme() {
 		theme.toggle();
+	}
+
+	function toggleMaxWidth() {
+		maxWidth.toggle();
 	}
 
 	function handleNavClick(event: MouseEvent, href: string) {
@@ -198,6 +207,16 @@
 					type='button'
 				>
 					🎨
+				</button>
+				<button
+					id='max-width-toggle'
+					class='max-width-toggle'
+					aria-label={currentMaxWidth >= 1800 ? 'Reducir ancho máximo' : 'Aumentar ancho máximo'}
+					title={currentMaxWidth >= 1800 ? 'Ancho: 1200px' : 'Ancho: 1800px'}
+					onclick={toggleMaxWidth}
+					type='button'
+				>
+					📐
 				</button>
 			{/if}
 			<button
@@ -389,6 +408,50 @@
 	}
 
 	.color-editor-toggle:hover {
+		/* Box/Visual */
+		box-shadow: 0 0.5rem 1rem var(--shadow-subtle);
+		
+		/* Effects & Motion */
+		transform: translateY(-1px);
+	}
+
+	.max-width-toggle {
+		/* Positioning */
+		z-index: 1001;
+		
+		/* Layout */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		
+		/* Box/Visual */
+		border: 1px solid var(--ref-neutral-900);
+		border-radius: 999px;
+		background: var(--ref-neutral-900);
+		
+		/* Typography */
+		font-size: 1.1rem;
+		color: var(--color-text-inverse);
+		
+		/* Misc/Overrides */
+		cursor: pointer;
+		
+		/* Effects & Motion */
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	:global(:root[data-theme='dark']) .max-width-toggle {
+		/* Box/Visual */
+		border: 1px solid var(--color-border-default);
+		background: var(--color-bg-elevated);
+		
+		/* Typography */
+		color: var(--color-accent-primary-text);
+	}
+
+	.max-width-toggle:hover {
 		/* Box/Visual */
 		box-shadow: 0 0.5rem 1rem var(--shadow-subtle);
 		
