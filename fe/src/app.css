@@ -100,8 +100,8 @@
 	--svg-stroke-contrast: var(--ref-gold-dark);
 
 	/* === Typography === */
-	--font-heading: 'Playfair Display', serif;
-	--font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	--font-heading: 'Ubuntu', sans-serif;
+	--font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 	--font-accent: var(--font-body);
 
 	/* Font weights */
@@ -109,7 +109,7 @@
 	--font-weight-medium: 500;
 	--font-weight-semibold: 600;
 	--font-weight-bold: 700;
-	--font-weight-extrabold: 900;
+	--font-weight-extrabold: 700; /* Ubuntu doesn't have 900, use 700 (bold) */
 
 	/* Letter spacing */
 	--letter-spacing-tight: -0.02em;
@@ -357,7 +357,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
 	font-size: 2.5rem;
-	font-weight: var(--font-weight-extrabold);
+	font-weight: var(--font-weight-bold);
 	letter-spacing: var(--letter-spacing-tight);
 }
 

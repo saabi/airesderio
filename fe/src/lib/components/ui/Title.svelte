@@ -52,7 +52,7 @@
 		/* Typography */
 		font-family: var(--font-heading);
 		font-size: 1.6em;
-		font-weight: var(--font-weight-extrabold);
+		font-weight: var(--font-weight-bold);
 		letter-spacing: var(--letter-spacing-wide);
 		color: var(--color-accent-primary);
 		text-transform: uppercase;
