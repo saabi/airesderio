@@ -41,7 +41,7 @@
 		class="scroll-animate"
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="Diseño" big="INTERIOR" />
+		<Title eyebrow="Diseño de" big="INTERIORES" />
 	</div>
 	<div class="interior-container">
 		<div

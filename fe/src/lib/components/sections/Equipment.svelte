@@ -156,7 +156,7 @@
         data-item-active={titleVisible || undefined}
         style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
     >
-        <Title eyebrow='Cómo están' big='EQUIPADOS' />
+        <Title eyebrow='Cómo vienen' big='EQUIPADOS' />
     </div>
     <ul class='equip-list' role='list'>
         {#each equipmentItems as item, index (index)}
