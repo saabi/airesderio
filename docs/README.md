@@ -28,7 +28,13 @@ docs/
     ├── 009-improve-accessibility.md
     ├── 010-reorganize-components.md
     ├── 011-organize-place-photos.md
-    └── 012-simplify-theming-logic.md
+    ├── 012-simplify-theming-logic.md
+    ├── 013-refactor-global-css-selectors.md
+    ├── 014-refactor-app-css-classes.md
+    ├── 015-remove-category-selector.md
+    ├── 016-refactor-scroll-animate.md
+    ├── 017-decouple-header-from-document-body.md
+    └── 018-complete-place-photos-carousel.md
 ```
 
 ## Quick Start
@@ -141,6 +147,7 @@ Design proposals, mockups, and visual assets for the project.
 - **#017**: ✅ Decouple Header Component from document.body (Code Quality, State Management) - **Complete**
 - **#016**: ⏸️ Refactor scroll-animate Utility Class (Code Quality, Animation System) - **Not Started** - *Can be done after #014*
 - **#011**: ⏸️ Organize Place Photo Carousel Files (Content Management) - **Not Started** - *Do before #007*
+- **#018**: ⏸️ Complete Place Photos Carousel Implementation (Functionality, UX) - **Not Started** - *Related to #011*
 - **#007**: ⏸️ Image Optimization (Performance) - **Pending** - *Depends on #011*
 
 ### Low Priority
