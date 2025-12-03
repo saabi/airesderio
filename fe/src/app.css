@@ -147,7 +147,7 @@
     --category-vida-nocturna: var(--ref-pink-600);
 
     /* Layout metrics */
-    --max: 1200px;
+    --max: 600px;
     --gap: 1.75rem;
     --header-height: 2.4lh;
     
@@ -227,6 +227,18 @@
     --category-supermercados: color-mix(in oklch, var(--ref-cyan-500) 65%, var(--ref-white) 35%);
     --category-servicios: color-mix(in oklch, var(--ref-indigo-600) 65%, var(--ref-white) 35%);
     --category-vida-nocturna: color-mix(in oklch, var(--ref-pink-600) 65%, var(--ref-white) 35%);
+}
+
+@media (min-width: 850px) {
+    :root {
+        --max: 1200px;
+    }
+}
+
+@media (min-width: 1500px) {
+    :root {
+        --max: 1750px;
+    }
 }
 
 /* Category helpers */

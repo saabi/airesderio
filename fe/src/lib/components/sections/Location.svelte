@@ -332,7 +332,7 @@
 		data-item-active={titleVisible || undefined}
 		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="Ubicación" big="¿DÓNDE SE ENCUENTRA?" />
+		<Title eyebrow="¿Dónde se encuentra?" big="UBICACIÓN" />
 	</div>
 	<div class="location-block">
 		<div
