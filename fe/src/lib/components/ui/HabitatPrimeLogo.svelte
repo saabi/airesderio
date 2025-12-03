@@ -25,23 +25,6 @@
 	aria-label="Habitat Prime SAS"
 >
 	<defs>
-		<style type="text/css">
-			<![CDATA[
-				.habitat-logo-fil0 { fill: white; fill-rule: nonzero; }
-				.habitat-logo-fil2 { fill: url(#id0); }
-				.habitat-logo-fil1 { fill: url(#id1); fill-rule: nonzero; }
-				.habitat-logo-stop0 { stop-opacity: 1; stop-color: #DEAE00; }
-				.habitat-logo-stop1 { stop-opacity: 1; stop-color: #EED67F; }
-				.habitat-logo-stop2 { stop-opacity: 1; stop-color: white; }
-				.habitat-logo-stop3 { stop-opacity: 1; stop-color: #FFC800; }
-				.habitat-logo-stop4 { stop-opacity: 1; stop-color: #C19700; }
-				.habitat-logo-stop5 { stop-opacity: 1; stop-color: #826600; }
-
-				/* Dark theme */
-				svg[data-theme='dark'] .habitat-logo-fil0 { fill: #1a1a1a; }
-				svg[data-theme='dark'] .habitat-logo-stop2 { stop-color: #1a1a1a; }
-			]]>
-		</style>
 		<linearGradient
 			id="id0"
 			gradientUnits="userSpaceOnUse"
@@ -155,3 +138,49 @@
 		</g>
 	</g>
 </svg>
+
+<style type="text/css">
+	.habitat-logo-fil0 {
+		fill: white;
+		fill-rule: nonzero;
+	}
+	.habitat-logo-fil2 {
+		fill: url(#id0);
+	}
+	.habitat-logo-fil1 {
+		fill: url(#id1);
+		fill-rule: nonzero;
+	}
+	.habitat-logo-stop0 {
+		stop-opacity: 1;
+		stop-color: #deae00;
+	}
+	.habitat-logo-stop1 {
+		stop-opacity: 1;
+		stop-color: #eed67f;
+	}
+	.habitat-logo-stop2 {
+		stop-opacity: 1;
+		stop-color: white;
+	}
+	.habitat-logo-stop3 {
+		stop-opacity: 1;
+		stop-color: #ffc800;
+	}
+	.habitat-logo-stop4 {
+		stop-opacity: 1;
+		stop-color: #c19700;
+	}
+	.habitat-logo-stop5 {
+		stop-opacity: 1;
+		stop-color: #826600;
+	}
+
+	/* Dark theme */
+	svg[data-theme='dark'] .habitat-logo-fil0 {
+		fill: #1a1a1a;
+	}
+	svg[data-theme='dark'] .habitat-logo-stop2 {
+		stop-color: #1a1a1a;
+	}
+</style>

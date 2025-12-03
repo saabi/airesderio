@@ -1,13 +1,3 @@
-<defs>
-	<style type="text/css">
-		.fil0 {
-			fill: var(--svg-fill-primary);
-		}
-		.fil2 {
-			fill: var(--svg-fill-contrast);
-		}
-	</style>
-</defs>
 <g transform="matrix(0.00909348,0,0,0.00909348,-222.96837,-108.92599)">
 	<g>
 		<g>
@@ -76,3 +66,12 @@
 		</g>
 	</g>
 </g>
+
+<style type="text/css">
+	.fil0 {
+		fill: var(--svg-fill-primary);
+	}
+	.fil2 {
+		fill: var(--svg-fill-contrast);
+	}
+</style>

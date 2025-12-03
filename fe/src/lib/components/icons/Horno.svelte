@@ -1,10 +1,3 @@
-<defs>
-	<style type="text/css">
-		.fil0 {
-			fill: var(--svg-fill-primary);
-		}
-	</style>
-</defs>
 <g id="Capa_x0020_1">
 	<metadata id="CorelCorpID_0Corel-Layer" />
 	<g id="horno">
@@ -62,3 +55,9 @@
 		/>
 	</g>
 </g>
+
+<style type="text/css">
+	.fil0 {
+		fill: var(--svg-fill-primary);
+	}
+</style>
