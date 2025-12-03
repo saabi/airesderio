@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== TYPES =====
 	type Token = {
 		name: string;
@@ -12,7 +12,7 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== IMPORTS =====
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -251,34 +251,34 @@
 </script>
 
 {#if open}
-	<div class="overlay" role="presentation" onclick={closeEditor}></div>
+	<div class='overlay' role='presentation' onclick={closeEditor}></div>
 {/if}
 
 <aside class:visible={open}>
-	<header class="panel-header">
+	<header class='panel-header'>
 		<h2>Color Tokens</h2>
-		<button class="close" onclick={closeEditor} aria-label="Close color editor">&times;</button>
+		<button class='close' onclick={closeEditor} aria-label='Close color editor'>&times;</button>
 	</header>
 
 	{#if loading}
-		<p class="status">Scanning styles...</p>
+		<p class='status'>Scanning styles...</p>
 	{:else if errorMessage}
-		<p class="status error">{errorMessage}</p>
+		<p class='status error'>{errorMessage}</p>
 	{:else if tokens.length === 0}
-		<p class="status">No color variables found.</p>
+		<p class='status'>No color variables found.</p>
 	{:else}
 		<ul>
 			{#each tokens as token (token.name)}
 				<li>
-					<div class="label">
-						<span class="row">
-							<span class="swatch" style={`background: ${token.value}`}></span>
-							<span class="name">{token.displayName}</span>
+					<div class='label'>
+						<span class='row'>
+							<span class='swatch' style={`background: ${token.value}`}></span>
+							<span class='name'>{token.displayName}</span>
 						</span>
-						<span class="code">{token.name}</span>
+						<span class='code'>{token.name}</span>
 					</div>
 					<input
-						type="color"
+						type='color'
 						value={token.value}
 						oninput={(event) => handleColorChange(token, event.currentTarget.value)}
 					/>
@@ -287,8 +287,8 @@
 		</ul>
 	{/if}
 
-	<footer class="panel-footer">
-		<button class="copy" onclick={copyToClipboard} disabled={tokens.length === 0}>
+	<footer class='panel-footer'>
+		<button class='copy' onclick={copyToClipboard} disabled={tokens.length === 0}>
 			{#if copyStatus === 'copied'}
 				Copied!
 			{:else if copyStatus === 'error'}

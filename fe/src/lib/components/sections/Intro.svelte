@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
 	// ===== IMPORTS =====
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import {
@@ -19,25 +19,25 @@
 </script>
 
 <section
-	class="intro"
-	id="proyecto"
-	aria-labelledby="proyecto-heading"
+	class='intro'
+	id='proyecto'
+	aria-labelledby='proyecto-heading'
 	use:introObserver
 	data-section-active={$introVisible}
 >
-	<VisuallyHidden id="proyecto-heading" tag="h2">Sobre el Proyecto</VisuallyHidden>
+	<VisuallyHidden id='proyecto-heading' tag='h2'>Sobre el Proyecto</VisuallyHidden>
 	<div
-		class="scroll-animate"
+		class='scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<section
-			id="welcome"
-			class="welcome-section"
+			id='welcome'
+			class='welcome-section'
 			use:welcomeObserver
 			data-section-active={$welcomeVisible}
 		>
 			<p
-				class="welcome scroll-animate"
+				class='welcome scroll-animate'
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()}; --scroll-animate-delay: ${animationDelay(1)};`}
 			>
 				Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto de departamentos con
@@ -55,22 +55,22 @@
 		</p>
 	</div>
 	<aside
-		class="kpis scroll-animate"
+		class='kpis scroll-animate'
 		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
-		aria-labelledby="kpis-heading"
+		aria-labelledby='kpis-heading'
 	>
-		<VisuallyHidden id="kpis-heading" tag="h3"
+		<VisuallyHidden id='kpis-heading' tag='h3'
 			>Características principales del proyecto</VisuallyHidden
 		>
 		<dl>
-			<dt class="kpi"><strong>2.500</strong><small>metros cuadrados</small></dt>
-			<VisuallyHidden tag="dd">Superficie total del proyecto</VisuallyHidden>
-			<dt class="kpi"><strong>1/2 + 1</strong><small>dorms · estudio</small></dt>
-			<VisuallyHidden tag="dd">Tipos de unidades disponibles</VisuallyHidden>
-			<dt class="kpi"><strong>TERRAZA</strong><small>PISCINA Y SOLARIUM HÚMEDO</small></dt>
-			<VisuallyHidden tag="dd">Amenities en terraza con piscina y solarium húmedo</VisuallyHidden>
-			<dt class="kpi"><strong>CAFETERÍA</strong><small>&nbsp;</small></dt>
-			<VisuallyHidden tag="dd">Servicio de cafetería incluido</VisuallyHidden>
+			<dt class='kpi'><strong>2.500</strong><small>metros cuadrados</small></dt>
+			<VisuallyHidden tag='dd'>Superficie total del proyecto</VisuallyHidden>
+			<dt class='kpi'><strong>1/2 + 1</strong><small>dorms · estudio</small></dt>
+			<VisuallyHidden tag='dd'>Tipos de unidades disponibles</VisuallyHidden>
+			<dt class='kpi'><strong>TERRAZA</strong><small>PISCINA Y SOLARIUM HÚMEDO</small></dt>
+			<VisuallyHidden tag='dd'>Amenities en terraza con piscina y solarium húmedo</VisuallyHidden>
+			<dt class='kpi'><strong>CAFETERÍA</strong><small>&nbsp;</small></dt>
+			<VisuallyHidden tag='dd'>Servicio de cafetería incluido</VisuallyHidden>
 		</dl>
 	</aside>
 </section>

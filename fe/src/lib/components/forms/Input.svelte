@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	// (No imports needed for this component)
 
@@ -23,7 +23,7 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {
 		id,
@@ -64,7 +64,7 @@
 	{placeholder}
 	{required}
 	{disabled}
-	class="form-input {className}"
+	class='form-input {className}'
 	{oninput}
 	{onkeydown}
 	{onchange}

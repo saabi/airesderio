@@ -1,10 +1,10 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import Title from '$lib/components/ui/Title.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== IMPORTS =====
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import {
@@ -24,26 +24,26 @@
 </script>
 
 <section
-	id="planos"
-	aria-labelledby="planos-heading"
+	id='planos'
+	aria-labelledby='planos-heading'
 	use:floorPlansObserver
 	data-section-active={$floorPlansVisible}
 >
-	<VisuallyHidden id="planos-heading" tag="h2">Planos</VisuallyHidden>
+	<VisuallyHidden id='planos-heading' tag='h2'>Planos</VisuallyHidden>
 	<div
-		class="scroll-animate"
+		class='scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="Distribución y" big="PLANOS" />
+		<Title eyebrow='Distribución y' big='PLANOS' />
 	</div>
 	<figure
-		class="scroll-animate"
+		class='scroll-animate'
 		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<div
-			class="plan-ph"
-			role="img"
-			aria-label="Plano de distribución de los departamentos del proyecto Aires de Río"
+			class='plan-ph'
+			role='img'
+			aria-label='Plano de distribución de los departamentos del proyecto Aires de Río'
 		></div>
 		<figcaption>Plano de distribución y layout de las unidades</figcaption>
 	</figure>

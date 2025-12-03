@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
@@ -6,7 +6,7 @@
 	import { theme } from '$lib/stores/theme';
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== IMPORTS =====
 	import {
 		ANIMATION,
@@ -22,32 +22,32 @@
 </script>
 
 <section
-	id="contacto"
-	class="section"
-	aria-labelledby="contact-heading"
+	id='contacto'
+	class='section'
+	aria-labelledby='contact-heading'
 	use:contactObserver
 	data-section-active={$contactVisible}
 >
-	<div class="container">
+	<div class='container'>
 		<div
-			class="form scroll-animate"
+			class='form scroll-animate'
 			style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 		>
-			<h2 id="contact-heading">Contacto</h2>
+			<h2 id='contact-heading'>Contacto</h2>
 			<p>Comunicate con nosotros</p>
 			<ContactForm />
 		</div>
-		<div class="right-column">
+		<div class='right-column'>
 			<img
-				src="/exteriores/exterior_03.png"
-				alt="Aires de Río exterior"
-				loading="lazy"
-				decoding="async"
-				class="exterior-image scroll-animate"
+				src='/exteriores/exterior_03.png'
+				alt='Aires de Río exterior'
+				loading='lazy'
+				decoding='async'
+				class='exterior-image scroll-animate'
 				style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 			/>
-			<div class="logo-wrapper">
-				<AiresDeRioLogo class="logo" theme={$theme} />
+			<div class='logo-wrapper'>
+				<AiresDeRioLogo class='logo' theme={$theme} />
 			</div>
 		</div>
 	</div>

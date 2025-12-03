@@ -1,10 +1,10 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import HabitatPrimeLogo from '$lib/components/ui/HabitatPrimeLogo.svelte';
 	import { theme } from '$lib/stores/theme';
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== DATA =====
 	const year = new Date().getFullYear();
 
@@ -33,19 +33,19 @@
 	];
 </script>
 
-<footer class="site-footer">
-	<div class="footer-wrap">
-		<div class="footer-grid">
-			<section class="footer-column footer-brand" aria-label="Resumen corporativo">
-				<div class="footer-logo">
-					<HabitatPrimeLogo theme={$theme} width="8rem" />
+<footer class='site-footer'>
+	<div class='footer-wrap'>
+		<div class='footer-grid'>
+			<section class='footer-column footer-brand' aria-label='Resumen corporativo'>
+				<div class='footer-logo'>
+					<HabitatPrimeLogo theme={$theme} width='8rem' />
 				</div>
 				<p>
 					Habitat Prime SAS desarrolla experiencias residenciales premium en Santiago del Estero.
 					Aires de Río es uno de nuestros productos insignia, diseñado para vivir con vistas
 					privilegiadas al río y acceso a amenities de alto nivel.
 				</p>
-				<ul class="project-highlights">
+				<ul class='project-highlights'>
 					{#each projectHighlights as item (item.label)}
 						<li>
 							<strong>{item.value}</strong>
@@ -55,9 +55,9 @@
 				</ul>
 			</section>
 
-			<section class="footer-column" aria-label="Navegación de secciones">
+			<section class='footer-column' aria-label='Navegación de secciones'>
 				<h3>Navegación</h3>
-				<ul class="footer-links">
+				<ul class='footer-links'>
 					{#each navigationLinks as link (link.href)}
 						<li>
 							<a
@@ -72,9 +72,9 @@
 				</ul>
 			</section>
 
-			<section class="footer-column" aria-label="Información de contacto">
+			<section class='footer-column' aria-label='Información de contacto'>
 				<h3>Contacto</h3>
-				<ul class="footer-contact">
+				<ul class='footer-contact'>
 					{#each contactInfo as item (item.label)}
 						<li>
 							<span>{item.label}</span>
@@ -85,7 +85,7 @@
 			</section>
 		</div>
 
-		<div class="footer-bottom">
+		<div class='footer-bottom'>
 			<p>© {year} Habitat Prime SAS · Aires de Río es una marca registrada.</p>
 		</div>
 	</div>

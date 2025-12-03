@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import type { Place } from '$lib/types';
 
@@ -14,7 +14,7 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {
 		visible = false,
@@ -67,40 +67,40 @@
 <svelte:window onkeydown={handleKeydown} />
 
 {#if visible && place && photos.length > 0}
-	<div class="overlay" role="dialog" aria-modal="true">
-		<button type="button" class="backdrop" aria-label="Cerrar galería" onclick={onClose}></button>
-		<div class="modal" role="document">
-			<div class="header">
+	<div class='overlay' role='dialog' aria-modal='true'>
+		<button type='button' class='backdrop' aria-label='Cerrar galería' onclick={onClose}></button>
+		<div class='modal' role='document'>
+			<div class='header'>
 				<h3>{place.nombre}</h3>
-				<button class="close-button" onclick={onClose} aria-label="Cerrar galería de fotos"
+				<button class='close-button' onclick={onClose} aria-label='Cerrar galería de fotos'
 					>×</button
 				>
 			</div>
 
-			<div class="content">
-				<div class="photo-container">
+			<div class='content'>
+				<div class='photo-container'>
 					<img
 						src={photos[currentIndex]}
 						alt={`${place.nombre} - Foto ${currentIndex + 1}`}
-						class="carousel-image"
+						class='carousel-image'
 					/>
 
 					{#if photos.length > 1}
 						<button
-							class="nav-button prev"
+							class='nav-button prev'
 							onclick={() => navigateCarousel(-1)}
-							aria-label="Foto anterior">‹</button
+							aria-label='Foto anterior'>‹</button
 						>
 						<button
-							class="nav-button next"
+							class='nav-button next'
 							onclick={() => navigateCarousel(1)}
-							aria-label="Siguiente foto">›</button
+							aria-label='Siguiente foto'>›</button
 						>
 					{/if}
 				</div>
 
 				{#if photos.length > 1}
-					<div class="photo-dots">
+					<div class='photo-dots'>
 						{#each photos as _, index (index)}
 							<button
 								class="dot {index === currentIndex ? 'active' : ''}"
@@ -111,10 +111,10 @@
 					</div>
 				{/if}
 
-				<div class="photo-info">
+				<div class='photo-info'>
 					<p>{currentIndex + 1} de {photos.length} fotos</p>
 					{#if place.descripcion}
-						<p class="photo-description">{place.descripcion}</p>
+						<p class='photo-description'>{place.descripcion}</p>
 					{/if}
 				</div>
 			</div>

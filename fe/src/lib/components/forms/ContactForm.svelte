@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import Input from '$lib/components/forms/Input.svelte';
 	import PhoneNumberInput from '$lib/components/forms/PhoneNumberInput.svelte';
@@ -15,7 +15,7 @@
 	const SUCCESS_MESSAGE_TIMEOUT = 5000;
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {}: Props = $props();
 
@@ -105,59 +105,59 @@
 	}
 </script>
 
-<form bind:this={formElement} action="#" method="POST" onsubmit={handleSubmit} novalidate>
+<form bind:this={formElement} action='#' method='POST' onsubmit={handleSubmit} novalidate>
 	<!-- Honeypot field for spam protection -->
 	<input
-		type="text"
-		name="website"
-		autocomplete="off"
-		tabindex="-1"
-		aria-hidden="true"
-		style="position: absolute; left: -9999px;"
+		type='text'
+		name='website'
+		autocomplete='off'
+		tabindex='-1'
+		aria-hidden='true'
+		style='position: absolute; left: -9999px;'
 	/>
 
 	{#if successMessage}
-		<div class="form-message form-message--success" role="alert">
+		<div class='form-message form-message--success' role='alert'>
 			{successMessage}
 		</div>
 	{/if}
 
 	{#if errorMessage}
-		<div class="form-message form-message--error" role="alert">
+		<div class='form-message form-message--error' role='alert'>
 			{errorMessage}
 		</div>
 	{/if}
 
-	<div class="form-group">
-		<label for="nombre">Nombre</label>
+	<div class='form-group'>
+		<label for='nombre'>Nombre</label>
 		<Input
-			type="text"
-			id="nombre"
-			name="nombre"
+			type='text'
+			id='nombre'
+			name='nombre'
 			required
-			ariaLabel="Nombre completo"
+			ariaLabel='Nombre completo'
 			disabled={isLoading}
 		/>
 	</div>
-	<div class="form-group">
-		<label for="correo">Correo</label>
+	<div class='form-group'>
+		<label for='correo'>Correo</label>
 		<Input
-			type="email"
-			id="correo"
-			name="correo"
+			type='email'
+			id='correo'
+			name='correo'
 			required
-			ariaLabel="Correo electrónico"
+			ariaLabel='Correo electrónico'
 			disabled={isLoading}
 		/>
 	</div>
-	<PhoneNumberInput id="telefono" name="telefono" />
-	<div class="form-group">
-		<label for="consulta">Consulta</label>
+	<PhoneNumberInput id='telefono' name='telefono' />
+	<div class='form-group'>
+		<label for='consulta'>Consulta</label>
 		<Select
-			id="consulta"
-			name="consulta"
-			placeholder="Seleccioná"
-			ariaLabel="Tipo de consulta"
+			id='consulta'
+			name='consulta'
+			placeholder='Seleccioná'
+			ariaLabel='Tipo de consulta'
 			disabled={isLoading}
 		>
 			{#snippet children()}
@@ -167,20 +167,20 @@
 			{/snippet}
 		</Select>
 	</div>
-	<div class="form-group">
-		<label for="mensaje">Mensaje</label>
+	<div class='form-group'>
+		<label for='mensaje'>Mensaje</label>
 		<Textarea
-			id="mensaje"
-			name="mensaje"
+			id='mensaje'
+			name='mensaje'
 			rows={4}
-			ariaLabel="Mensaje o consulta"
+			ariaLabel='Mensaje o consulta'
 			disabled={isLoading}
 		/>
 	</div>
-	<div class="form-group">
-		<button type="submit" disabled={isLoading} aria-label="Enviar formulario de contacto">
+	<div class='form-group'>
+		<button type='submit' disabled={isLoading} aria-label='Enviar formulario de contacto'>
 			{#if isLoading}
-				<span class="button-loading">Enviando...</span>
+				<span class='button-loading'>Enviando...</span>
 			{:else}
 				ENVIAR
 			{/if}

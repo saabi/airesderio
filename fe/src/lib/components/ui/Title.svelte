@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	// (No imports needed for this component)
 
@@ -9,14 +9,14 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let { eyebrow, big }: Props = $props();
 </script>
 
-<div class="title">
-	<span class="eyebrow">{eyebrow}</span>
-	<span class="big">{big}</span>
+<div class='title'>
+	<span class='eyebrow'>{eyebrow}</span>
+	<span class='big'>{big}</span>
 </div>
 
 <style>

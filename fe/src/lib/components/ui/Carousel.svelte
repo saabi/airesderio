@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import { onMount, onDestroy } from 'svelte';
 
@@ -11,7 +11,7 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {
 		images,
@@ -65,47 +65,47 @@
 </script>
 
 <div
-	class="carousel"
-	role="region"
+	class='carousel'
+	role='region'
 	aria-label={ariaLabel}
 	onmouseenter={stopCarousel}
 	onmouseleave={startCarousel}
 >
 	{#each images as image, index}
 		<div
-			class="carousel-image"
+			class='carousel-image'
 			class:active={index === currentImageIndex}
 			style="background-image: url('{image}')"
-			role="img"
+			role='img'
 			aria-label={typeof imageAriaLabel === 'function' ? imageAriaLabel(index) : imageAriaLabel}
 		></div>
 	{/each}
 	{#if images.length > 1}
-		<div class="carousel-navigation">
+		<div class='carousel-navigation'>
 			<button
-				class="carousel-button prev"
+				class='carousel-button prev'
 				onclick={previousImage}
-				aria-label="Imagen anterior"
-				type="button"
+				aria-label='Imagen anterior'
+				type='button'
 			>
 				‹
 			</button>
-			<div class="carousel-dots">
+			<div class='carousel-dots'>
 				{#each images as _, index}
 					<button
-						class="dot"
+						class='dot'
 						class:active={index === currentImageIndex}
 						onclick={() => goToImage(index)}
-						aria-label="Ver imagen {index + 1}"
-						type="button"
+						aria-label='Ver imagen {index + 1}'
+						type='button'
 					></button>
 				{/each}
 			</div>
 			<button
-				class="carousel-button next"
+				class='carousel-button next'
 				onclick={nextImage}
-				aria-label="Siguiente imagen"
-				type="button"
+				aria-label='Siguiente imagen'
+				type='button'
 			>
 				›
 			</button>

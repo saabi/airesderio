@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	// (No imports needed for this component)
 
@@ -20,7 +20,7 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {
 		id,
@@ -47,7 +47,7 @@
 	{rows}
 	{required}
 	{disabled}
-	class="form-textarea {className}"
+	class='form-textarea {className}'
 	{oninput}
 	{onchange}
 	{onblur}

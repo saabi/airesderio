@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import type { Snippet } from 'svelte';
 
@@ -19,7 +19,7 @@
 	const BLUR_DELAY = 100; // Delay to keep focus state briefly to avoid flicker
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {
 		id,
@@ -65,7 +65,7 @@
 	bind:this={selectElement}
 	{id}
 	{name}
-	class="select-input {className}"
+	class='select-input {className}'
 	class:keyboard-focus={isKeyboardFocus}
 	{value}
 	{onchange}

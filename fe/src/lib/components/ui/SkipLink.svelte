@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== TYPES =====
 	interface Props {
 		targetId?: string;
@@ -6,12 +6,12 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let { targetId = 'main-content', text = 'Saltar al contenido principal' }: Props = $props();
 </script>
 
-<a href="#{targetId}" class="skip-link">
+<a href='#{targetId}' class='skip-link'>
 	{text}
 </a>
 

@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import { tweened } from 'svelte/motion';
 	import PinLabel from '$lib/components/ui/PinLabel.svelte';
@@ -61,7 +61,7 @@
 	};
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {
 		width = '100%',
@@ -457,153 +457,153 @@
 	export { next, prev, reset, currentPathId, selectedGroupName, pinCoordinates };
 </script>
 
-<div class="map-container" bind:this={mapContainer}>
+<div class='map-container' bind:this={mapContainer}>
 	<svg
 		bind:this={svgElement}
 		width={widthAttr}
 		height={heightAttr}
 		viewBox={viewBoxAttr}
-		preserveAspectRatio="xMidYMid slice"
+		preserveAspectRatio='xMidYMid slice'
 		class={className}
 		aria-label={ariaLabel}
-		role="img"
-		xmlns="http://www.w3.org/2000/svg"
+		role='img'
+		xmlns='http://www.w3.org/2000/svg'
 	>
-		<g id="maps">
+		<g id='maps'>
 			<image
-				id="far"
-				href="/map/far.jpg"
-				x="0"
-				y="0"
-				width="374.12082"
-				height="225.68958"
-				preserveAspectRatio="none"
+				id='far'
+				href='/map/far.jpg'
+				x='0'
+				y='0'
+				width='374.12082'
+				height='225.68958'
+				preserveAspectRatio='none'
 			/>
 			<image
-				id="near"
-				href="/map/near.jpg"
-				x="81.364487"
-				y="52.243599"
-				width="69.217209"
-				height="41.755505"
-				preserveAspectRatio="none"
+				id='near'
+				href='/map/near.jpg'
+				x='81.364487'
+				y='52.243599'
+				width='69.217209'
+				height='41.755505'
+				preserveAspectRatio='none'
 			/>
 		</g>
-		<g id="places" class="places-group" class:zoom-active={currentZoomedIndex !== null}>
+		<g id='places' class='places-group' class:zoom-active={currentZoomedIndex !== null}>
 			<g
-				id="gterminal"
-				data-name="Terminal de Omnibus"
+				id='gterminal'
+				data-name='Terminal de Omnibus'
 				class:group-active={currentPathId === 'terminal'}
 			>
 				<path
 					bind:this={terminalPath}
-					class="place-path"
-					fill="#00be4d"
-					vector-effect="non-scaling-stroke"
-					role="button"
-					tabindex="0"
-					aria-label="Terminal"
-					d="m 28.247054,37.089611 4.175651,0.491252 6.509105,2.824708 3.070333,2.210638 3.070331,2.579079 1.473761,1.596573 1.228132,1.719384 0.36844,2.456267 -0.614068,2.579079 -1.596573,1.842199 -2.70189,1.719387 c 0,0 -3.807212,-0.491255 -4.05284,-0.614067 C 38.93181,56.371296 33.2824,53.546591 33.2824,53.546591 l -3.930025,-3.193145 -3.807212,-4.42128 -2.824706,-4.666903 z"
-					id="terminal"
+					class='place-path'
+					fill='#00be4d'
+					vector-effect='non-scaling-stroke'
+					role='button'
+					tabindex='0'
+					aria-label='Terminal'
+					d='m 28.247054,37.089611 4.175651,0.491252 6.509105,2.824708 3.070333,2.210638 3.070331,2.579079 1.473761,1.596573 1.228132,1.719384 0.36844,2.456267 -0.614068,2.579079 -1.596573,1.842199 -2.70189,1.719387 c 0,0 -3.807212,-0.491255 -4.05284,-0.614067 C 38.93181,56.371296 33.2824,53.546591 33.2824,53.546591 l -3.930025,-3.193145 -3.807212,-4.42128 -2.824706,-4.666903 z'
+					id='terminal'
 				/>
-				<circle class="pin-circle" id="pin-terminal" cx="36.098015" cy="46.98563" r="2.0137656" />
+				<circle class='pin-circle' id='pin-terminal' cx='36.098015' cy='46.98563' r='2.0137656' />
 			</g>
-			<g id="gforum" data-name="Forum" class:group-active={currentPathId === 'forum'}>
+			<g id='gforum' data-name='Forum' class:group-active={currentPathId === 'forum'}>
 				<path
 					bind:this={forumPath}
-					class="place-path"
-					fill="#00be4d"
-					vector-effect="non-scaling-stroke"
-					role="button"
-					tabindex="0"
-					aria-label="Forum"
-					d="M 43.421053,72.078947 61.310527,57.663159 87.884211,89.447369 87.363159,90.489473 70.863157,104.38421 69.299999,103.86316 43.594736,72.947368 Z"
-					id="forum"
+					class='place-path'
+					fill='#00be4d'
+					vector-effect='non-scaling-stroke'
+					role='button'
+					tabindex='0'
+					aria-label='Forum'
+					d='M 43.421053,72.078947 61.310527,57.663159 87.884211,89.447369 87.363159,90.489473 70.863157,104.38421 69.299999,103.86316 43.594736,72.947368 Z'
+					id='forum'
 				/>
-				<circle class="pin-circle" id="pin-forum" cx="58.824978" cy="79.12207" r="2.0137656" />
+				<circle class='pin-circle' id='pin-forum' cx='58.824978' cy='79.12207' r='2.0137656' />
 			</g>
 			<g
-				id="gcasagob"
-				data-name="Casa de Gobierno"
+				id='gcasagob'
+				data-name='Casa de Gobierno'
 				class:group-active={currentPathId === 'casagob'}
 			>
 				<path
 					bind:this={casagobPath}
-					class="place-path"
-					fill="#00be4d"
-					vector-effect="non-scaling-stroke"
-					role="button"
-					tabindex="0"
-					aria-label="Casa de Gobierno"
-					d="M 37.212426,158.92039 9.4566228,123.9186 7.9828632,123.42735 0,129.69083 v 6.26347 l 27.510176,30.94895 z"
-					id="casagob"
+					class='place-path'
+					fill='#00be4d'
+					vector-effect='non-scaling-stroke'
+					role='button'
+					tabindex='0'
+					aria-label='Casa de Gobierno'
+					d='M 37.212426,158.92039 9.4566228,123.9186 7.9828632,123.42735 0,129.69083 v 6.26347 l 27.510176,30.94895 z'
+					id='casagob'
 				/>
-				<circle class="pin-circle" id="pin-casagob" cx="9.6377773" cy="136.76311" r="2.0137656" />
+				<circle class='pin-circle' id='pin-casagob' cx='9.6377773' cy='136.76311' r='2.0137656' />
 				<circle
-					class="pin-circle"
-					id="pin-plazasanmartin"
-					cx="26.456091"
-					cy="156.33569"
-					r="2.0137656"
+					class='pin-circle'
+					id='pin-plazasanmartin'
+					cx='26.456091'
+					cy='156.33569'
+					r='2.0137656'
 				/>
 			</g>
-			<g id="gplazavea" data-name="Plaza Vea" class:group-active={currentPathId === 'plazavea'}>
+			<g id='gplazavea' data-name='Plaza Vea' class:group-active={currentPathId === 'plazavea'}>
 				<path
 					bind:this={plazaveaPath}
-					class="place-path"
-					fill="#00be4d"
-					vector-effect="non-scaling-stroke"
-					role="button"
-					tabindex="0"
-					aria-label="Plaza Vea"
-					d="m 139.27026,5.7722243 19.65013,16.4569797 c 0,0 -2.7019,2.210639 -1.96502,1.965012 0.73688,-0.245626 3.43878,4.421278 3.43878,4.421278 l -27.75581,23.088897 -20.387,-24.317029 z"
-					id="plazavea"
+					class='place-path'
+					fill='#00be4d'
+					vector-effect='non-scaling-stroke'
+					role='button'
+					tabindex='0'
+					aria-label='Plaza Vea'
+					d='m 139.27026,5.7722243 19.65013,16.4569797 c 0,0 -2.7019,2.210639 -1.96502,1.965012 0.73688,-0.245626 3.43878,4.421278 3.43878,4.421278 l -27.75581,23.088897 -20.387,-24.317029 z'
+					id='plazavea'
 				/>
-				<circle class="pin-circle" id="pin-plazavea" cx="138.37157" cy="29.165194" r="2.0137656" />
+				<circle class='pin-circle' id='pin-plazavea' cx='138.37157' cy='29.165194' r='2.0137656' />
 			</g>
-			<g id="g-parque" data-name="Parque Aguirre" class:group-active={currentPathId === 'parque'}>
+			<g id='g-parque' data-name='Parque Aguirre' class:group-active={currentPathId === 'parque'}>
 				<path
 					bind:this={parquePath}
-					class="place-path"
-					fill="#00be4d"
-					vector-effect="non-scaling-stroke"
-					role="button"
-					tabindex="0"
-					aria-label="Parque"
-					d="m 199.0421,0 0.69474,4.5157895 1.38947,4.8631577 6.25264,7.2947368 -23.62106,35.569919 18.41053,24.090312 0.26053,3.387138 -29.96053,20.494737 22.23158,26.05263 0.20468,4.15928 -20.63263,17.43949 v 3.6844 l 61.77508,74.13799 h 138.0737 V 86.460551 L 350.8421,67.910527 329.65263,54.710525 319.57893,48.110526 317.49473,44.63684 309.85264,43.594736 304.98946,40.815789 292.4842,30.394738 291.78948,27.268421 290.4,26.226315 285.88422,26.573683 278.58947,23.1 l -2.0842,-3.473685 -2.4316,-0.694736 h -1.38946 l -1.73686,-1.389474 0.34737,-1.736842 -0.34737,-1.389474 h -1.38946 l -3.47368,1.389474 -3.47369,-1.042105 -1.73684,-3.473684 -0.69474,-2.4315794 -1.73684,0.6947368 -3.82105,2.4315786 -7.29474,-5.5578942 V 5.3842104 L 243.85263,5.0368422 238.6421,0 Z"
-					id="parque"
+					class='place-path'
+					fill='#00be4d'
+					vector-effect='non-scaling-stroke'
+					role='button'
+					tabindex='0'
+					aria-label='Parque'
+					d='m 199.0421,0 0.69474,4.5157895 1.38947,4.8631577 6.25264,7.2947368 -23.62106,35.569919 18.41053,24.090312 0.26053,3.387138 -29.96053,20.494737 22.23158,26.05263 0.20468,4.15928 -20.63263,17.43949 v 3.6844 l 61.77508,74.13799 h 138.0737 V 86.460551 L 350.8421,67.910527 329.65263,54.710525 319.57893,48.110526 317.49473,44.63684 309.85264,43.594736 304.98946,40.815789 292.4842,30.394738 291.78948,27.268421 290.4,26.226315 285.88422,26.573683 278.58947,23.1 l -2.0842,-3.473685 -2.4316,-0.694736 h -1.38946 l -1.73686,-1.389474 0.34737,-1.736842 -0.34737,-1.389474 h -1.38946 l -3.47368,1.389474 -3.47369,-1.042105 -1.73684,-3.473684 -0.69474,-2.4315794 -1.73684,0.6947368 -3.82105,2.4315786 -7.29474,-5.5578942 V 5.3842104 L 243.85263,5.0368422 238.6421,0 Z'
+					id='parque'
 				/>
-				<circle class="pin-circle" id="pin-parque" cx="276.63824" cy="127.52752" r="2.0137656" />
+				<circle class='pin-circle' id='pin-parque' cx='276.63824' cy='127.52752' r='2.0137656' />
 			</g>
-			<g id="gavroca" data-name="Avenida Roca" class:group-active={currentPathId === 'avroca'}>
+			<g id='gavroca' data-name='Avenida Roca' class:group-active={currentPathId === 'avroca'}>
 				<path
 					bind:this={avrocaPath}
-					class="place-path"
-					fill="#00be4d"
-					vector-effect="non-scaling-stroke"
-					role="button"
-					tabindex="0"
-					aria-label="Avenida Roca"
-					d="m 89.273683,91.18421 109.808187,134.44005 4.47726,0.12282 L 91.950889,89.142142 Z"
-					id="avroca"
+					class='place-path'
+					fill='#00be4d'
+					vector-effect='non-scaling-stroke'
+					role='button'
+					tabindex='0'
+					aria-label='Avenida Roca'
+					d='m 89.273683,91.18421 109.808187,134.44005 4.47726,0.12282 L 91.950889,89.142142 Z'
+					id='avroca'
 				/>
-				<circle class="pin-circle" id="pin-avroca" cx="145.09337" cy="156.96059" r="2.0137656" />
+				<circle class='pin-circle' id='pin-avroca' cx='145.09337' cy='156.96059' r='2.0137656' />
 			</g>
 		</g>
-		<g id="building" class="building-group" class:zoom-active={currentZoomedIndex !== null}>
-			<g id="gairesderio">
+		<g id='building' class='building-group' class:zoom-active={currentZoomedIndex !== null}>
+			<g id='gairesderio'>
 				<circle
-					class="pin-airesderio"
-					id="pin-airesderio"
-					cx="114.75736"
-					cy="73.439285"
-					r="4.4700313"
+					class='pin-airesderio'
+					id='pin-airesderio'
+					cx='114.75736'
+					cy='73.439285'
+					r='4.4700313'
 				/>
 				<path
 					bind:this={airesderioPath}
-					class="airesderio-path"
-					d="m 111.26556,71.791805 1.52949,-1.228227 1.59901,0.463483 2.47962,3.058973 0.30126,0.115865 0.7184,0.880615 -1.52949,1.251402 -0.60252,-0.787914 -1.50631,-0.301271 z"
-					id="airesderio"
+					class='airesderio-path'
+					d='m 111.26556,71.791805 1.52949,-1.228227 1.59901,0.463483 2.47962,3.058973 0.30126,0.115865 0.7184,0.880615 -1.52949,1.251402 -0.60252,-0.787914 -1.50631,-0.301271 z'
+					id='airesderio'
 				/>
 			</g>
 		</g>
@@ -611,7 +611,7 @@
 
 	{#if selectedGroupName && pinCoordinates}
 		<!-- Hidden label for measurement -->
-		<div bind:this={measurementLabel} class="pin-label-measure" aria-hidden="true">
+		<div bind:this={measurementLabel} class='pin-label-measure' aria-hidden='true'>
 			{selectedGroupName}
 		</div>
 

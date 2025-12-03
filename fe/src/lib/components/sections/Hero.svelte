@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import Carousel from '$lib/components/ui/Carousel.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
@@ -22,7 +22,7 @@
 	);
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {}: Props = $props();
 
@@ -33,22 +33,22 @@
 </script>
 
 <section
-	id="top"
-	class="hero"
-	role="banner"
-	aria-labelledby="hero-heading"
+	id='top'
+	class='hero'
+	role='banner'
+	aria-labelledby='hero-heading'
 	use:heroObserver
 	data-section-active={$heroVisible}
 >
-	<VisuallyHidden id="hero-heading" tag="h2">Presentación y Contacto - Aires de Río</VisuallyHidden>
+	<VisuallyHidden id='hero-heading' tag='h2'>Presentación y Contacto - Aires de Río</VisuallyHidden>
 	<div
-		class="hero-carousel scroll-animate"
+		class='hero-carousel scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<Carousel
 			images={CAROUSEL_IMAGES}
 			interval={5000}
-			ariaLabel="Carrusel de imágenes del edificio"
+			ariaLabel='Carrusel de imágenes del edificio'
 			imageAriaLabel={(index) => `Fachada del edificio Aires de Río - Imagen ${index + 1}`}
 		/>
 	</div>

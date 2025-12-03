@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -31,7 +31,7 @@
 	];
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {}: Props = $props();
 
@@ -152,16 +152,16 @@
 	}
 </script>
 
-<header class="site">
-	<div class="bar">
-		<AiresDeRioLogo class="logo" loading="eager" height="2.2em" theme="dark" />
+<header class='site'>
+	<div class='bar'>
+		<AiresDeRioLogo class='logo' loading='eager' height='2.2em' theme='dark' />
 		<nav
-			id="main-nav"
-			class="main-nav"
+			id='main-nav'
+			class='main-nav'
 			class:is-open={$menuStore}
-			aria-label="Navegación principal"
+			aria-label='Navegación principal'
 		>
-			<ul class="desktop-nav">
+			<ul class='desktop-nav'>
 				{#each navLinks as link (link.id)}
 					<li>
 						<a
@@ -176,75 +176,75 @@
 				{/each}
 			</ul>
 		</nav>
-		<div class="header-controls">
+		<div class='header-controls'>
 			{#if isDevMode}
 				<button
-					id="color-editor-toggle"
-					class="color-editor-toggle"
+					id='color-editor-toggle'
+					class='color-editor-toggle'
 					onclick={() => (colorEditorOpen = !colorEditorOpen)}
 					aria-expanded={colorEditorOpen}
-					type="button"
+					type='button'
 				>
 					🎨
 				</button>
 			{/if}
 			<button
-				id="theme-toggle"
-				class="theme-toggle"
+				id='theme-toggle'
+				class='theme-toggle'
 				aria-label={currentTheme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
 				title={currentTheme === 'light' ? 'Modo oscuro' : 'Modo claro'}
 				onclick={toggleTheme}
 			>
 				{#if currentTheme === 'light'}
 					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="20"
-						height="20"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
+						xmlns='http://www.w3.org/2000/svg'
+						width='20'
+						height='20'
+						viewBox='0 0 24 24'
+						fill='none'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'
+						stroke-linejoin='round'
 					>
-						<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+						<path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'></path>
 					</svg>
 				{:else}
 					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="20"
-						height="20"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
+						xmlns='http://www.w3.org/2000/svg'
+						width='20'
+						height='20'
+						viewBox='0 0 24 24'
+						fill='none'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'
+						stroke-linejoin='round'
 					>
-						<circle cx="12" cy="12" r="5"></circle>
-						<line x1="12" y1="1" x2="12" y2="3"></line>
-						<line x1="12" y1="21" x2="12" y2="23"></line>
-						<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-						<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-						<line x1="1" y1="12" x2="3" y2="12"></line>
-						<line x1="21" y1="12" x2="23" y2="12"></line>
-						<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-						<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+						<circle cx='12' cy='12' r='5'></circle>
+						<line x1='12' y1='1' x2='12' y2='3'></line>
+						<line x1='12' y1='21' x2='12' y2='23'></line>
+						<line x1='4.22' y1='4.22' x2='5.64' y2='5.64'></line>
+						<line x1='18.36' y1='18.36' x2='19.78' y2='19.78'></line>
+						<line x1='1' y1='12' x2='3' y2='12'></line>
+						<line x1='21' y1='12' x2='23' y2='12'></line>
+						<line x1='4.22' y1='19.78' x2='5.64' y2='18.36'></line>
+						<line x1='18.36' y1='5.64' x2='19.78' y2='4.22'></line>
 					</svg>
 				{/if}
 			</button>
 			<button
-				id="nav-toggle"
-				class="nav-toggle"
+				id='nav-toggle'
+				class='nav-toggle'
 				class:is-open={$menuStore}
-				aria-label="Abrir menú"
+				aria-label='Abrir menú'
 				aria-expanded={$menuStore}
-				aria-controls="main-nav"
+				aria-controls='main-nav'
 				onclick={toggleMenu}
 			>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
+				<span class='icon-bar'></span>
+				<span class='icon-bar'></span>
+				<span class='icon-bar'></span>
 			</button>
 		</div>
 	</div>

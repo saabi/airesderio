@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import '../app.css';
 
@@ -7,7 +7,7 @@
 	import SkipLink from '$lib/components/ui/SkipLink.svelte';
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== IMPORTS =====
 	import type { Snippet } from 'svelte';
 	import { onDestroy } from 'svelte';

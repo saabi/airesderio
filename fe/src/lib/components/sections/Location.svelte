@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import Map from '$lib/components/features/Map.svelte';
 	import type { MapComponent } from '$lib/components/features/Map.svelte';
@@ -26,7 +26,7 @@
 	const DEFAULT_JSON_URL = '/lugares/lugares-direcciones.json';
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== IMPORTS =====
 	import { browser } from '$app/environment';
 
@@ -288,23 +288,23 @@
 </script>
 
 <section
-	id="ubicacion"
-	class="ubi"
-	aria-labelledby="ubicacion-heading"
+	id='ubicacion'
+	class='ubi'
+	aria-labelledby='ubicacion-heading'
 	use:locationObserver
 	data-section-active={$locationVisible}
 >
 	<div
 		use:createTitleObserver
-		class="title-block scroll-animate"
+		class='title-block scroll-animate'
 		data-item-active={titleVisible || undefined}
 		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="¿Dónde se encuentra?" big="UBICACIÓN" />
+		<Title eyebrow='¿Dónde se encuentra?' big='UBICACIÓN' />
 	</div>
-	<div class="location-block">
+	<div class='location-block'>
 		<div
-			class="location-text scroll-animate"
+			class='location-text scroll-animate'
 			style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 		>
 			<p>
@@ -319,171 +319,171 @@
 				Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
 				de cercanía a solo una cuadra.
 			</p>
-			<div class="map-navigation">
-				<div class="navigation-row">
+			<div class='map-navigation'>
+				<div class='navigation-row'>
 					<button
-						class="nav-button nav-button--prev"
+						class='nav-button nav-button--prev'
 						onclick={() => mapComponent?.prev()}
-						aria-label="Anterior ubicación"
-						type="button"
+						aria-label='Anterior ubicación'
+						type='button'
 					>
 						<svg
-							width="20"
-							height="20"
-							viewBox="0 0 20 20"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-							aria-hidden="true"
+							width='20'
+							height='20'
+							viewBox='0 0 20 20'
+							fill='none'
+							xmlns='http://www.w3.org/2000/svg'
+							aria-hidden='true'
 						>
 							<path
-								d="M12.5 15L7.5 10L12.5 5"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
+								d='M12.5 15L7.5 10L12.5 5'
+								stroke='currentColor'
+								stroke-width='2'
+								stroke-linecap='round'
+								stroke-linejoin='round'
 							/>
 						</svg>
 					</button>
-					<div class="navigation-center">
+					<div class='navigation-center'>
 						<button
-							class="nav-button nav-button--up"
+							class='nav-button nav-button--up'
 							onclick={() => mapComponent?.reset()}
-							aria-label="Volver al estado inicial"
-							type="button"
+							aria-label='Volver al estado inicial'
+							type='button'
 						>
 							<svg
-								width="20"
-								height="20"
-								viewBox="0 0 20 20"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-								aria-hidden="true"
+								width='20'
+								height='20'
+								viewBox='0 0 20 20'
+								fill='none'
+								xmlns='http://www.w3.org/2000/svg'
+								aria-hidden='true'
 							>
 								<!-- Building icon -->
 								<rect
-									x="4"
-									y="7"
-									width="12"
-									height="10"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+									x='4'
+									y='7'
+									width='12'
+									height='10'
+									stroke='currentColor'
+									stroke-width='1.5'
+									stroke-linecap='round'
+									stroke-linejoin='round'
 								/>
 								<path
-									d="M4 7L10 3L16 7"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+									d='M4 7L10 3L16 7'
+									stroke='currentColor'
+									stroke-width='1.5'
+									stroke-linecap='round'
+									stroke-linejoin='round'
 								/>
 								<line
-									x1="7"
-									y1="10"
-									x2="7"
-									y2="17"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
+									x1='7'
+									y1='10'
+									x2='7'
+									y2='17'
+									stroke='currentColor'
+									stroke-width='1.5'
+									stroke-linecap='round'
 								/>
 								<line
-									x1="13"
-									y1="10"
-									x2="13"
-									y2="17"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
+									x1='13'
+									y1='10'
+									x2='13'
+									y2='17'
+									stroke='currentColor'
+									stroke-width='1.5'
+									stroke-linecap='round'
 								/>
 								<rect
-									x="8.5"
-									y="12"
-									width="3"
-									height="3"
-									stroke="currentColor"
-									stroke-width="1.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+									x='8.5'
+									y='12'
+									width='3'
+									height='3'
+									stroke='currentColor'
+									stroke-width='1.5'
+									stroke-linecap='round'
+									stroke-linejoin='round'
 								/>
 							</svg>
 						</button>
 						<button
-							class="nav-button nav-button--gallery"
+							class='nav-button nav-button--gallery'
 							onclick={() => (galleryCarouselVisible = true)}
-							aria-label="Abrir galería"
-							type="button"
+							aria-label='Abrir galería'
+							type='button'
 						>
 							<svg
-								width="20"
-								height="20"
-								viewBox="0 0 20 20"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-								aria-hidden="true"
+								width='20'
+								height='20'
+								viewBox='0 0 20 20'
+								fill='none'
+								xmlns='http://www.w3.org/2000/svg'
+								aria-hidden='true'
 							>
 								<rect
-									x="3"
-									y="3"
-									width="5"
-									height="5"
-									rx="1"
-									stroke="currentColor"
-									stroke-width="2"
-									fill="none"
+									x='3'
+									y='3'
+									width='5'
+									height='5'
+									rx='1'
+									stroke='currentColor'
+									stroke-width='2'
+									fill='none'
 								/>
 								<rect
-									x="12"
-									y="3"
-									width="5"
-									height="5"
-									rx="1"
-									stroke="currentColor"
-									stroke-width="2"
-									fill="none"
+									x='12'
+									y='3'
+									width='5'
+									height='5'
+									rx='1'
+									stroke='currentColor'
+									stroke-width='2'
+									fill='none'
 								/>
 								<rect
-									x="3"
-									y="12"
-									width="5"
-									height="5"
-									rx="1"
-									stroke="currentColor"
-									stroke-width="2"
-									fill="none"
+									x='3'
+									y='12'
+									width='5'
+									height='5'
+									rx='1'
+									stroke='currentColor'
+									stroke-width='2'
+									fill='none'
 								/>
 								<rect
-									x="12"
-									y="12"
-									width="5"
-									height="5"
-									rx="1"
-									stroke="currentColor"
-									stroke-width="2"
-									fill="none"
+									x='12'
+									y='12'
+									width='5'
+									height='5'
+									rx='1'
+									stroke='currentColor'
+									stroke-width='2'
+									fill='none'
 								/>
 							</svg>
 						</button>
 					</div>
 					<button
-						class="nav-button nav-button--next"
+						class='nav-button nav-button--next'
 						onclick={() => mapComponent?.next()}
-						aria-label="Siguiente ubicación"
-						type="button"
+						aria-label='Siguiente ubicación'
+						type='button'
 					>
 						<svg
-							width="20"
-							height="20"
-							viewBox="0 0 20 20"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-							aria-hidden="true"
+							width='20'
+							height='20'
+							viewBox='0 0 20 20'
+							fill='none'
+							xmlns='http://www.w3.org/2000/svg'
+							aria-hidden='true'
 						>
 							<path
-								d="M7.5 5L12.5 10L7.5 15"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
+								d='M7.5 5L12.5 10L7.5 15'
+								stroke='currentColor'
+								stroke-width='2'
+								stroke-linecap='round'
+								stroke-linejoin='round'
 							/>
 						</svg>
 					</button>
@@ -491,13 +491,13 @@
 			</div>
 		</div>
 		<div
-			class="map-container scroll-animate"
+			class='map-container scroll-animate'
 			style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 		>
 			<Map
 				bind:this={mapComponent}
-				class="location-map"
-				ariaLabel="Mapa de ubicación del proyecto Aires de Río"
+				class='location-map'
+				ariaLabel='Mapa de ubicación del proyecto Aires de Río'
 			/>
 		</div>
 	</div>
@@ -519,9 +519,9 @@
 <!-- Gallery Carousel Placeholder -->
 {#if galleryCarouselVisible}
 	<div
-		class="gallery-carousel-overlay"
-		role="button"
-		tabindex="0"
+		class='gallery-carousel-overlay'
+		role='button'
+		tabindex='0'
 		onclick={(e) => {
 			if (e.target === e.currentTarget) {
 				galleryCarouselVisible = false;
@@ -533,35 +533,35 @@
 				galleryCarouselVisible = false;
 			}
 		}}
-		aria-label="Cerrar galería"
+		aria-label='Cerrar galería'
 	>
-		<div class="gallery-carousel" role="dialog" aria-modal="true" aria-labelledby="gallery-title">
-			<div class="gallery-header">
-				<h3 id="gallery-title">Galería</h3>
+		<div class='gallery-carousel' role='dialog' aria-modal='true' aria-labelledby='gallery-title'>
+			<div class='gallery-header'>
+				<h3 id='gallery-title'>Galería</h3>
 				<button
-					class="gallery-close"
+					class='gallery-close'
 					onclick={() => (galleryCarouselVisible = false)}
-					aria-label="Cerrar galería"
-					type="button"
+					aria-label='Cerrar galería'
+					type='button'
 				>
 					<svg
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
+						width='24'
+						height='24'
+						viewBox='0 0 24 24'
+						fill='none'
+						xmlns='http://www.w3.org/2000/svg'
 					>
 						<path
-							d="M18 6L6 18M6 6L18 18"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
+							d='M18 6L6 18M6 6L18 18'
+							stroke='currentColor'
+							stroke-width='2'
+							stroke-linecap='round'
+							stroke-linejoin='round'
 						/>
 					</svg>
 				</button>
 			</div>
-			<div class="gallery-content">
+			<div class='gallery-content'>
 				<p>Galería de imágenes (placeholder)</p>
 			</div>
 		</div>

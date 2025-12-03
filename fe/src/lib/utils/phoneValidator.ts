@@ -288,7 +288,7 @@ export function parseArgentineNumber(raw: string): PhoneData | undefined {
 	if (extractedCandidates.length === 0) return undefined;
 
 	for (const candidate of extractedCandidates) {
-		let { areaCode, mobilePrefix, subscriber } = candidate;
+		const { areaCode, mobilePrefix, subscriber } = candidate;
 
 		if (!subscriber) continue;
 
@@ -367,7 +367,7 @@ export function formatArgentineNumber(parsed: PhoneData, opts: FormatOptions = {
 		return `${parsed.specific} ${subscriberFormatted}`;
 	}
 
-	let parts: string[] = [];
+	const parts: string[] = [];
 
 	if (country && parsed.country) {
 		parts.push(`+${parsed.country}`);

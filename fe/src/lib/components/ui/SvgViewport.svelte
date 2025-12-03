@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import type { Snippet } from 'svelte';
 
@@ -12,7 +12,7 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {
 		width = '4.5em',
@@ -23,7 +23,7 @@
 	}: Props = $props();
 </script>
 
-<svg {width} {height} {viewBox} class={className} aria-hidden="true" focusable="false">
+<svg {width} {height} {viewBox} class={className} aria-hidden='true' focusable='false'>
 	{#if children}
 		{@render children()}
 	{/if}

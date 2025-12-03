@@ -371,7 +371,7 @@ const countryModules: Record<string, CountryModule> = {
 			}
 
 			const cleaned = sanitize(phone);
-			let digitsOnly = stripToNationalDigits(cleaned, context.plan);
+			const digitsOnly = stripToNationalDigits(cleaned, context.plan);
 			if (!digitsOnly) return '';
 
 			if (digitsOnly.length >= 7) {

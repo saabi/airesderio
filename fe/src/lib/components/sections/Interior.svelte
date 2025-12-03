@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	// Local components
 	import Title from '$lib/components/ui/Title.svelte';
@@ -29,7 +29,7 @@
 	);
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== INSTANCE CONSTANTS =====
 	const { action: interiorObserver, visible: interiorVisible } = createSectionObserver('interior', {
 		threshold: ANIMATION.threshold.section
@@ -37,47 +37,47 @@
 </script>
 
 <section
-	id="interior"
-	aria-labelledby="interior-heading"
+	id='interior'
+	aria-labelledby='interior-heading'
 	use:interiorObserver
 	data-section-active={$interiorVisible}
 >
-	<VisuallyHidden id="interior-heading" tag="h2">Diseño Interior</VisuallyHidden>
+	<VisuallyHidden id='interior-heading' tag='h2'>Diseño Interior</VisuallyHidden>
 	<div
-		class="scroll-animate"
+		class='scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="Diseño de" big="INTERIORES" />
+		<Title eyebrow='Diseño de' big='INTERIORES' />
 	</div>
-	<div class="interior-container">
+	<div class='interior-container'>
 		<div
-			class="interior-gallery scroll-animate"
+			class='interior-gallery scroll-animate'
 			style={`--scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
 		>
 			<Carousel
 				images={INTERIOR_IMAGES}
 				interval={2500}
-				ariaLabel="Galería de imágenes del diseño interior"
+				ariaLabel='Galería de imágenes del diseño interior'
 				imageAriaLabel={(index) => `Imagen del diseño interior - ${index + 1}`}
 			/>
 		</div>
-		<div class="interior-text">
+		<div class='interior-text'>
 			<p
-				class="scroll-animate"
+				class='scroll-animate'
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				Ambientes amplios de un dormitorio que combinan diseño contemporáneo y funcionalidad, con
 				materiales ecológicos, formas curvas y detalles en madera y vegetación.
 			</p>
 			<p
-				class="scroll-animate"
+				class='scroll-animate'
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(2)}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				Grandes aberturas optimizan luz y ventilación natural, mejorando el confort y la eficiencia
 				energética.
 			</p>
 			<p
-				class="scroll-animate"
+				class='scroll-animate'
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				La iluminación LED, ya integrada, resalta los ambientes con luz indirecta, creando espacios

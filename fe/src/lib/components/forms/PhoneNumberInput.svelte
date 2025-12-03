@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import Select from '$lib/components/forms/Select.svelte';
 	import {
@@ -38,7 +38,7 @@
 	];
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let { name = 'telefono', id = 'telefono' }: Props = $props();
 
@@ -294,19 +294,19 @@
 	}
 </script>
 
-<div class="group">
+<div class='group'>
 	<label for={id}>Número de teléfono</label>
-	<p class="hint">Con código de área. Ej: +54 3512334353</p>
+	<p class='hint'>Con código de área. Ej: +54 3512334353</p>
 	{#if showValidationError}
-		<p class="error" role="alert">Número de teléfono inválido</p>
+		<p class='error' role='alert'>Número de teléfono inválido</p>
 	{/if}
-	<div class="container">
+	<div class='container'>
 		<Select
 			id={`${id}-country`}
 			name={`${name}-country`}
 			value={selectedCountry.code}
 			onchange={handleCountryChange}
-			class="country-select"
+			class='country-select'
 		>
 			{#snippet children()}
 				{#each countries as country (country.code)}
@@ -314,23 +314,23 @@
 				{/each}
 			{/snippet}
 		</Select>
-		<div class="number-wrapper">
+		<div class='number-wrapper'>
 			{#if selectedCountry.code === 'OTHER'}
 				<input
-					type="text"
-					class="dial-code-input"
+					type='text'
+					class='dial-code-input'
 					bind:this={customDialCodeRef}
 					value={customDialCode}
 					oninput={handleCustomDialCodeInput}
-					placeholder="+"
-					aria-label="Country code"
+					placeholder='+'
+					aria-label='Country code'
 				/>
 			{:else}
-				<span class="dial-code">{selectedCountry.dialCode}</span>
+				<span class='dial-code'>{selectedCountry.dialCode}</span>
 			{/if}
 			<input
-				type="tel"
-				class="number-input"
+				type='tel'
+				class='number-input'
 				class:invalid={showValidationError}
 				bind:this={phoneInputRef}
 				value={formattedPhoneNumber}
@@ -341,12 +341,12 @@
 					: selectedCountry.code === 'AR'
 						? '3512-3343-53'
 						: '3512-3343-53'}
-				aria-label="Phone number"
+				aria-label='Phone number'
 				aria-invalid={showValidationError}
-				inputmode="numeric"
+				inputmode='numeric'
 			/>
 			<!-- Hidden input for form submission with full phone number -->
-			<input type="hidden" {id} {name} value={fullPhoneNumber} />
+			<input type='hidden' {id} {name} value={fullPhoneNumber} />
 		</div>
 	</div>
 </div>

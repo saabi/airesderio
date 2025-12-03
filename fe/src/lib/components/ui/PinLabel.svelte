@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	// (No imports needed for this component)
 
@@ -14,18 +14,18 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let { x, y, text, arrowPosition = 'bottom', class: className = '' }: Props = $props();
 </script>
 
 <div
-	class="pin-label {className}"
+	class='pin-label {className}'
 	class:arrow-bottom={arrowPosition === 'bottom'}
 	class:arrow-top={arrowPosition === 'top'}
 	class:arrow-left={arrowPosition === 'left'}
 	class:arrow-right={arrowPosition === 'right'}
-	style="left: {x}px; top: {y}px;"
+	style='left: {x}px; top: {y}px;'
 >
 	{text}
 </div>

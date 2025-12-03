@@ -1,4 +1,4 @@
-<script module lang="ts">
+<script module lang='ts'>
 	// ===== IMPORTS =====
 	import { browser } from '$app/environment';
 
@@ -17,7 +17,7 @@
 	const DEFAULT_FADE_DURATION = 300;
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	// ===== PROPS =====
 	let {
 		delay = DEFAULT_DELAY,
@@ -136,7 +136,7 @@
 {#if showCTA || opacity > 0}
 	<a
 		href={ctaUrl}
-		class="floating-cta"
+		class='floating-cta'
 		style={`transform: translateY(${transformY}px); opacity: ${opacity}; transition-duration: ${fadeDuration}ms;`}
 		onclick={handleClick}
 		aria-label={ctaText}
