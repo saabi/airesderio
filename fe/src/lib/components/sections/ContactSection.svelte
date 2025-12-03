@@ -18,42 +18,45 @@
 
 <section 
 	id='contacto' 
-	class='contact-section' 
+	class='section' 
 	aria-labelledby='contact-heading'
 	use:contactObserver
 	data-section-active={$contactVisible}
 >
-	<div class='wrap'>
-		<div class='contact-section__container'>
-			<div 
-				class='contact-section__form scroll-animate'
-				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
-			>
-				<h2 id='contact-heading'>Contacto</h2>
-				<p>Comunicate con nosotros</p>
-				<ContactForm />
-			</div>
-			<div 
-				class='contact-section__logo scroll-animate'
+	<div class='container'>
+		<div 
+			class='form scroll-animate'
+			style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+		>
+			<h2 id='contact-heading'>Contacto</h2>
+			<p>Comunicate con nosotros</p>
+			<ContactForm />
+		</div>
+		<div class="right-column">
+			<img
+				src="/exteriores/exterior_03.png"
+				alt="Aires de Río exterior"
+				loading="lazy"
+				decoding="async"
+				class="exterior-image scroll-animate"
 				style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
-			>
-				<div class="contact-section__logo-wrapper">
-					<img
-						src="/exteriores/exterior_03.png"
-						alt="Aires de Río exterior"
-						loading="lazy"
-						decoding="async"
-						class="contact-exterior"
-					/>
-					<AiresDeRioLogo class="contact-logo" theme={$theme}/>
-				</div>
+			/>
+			<div class="logo-wrapper">
+				<AiresDeRioLogo class="logo" theme={$theme}/>
 			</div>
 		</div>
 	</div>
 </section>
 
 <style>
-	.contact-section {
+	#contacto {
+		/* Layout */
+		max-width: var(--max);
+		margin: 0 auto;
+		font-size: 1.2rem;
+	}
+
+	.section {
 		/* Layout */
 		margin: 2rem 0;
 		padding: 2rem 0;
@@ -62,15 +65,25 @@
 		border-top: 1px solid var(--color-border-subtle);
 	}
 
-	.contact-section__container {
+	.container {
 		/* Layout */
 		display: grid;
 		grid-template-columns: 1fr 1fr;
+		grid-template-rows: min-content;
 		gap: 2rem;
-		align-items: start;
 	}
 
-	.contact-section__form h2 {
+	.right-column {
+		/* Layout */
+		display: grid;
+		grid-template-rows: 1fr min-content;
+		height: 100%;
+		gap: 1rem;
+		max-height: 36em;
+		justify-items: center;
+	}
+
+	.form h2 {
 		/* Layout */
 		margin: 0 0 0.5rem;
 		
@@ -81,7 +94,7 @@
 		color: var(--color-accent-primary);
 	}
 
-	.contact-section__form p {
+	.form p {
 		/* Layout */
 		margin: 0 0 1.5rem;
 		
@@ -90,37 +103,40 @@
 		color: var(--color-text-secondary);
 	}
 
-	.contact-section__logo {
+	.exterior-image {
 		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		flex: 1 1 auto;
+		max-width: 100vw;
 		min-height: 200px;
+		height: 100%;
 	}
 
-	.contact-section__logo-wrapper {
+	.logo-wrapper {
 		/* Layout */
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
-	}
-
-	.contact-exterior {
-		/* Layout */
-		max-width: 80%;
+		flex: 0 0 auto;
 	}
 
 	@media (max-width: 850px) {
-		.contact-section__container {
+		.container {
 			/* Layout */
 			grid-template-columns: 1fr;
 		}
 
-		.contact-section__logo {
+		.right-column {
+			/* Layout */
+			margin-top: 1rem;
+		}
+
+		.exterior-image {
 			/* Layout */
 			min-height: 150px;
-			margin-top: 1rem;
 		}
 	}
 </style>
