@@ -565,4 +565,9 @@
 			font-size: 1.5rem;
 		}
 	}
+
+	/* Prevent body scroll when mobile menu is open */
+	:global(body.nav-open) {
+		overflow: hidden;
+	}
 </style>

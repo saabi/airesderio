@@ -4,6 +4,7 @@
 
 	import Footer from '$lib/components/layout/Footer.svelte';
 	import Header from '$lib/components/layout/Header.svelte';
+	import SkipLink from '$lib/components/ui/SkipLink.svelte';
 </script>
 
 <script lang="ts">
@@ -27,7 +28,7 @@
 </script>
 
 <!-- Skip to main content link for keyboard navigation -->
-<a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+<SkipLink />
 
 <Header />
 

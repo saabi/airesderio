@@ -35,7 +35,7 @@
 </script>
 
 <footer class="site-footer">
-	<div class="wrap">
+	<div class="footer-wrap">
 		<div class="footer-grid">
 			<section class="footer-column footer-brand" aria-label="Resumen corporativo">
 				<div class="footer-logo">
@@ -93,6 +93,13 @@
 </footer>
 
 <style>
+	.footer-wrap {
+		/* Layout */
+		max-width: var(--max);
+		margin: auto;
+		padding: 0 clamp(0.875rem, 3vw, 1.5rem);
+	}
+
 	.site-footer {
 		/* Layout */
 		padding: 3rem 0 2rem;
