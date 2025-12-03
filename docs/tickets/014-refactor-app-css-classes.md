@@ -242,6 +242,15 @@ body.nav-open {
 - [ ] svelte-check passes with no errors
 - [ ] Manual testing confirms all animations and interactions work correctly
 
+## Implementation Plan
+
+A detailed step-by-step implementation plan is available in [`014-implementation-plan.md`](./014-implementation-plan.md). The plan includes:
+- Detailed steps for each phase
+- Code examples for each refactoring
+- Testing checklists
+- Rollback procedures
+- Time estimates
+
 ## Implementation Steps
 
 ### Phase 1: Scroll Animation
