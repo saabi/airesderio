@@ -44,10 +44,10 @@
 	{rows}
 	{required}
 	{disabled}
-	class='form-textarea {className}'
-	oninput={oninput}
-	onchange={onchange}
-	onblur={onblur}
+	class="form-textarea {className}"
+	{oninput}
+	{onchange}
+	{onblur}
 	aria-label={ariaLabel}
 	aria-invalid={ariaInvalid}
 ></textarea>
@@ -59,13 +59,13 @@
 		min-width: 0;
 		padding: 0.625rem;
 		resize: vertical;
-		
+
 		/* Box/Visual */
 		border: 1px solid var(--color-border-default);
 		border-radius: 0.25rem;
 		background-color: field;
 		outline: none;
-		
+
 		/* Typography */
 		font-family: inherit;
 		font-size: inherit;
@@ -87,9 +87,8 @@
 	.form-textarea:disabled {
 		/* Box/Visual */
 		opacity: 0.6;
-		
+
 		/* Misc/Overrides */
 		cursor: not-allowed;
 	}
 </style>
-

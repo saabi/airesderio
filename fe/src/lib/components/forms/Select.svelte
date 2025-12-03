@@ -21,7 +21,7 @@
 
 <script lang="ts">
 	// ===== PROPS =====
-	let { 
+	let {
 		id,
 		name,
 		value = '',
@@ -39,18 +39,18 @@
 
 	// ===== EVENT HANDLERS =====
 	function handleFocus(event: FocusEvent) {
-        // For Firefox, show focus ring on click too since :-moz-focusring doesn't work
-        // with appearance: none. This provides needed visual feedback.
-        const isFirefox = typeof navigator !== 'undefined' && 
-            navigator.userAgent.toLowerCase().includes('firefox');
-        
-        if (isFirefox) {
-            // Show focus ring on any focus in Firefox
-            isKeyboardFocus = true;
-        } else {
-            // In other browsers, only show focus ring for keyboard navigation (standard behavior)
-            isKeyboardFocus = false;
-        }
+		// For Firefox, show focus ring on click too since :-moz-focusring doesn't work
+		// with appearance: none. This provides needed visual feedback.
+		const isFirefox =
+			typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('firefox');
+
+		if (isFirefox) {
+			// Show focus ring on any focus in Firefox
+			isKeyboardFocus = true;
+		} else {
+			// In other browsers, only show focus ring for keyboard navigation (standard behavior)
+			isKeyboardFocus = false;
+		}
 	}
 
 	function handleBlur() {
@@ -65,17 +65,17 @@
 	bind:this={selectElement}
 	{id}
 	{name}
-	class='select-input {className}'
+	class="select-input {className}"
 	class:keyboard-focus={isKeyboardFocus}
-	value={value}
-	onchange={onchange}
+	{value}
+	{onchange}
 	onfocus={handleFocus}
 	onblur={handleBlur}
 	aria-label={ariaLabel}
 	{disabled}
 >
 	{#if placeholder}
-		<option value='' disabled hidden>{placeholder}</option>
+		<option value="" disabled hidden>{placeholder}</option>
 	{/if}
 	{#if children}
 		{@render children()}
@@ -89,7 +89,7 @@
 		min-width: 0;
 		padding: 0.625rem;
 		padding-right: 2rem;
-		
+
 		/* Box/Visual */
 		border: 1px solid var(--color-border-default);
 		border-radius: 0.25rem;
@@ -99,10 +99,10 @@
 		background-position: right 0.625rem center;
 		outline: 2px solid transparent;
 		outline-offset: 0;
-		
+
 		/* Typography */
 		color: text;
-		
+
 		/* Misc/Overrides */
 		appearance: none;
 		-moz-appearance: none;
@@ -142,7 +142,7 @@
 	.select-input:disabled {
 		/* Box/Visual */
 		opacity: 0.6;
-		
+
 		/* Misc/Overrides */
 		cursor: not-allowed;
 	}
@@ -152,4 +152,3 @@
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ccc' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
 	}
 </style>
-

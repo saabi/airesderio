@@ -44,7 +44,7 @@ describe('theme store', () => {
 		it('should use system preference when no stored theme', () => {
 			// Clear any stored theme
 			localStorage.removeItem('aires-theme');
-			
+
 			vi.mocked(window.matchMedia).mockReturnValue({
 				matches: true,
 				media: '(prefers-color-scheme: dark)',
@@ -167,9 +167,11 @@ describe('theme store', () => {
 			localStorage.removeItem('aires-theme');
 
 			// Simulate system preference change
-			const changeHandler = (mockMediaQuery.addEventListener as ReturnType<typeof vi.fn>).mock.calls.find(
-				(call) => call[0] === 'change'
-			)?.[1] as (event: MediaQueryListEvent) => void;
+			const changeHandler = (
+				mockMediaQuery.addEventListener as ReturnType<typeof vi.fn>
+			).mock.calls.find((call) => call[0] === 'change')?.[1] as (
+				event: MediaQueryListEvent
+			) => void;
 
 			if (changeHandler) {
 				changeHandler({ matches: true } as MediaQueryListEvent);
@@ -195,9 +197,11 @@ describe('theme store', () => {
 			vi.mocked(window.matchMedia).mockReturnValue(mockMediaQuery);
 
 			// Simulate system preference change
-			const changeHandler = (mockMediaQuery.addEventListener as ReturnType<typeof vi.fn>).mock.calls.find(
-				(call) => call[0] === 'change'
-			)?.[1] as (event: MediaQueryListEvent) => void;
+			const changeHandler = (
+				mockMediaQuery.addEventListener as ReturnType<typeof vi.fn>
+			).mock.calls.find((call) => call[0] === 'change')?.[1] as (
+				event: MediaQueryListEvent
+			) => void;
 
 			if (changeHandler) {
 				changeHandler({ matches: true } as MediaQueryListEvent);
@@ -207,4 +211,3 @@ describe('theme store', () => {
 		});
 	});
 });
-

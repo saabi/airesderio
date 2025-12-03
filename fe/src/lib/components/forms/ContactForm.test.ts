@@ -15,7 +15,7 @@ import { describe, it } from 'vitest';
 describe.skip('ContactForm', () => {
 	// All tests skipped - see note at top of file
 	// Original comprehensive test suite exists but cannot run due to SSR limitations
-	
+
 	it.todo('should render all form fields');
 	it.todo('should render honeypot field');
 	it.todo('should submit form with valid data');

@@ -37,5 +37,3 @@
 {@render children()}
 
 <Footer />
-
-

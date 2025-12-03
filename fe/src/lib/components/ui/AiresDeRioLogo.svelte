@@ -11,13 +11,7 @@
 
 <script lang="ts">
 	// ===== PROPS =====
-	let {
-		class: className = '',
-		loading = 'lazy',
-		width,
-		height,
-		theme = 'light'
-	}: Props = $props();
+	let { class: className = '', loading = 'lazy', width, height, theme = 'light' }: Props = $props();
 </script>
 
 <svg
@@ -65,10 +59,20 @@
 </svg>
 
 <style type="text/css">
-	.text { stroke: none; fill: black; }
-	.isotype { fill: #999999; stroke: none; }
+	.text {
+		stroke: none;
+		fill: black;
+	}
+	.isotype {
+		fill: #999999;
+		stroke: none;
+	}
 
 	/* Dark theme */
-	svg[data-theme='dark'] .text { fill: white; }
-	svg[data-theme='dark'] .isotype { fill: #666666; }
+	svg[data-theme='dark'] .text {
+		fill: white;
+	}
+	svg[data-theme='dark'] .isotype {
+		fill: #666666;
+	}
 </style>

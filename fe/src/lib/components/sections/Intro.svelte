@@ -1,7 +1,12 @@
 <script lang="ts">
 	// ===== IMPORTS =====
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
-	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
+	import {
+		ANIMATION,
+		animationDelay,
+		animationDuration,
+		animationOffset
+	} from '$lib/constants/animation';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 
 	// ===== INSTANCE CONSTANTS =====
@@ -14,15 +19,15 @@
 </script>
 
 <section
-	class='intro'
-	id='proyecto'
-	aria-labelledby='proyecto-heading'
+	class="intro"
+	id="proyecto"
+	aria-labelledby="proyecto-heading"
 	use:introObserver
 	data-section-active={$introVisible}
 >
 	<VisuallyHidden id="proyecto-heading" tag="h2">Sobre el Proyecto</VisuallyHidden>
 	<div
-		class='scroll-animate'
+		class="scroll-animate"
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<section
@@ -35,8 +40,8 @@
 				class="welcome scroll-animate"
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()}; --scroll-animate-delay: ${animationDelay(1)};`}
 			>
-				Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto
-				de departamentos con las mejores prestaciones y estratégica ubicación.
+				Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto de departamentos con
+				las mejores prestaciones y estratégica ubicación.
 			</p>
 		</section>
 		<p>
@@ -50,19 +55,21 @@
 		</p>
 	</div>
 	<aside
-		class='kpis scroll-animate'
+		class="kpis scroll-animate"
 		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
-		aria-labelledby='kpis-heading'
+		aria-labelledby="kpis-heading"
 	>
-		<VisuallyHidden id="kpis-heading" tag="h3">Características principales del proyecto</VisuallyHidden>
+		<VisuallyHidden id="kpis-heading" tag="h3"
+			>Características principales del proyecto</VisuallyHidden
+		>
 		<dl>
-			<dt class='kpi'><strong>2.500</strong><small>metros cuadrados</small></dt>
+			<dt class="kpi"><strong>2.500</strong><small>metros cuadrados</small></dt>
 			<VisuallyHidden tag="dd">Superficie total del proyecto</VisuallyHidden>
-			<dt class='kpi'><strong>1/2 + 1</strong><small>dorms · estudio</small></dt>
+			<dt class="kpi"><strong>1/2 + 1</strong><small>dorms · estudio</small></dt>
 			<VisuallyHidden tag="dd">Tipos de unidades disponibles</VisuallyHidden>
-			<dt class='kpi'><strong>TERRAZA</strong><small>PISCINA Y SOLARIUM HÚMEDO</small></dt>
+			<dt class="kpi"><strong>TERRAZA</strong><small>PISCINA Y SOLARIUM HÚMEDO</small></dt>
 			<VisuallyHidden tag="dd">Amenities en terraza con piscina y solarium húmedo</VisuallyHidden>
-			<dt class='kpi'><strong>CAFETERÍA</strong><small>&nbsp;</small></dt>
+			<dt class="kpi"><strong>CAFETERÍA</strong><small>&nbsp;</small></dt>
 			<VisuallyHidden tag="dd">Servicio de cafetería incluido</VisuallyHidden>
 		</dl>
 	</aside>
@@ -86,11 +93,11 @@
 		max-width: 34em;
 		padding: 1.5rem 1.5rem;
 		margin: 2rem auto;
-		
+
 		/* Box/Visual */
 		background: var(--color-accent-secondary);
 		border-radius: 0.625rem;
-		
+
 		/* Typography */
 		font-size: 1.6rem;
 		font-weight: 500;
@@ -108,14 +115,14 @@
 		display: grid;
 		gap: 0.625rem;
 		padding-left: 0;
-		
+
 		/* Typography */
 		color: var(--color-ink);
 	}
 
 	.kpis dl {
 		/* Layout */
-		display: contents;	
+		display: contents;
 	}
 
 	.kpis dt {
@@ -126,7 +133,7 @@
 	.kpi strong {
 		/* Layout */
 		display: block;
-		
+
 		/* Typography */
 		font-size: 4rem;
 		font-weight: 700;
@@ -137,7 +144,7 @@
 	.kpi small {
 		/* Layout */
 		display: block;
-		
+
 		/* Typography */
 		color: var(--color-ink);
 		text-transform: uppercase;

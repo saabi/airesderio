@@ -8,7 +8,6 @@
 	// ===== DATA =====
 	const year = new Date().getFullYear();
 
-
 	const navigationLinks = [
 		{ label: 'Home', href: '#top' },
 		{ label: 'Proyecto', href: '#proyecto' },
@@ -39,12 +38,12 @@
 		<div class="footer-grid">
 			<section class="footer-column footer-brand" aria-label="Resumen corporativo">
 				<div class="footer-logo">
-					<HabitatPrimeLogo theme={$theme} width="8rem"/>
+					<HabitatPrimeLogo theme={$theme} width="8rem" />
 				</div>
 				<p>
-					Habitat Prime SAS desarrolla experiencias residenciales premium en Santiago del Estero. Aires de Río
-					es uno de nuestros productos insignia, diseñado para vivir con vistas privilegiadas al río y acceso
-					a amenities de alto nivel.
+					Habitat Prime SAS desarrolla experiencias residenciales premium en Santiago del Estero.
+					Aires de Río es uno de nuestros productos insignia, diseñado para vivir con vistas
+					privilegiadas al río y acceso a amenities de alto nivel.
 				</p>
 				<ul class="project-highlights">
 					{#each projectHighlights as item (item.label)}
@@ -223,7 +222,6 @@
 		gap: 1rem;
 		flex-wrap: wrap;
 	}
-
 
 	@media (max-width: 1000px) {
 		.footer-grid {

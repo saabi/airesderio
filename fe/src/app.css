@@ -1,304 +1,329 @@
 :root {
-    color-scheme: light;
-    --theme-name: light;
+	color-scheme: light;
+	--theme-name: light;
 
-    /* === Reference palette (OKLCH) === */
-    --ref-white: oklch(1 0 0deg);
-    --ref-black: oklch(0 0 0deg);
+	/* === Reference palette (OKLCH) === */
+	--ref-white: oklch(1 0 0deg);
+	--ref-black: oklch(0 0 0deg);
 
-    /* Warmer copper/terracotta accent color - matches building render */
-    --ref-brand-primary: oklch(0.50 0.12 35deg); /* Rich warm copper/terracotta */
-    --ref-brand-secondary: oklch(0.60 0.10 40deg);
-    --ref-brand-dark: oklch(0.45 0.11 35deg);
-    --ref-brand-deep: oklch(0.40 0.10 35deg);
-    /* Darker variant for text on light backgrounds - meets WCAG AA 4.5:1 */
-    --ref-brand-primary-text: oklch(0.35 0.11 35deg);
-    --ref-brand-accent: oklch(0.70 0.11 40deg);
-    --ref-brand-border: oklch(0.75 0.08 40deg);
+	/* Warmer copper/terracotta accent color - matches building render */
+	--ref-brand-primary: oklch(0.5 0.12 35deg); /* Rich warm copper/terracotta */
+	--ref-brand-secondary: oklch(0.6 0.1 40deg);
+	--ref-brand-dark: oklch(0.45 0.11 35deg);
+	--ref-brand-deep: oklch(0.4 0.1 35deg);
+	/* Darker variant for text on light backgrounds - meets WCAG AA 4.5:1 */
+	--ref-brand-primary-text: oklch(0.35 0.11 35deg);
+	--ref-brand-accent: oklch(0.7 0.11 40deg);
+	--ref-brand-border: oklch(0.75 0.08 40deg);
 
-    --ref-ink: oklch(0.1776 0 89.88deg);
-    --ref-muted: oklch(0.5510 0.0234 264.36deg);
-    --ref-mid: oklch(0.5103 0 89.88deg);
-    --ref-contrast-low: oklch(0.3211 0 89.88deg);
+	--ref-ink: oklch(0.1776 0 89.88deg);
+	--ref-muted: oklch(0.551 0.0234 264.36deg);
+	--ref-mid: oklch(0.5103 0 89.88deg);
+	--ref-contrast-low: oklch(0.3211 0 89.88deg);
 
-    --ref-neutral-900: oklch(0.2781 0 0deg);
-    --ref-neutral-800: oklch(0.3729 0 0deg);
-    --ref-neutral-700: oklch(0.4500 0 0deg);
-    --ref-neutral-600: oklch(0.7107 0 0deg);
-    --ref-neutral-500: oklch(0.7137 0 0deg);
-    --ref-neutral-400: oklch(0.8717 0 0deg);
-    --ref-neutral-350: oklch(0.8975 0 0deg);
-    --ref-neutral-300: oklch(0.9276 0 0deg);
-    --ref-neutral-275: oklch(0.9340 0 0deg);
-    --ref-neutral-250: oklch(0.9521 0 0deg);
-    --ref-neutral-200: oklch(0.9670 0 0deg);
-    --ref-neutral-150: oklch(0.9842 0 0deg);
-    --ref-neutral-125: oklch(0.9846 0 0deg);
+	--ref-neutral-900: oklch(0.2781 0 0deg);
+	--ref-neutral-800: oklch(0.3729 0 0deg);
+	--ref-neutral-700: oklch(0.45 0 0deg);
+	--ref-neutral-600: oklch(0.7107 0 0deg);
+	--ref-neutral-500: oklch(0.7137 0 0deg);
+	--ref-neutral-400: oklch(0.8717 0 0deg);
+	--ref-neutral-350: oklch(0.8975 0 0deg);
+	--ref-neutral-300: oklch(0.9276 0 0deg);
+	--ref-neutral-275: oklch(0.934 0 0deg);
+	--ref-neutral-250: oklch(0.9521 0 0deg);
+	--ref-neutral-200: oklch(0.967 0 0deg);
+	--ref-neutral-150: oklch(0.9842 0 0deg);
+	--ref-neutral-125: oklch(0.9846 0 0deg);
 
-    --ref-sky-500: oklch(0.6847 0.1479 237.32deg);
-    --ref-sky-600: oklch(0.5876 0.1389 241.97deg);
-    --ref-blue-500: oklch(0.6231 0.1880 259.81deg);
-    --ref-blue-600: oklch(0.5461 0.2152 262.88deg);
-    --ref-blue-700: oklch(0.4882 0.2172 264.38deg);
+	--ref-sky-500: oklch(0.6847 0.1479 237.32deg);
+	--ref-sky-600: oklch(0.5876 0.1389 241.97deg);
+	--ref-blue-500: oklch(0.6231 0.188 259.81deg);
+	--ref-blue-600: oklch(0.5461 0.2152 262.88deg);
+	--ref-blue-700: oklch(0.4882 0.2172 264.38deg);
 
-    --ref-green-400: oklch(0.8003 0.1821 151.71deg);
-    --ref-green-500: oklch(0.7227 0.1920 149.58deg);
-    --ref-green-600: oklch(0.6271 0.1699 149.21deg);
-    --ref-orange-500: oklch(0.6461 0.1943 41.12deg);
-    --ref-red-500: oklch(0.5771 0.2152 27.33deg);
-    --ref-red-accent: oklch(0.6636 0.2231 25.73deg);
+	--ref-green-400: oklch(0.8003 0.1821 151.71deg);
+	--ref-green-500: oklch(0.7227 0.192 149.58deg);
+	--ref-green-600: oklch(0.6271 0.1699 149.21deg);
+	--ref-orange-500: oklch(0.6461 0.1943 41.12deg);
+	--ref-red-500: oklch(0.5771 0.2152 27.33deg);
+	--ref-red-accent: oklch(0.6636 0.2231 25.73deg);
 
-    --ref-purple-500: oklch(0.5413 0.2466 293.01deg);
-    --ref-emerald-600: oklch(0.5960 0.1274 163.23deg);
-    --ref-violet-500: oklch(0.5575 0.2525 302.32deg);
-    --ref-cyan-500: oklch(0.6089 0.1109 221.72deg);
-    --ref-indigo-600: oklch(0.4568 0.2146 277.02deg);
-    --ref-pink-600: oklch(0.5246 0.1990 3.96deg);
+	--ref-purple-500: oklch(0.5413 0.2466 293.01deg);
+	--ref-emerald-600: oklch(0.596 0.1274 163.23deg);
+	--ref-violet-500: oklch(0.5575 0.2525 302.32deg);
+	--ref-cyan-500: oklch(0.6089 0.1109 221.72deg);
+	--ref-indigo-600: oklch(0.4568 0.2146 277.02deg);
+	--ref-pink-600: oklch(0.5246 0.199 3.96deg);
 
-    /* Clean, slightly warm off-white (milk/cream) for premium feel */
-    --ref-cream: oklch(0.98 0.01 85deg); /* Very clean, slightly warm cream */
-    --ref-gold: #EAA43B;
-    --ref-gold-dark: #D48C20;
+	/* Clean, slightly warm off-white (milk/cream) for premium feel */
+	--ref-cream: oklch(0.98 0.01 85deg); /* Very clean, slightly warm cream */
+	--ref-gold: #eaa43b;
+	--ref-gold-dark: #d48c20;
 
-    --ref-neutral-950: color-mix(in oklch, var(--ref-black) 85%, var(--ref-white) 15%);
-    --ref-neutral-980: color-mix(in oklch, var(--ref-black) 92%, var(--ref-white) 8%);
+	--ref-neutral-950: color-mix(in oklch, var(--ref-black) 85%, var(--ref-white) 15%);
+	--ref-neutral-980: color-mix(in oklch, var(--ref-black) 92%, var(--ref-white) 8%);
 
-    /* === Functional tokens === */
-    /* Clean, slightly warm off-white background (milk/cream) */
-    --color-bg-canvas: var(--ref-cream);
-    --color-bg-surface: var(--ref-neutral-150);
-    --color-bg-elevated: color-mix(in oklch, var(--ref-white) 95%, var(--ref-neutral-200) 5%);
-    --color-bg-muted: var(--ref-neutral-200);
-    --color-bg-inset: var(--ref-neutral-250);
-    --color-bg-interactive: var(--ref-brand-primary);
-    --color-bg-contrast: var(--ref-white);
+	/* === Functional tokens === */
+	/* Clean, slightly warm off-white background (milk/cream) */
+	--color-bg-canvas: var(--ref-cream);
+	--color-bg-surface: var(--ref-neutral-150);
+	--color-bg-elevated: color-mix(in oklch, var(--ref-white) 95%, var(--ref-neutral-200) 5%);
+	--color-bg-muted: var(--ref-neutral-200);
+	--color-bg-inset: var(--ref-neutral-250);
+	--color-bg-interactive: var(--ref-brand-primary);
+	--color-bg-contrast: var(--ref-white);
 
-    --color-border-subtle: var(--ref-neutral-300);
-    --color-border-default: var(--ref-neutral-400);
-    --color-border-title: var(--ref-neutral-600);
-    --color-border-strong: var(--ref-brand-border);
+	--color-border-subtle: var(--ref-neutral-300);
+	--color-border-default: var(--ref-neutral-400);
+	--color-border-title: var(--ref-neutral-600);
+	--color-border-strong: var(--ref-brand-border);
 
-    --color-text-primary: var(--ref-ink);
-    --color-text-secondary: var(--ref-muted);
-    --color-text-secondary-dark: var(--ref-neutral-700);
-    --color-text-tertiary: var(--ref-neutral-600);
-    --color-text-inverse: var(--ref-white);
-    --color-text-link: var(--ref-blue-600);
-    /* Text color for accent background - ensures high contrast */
-    --color-text-on-accent: var(--ref-white);
-    /* Dark text for use on light backgrounds (info windows, cards) */
-    --color-text-on-light: var(--ref-neutral-900);
+	--color-text-primary: var(--ref-ink);
+	--color-text-secondary: var(--ref-muted);
+	--color-text-secondary-dark: var(--ref-neutral-700);
+	--color-text-tertiary: var(--ref-neutral-600);
+	--color-text-inverse: var(--ref-white);
+	--color-text-link: var(--ref-blue-600);
+	/* Text color for accent background - ensures high contrast */
+	--color-text-on-accent: var(--ref-white);
+	/* Dark text for use on light backgrounds (info windows, cards) */
+	--color-text-on-light: var(--ref-neutral-900);
 
-    --color-icon-primary: var(--color-text-primary);
-    --color-icon-inverse: var(--color-text-inverse);
+	--color-icon-primary: var(--color-text-primary);
+	--color-icon-inverse: var(--color-text-inverse);
 
-    /* SVG icon colors */
-    --svg-fill-primary: var(--ref-gold-dark);
-    --svg-fill-secondary: var(--ref-gold);
-    --svg-fill-contrast: var(--ref-white);
-    --svg-stroke-primary: var(--ref-gold);
-    --svg-stroke-contrast: var(--ref-gold-dark);
+	/* SVG icon colors */
+	--svg-fill-primary: var(--ref-gold-dark);
+	--svg-fill-secondary: var(--ref-gold);
+	--svg-fill-contrast: var(--ref-white);
+	--svg-stroke-primary: var(--ref-gold);
+	--svg-stroke-contrast: var(--ref-gold-dark);
 
-    --color-accent-primary: var(--ref-brand-primary);
-    --color-accent-secondary: var(--ref-brand-secondary);
-    --color-accent-hover: color-mix(in oklch, var(--ref-brand-primary) 85%, var(--ref-white) 15%);
-    --color-accent-border: var(--ref-brand-border);
-    --color-accent-strong: var(--ref-brand-deep);
-    /* Darker accent color for text on light backgrounds */
-    --color-accent-primary-text: var(--ref-brand-primary-text);
+	--color-accent-primary: var(--ref-brand-primary);
+	--color-accent-secondary: var(--ref-brand-secondary);
+	--color-accent-hover: color-mix(in oklch, var(--ref-brand-primary) 85%, var(--ref-white) 15%);
+	--color-accent-border: var(--ref-brand-border);
+	--color-accent-strong: var(--ref-brand-deep);
+	/* Darker accent color for text on light backgrounds */
+	--color-accent-primary-text: var(--ref-brand-primary-text);
 
-    --color-success: var(--ref-green-500);
-    --color-success-strong: var(--ref-green-600);
-    --color-warning: var(--ref-orange-500);
-    --color-danger: var(--ref-red-500);
-    --color-danger-strong: var(--ref-red-accent);
-    --color-info: var(--ref-blue-500);
+	--color-success: var(--ref-green-500);
+	--color-success-strong: var(--ref-green-600);
+	--color-warning: var(--ref-orange-500);
+	--color-danger: var(--ref-red-500);
+	--color-danger-strong: var(--ref-red-accent);
+	--color-info: var(--ref-blue-500);
 
-    --focus-ring: color-mix(in oklch, var(--ref-brand-accent) 85%, transparent);
+	--focus-ring: color-mix(in oklch, var(--ref-brand-accent) 85%, transparent);
 
-    --overlay-white-strong: color-mix(in oklch, var(--ref-white) 98%, transparent);
-    --overlay-white-soft: color-mix(in oklch, var(--ref-white) 90%, transparent);
-    --overlay-white-medium: color-mix(in oklch, var(--ref-white) 80%, transparent);
-    --overlay-black-80: color-mix(in oklch, var(--ref-black) 80%, transparent);
-    --overlay-black-60: color-mix(in oklch, var(--ref-black) 60%, transparent);
-    --overlay-black-40: color-mix(in oklch, var(--ref-black) 40%, transparent);
-    --overlay-black-30: color-mix(in oklch, var(--ref-black) 30%, transparent);
-    --overlay-black-20: color-mix(in oklch, var(--ref-black) 20%, transparent);
-    --overlay-black-10: color-mix(in oklch, var(--ref-black) 10%, transparent);
-    --brand-overlay-70: color-mix(in oklch, var(--ref-brand-primary) 70%, transparent);
-    --brand-overlay-30: color-mix(in oklch, var(--ref-brand-primary) 30%, transparent);
+	--overlay-white-strong: color-mix(in oklch, var(--ref-white) 98%, transparent);
+	--overlay-white-soft: color-mix(in oklch, var(--ref-white) 90%, transparent);
+	--overlay-white-medium: color-mix(in oklch, var(--ref-white) 80%, transparent);
+	--overlay-black-80: color-mix(in oklch, var(--ref-black) 80%, transparent);
+	--overlay-black-60: color-mix(in oklch, var(--ref-black) 60%, transparent);
+	--overlay-black-40: color-mix(in oklch, var(--ref-black) 40%, transparent);
+	--overlay-black-30: color-mix(in oklch, var(--ref-black) 30%, transparent);
+	--overlay-black-20: color-mix(in oklch, var(--ref-black) 20%, transparent);
+	--overlay-black-10: color-mix(in oklch, var(--ref-black) 10%, transparent);
+	--brand-overlay-70: color-mix(in oklch, var(--ref-brand-primary) 70%, transparent);
+	--brand-overlay-30: color-mix(in oklch, var(--ref-brand-primary) 30%, transparent);
 
-    --shadow-subtle: var(--overlay-black-10);
-    --shadow-soft: var(--overlay-black-20);
-    --shadow-medium: var(--overlay-black-30);
-    --shadow-strong: var(--overlay-black-40);
+	--shadow-subtle: var(--overlay-black-10);
+	--shadow-soft: var(--overlay-black-20);
+	--shadow-medium: var(--overlay-black-30);
+	--shadow-strong: var(--overlay-black-40);
 
-    /* Category semantic tokens */
-    --category-edificio-principal: var(--ref-brand-primary);
-    --category-transporte: var(--ref-blue-600);
-    --category-cultura-entretenimiento: var(--ref-purple-500);
-    --category-infraestructura: var(--ref-emerald-600);
-    --category-lugares-historicos: var(--ref-red-500);
-    --category-parques-recreacion: var(--ref-green-600);
-    --category-museos: var(--ref-violet-500);
-    --category-gastronomia: var(--ref-orange-500);
-    --category-supermercados: var(--ref-cyan-500);
-    --category-servicios: var(--ref-indigo-600);
-    --category-vida-nocturna: var(--ref-pink-600);
+	/* Category semantic tokens */
+	--category-edificio-principal: var(--ref-brand-primary);
+	--category-transporte: var(--ref-blue-600);
+	--category-cultura-entretenimiento: var(--ref-purple-500);
+	--category-infraestructura: var(--ref-emerald-600);
+	--category-lugares-historicos: var(--ref-red-500);
+	--category-parques-recreacion: var(--ref-green-600);
+	--category-museos: var(--ref-violet-500);
+	--category-gastronomia: var(--ref-orange-500);
+	--category-supermercados: var(--ref-cyan-500);
+	--category-servicios: var(--ref-indigo-600);
+	--category-vida-nocturna: var(--ref-pink-600);
 
-    /* Layout metrics */
-    --max: 600px;
-    --gap: 1.75rem;
-    --header-height: 2.4lh;
-    
-    /* Floating CTA positioning */
-    --floating-cta-right-padding: 1.5rem;
-    --floating-cta-top-padding: 1rem;
-    --floating-cta-fade-duration: 300ms;
+	/* Layout metrics */
+	--max: 600px;
+	--gap: 1.75rem;
+	--header-height: 2.4lh;
+
+	/* Floating CTA positioning */
+	--floating-cta-right-padding: 1.5rem;
+	--floating-cta-top-padding: 1rem;
+	--floating-cta-fade-duration: 300ms;
 }
 
 :root[data-theme='dark'] {
-    color-scheme: dark;
-    --theme-name: dark;
+	color-scheme: dark;
+	--theme-name: dark;
 
-    /* Deep charcoal grey background instead of pure black - more sophisticated */
-    --color-bg-canvas: oklch(0.12 0 0deg); /* #1A1A1A equivalent - deep charcoal */
-    --color-bg-surface: oklch(0.15 0 0deg);
-    --color-bg-elevated: oklch(0.18 0 0deg);
-    --color-bg-muted: oklch(0.20 0 0deg);
-    --color-bg-inset: oklch(0.22 0 0deg);
-    --color-bg-interactive: color-mix(in oklch, var(--ref-brand-primary) 80%, var(--ref-white) 20%);
-    --color-bg-contrast: oklch(0.25 0 0deg);
+	/* Deep charcoal grey background instead of pure black - more sophisticated */
+	--color-bg-canvas: oklch(0.12 0 0deg); /* #1A1A1A equivalent - deep charcoal */
+	--color-bg-surface: oklch(0.15 0 0deg);
+	--color-bg-elevated: oklch(0.18 0 0deg);
+	--color-bg-muted: oklch(0.2 0 0deg);
+	--color-bg-inset: oklch(0.22 0 0deg);
+	--color-bg-interactive: color-mix(in oklch, var(--ref-brand-primary) 80%, var(--ref-white) 20%);
+	--color-bg-contrast: oklch(0.25 0 0deg);
 
-    --color-border-subtle: color-mix(in oklch, var(--ref-neutral-950) 65%, var(--ref-neutral-300) 35%);
-    --color-border-default: color-mix(in oklch, var(--ref-neutral-900) 55%, var(--ref-neutral-250) 45%);
-    --color-border-strong: color-mix(in oklch, var(--ref-brand-border) 40%, var(--ref-neutral-900) 60%);
-    --color-border-title: color-mix(in oklch, var(--ref-neutral-600) 45%, var(--ref-neutral-200) 55%);
+	--color-border-subtle: color-mix(
+		in oklch,
+		var(--ref-neutral-950) 65%,
+		var(--ref-neutral-300) 35%
+	);
+	--color-border-default: color-mix(
+		in oklch,
+		var(--ref-neutral-900) 55%,
+		var(--ref-neutral-250) 45%
+	);
+	--color-border-strong: color-mix(
+		in oklch,
+		var(--ref-brand-border) 40%,
+		var(--ref-neutral-900) 60%
+	);
+	--color-border-title: color-mix(in oklch, var(--ref-neutral-600) 45%, var(--ref-neutral-200) 55%);
 
-    /* Lighter text for better readability on dark background */
-    --color-text-primary: oklch(0.95 0 0deg); /* Off-white for body text */
-    --color-text-secondary: oklch(0.85 0 0deg); /* Light grey */
-    --color-text-secondary-dark: oklch(0.90 0 0deg);
-    --color-text-tertiary: oklch(0.75 0 0deg);
-    --color-text-inverse: oklch(0.25 0 0deg);
-    --color-text-link: color-mix(in oklch, var(--ref-blue-500) 85%, var(--ref-white) 15%);
-    /* Dark text for use on light backgrounds (info windows, cards) */
-    --color-text-on-light: oklch(0.95 0 0deg);
+	/* Lighter text for better readability on dark background */
+	--color-text-primary: oklch(0.95 0 0deg); /* Off-white for body text */
+	--color-text-secondary: oklch(0.85 0 0deg); /* Light grey */
+	--color-text-secondary-dark: oklch(0.9 0 0deg);
+	--color-text-tertiary: oklch(0.75 0 0deg);
+	--color-text-inverse: oklch(0.25 0 0deg);
+	--color-text-link: color-mix(in oklch, var(--ref-blue-500) 85%, var(--ref-white) 15%);
+	/* Dark text for use on light backgrounds (info windows, cards) */
+	--color-text-on-light: oklch(0.95 0 0deg);
 
-    --color-icon-primary: var(--color-text-primary);
-    --color-icon-inverse: var(--ref-neutral-980);
+	--color-icon-primary: var(--color-text-primary);
+	--color-icon-inverse: var(--ref-neutral-980);
 
-    /* SVG icon colors - use brighter accent for visibility on dark background */
-    --svg-fill-primary: var(--color-accent-primary);
-    --svg-fill-secondary: var(--color-accent-secondary);
-    --svg-fill-contrast: oklch(0.90 0 0deg);
-    --svg-stroke-primary: var(--color-accent-primary);
-    --svg-stroke-contrast: oklch(0.90 0 0deg);
+	/* SVG icon colors - use brighter accent for visibility on dark background */
+	--svg-fill-primary: var(--color-accent-primary);
+	--svg-fill-secondary: var(--color-accent-secondary);
+	--svg-fill-contrast: oklch(0.9 0 0deg);
+	--svg-stroke-primary: var(--color-accent-primary);
+	--svg-stroke-contrast: oklch(0.9 0 0deg);
 
-    /* Brighter copper/terracotta accent that glows against dark background */
-    --color-accent-primary: oklch(0.65 0.13 35deg); /* Bright, warm copper - glows on dark */
-    --color-accent-secondary: oklch(0.70 0.11 40deg);
-    --color-accent-hover: oklch(0.70 0.13 35deg);
-    --color-accent-border: oklch(0.60 0.10 35deg);
-    --color-accent-strong: oklch(0.75 0.12 35deg);
+	/* Brighter copper/terracotta accent that glows against dark background */
+	--color-accent-primary: oklch(0.65 0.13 35deg); /* Bright, warm copper - glows on dark */
+	--color-accent-secondary: oklch(0.7 0.11 40deg);
+	--color-accent-hover: oklch(0.7 0.13 35deg);
+	--color-accent-border: oklch(0.6 0.1 35deg);
+	--color-accent-strong: oklch(0.75 0.12 35deg);
 
-    --color-success: color-mix(in oklch, var(--ref-green-500) 70%, var(--ref-white) 30%);
-    --color-success-strong: color-mix(in oklch, var(--ref-green-600) 70%, var(--ref-white) 30%);
-    --color-warning: color-mix(in oklch, var(--ref-orange-500) 75%, var(--ref-white) 25%);
-    --color-danger: color-mix(in oklch, var(--ref-red-500) 75%, var(--ref-white) 25%);
-    --color-danger-strong: color-mix(in oklch, var(--ref-red-accent) 70%, var(--ref-white) 30%);
-    --color-info: color-mix(in oklch, var(--ref-blue-500) 75%, var(--ref-white) 25%);
+	--color-success: color-mix(in oklch, var(--ref-green-500) 70%, var(--ref-white) 30%);
+	--color-success-strong: color-mix(in oklch, var(--ref-green-600) 70%, var(--ref-white) 30%);
+	--color-warning: color-mix(in oklch, var(--ref-orange-500) 75%, var(--ref-white) 25%);
+	--color-danger: color-mix(in oklch, var(--ref-red-500) 75%, var(--ref-white) 25%);
+	--color-danger-strong: color-mix(in oklch, var(--ref-red-accent) 70%, var(--ref-white) 30%);
+	--color-info: color-mix(in oklch, var(--ref-blue-500) 75%, var(--ref-white) 25%);
 
-    --focus-ring: color-mix(in oklch, var(--ref-brand-accent) 70%, var(--ref-white) 30%);
+	--focus-ring: color-mix(in oklch, var(--ref-brand-accent) 70%, var(--ref-white) 30%);
 
-    --shadow-subtle: color-mix(in oklch, var(--ref-black) 70%, transparent);
-    --shadow-soft: color-mix(in oklch, var(--ref-black) 60%, transparent);
-    --shadow-medium: color-mix(in oklch, var(--ref-black) 50%, transparent);
-    --shadow-strong: color-mix(in oklch, var(--ref-black) 40%, transparent);
+	--shadow-subtle: color-mix(in oklch, var(--ref-black) 70%, transparent);
+	--shadow-soft: color-mix(in oklch, var(--ref-black) 60%, transparent);
+	--shadow-medium: color-mix(in oklch, var(--ref-black) 50%, transparent);
+	--shadow-strong: color-mix(in oklch, var(--ref-black) 40%, transparent);
 
-    --category-edificio-principal: color-mix(in oklch, var(--ref-brand-primary) 60%, var(--ref-white) 40%);
-    --category-transporte: color-mix(in oklch, var(--ref-blue-600) 65%, var(--ref-white) 35%);
-    --category-cultura-entretenimiento: color-mix(in oklch, var(--ref-purple-500) 65%, var(--ref-white) 35%);
-    --category-infraestructura: color-mix(in oklch, var(--ref-emerald-600) 65%, var(--ref-white) 35%);
-    --category-lugares-historicos: color-mix(in oklch, var(--ref-red-500) 70%, var(--ref-white) 30%);
-    --category-parques-recreacion: color-mix(in oklch, var(--ref-green-600) 65%, var(--ref-white) 35%);
-    --category-museos: color-mix(in oklch, var(--ref-violet-500) 65%, var(--ref-white) 35%);
-    --category-gastronomia: color-mix(in oklch, var(--ref-orange-500) 70%, var(--ref-white) 30%);
-    --category-supermercados: color-mix(in oklch, var(--ref-cyan-500) 65%, var(--ref-white) 35%);
-    --category-servicios: color-mix(in oklch, var(--ref-indigo-600) 65%, var(--ref-white) 35%);
-    --category-vida-nocturna: color-mix(in oklch, var(--ref-pink-600) 65%, var(--ref-white) 35%);
+	--category-edificio-principal: color-mix(
+		in oklch,
+		var(--ref-brand-primary) 60%,
+		var(--ref-white) 40%
+	);
+	--category-transporte: color-mix(in oklch, var(--ref-blue-600) 65%, var(--ref-white) 35%);
+	--category-cultura-entretenimiento: color-mix(
+		in oklch,
+		var(--ref-purple-500) 65%,
+		var(--ref-white) 35%
+	);
+	--category-infraestructura: color-mix(in oklch, var(--ref-emerald-600) 65%, var(--ref-white) 35%);
+	--category-lugares-historicos: color-mix(in oklch, var(--ref-red-500) 70%, var(--ref-white) 30%);
+	--category-parques-recreacion: color-mix(
+		in oklch,
+		var(--ref-green-600) 65%,
+		var(--ref-white) 35%
+	);
+	--category-museos: color-mix(in oklch, var(--ref-violet-500) 65%, var(--ref-white) 35%);
+	--category-gastronomia: color-mix(in oklch, var(--ref-orange-500) 70%, var(--ref-white) 30%);
+	--category-supermercados: color-mix(in oklch, var(--ref-cyan-500) 65%, var(--ref-white) 35%);
+	--category-servicios: color-mix(in oklch, var(--ref-indigo-600) 65%, var(--ref-white) 35%);
+	--category-vida-nocturna: color-mix(in oklch, var(--ref-pink-600) 65%, var(--ref-white) 35%);
 }
 
 @media (min-width: 850px) {
-    :root {
-        --max: 1200px;
-    }
+	:root {
+		--max: 1200px;
+	}
 }
 
 @media (min-width: 1500px) {
-    :root {
-        --max: 1750px;
-    }
+	:root {
+		--max: 1750px;
+	}
 }
 
 .scroll-animate {
-    transition:
-        transform var(--scroll-animate-duration, 500ms) var(--scroll-animate-easing, cubic-bezier(0.22, 1, 0.36, 1)),
-        opacity var(--scroll-animate-duration, 500ms) ease;
-    transition-delay: var(--scroll-animate-delay, 0ms);
+	transition:
+		transform var(--scroll-animate-duration, 500ms)
+			var(--scroll-animate-easing, cubic-bezier(0.22, 1, 0.36, 1)),
+		opacity var(--scroll-animate-duration, 500ms) ease;
+	transition-delay: var(--scroll-animate-delay, 0ms);
 }
 
 .scroll-animate:not([data-item-active]) {
-    opacity: 0;
-    transform: translate3d(0, var(--scroll-animate-offset, 40px), 0)
-        scale(var(--scroll-animate-scale, 0.98));
+	opacity: 0;
+	transform: translate3d(0, var(--scroll-animate-offset, 40px), 0)
+		scale(var(--scroll-animate-scale, 0.98));
 }
 
 [data-section-active='true'] .scroll-animate:not([data-item-active]) {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+	opacity: 1;
+	transform: translate3d(0, 0, 0) scale(1);
 }
 
 .scroll-animate[data-item-active] {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+	opacity: 1;
+	transform: translate3d(0, 0, 0) scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
-    [data-section-active] .scroll-animate {
-        transform: none;
-        transition-duration: 0ms;
-    }
+	[data-section-active] .scroll-animate {
+		transform: none;
+		transition-duration: 0ms;
+	}
 }
 
 /* Mobile overrides for Floating CTA */
 @media (max-width: 850px) {
-    :root {
-        --floating-cta-right-padding: 1rem;
-    }
+	:root {
+		--floating-cta-right-padding: 1rem;
+	}
 }
 
 * {
-    box-sizing: border-box
+	box-sizing: border-box;
 }
 
 html {
-    scroll-behavior: smooth
+	scroll-behavior: smooth;
 }
 
 body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.6;
-    color: var(--color-text-primary);
-    background: var(--color-bg-canvas);
-    overflow-x: hidden;
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	line-height: 1.6;
+	color: var(--color-text-primary);
+	background: var(--color-bg-canvas);
+	overflow-x: hidden;
 }
 
 /* Focus indicators for keyboard navigation */
 *:focus-visible {
-    outline: 2px solid var(--color-accent-primary);
-    outline-offset: 2px;
+	outline: 2px solid var(--color-accent-primary);
+	outline-offset: 2px;
 }
 
 /* Ensure buttons and interactive elements have visible focus */
@@ -307,6 +332,6 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-    outline: 2px solid var(--color-accent-primary);
-    outline-offset: 2px;
+	outline: 2px solid var(--color-accent-primary);
+	outline-offset: 2px;
 }

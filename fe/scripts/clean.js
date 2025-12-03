@@ -17,11 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const projectRoot = join(__dirname, '..');
 
-const cacheDirs = [
-	'.svelte-kit',
-	'node_modules/.vite',
-	'.vite'
-];
+const cacheDirs = ['.svelte-kit', 'node_modules/.vite', '.vite'];
 
 console.log('🧹 Cleaning Vite and SvelteKit caches...\n');
 
@@ -29,7 +25,7 @@ let cleanedCount = 0;
 
 for (const dir of cacheDirs) {
 	const fullPath = join(projectRoot, dir);
-	
+
 	if (existsSync(fullPath)) {
 		try {
 			rmSync(fullPath, { recursive: true, force: true });
@@ -44,5 +40,6 @@ for (const dir of cacheDirs) {
 	}
 }
 
-console.log(`\n✨ Cleanup complete! Removed ${cleanedCount} cache ${cleanedCount === 1 ? 'directory' : 'directories'}.`);
-
+console.log(
+	`\n✨ Cleanup complete! Removed ${cleanedCount} cache ${cleanedCount === 1 ? 'directory' : 'directories'}.`
+);

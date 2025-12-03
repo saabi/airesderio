@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { parseArgentineNumber, isValidArgentineNumber, formatArgentineNumber } from './phoneValidator';
+import {
+	parseArgentineNumber,
+	isValidArgentineNumber,
+	formatArgentineNumber
+} from './phoneValidator';
 
 describe('phoneValidator', () => {
 	describe('parseArgentineNumber', () => {
@@ -108,4 +112,3 @@ describe('phoneValidator', () => {
 		});
 	});
 });
-

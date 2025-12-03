@@ -47,7 +47,7 @@
 	// Handle keyboard navigation
 	function handleKeydown(e: KeyboardEvent) {
 		if (!visible) return;
-		
+
 		switch (e.key) {
 			case 'Escape':
 				onClose();
@@ -67,56 +67,54 @@
 <svelte:window onkeydown={handleKeydown} />
 
 {#if visible && place && photos.length > 0}
-	<div 
-		class='overlay' 
-		role='dialog' 
-		aria-modal='true'
-	>
-		<button 
-			type='button'
-			class='backdrop'
-			aria-label='Cerrar galería'
-			onclick={onClose}
-		></button>
-		<div 
-			class='modal' 
-			role='document'
-		>
-			<div class='header'>
+	<div class="overlay" role="dialog" aria-modal="true">
+		<button type="button" class="backdrop" aria-label="Cerrar galería" onclick={onClose}></button>
+		<div class="modal" role="document">
+			<div class="header">
 				<h3>{place.nombre}</h3>
-				<button class='close-button' onclick={onClose} aria-label='Cerrar galería de fotos'>×</button>
+				<button class="close-button" onclick={onClose} aria-label="Cerrar galería de fotos"
+					>×</button
+				>
 			</div>
-			
-			<div class='content'>
-				<div class='photo-container'>
-					<img 
-						src={photos[currentIndex]} 
+
+			<div class="content">
+				<div class="photo-container">
+					<img
+						src={photos[currentIndex]}
 						alt={`${place.nombre} - Foto ${currentIndex + 1}`}
-						class='carousel-image'
+						class="carousel-image"
 					/>
-					
+
 					{#if photos.length > 1}
-						<button class='nav-button prev' onclick={() => navigateCarousel(-1)} aria-label='Foto anterior'>‹</button>
-						<button class='nav-button next' onclick={() => navigateCarousel(1)} aria-label='Siguiente foto'>›</button>
+						<button
+							class="nav-button prev"
+							onclick={() => navigateCarousel(-1)}
+							aria-label="Foto anterior">‹</button
+						>
+						<button
+							class="nav-button next"
+							onclick={() => navigateCarousel(1)}
+							aria-label="Siguiente foto">›</button
+						>
 					{/if}
 				</div>
-				
+
 				{#if photos.length > 1}
-					<div class='photo-dots'>
+					<div class="photo-dots">
 						{#each photos as _, index (index)}
-							<button 
-								class='dot {index === currentIndex ? 'active' : ''}'
+							<button
+								class="dot {index === currentIndex ? 'active' : ''}"
 								onclick={() => goToPhoto(index)}
 								aria-label={`Ver foto ${index + 1}`}
 							></button>
 						{/each}
 					</div>
 				{/if}
-				
-				<div class='photo-info'>
+
+				<div class="photo-info">
 					<p>{currentIndex + 1} de {photos.length} fotos</p>
 					{#if place.descripcion}
-						<p class='photo-description'>{place.descripcion}</p>
+						<p class="photo-description">{place.descripcion}</p>
 					{/if}
 				</div>
 			</div>
@@ -134,12 +132,12 @@
 		right: 0;
 		bottom: 0;
 		z-index: 10000;
-		
+
 		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		
+
 		/* Box/Visual */
 		backdrop-filter: blur(4px);
 	}
@@ -152,16 +150,16 @@
 		right: 0;
 		bottom: 0;
 		z-index: 1;
-		
+
 		/* Layout */
 		width: 100%;
 		height: 100%;
 		padding: 0;
-		
+
 		/* Box/Visual */
 		background: var(--overlay-black-80);
 		border: none;
-		
+
 		/* Misc/Overrides */
 		cursor: pointer;
 	}
@@ -170,13 +168,13 @@
 		/* Positioning */
 		position: relative;
 		z-index: 2;
-		
+
 		/* Layout */
 		width: 600px;
 		max-width: 90vw;
 		max-height: 90vh;
 		overflow: hidden;
-		
+
 		/* Box/Visual */
 		background: var(--color-bg-contrast);
 		border-radius: 0.75rem;
@@ -189,7 +187,7 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 1rem 1.5rem;
-		
+
 		/* Box/Visual */
 		border-bottom: 1px solid var(--color-neutral-300);
 		background: var(--color-neutral-125);
@@ -198,7 +196,7 @@
 	.header h3 {
 		/* Layout */
 		margin: 0;
-		
+
 		/* Typography */
 		font-size: 1.125rem;
 		font-weight: 600;
@@ -208,19 +206,19 @@
 	.close-button {
 		/* Layout */
 		padding: 0.25rem;
-		
+
 		/* Box/Visual */
 		background: none;
 		border: none;
 		border-radius: 0.25rem;
-		
+
 		/* Typography */
 		font-size: 1.5rem;
 		color: var(--color-muted);
-		
+
 		/* Misc/Overrides */
 		cursor: pointer;
-		
+
 		/* Effects & Motion */
 		transition: background-color 0.2s;
 	}
@@ -239,13 +237,13 @@
 	.photo-container {
 		/* Positioning */
 		position: relative;
-		
+
 		/* Layout */
 		width: 100%;
 		height: 400px;
 		margin-bottom: 1rem;
 		overflow: hidden;
-		
+
 		/* Box/Visual */
 		background: var(--color-neutral-200);
 		border-radius: 0.5rem;
@@ -264,26 +262,26 @@
 		position: absolute;
 		top: 50%;
 		z-index: 10;
-		
+
 		/* Layout */
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		width: 40px;
 		height: 40px;
-		
+
 		/* Box/Visual */
 		background: var(--overlay-black-60);
 		border: none;
 		border-radius: 50%;
-		
+
 		/* Typography */
 		font-size: 1.25rem;
 		color: var(--color-text-inverse);
-		
+
 		/* Misc/Overrides */
 		cursor: pointer;
-		
+
 		/* Effects & Motion */
 		transform: translateY(-50%);
 		transition: background-color 0.2s;
@@ -316,15 +314,15 @@
 		/* Layout */
 		width: 12px;
 		height: 12px;
-		
+
 		/* Box/Visual */
 		border: none;
 		border-radius: 50%;
 		background: var(--color-neutral-400);
-		
+
 		/* Misc/Overrides */
 		cursor: pointer;
-		
+
 		/* Effects & Motion */
 		transition: background-color 0.2s;
 	}
@@ -352,7 +350,7 @@
 	.photo-info p {
 		/* Layout */
 		margin: 0.25rem 0;
-		
+
 		/* Typography */
 		font-size: 0.875rem;
 		color: var(--color-muted);
@@ -391,7 +389,7 @@
 			/* Layout */
 			width: 35px;
 			height: 35px;
-			
+
 			/* Typography */
 			font-size: 1rem;
 		}

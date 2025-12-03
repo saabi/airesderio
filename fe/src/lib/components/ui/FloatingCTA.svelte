@@ -116,9 +116,10 @@
 
 			if (targetElement) {
 				// Get header height from CSS variable
-				const headerHeight = parseFloat(
-					getComputedStyle(document.documentElement).getPropertyValue('--header-height')
-				) || 80;
+				const headerHeight =
+					parseFloat(
+						getComputedStyle(document.documentElement).getPropertyValue('--header-height')
+					) || 80;
 
 				const targetPosition =
 					targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
@@ -162,7 +163,9 @@
 		border: none;
 		border-radius: 0.375rem;
 		background: var(--color-accent-primary);
-		box-shadow: 0 0.75rem 0.75rem var(--shadow-soft), 0 0.5rem 0.25rem var(--shadow-subtle);
+		box-shadow:
+			0 0.75rem 0.75rem var(--shadow-soft),
+			0 0.5rem 0.25rem var(--shadow-subtle);
 
 		/* Typography */
 		font-size: 1rem;
@@ -213,4 +216,3 @@
 		}
 	}
 </style>
-

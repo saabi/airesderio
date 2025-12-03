@@ -25,10 +25,26 @@
 
 	// ===== STATIC CONSTANTS =====
 	const equipmentItems: EquipmentItem[] = [
-		{ icon: '🖼️', component: Carpinteria, text: 'Carpintería de aluminio de alta prestación con aislación termoacústica superior.' },
-		{ icon: '🍳', component: Horno, text: 'Anafe y horno a gas empotrados de diseño moderno y alta funcionalidad.' },
-		{ icon: '🚪', component: Puerta, text: 'Puertas de madera con diseño exclusivo que aportan calidez y elegancia moderna.' },
-		{ icon: '🌡️', component: Termotanque, text: 'Agua caliente asegurada mediante termotanques eléctricos individuales de alta recuperación.' },
+		{
+			icon: '🖼️',
+			component: Carpinteria,
+			text: 'Carpintería de aluminio de alta prestación con aislación termoacústica superior.'
+		},
+		{
+			icon: '🍳',
+			component: Horno,
+			text: 'Anafe y horno a gas empotrados de diseño moderno y alta funcionalidad.'
+		},
+		{
+			icon: '🚪',
+			component: Puerta,
+			text: 'Puertas de madera con diseño exclusivo que aportan calidez y elegancia moderna.'
+		},
+		{
+			icon: '🌡️',
+			component: Termotanque,
+			text: 'Agua caliente asegurada mediante termotanques eléctricos individuales de alta recuperación.'
+		},
 		{
 			icon: '🔐',
 			component: CerraduraDigital,
@@ -39,15 +55,31 @@
 			component: Banos,
 			text: 'Baños de diseño con grifería de primera calidad, vanitory, espejo y mampara de vidrio.'
 		},
-		{ icon: '🔥', component: GasNatural, text: 'Conexión de gas natural disponible específicamente para anafe y horno empotrado.' },
+		{
+			icon: '🔥',
+			component: GasNatural,
+			text: 'Conexión de gas natural disponible específicamente para anafe y horno empotrado.'
+		},
 		{
 			icon: '👔',
 			component: Vestidor,
 			text: 'Vestidores completos con interiores diseñados a medida e iluminación LED integrada.'
 		},
-		{ icon: '⚡', component: EnergiaElectrica, text: 'Suministro eléctrico confiable garantizado por transformador propio en el edificio.' },
-		{ icon: '⬜', component: Piso, text: 'Pisos de porcelanato de gran formato en la totalidad de los ambientes.' },
-		{ icon: '🍽️', component: Cocina, text: 'Cocinas completamente equipadas con modernos muebles de guardado bajo y sobre mesada.' }
+		{
+			icon: '⚡',
+			component: EnergiaElectrica,
+			text: 'Suministro eléctrico confiable garantizado por transformador propio en el edificio.'
+		},
+		{
+			icon: '⬜',
+			component: Piso,
+			text: 'Pisos de porcelanato de gran formato en la totalidad de los ambientes.'
+		},
+		{
+			icon: '🍽️',
+			component: Cocina,
+			text: 'Cocinas completamente equipadas con modernos muebles de guardado bajo y sobre mesada.'
+		}
 	];
 </script>
 
@@ -55,12 +87,20 @@
 	// ===== IMPORTS =====
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { browser } from '$app/environment';
-	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
+	import {
+		ANIMATION,
+		animationDelay,
+		animationDuration,
+		animationOffset
+	} from '$lib/constants/animation';
 
 	// ===== INSTANCE CONSTANTS =====
-	const { action: equipmentObserver, visible: equipmentVisible } = createSectionObserver('equipment', {
-		threshold: ANIMATION.threshold.section
-	});
+	const { action: equipmentObserver, visible: equipmentVisible } = createSectionObserver(
+		'equipment',
+		{
+			threshold: ANIMATION.threshold.section
+		}
+	);
 
 	// ===== STATE =====
 	let visibleItems = $state<Set<number>>(new Set());
@@ -144,36 +184,36 @@
 </script>
 
 <section
-    id='equipados'
-    class='equip'
-    aria-labelledby='equipados-heading'
-    use:equipmentObserver
-    data-section-active={$equipmentVisible}
+	id="equipados"
+	class="equip"
+	aria-labelledby="equipados-heading"
+	use:equipmentObserver
+	data-section-active={$equipmentVisible}
 >
-    <div 
-        use:createTitleObserver
-        class='scroll-animate' 
-        data-item-active={titleVisible || undefined}
-        style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
-    >
-        <Title eyebrow='Cómo vienen' big='EQUIPADOS' />
-    </div>
-    <ul class='equip-list' role='list'>
-        {#each equipmentItems as item, index (index)}
-            <li
-                use:createItemObserver(index)
-                class='scroll-animate'
-                data-item-active={visibleItems.has(index) || undefined}
-                style={`--scroll-animate-delay: ${animationDelay(index + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
-            >
-                <SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
-                    {@const Component = item.component}
-                    <Component />
-                </SvgViewport>
-                <span>{item.text}</span>
-            </li>
-        {/each}
-    </ul>
+	<div
+		use:createTitleObserver
+		class="scroll-animate"
+		data-item-active={titleVisible || undefined}
+		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+	>
+		<Title eyebrow="Cómo vienen" big="EQUIPADOS" />
+	</div>
+	<ul class="equip-list" role="list">
+		{#each equipmentItems as item, index (index)}
+			<li
+				use:createItemObserver(index)
+				class="scroll-animate"
+				data-item-active={visibleItems.has(index) || undefined}
+				style={`--scroll-animate-delay: ${animationDelay(index + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
+			>
+				<SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
+					{@const Component = item.component}
+					<Component />
+				</SvgViewport>
+				<span>{item.text}</span>
+			</li>
+		{/each}
+	</ul>
 </section>
 
 <style>
@@ -181,7 +221,7 @@
 		max-width: var(--max);
 		margin: 0 auto;
 	}
-	
+
 	.equip {
 		/* Layout */
 		margin: 1.625rem 0;
@@ -228,10 +268,10 @@
 	.equip-list li span {
 		/* Positioning */
 		position: relative;
-		
+
 		/* Layout */
 		padding: 0.75rem 0;
-		
+
 		/* Typography */
 		font-size: 1.75rem;
 		line-height: 1.4;
@@ -244,13 +284,13 @@
 		position: absolute;
 		left: 0;
 		right: 0;
-		
+
 		/* Layout */
 		height: 0.25rem;
-		
+
 		/* Box/Visual */
 		background-color: var(--color-border-default);
-		
+
 		/* Misc/Overrides */
 		content: '';
 	}
@@ -264,5 +304,4 @@
 		/* Positioning */
 		bottom: 0;
 	}
-
 </style>

@@ -70,7 +70,10 @@
 	let scriptLoaded = $state(false);
 	let map: google.maps.Map | null = null;
 	let mapReady = $state(false);
-	const markerInstances = new Map<string, google.maps.Marker | google.maps.marker.AdvancedMarkerElement>();
+	const markerInstances = new Map<
+		string,
+		google.maps.Marker | google.maps.marker.AdvancedMarkerElement
+	>();
 	const infoWindowInstances = new Map<string, google.maps.InfoWindow>();
 	let snippetContainers = $state<Record<string, HTMLElement>>({});
 	let markerSnippetContainers = $state<Record<string, HTMLElement>>({});
@@ -79,16 +82,24 @@
 	let syncGeneration = 0;
 	let lastMarkerSignature = '';
 	let lastMarkerCount = 0;
-	let markerFillColor = $state(readCssColor('--color-accent-primary', 'var(--color-accent-primary)'));
+	let markerFillColor = $state(
+		readCssColor('--color-accent-primary', 'var(--color-accent-primary)')
+	);
 	let markerStrokeColor = $state(readCssColor('--color-text-inverse', 'var(--color-text-inverse)'));
 
 	const ensureMarkerColors = () => {
 		if (!browser) return;
 		if (!markerFillColor || markerFillColor.startsWith('var(')) {
-			markerFillColor = readCssColor('--color-accent-primary', markerFillColor || 'var(--color-accent-primary)');
+			markerFillColor = readCssColor(
+				'--color-accent-primary',
+				markerFillColor || 'var(--color-accent-primary)'
+			);
 		}
 		if (!markerStrokeColor || markerStrokeColor.startsWith('var(')) {
-			markerStrokeColor = readCssColor('--color-text-inverse', markerStrokeColor || 'var(--color-text-inverse)');
+			markerStrokeColor = readCssColor(
+				'--color-text-inverse',
+				markerStrokeColor || 'var(--color-text-inverse)'
+			);
 		}
 	};
 
@@ -180,9 +191,12 @@
 		}
 	}
 
-	function createMarker(markerData: GenericMarker, content?: HTMLElement): google.maps.Marker | google.maps.marker.AdvancedMarkerElement {
+	function createMarker(
+		markerData: GenericMarker,
+		content?: HTMLElement
+	): google.maps.Marker | google.maps.marker.AdvancedMarkerElement {
 		if (!map) throw new Error('Map not initialized');
-		
+
 		ensureMarkerColors();
 		let marker: google.maps.Marker | google.maps.marker.AdvancedMarkerElement;
 
@@ -221,7 +235,11 @@
 		return marker;
 	}
 
-	function updateMarker(marker: google.maps.Marker | google.maps.marker.AdvancedMarkerElement, markerData: GenericMarker, content?: HTMLElement) {
+	function updateMarker(
+		marker: google.maps.Marker | google.maps.marker.AdvancedMarkerElement,
+		markerData: GenericMarker,
+		content?: HTMLElement
+	) {
 		const AdvancedMarker = window.google?.maps?.marker?.AdvancedMarkerElement;
 
 		if (AdvancedMarker && marker instanceof AdvancedMarker) {
@@ -557,10 +575,10 @@
 </script>
 
 <!-- Hidden containers for snippet rendering -->
-<div style='display: none;'>
+<div style="display: none;">
 	{#if markerElement}
 		{#each markers as marker (marker.id)}
-			<div bind:this={markerSnippetContainers[marker.id]} id='marker-{marker.id}'>
+			<div bind:this={markerSnippetContainers[marker.id]} id="marker-{marker.id}">
 				{@render markerElement(marker)}
 			</div>
 		{/each}
@@ -568,7 +586,7 @@
 
 	{#if markerInfoWindow}
 		{#each markers as marker (marker.id)}
-			<div bind:this={snippetContainers[marker.id]} id='info-window-{marker.id}'>
+			<div bind:this={snippetContainers[marker.id]} id="info-window-{marker.id}">
 				{@render markerInfoWindow(marker)}
 			</div>
 		{/each}
@@ -577,10 +595,10 @@
 
 <div
 	bind:this={mapElement}
-	class='google-map {containerClass}'
-	style='height: {height}; min-height: {height}; width: {width}; min-width: {width};'
-	role='img'
-	aria-label='Interactive map'
+	class="google-map {containerClass}"
+	style="height: {height}; min-height: {height}; width: {width}; min-width: {width};"
+	role="img"
+	aria-label="Interactive map"
 ></div>
 
 <style>
@@ -589,7 +607,7 @@
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
-		
+
 		/* Box/Visual */
 		background-color: var(--color-neutral-275);
 		border-radius: 0.5rem;

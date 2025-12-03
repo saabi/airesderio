@@ -23,14 +23,7 @@
 	}: Props = $props();
 </script>
 
-<svg
-	width={width}
-	height={height}
-	viewBox={viewBox}
-	class={className}
-	aria-hidden="true"
-	focusable="false"
->
+<svg {width} {height} {viewBox} class={className} aria-hidden="true" focusable="false">
 	{#if children}
 		{@render children()}
 	{/if}
@@ -43,4 +36,3 @@
 		vertical-align: middle;
 	}
 </style>
-

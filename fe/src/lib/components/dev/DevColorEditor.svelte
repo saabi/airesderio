@@ -231,9 +231,7 @@
 
 	async function copyToClipboard() {
 		const cssBlock =
-			':root {\n' +
-			tokens.map((token) => `  ${token.name}: ${token.value};`).join('\n') +
-			'\n}';
+			':root {\n' + tokens.map((token) => `  ${token.name}: ${token.value};`).join('\n') + '\n}';
 
 		try {
 			await navigator.clipboard.writeText(cssBlock);
@@ -253,34 +251,34 @@
 </script>
 
 {#if open}
-	<div class='overlay' role='presentation' onclick={closeEditor}></div>
+	<div class="overlay" role="presentation" onclick={closeEditor}></div>
 {/if}
 
 <aside class:visible={open}>
-	<header class='panel-header'>
+	<header class="panel-header">
 		<h2>Color Tokens</h2>
-		<button class='close' onclick={closeEditor} aria-label='Close color editor'>&times;</button>
+		<button class="close" onclick={closeEditor} aria-label="Close color editor">&times;</button>
 	</header>
 
 	{#if loading}
-		<p class='status'>Scanning styles...</p>
+		<p class="status">Scanning styles...</p>
 	{:else if errorMessage}
-		<p class='status error'>{errorMessage}</p>
+		<p class="status error">{errorMessage}</p>
 	{:else if tokens.length === 0}
-		<p class='status'>No color variables found.</p>
+		<p class="status">No color variables found.</p>
 	{:else}
 		<ul>
 			{#each tokens as token (token.name)}
 				<li>
-					<div class='label'>
-						<span class='row'>
-							<span class='swatch' style={`background: ${token.value}`}></span>
-							<span class='name'>{token.displayName}</span>
+					<div class="label">
+						<span class="row">
+							<span class="swatch" style={`background: ${token.value}`}></span>
+							<span class="name">{token.displayName}</span>
 						</span>
-						<span class='code'>{token.name}</span>
+						<span class="code">{token.name}</span>
 					</div>
 					<input
-						type='color'
+						type="color"
 						value={token.value}
 						oninput={(event) => handleColorChange(token, event.currentTarget.value)}
 					/>
@@ -289,8 +287,8 @@
 		</ul>
 	{/if}
 
-	<footer class='panel-footer'>
-		<button class='copy' onclick={copyToClipboard} disabled={tokens.length === 0}>
+	<footer class="panel-footer">
+		<button class="copy" onclick={copyToClipboard} disabled={tokens.length === 0}>
 			{#if copyStatus === 'copied'}
 				Copied!
 			{:else if copyStatus === 'error'}
@@ -309,7 +307,7 @@
 		top: 0;
 		right: -360px;
 		z-index: 2000;
-		
+
 		/* Layout */
 		display: flex;
 		flex-direction: column;
@@ -317,15 +315,15 @@
 		height: 100vh;
 		padding: 1rem;
 		gap: 1rem;
-		
+
 		/* Box/Visual */
 		background: var(--color-bg-elevated, #111);
 		border-left: 1px solid rgba(255, 255, 255, 0.1);
 		box-shadow: -0.5rem 0 1.5rem rgba(0, 0, 0, 0.3);
-		
+
 		/* Typography */
 		color: var(--color-text-default, #fff);
-		
+
 		/* Effects & Motion */
 		transition: right 0.3s ease;
 	}
@@ -340,7 +338,7 @@
 		position: fixed;
 		inset: 0;
 		z-index: 1999;
-		
+
 		/* Box/Visual */
 		background: rgba(0, 0, 0, 0.25);
 	}
@@ -356,7 +354,7 @@
 	.panel-header h2 {
 		/* Layout */
 		margin: 0;
-		
+
 		/* Typography */
 		font-size: 1.1rem;
 	}
@@ -364,16 +362,16 @@
 	.close {
 		/* Layout */
 		padding: 0.25rem 0.5rem;
-		
+
 		/* Box/Visual */
 		background: transparent;
 		border: none;
-		
+
 		/* Typography */
 		font-size: 1.5rem;
 		line-height: 1;
 		color: inherit;
-		
+
 		/* Misc/Overrides */
 		cursor: pointer;
 	}
@@ -381,7 +379,7 @@
 	.status {
 		/* Layout */
 		margin: 0;
-		
+
 		/* Typography */
 		font-size: 0.95rem;
 		color: var(--color-text-muted, #ccc);
@@ -411,7 +409,7 @@
 		justify-content: space-between;
 		gap: 0.75rem;
 		padding: 0.5rem 0.75rem;
-		
+
 		/* Box/Visual */
 		background: rgba(0, 0, 0, 0.15);
 		border-radius: 0.5rem;
@@ -437,7 +435,7 @@
 		display: inline-block;
 		width: 24px;
 		height: 24px;
-		
+
 		/* Box/Visual */
 		border: 1px solid rgba(255, 255, 255, 0.3);
 		border-radius: 0.25rem;
@@ -448,7 +446,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
-		
+
 		/* Typography */
 		font-weight: 600;
 	}
@@ -465,11 +463,11 @@
 		width: 42px;
 		height: 32px;
 		padding: 0;
-		
+
 		/* Box/Visual */
 		border: none;
 		background: transparent;
-		
+
 		/* Misc/Overrides */
 		cursor: pointer;
 	}
@@ -478,7 +476,7 @@
 		/* Layout */
 		display: flex;
 		padding-top: 0.5rem;
-		
+
 		/* Box/Visual */
 		border-top: 1px solid rgba(255, 255, 255, 0.1);
 	}
@@ -487,27 +485,29 @@
 		/* Layout */
 		width: 100%;
 		padding: 0.75rem 1rem;
-		
+
 		/* Box/Visual */
 		border: none;
 		border-radius: 0.5rem;
 		background: var(--color-accent-secondary, #fff);
-		
+
 		/* Typography */
 		font-weight: 600;
 		color: var(--color-bg-canvas, #111);
-		
+
 		/* Misc/Overrides */
 		cursor: pointer;
-		
+
 		/* Effects & Motion */
-		transition: transform 0.15s ease, box-shadow 0.15s ease;
+		transition:
+			transform 0.15s ease,
+			box-shadow 0.15s ease;
 	}
 
 	.copy:disabled {
 		/* Box/Visual */
 		opacity: 0.6;
-		
+
 		/* Misc/Overrides */
 		cursor: not-allowed;
 	}
@@ -515,7 +515,7 @@
 	.copy:not(:disabled):hover {
 		/* Box/Visual */
 		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-		
+
 		/* Effects & Motion */
 		transform: translateY(-1px);
 	}

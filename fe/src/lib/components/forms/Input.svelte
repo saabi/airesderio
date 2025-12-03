@@ -61,11 +61,11 @@
 	{placeholder}
 	{required}
 	{disabled}
-	class='form-input {className}'
-	oninput={oninput}
-	onkeydown={onkeydown}
-	onchange={onchange}
-	onblur={onblur}
+	class="form-input {className}"
+	{oninput}
+	{onkeydown}
+	{onchange}
+	{onblur}
 	{inputmode}
 	aria-label={ariaLabel}
 	aria-invalid={ariaInvalid}
@@ -77,13 +77,13 @@
 		width: 100%;
 		min-width: 0;
 		padding: 0.625rem;
-		
+
 		/* Box/Visual */
 		border: 1px solid var(--color-border-default);
 		border-radius: 0.25rem;
 		background-color: field;
 		outline: none;
-		
+
 		/* Typography */
 		color: text;
 	}
@@ -103,9 +103,8 @@
 	.form-input:disabled {
 		/* Box/Visual */
 		opacity: 0.6;
-		
+
 		/* Misc/Overrides */
 		cursor: not-allowed;
 	}
 </style>
-

@@ -852,7 +852,7 @@
 			/* Layout */
 			max-width: 100%;
 		}
-		
+
 		.map-container {
 			/* Layout */
 			grid-template-columns: 1fr;

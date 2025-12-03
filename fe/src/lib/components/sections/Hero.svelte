@@ -16,9 +16,9 @@
 		'2_DB_EXTERIOR_01 (8).jpg',
 		'3_DB_EXTERIOR_01 (1).jpg'
 	];
-	
-	const CAROUSEL_IMAGES = carouselImageFiles.map(file => 
-		`/carrousel-hero/${encodeURIComponent(file)}`
+
+	const CAROUSEL_IMAGES = carouselImageFiles.map(
+		(file) => `/carrousel-hero/${encodeURIComponent(file)}`
 	);
 </script>
 
@@ -33,22 +33,22 @@
 </script>
 
 <section
-	id='top'
-	class='hero'
-	role='banner'
-	aria-labelledby='hero-heading'
+	id="top"
+	class="hero"
+	role="banner"
+	aria-labelledby="hero-heading"
 	use:heroObserver
 	data-section-active={$heroVisible}
 >
 	<VisuallyHidden id="hero-heading" tag="h2">Presentación y Contacto - Aires de Río</VisuallyHidden>
 	<div
-		class='hero-carousel scroll-animate'
+		class="hero-carousel scroll-animate"
 		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<Carousel
 			images={CAROUSEL_IMAGES}
 			interval={5000}
-			ariaLabel='Carrusel de imágenes del edificio'
+			ariaLabel="Carrusel de imágenes del edificio"
 			imageAriaLabel={(index) => `Fachada del edificio Aires de Río - Imagen ${index + 1}`}
 		/>
 	</div>
@@ -63,7 +63,7 @@
 	.hero {
 		/* Positioning */
 		position: relative;
-		
+
 		/* Layout */
 		display: grid;
 		grid-template-columns: 1fr;
@@ -78,10 +78,9 @@
 	.hero-carousel {
 		/* Positioning */
 		position: absolute;
-		
+
 		/* Layout */
 		width: 100%;
 		height: 100%;
 	}
-
 </style>

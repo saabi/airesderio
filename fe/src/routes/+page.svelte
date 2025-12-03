@@ -2,7 +2,7 @@
 	// ===== IMPORTS =====
 	// SvelteKit
 	import { page } from '$app/stores';
-	
+
 	// Local components
 	import ContactSection from '$lib/components/sections/ContactSection.svelte';
 	import Equipment from '$lib/components/sections/Equipment.svelte';
@@ -12,13 +12,12 @@
 	import Interior from '$lib/components/sections/Interior.svelte';
 	import Intro from '$lib/components/sections/Intro.svelte';
 	import Location from '$lib/components/sections/Location.svelte';
-	
+
 	// ===== STATIC CONSTANTS =====
 	const DEFAULT_SITE_URL = 'https://airesderio.com';
 </script>
 
 <script lang="ts">
-
 	// ===== DERIVED =====
 	// Base URL for the site
 	const siteUrl = import.meta.env.PUBLIC_SITE_URL || DEFAULT_SITE_URL;
@@ -118,11 +117,11 @@
 <main>
 	<Hero />
 	<FloatingCTA />
-	
+
 	<div class="container">
 		<Intro />
 	</div>
-	<Location jsonUrl='/lugares/lugares-direcciones.json' showPlaceMarkers={true} />
+	<Location jsonUrl="/lugares/lugares-direcciones.json" showPlaceMarkers={true} />
 	<div class="container">
 		<Interior />
 		<Equipment />

@@ -52,4 +52,3 @@ Object.defineProperty(window, 'localStorage', {
 beforeEach(() => {
 	localStorage.clear();
 });
-

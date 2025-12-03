@@ -8,7 +8,12 @@
 
 <script lang="ts">
 	// ===== IMPORTS =====
-	import { ANIMATION, animationDelay, animationDuration, animationOffset } from '$lib/constants/animation';
+	import {
+		ANIMATION,
+		animationDelay,
+		animationDuration,
+		animationOffset
+	} from '$lib/constants/animation';
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: contactObserver, visible: contactVisible } = createSectionObserver('contact', {
@@ -16,19 +21,19 @@
 	});
 </script>
 
-<section 
-	id='contacto' 
-	class='section' 
-	aria-labelledby='contact-heading'
+<section
+	id="contacto"
+	class="section"
+	aria-labelledby="contact-heading"
 	use:contactObserver
 	data-section-active={$contactVisible}
 >
-	<div class='container'>
-		<div 
-			class='form scroll-animate'
+	<div class="container">
+		<div
+			class="form scroll-animate"
 			style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 		>
-			<h2 id='contact-heading'>Contacto</h2>
+			<h2 id="contact-heading">Contacto</h2>
 			<p>Comunicate con nosotros</p>
 			<ContactForm />
 		</div>
@@ -42,7 +47,7 @@
 				style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 			/>
 			<div class="logo-wrapper">
-				<AiresDeRioLogo class="logo" theme={$theme}/>
+				<AiresDeRioLogo class="logo" theme={$theme} />
 			</div>
 		</div>
 	</div>
@@ -60,7 +65,7 @@
 		/* Layout */
 		margin: 2rem 0;
 		padding: 2rem 0;
-		
+
 		/* Box/Visual */
 		border-top: 1px solid var(--color-border-subtle);
 	}
@@ -86,7 +91,7 @@
 	.form h2 {
 		/* Layout */
 		margin: 0 0 0.5rem;
-		
+
 		/* Typography */
 		font-size: 1.5em;
 		font-weight: 600;
@@ -97,7 +102,7 @@
 	.form p {
 		/* Layout */
 		margin: 0 0 1.5rem;
-		
+
 		/* Typography */
 		font-size: 0.95em;
 		color: var(--color-text-secondary);

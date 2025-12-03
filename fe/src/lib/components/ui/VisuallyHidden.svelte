@@ -38,7 +38,7 @@
 	.visually-hidden {
 		/* Positioning */
 		position: absolute !important;
-		
+
 		/* Layout */
 		width: 1px;
 		height: 1px;
@@ -50,4 +50,3 @@
 		border: 0;
 	}
 </style>
-

@@ -104,6 +104,7 @@ GOOGLE_MAPS_API_KEY=your_api_key npm run sync:geo
 ```
 
 Options:
+
 - `--dry-run` - Compute updates without writing to the JSON file
 - `--place=cat/id` - Only process a specific place (e.g. `transporte/terminal_omnibus`)
 - `--ref-lat=value` - Override reference latitude for distance calculations

@@ -21,7 +21,7 @@
 		/* Layout */
 		display: inline-block;
 		margin: 4rem 0 2rem 0;
-		
+
 		/* Typography */
 		font-size: 1.7rem;
 	}
@@ -29,7 +29,7 @@
 	.title .eyebrow {
 		/* Layout */
 		display: block;
-		
+
 		/* Typography */
 		letter-spacing: 0.18em;
 		color: var(--color-text-secondary);
@@ -42,7 +42,7 @@
 		display: block;
 		position: relative;
 		padding-bottom: 0.5rem;
-		
+
 		/* Typography */
 		font-size: 1.6em;
 		font-weight: 800;

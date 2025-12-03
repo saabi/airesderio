@@ -92,4 +92,3 @@ export interface MainBuilding {
 	placeId: string;
 	place: Place;
 }
-
