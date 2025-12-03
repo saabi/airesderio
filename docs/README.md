@@ -151,7 +151,7 @@ Design proposals, mockups, and visual assets for the project.
 - **#018**: ✅ Complete Place Photos Carousel Implementation (Functionality, UX) - **Complete**
 - **#019**: ✅ Refactor Places Data Structure (Data Architecture, Code Quality) - **Complete**
 - **#020**: ✅ Add Photos with Descriptions to Floor Plan Section (Content, UX) - **Complete**
-- **#021**: ⏸️ Select Typeface System for Titles and Body Text (Design, Branding) - **Not Started** - *Medium Priority*
+- **#021**: ✅ Select Typeface System for Titles and Body Text (Design, Branding) - **Complete**
 - **#007**: ⏸️ Image Optimization (Performance) - **Pending** - *Depends on #011*
 
 ### Low Priority
