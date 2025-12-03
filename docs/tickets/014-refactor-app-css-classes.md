@@ -244,15 +244,7 @@ body.nav-open {
 
 ## Implementation Steps
 
-### Phase 1: Category Classes
-1. Review `CategorySelector.svelte` usage of category classes
-2. Move `.category-color`, `.category-border`, `.category-text` to component
-3. Replace category modifier classes with inline `style` attributes
-4. Update `toCategoryClass()` function or remove if no longer needed
-5. Remove category classes from `app.css`
-6. Test category selector functionality
-
-### Phase 2: Scroll Animation
+### Phase 1: Scroll Animation
 1. Decide on approach: componentize or keep as utility
 2. If componentizing:
    - Create `ScrollAnimate.svelte` component
