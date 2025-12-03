@@ -226,7 +226,12 @@ A detailed step-by-step implementation plan is available in [`014-implementation
 - **Ticket #016** - Scroll animation refactoring (separate ticket for complex scroll-animate class)
 
 ## Status
-**Pending** - Not started
+**Complete** ✅ - All three utility classes have been refactored:
+- `.wrap` → Moved to `Footer.svelte` as `.footer-wrap`
+- `.skip-link` → Componentized as `SkipLink.svelte` component
+- `body.nav-open` → Moved to ticket #017 and implemented via `menuStore`
+
+All classes have been removed from `app.css` and functionality is maintained.
 
 ## Notes
 - This refactoring improves component encapsulation and reduces global CSS

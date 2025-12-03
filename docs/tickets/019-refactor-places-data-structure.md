@@ -1,7 +1,7 @@
 # Ticket #019: Refactor Places Data Structure
 
 ## Status
-**Pending**
+**Complete** ✅ - Places data structure has been refactored. Created `fe/static/places/places.json` with simple structure matching directory names. Updated `Location.svelte` to use the new JSON structure. Removed `PATH_ID_TO_PLACE_DATA` mapping. Simplified `openGalleryForCurrentPlace()` to use pathId directly. Updated `PhotoCarousel` to use `PlaceMetadata` type. Map path ID mismatch fixed (`parque` → `parqueaguirre`). Gallery and home buttons are disabled when no place is selected.
 
 ## Priority
 **High**

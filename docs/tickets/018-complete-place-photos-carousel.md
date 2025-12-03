@@ -1,7 +1,7 @@
 # Ticket #018: Complete Place Photos Carousel Implementation
 
 ## Status
-**Pending**
+**Complete** ✅ - PhotoCarousel component is now used for displaying place photos. The placeholder gallery carousel has been removed. The gallery button in map navigation is connected to `openGalleryForCurrentPlace()` which opens PhotoCarousel with the correct photos for the selected place. Photo paths use `/places/${placeId}/${filename}` structure matching the directory organization.
 
 ## Priority
 **Medium**

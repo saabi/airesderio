@@ -105,7 +105,7 @@ None
 None
 
 ## Status
-**Pending** - Not started
+**Complete** ✅ - Header component has been decoupled from `document.body` using a Svelte store (`menuStore`). The store manages the menu's open state and applies the `nav-open` class to `document.body` via a subscription. The `Header.svelte` component now uses `menuStore.toggle()`, `menuStore.open()`, and `menuStore.close()` methods instead of directly manipulating the DOM. The store is initialized in `+layout.svelte` and cleaned up on destroy.
 
 ## Notes
 - This refactoring improves code quality and maintainability
