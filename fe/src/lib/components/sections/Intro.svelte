@@ -50,7 +50,7 @@
 		</p>
 	</div>
 	<aside
-		class='intro__kpis scroll-animate'
+		class='kpis scroll-animate'
 		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 		aria-labelledby='kpis-heading'
 	>
@@ -103,7 +103,7 @@
 		margin-top: 0;
 	}
 
-	.intro__kpis {
+	.kpis {
 		/* Layout */
 		display: grid;
 		gap: 0.625rem;
@@ -113,12 +113,12 @@
 		color: var(--color-ink);
 	}
 
-	.intro__kpis dl {
+	.kpis dl {
 		/* Layout */
 		display: contents;	
 	}
 
-	.intro__kpis dt {
+	.kpis dt {
 		/* Layout */
 		display: contents;
 	}

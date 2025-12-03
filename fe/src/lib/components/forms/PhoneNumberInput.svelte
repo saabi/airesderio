@@ -294,19 +294,19 @@
 	}
 </script>
 
-<div class="phone-input-group">
+<div class="group">
 	<label for={id}>Número de teléfono</label>
-	<p class="phone-input-hint">Con código de área. Ej: +54 3512334353</p>
+	<p class="hint">Con código de área. Ej: +54 3512334353</p>
 	{#if showValidationError}
-		<p class="phone-validation-error" role="alert">Número de teléfono inválido</p>
+		<p class="error" role="alert">Número de teléfono inválido</p>
 	{/if}
-	<div class="phone-input-container">
+	<div class="container">
 		<Select
 			id={`${id}-country`}
 			name={`${name}-country`}
 			value={selectedCountry.code}
 			onchange={handleCountryChange}
-			class="phone-country-select"
+			class="country-select"
 		>
 			{#snippet children()}
 				{#each countries as country (country.code)}
@@ -314,11 +314,11 @@
 				{/each}
 			{/snippet}
 		</Select>
-		<div class="phone-number-wrapper">
+		<div class="number-wrapper">
 			{#if selectedCountry.code === 'OTHER'}
 				<input
 					type="text"
-					class="phone-dial-code-input"
+					class="dial-code-input"
 					bind:this={customDialCodeRef}
 					value={customDialCode}
 					oninput={handleCustomDialCodeInput}
@@ -326,11 +326,11 @@
 					aria-label="Country code"
 				/>
 			{:else}
-				<span class="phone-dial-code">{selectedCountry.dialCode}</span>
+				<span class="dial-code">{selectedCountry.dialCode}</span>
 			{/if}
 			<input
 				type="tel"
-				class="phone-number-input"
+				class="number-input"
 				class:invalid={showValidationError}
 				bind:this={phoneInputRef}
 				value={formattedPhoneNumber}
@@ -352,12 +352,12 @@
 </div>
 
 <style>
-	.phone-input-group {
+	.group {
 		/* Layout */
 		margin-bottom: 0.75rem;
 	}
 
-	.phone-input-group label {
+	.group label {
 		/* Layout */
 		display: block;
 		margin-bottom: 0.25rem;
@@ -368,7 +368,7 @@
 		color: var(--color-text-primary);
 	}
 
-	.phone-input-hint {
+	.hint {
 		/* Layout */
 		margin: 0 0 0.5rem;
 
@@ -377,7 +377,7 @@
 		color: var(--color-text-primary);
 	}
 
-	.phone-input-container {
+	.container {
 		/* Layout */
 		display: flex;
 		gap: 0.5rem;
@@ -386,7 +386,7 @@
 
 	/* Override Select component width for phone number country selector */
 	/* Using !important is necessary here to override scoped component styles */
-	:global(.phone-country-select.select-input) {
+	:global(.country-select.select-input) {
 		/* Layout */
 		width: auto !important;
 		flex: 0 0 auto;
@@ -394,7 +394,7 @@
 		max-width: 200px;
 	}
 
-	.phone-number-wrapper {
+	.number-wrapper {
 		/* Layout */
 		display: flex;
 		align-items: center;
@@ -410,15 +410,15 @@
 		color: text;
 	}
 
-	.phone-number-wrapper:has(.phone-number-input:focus-visible),
-	.phone-number-wrapper:has(.phone-dial-code-input:focus-visible) {
+	.number-wrapper:has(.number-input:focus-visible),
+	.number-wrapper:has(.dial-code-input:focus-visible) {
 		/* Box/Visual */
 		border-color: var(--color-border-strong);
 		outline: 1px solid var(--color-border-strong);
 		outline-offset: 0;
 	}
 
-	.phone-dial-code {
+	.dial-code {
 		/* Layout */
 		padding: 0.625rem 0.5rem;
 		flex-shrink: 0;
@@ -436,7 +436,7 @@
 		pointer-events: none;
 	}
 
-	.phone-dial-code-input {
+	.dial-code-input {
 		/* Layout */
 		padding: 0.625rem 0.5rem;
 		flex-shrink: 0;
@@ -454,7 +454,7 @@
 		color: var(--color-text-primary);
 	}
 
-	.phone-number-input {
+	.number-input {
 		/* Layout */
 		width: 100%;
 		padding: 0.625rem;
@@ -469,12 +469,12 @@
 		color: text;
 	}
 
-	.phone-number-input::placeholder {
+	.number-input::placeholder {
 		/* Typography */
 		color: var(--color-text-tertiary);
 	}
 
-	.phone-validation-error {
+	.error {
 		/* Layout */
 		margin: 0.25rem 0 0;
 		padding: 0;
@@ -484,7 +484,7 @@
 		color: var(--color-danger-strong);
 	}
 
-	.phone-number-wrapper:has(.phone-number-input.invalid) {
+	.number-wrapper:has(.number-input.invalid) {
 		/* Box/Visual */
 		border-color: var(--color-danger);
 	}

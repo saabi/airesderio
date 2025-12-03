@@ -160,7 +160,7 @@
 </script>
 
 <header class='site'>
-	<div class='site__bar'>
+	<div class='bar'>
 		<AiresDeRioLogo
 			class="logo"
 			loading="eager"
@@ -173,7 +173,7 @@
 			class:is-open={isMenuOpen}
 			aria-label='Navegación principal'
 		>
-			<ul class='nav__desktop'>
+			<ul class='desktop-nav'>
 				{#each navLinks as link (link.id)}
 					<li>
 						<a 
@@ -290,7 +290,7 @@
 		box-shadow: 0 0.125rem 0.375rem var(--shadow-subtle);
 	}
 
-	.site__bar {
+	.bar {
 		/* Layout */
 		display: flex;
 		align-items: center;
@@ -301,12 +301,12 @@
 		background: var(--ref-neutral-950);
 	}
 
-	:global(:root[data-theme='dark']) .site__bar {
+	:global(:root[data-theme='dark']) .bar {
 		/* Box/Visual */
 		background: var(--color-bg-elevated);
 	}
 
-	.nav__desktop {
+	.desktop-nav {
 		/* Layout */
 		display: flex;
 		gap: 1.125rem;
@@ -315,7 +315,7 @@
 		padding: 0;
 	}
 
-	.nav__desktop a {
+	.desktop-nav a {
 		/* Layout */
 		padding: 0.375rem 0.125rem;
 		
@@ -329,18 +329,18 @@
 		color: var(--color-text-inverse);
 	}
 
-	:global(:root[data-theme='dark']) .nav__desktop a {
+	:global(:root[data-theme='dark']) .desktop-nav a {
 		/* Typography */
 		color: var(--color-accent-primary-text);
 	}
 
-	.nav__desktop a:hover {
+	.desktop-nav a:hover {
 		/* Box/Visual */
 		border-color: var(--color-accent-border);
 	}
 
-	.nav__desktop a[aria-current='page'],
-	.nav__desktop a.active {
+	.desktop-nav a[aria-current='page'],
+	.desktop-nav a.active {
 		/* Box/Visual */
 		border-color: var(--color-accent-secondary);
 	}
@@ -553,14 +553,14 @@
 			transform: translateY(-0.5rem) rotate(-45deg);
 		}
 
-		.nav__desktop {
+		.desktop-nav {
 			/* Layout */
 			flex-direction: column;
 			align-items: center;
 			gap: 1.5rem;
 		}
 
-		.nav__desktop a {
+		.desktop-nav a {
 			/* Typography */
 			font-size: 1.5rem;
 		}

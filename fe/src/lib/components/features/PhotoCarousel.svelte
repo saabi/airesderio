@@ -68,26 +68,26 @@
 
 {#if visible && place && photos.length > 0}
 	<div 
-		class='photo-carousel-overlay' 
+		class='overlay' 
 		role='dialog' 
 		aria-modal='true'
 	>
 		<button 
 			type='button'
-			class='photo-carousel-overlay-backdrop'
+			class='backdrop'
 			aria-label='Cerrar galería'
 			onclick={onClose}
 		></button>
 		<div 
-			class='photo-carousel-modal' 
+			class='modal' 
 			role='document'
 		>
-			<div class='photo-carousel-header'>
+			<div class='header'>
 				<h3>{place.nombre}</h3>
 				<button class='close-button' onclick={onClose} aria-label='Cerrar galería de fotos'>×</button>
 			</div>
 			
-			<div class='photo-carousel-content'>
+			<div class='content'>
 				<div class='photo-container'>
 					<img 
 						src={photos[currentIndex]} 
@@ -126,7 +126,7 @@
 
 <style>
 	/* Photo Carousel Styles */
-	.photo-carousel-overlay {
+	.overlay {
 		/* Positioning */
 		position: fixed;
 		top: 0;
@@ -144,7 +144,7 @@
 		backdrop-filter: blur(4px);
 	}
 
-	.photo-carousel-overlay-backdrop {
+	.backdrop {
 		/* Positioning */
 		position: absolute;
 		top: 0;
@@ -166,7 +166,7 @@
 		cursor: pointer;
 	}
 
-	.photo-carousel-modal {
+	.modal {
 		/* Positioning */
 		position: relative;
 		z-index: 2;
@@ -183,7 +183,7 @@
 		box-shadow: 0 20px 25px -5px var(--shadow-soft);
 	}
 
-	.photo-carousel-header {
+	.header {
 		/* Layout */
 		display: flex;
 		justify-content: space-between;
@@ -195,7 +195,7 @@
 		background: var(--color-neutral-125);
 	}
 
-	.photo-carousel-header h3 {
+	.header h3 {
 		/* Layout */
 		margin: 0;
 		
@@ -231,7 +231,7 @@
 		color: var(--color-neutral-800);
 	}
 
-	.photo-carousel-content {
+	.content {
 		/* Layout */
 		padding: 1.5rem;
 	}
@@ -366,7 +366,7 @@
 
 	/* Mobile responsiveness */
 	@media (max-width: 640px) {
-		.photo-carousel-modal {
+		.modal {
 			/* Layout */
 			width: 95vw;
 			max-height: 95vh;
@@ -377,12 +377,12 @@
 			height: 300px;
 		}
 
-		.photo-carousel-header {
+		.header {
 			/* Layout */
 			padding: 0.75rem 1rem;
 		}
 
-		.photo-carousel-content {
+		.content {
 			/* Layout */
 			padding: 1rem;
 		}

@@ -352,7 +352,7 @@
 				de cercanía a solo una cuadra.
 			</p>
 			<div class="map-navigation">
-				<div class="map-navigation__row">
+				<div class="navigation-row">
 					<button
 						class="nav-button nav-button--prev"
 						onclick={() => mapComponent?.prev()}
@@ -376,7 +376,7 @@
 							/>
 						</svg>
 					</button>
-					<div class="map-navigation__center">
+					<div class="navigation-center">
 						<button
 							class="nav-button nav-button--up"
 							onclick={() => mapComponent?.reset()}
@@ -568,10 +568,10 @@
 		aria-label="Cerrar galería"
 	>
 		<div class="gallery-carousel" role="dialog" aria-modal="true" aria-labelledby="gallery-title">
-			<div class="gallery-carousel__header">
+			<div class="gallery-header">
 				<h3 id="gallery-title">Galería</h3>
 				<button
-					class="gallery-carousel__close"
+					class="gallery-close"
 					onclick={() => (galleryCarouselVisible = false)}
 					aria-label="Cerrar galería"
 					type="button"
@@ -593,7 +593,7 @@
 					</svg>
 				</button>
 			</div>
-			<div class="gallery-carousel__content">
+			<div class="gallery-content">
 				<p>Galería de imágenes (placeholder)</p>
 			</div>
 		</div>
@@ -678,7 +678,7 @@
 		margin-top: 1.5rem;
 	}
 
-	.map-navigation__row {
+	.navigation-row {
 		/* Layout */
 		display: flex;
 		align-items: center;
@@ -686,7 +686,7 @@
 		gap: 0.75rem;
 	}
 
-	.map-navigation__center {
+	.navigation-center {
 		/* Layout */
 		display: flex;
 		flex-direction: column;
@@ -810,7 +810,7 @@
 		}
 	}
 
-	.gallery-carousel__header {
+	.gallery-header {
 		/* Layout */
 		display: flex;
 		align-items: center;
@@ -818,7 +818,7 @@
 		margin-bottom: 1.5rem;
 	}
 
-	.gallery-carousel__header h3 {
+	.gallery-header h3 {
 		/* Layout */
 		margin: 0;
 
@@ -828,7 +828,7 @@
 		color: var(--color-text-on-light);
 	}
 
-	.gallery-carousel__close {
+	.gallery-close {
 		/* Layout */
 		display: flex;
 		align-items: center;
@@ -850,12 +850,12 @@
 		transition: background-color 0.2s ease;
 	}
 
-	.gallery-carousel__close:hover {
+	.gallery-close:hover {
 		/* Box/Visual */
 		background: var(--color-bg-muted);
 	}
 
-	.gallery-carousel__content {
+	.gallery-content {
 		/* Layout */
 		flex: 1;
 		display: flex;
