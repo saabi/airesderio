@@ -35,7 +35,10 @@ docs/
     ├── 016-refactor-scroll-animate.md
     ├── 017-decouple-header-from-document-body.md
     ├── 018-complete-place-photos-carousel.md
-    └── 019-refactor-places-data-structure.md
+    ├── 019-refactor-places-data-structure.md
+    ├── 020-add-floor-plan-photos.md
+    ├── 021-select-typeface-system.md
+    └── 022-componentize-carousel-dots.md
 ```
 
 ## Quick Start
@@ -152,6 +155,7 @@ Design proposals, mockups, and visual assets for the project.
 - **#019**: ✅ Refactor Places Data Structure (Data Architecture, Code Quality) - **Complete**
 - **#020**: ✅ Add Photos with Descriptions to Floor Plan Section (Content, UX) - **Complete**
 - **#021**: ✅ Select Typeface System for Titles and Body Text (Design, Branding) - **Complete**
+- **#022**: ⏸️ Componentize Carousel Dots (Code Quality, Component Architecture) - **Not Started**
 - **#007**: ⏸️ Image Optimization (Performance) - **Pending** - *Depends on #011*
 
 ### Low Priority
