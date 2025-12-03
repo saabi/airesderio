@@ -14,40 +14,48 @@
 
 	// ===== TYPES =====
 	interface FloorPlan {
-		image: string;
+		image: string | any; // Enhanced image type
 		title: string;
 		description: string;
 	}
 
 	// ===== STATIC CONSTANTS =====
+	// Import images with ?enhanced for optimization
+	import plan1 from '$lib/assets/floor-plans/1ra-planta-4-deptos.png?enhanced';
+	import plan2 from '$lib/assets/floor-plans/1ra-planta-4-deptos-a.png?enhanced';
+	import plan3 from '$lib/assets/floor-plans/2 OCTUBRE_MODELO 1ra PLANTA_4 DPTOS 1 DORM.jpg?enhanced';
+	import plan4 from '$lib/assets/floor-plans/2da-planta-3-deptos.png?enhanced';
+	import plan5 from '$lib/assets/floor-plans/2da-planta-3-deptos-a.png?enhanced';
+	import plan6 from '$lib/assets/floor-plans/2 OCTUBRE_MODELO 2da PLANTA_2 DPTOS 1 DORM_1 DEPTO DOBLE.jpg?enhanced';
+
 	const FLOOR_PLANS: FloorPlan[] = [
 		{
-			image: '/planos/1ra-planta-4-deptos.png',
+			image: plan1,
 			title: 'Primera Planta - 4 Departamentos',
 			description: 'Plano de la primera planta con 4 departamentos de 1 dormitorio cada uno.'
 		},
 		{
-			image: '/planos/1ra-planta-4-deptos-a.png',
+			image: plan2,
 			title: 'Primera Planta - 4 Departamentos (Alternativa)',
 			description: 'Vista alternativa de la primera planta con distribución de los 4 departamentos.'
 		},
 		{
-			image: '/planos/2 OCTUBRE_MODELO 1ra PLANTA_4 DPTOS 1 DORM.jpg',
+			image: plan3,
 			title: 'Modelo Octubre - Primera Planta',
 			description: 'Modelo de octubre: primera planta con 4 departamentos de 1 dormitorio.'
 		},
 		{
-			image: '/planos/2da-planta-3-deptos.png',
+			image: plan4,
 			title: 'Segunda Planta - 3 Departamentos',
 			description: 'Plano de la segunda planta con 3 departamentos, incluyendo 2 departamentos de 1 dormitorio y 1 departamento doble.'
 		},
 		{
-			image: '/planos/2da-planta-3-deptos-a.png',
+			image: plan5,
 			title: 'Segunda Planta - 3 Departamentos (Alternativa)',
 			description: 'Vista alternativa de la segunda planta con distribución de los 3 departamentos.'
 		},
 		{
-			image: '/planos/2 OCTUBRE_MODELO 2da PLANTA_2 DPTOS 1 DORM_1 DEPTO DOBLE.jpg',
+			image: plan6,
 			title: 'Modelo Octubre - Segunda Planta',
 			description: 'Modelo de octubre: segunda planta con 2 departamentos de 1 dormitorio y 1 departamento doble.'
 		}
@@ -102,13 +110,25 @@
 	>
 		<div class='carousel-wrapper' role='region' aria-label='Galería de planos de distribución'>
 			{#each FLOOR_PLANS as plan, index}
+				{@const isString = typeof plan.image === 'string'}
 				<div
 					class='carousel-image'
 					class:active={index === currentPlanIndex}
-					style="background-image: url('{plan.image}')"
+					class:enhanced={!isString}
+					style={isString ? "background-image: url('{plan.image}')" : undefined}
 					role='img'
 					aria-label={`Plano ${index + 1}: ${plan.title}`}
-				></div>
+				>
+					{#if !isString}
+						<enhanced:img
+							src={plan.image}
+							alt={plan.title}
+							sizes='(min-width: 1024px) 1024px, 100vw'
+							loading='lazy'
+							class='floor-plan-image'
+						/>
+					{/if}
+				</div>
 			{/each}
 			{#if FLOOR_PLANS.length > 1}
 				<div class='carousel-navigation'>
@@ -201,6 +221,28 @@
 	.carousel-image.active {
 		/* Box/Visual */
 		opacity: 1;
+	}
+
+	.carousel-image.enhanced {
+		/* Layout */
+		display: block;
+		overflow: hidden;
+	}
+
+	.floor-plan-image {
+		/* Positioning */
+		position: absolute;
+		top: 0;
+		left: 0;
+
+		/* Layout */
+		width: 100%;
+		height: 100%;
+
+		/* Box/Visual */
+		object-fit: contain;
+		object-position: center;
+		display: block;
 	}
 
 	.carousel-navigation {

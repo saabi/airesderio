@@ -1,6 +1,7 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
 	import type { PlaceMetadata } from '$lib/types';
+	import { PLACE_PHOTOS_MAP } from '$lib/assets/places/index';
 
 	// ===== TYPES =====
 	interface Props {
@@ -23,6 +24,27 @@
 		currentIndex = $bindable(0),
 		onClose
 	}: Props = $props();
+
+	// ===== DERIVED =====
+	// Map photo filenames to enhanced images
+	const enhancedPhotos = $derived.by(() => {
+		const placeMap = PLACE_PHOTOS_MAP[placeId];
+		if (!placeMap) {
+			// Fallback to original paths if place not in map
+			return photos.map((filename) => ({
+				src: `/places/${placeId}/${filename}`,
+				enhanced: false,
+				filename
+			}));
+		}
+
+		return photos.map((filename) => {
+			const enhanced = placeMap[filename];
+			return enhanced
+				? { src: enhanced, enhanced: true, filename }
+				: { src: `/places/${placeId}/${filename}`, enhanced: false, filename };
+		});
+	});
 
 	// ===== FUNCTIONS =====
 	// Navigate carousel
@@ -77,11 +99,22 @@
 
 			<div class='content'>
 				<div class='photo-container'>
-					<img
-						src={photos[currentIndex]}
-						alt={`${place.nombre} - Foto ${currentIndex + 1}`}
-						class='carousel-image'
-					/>
+					{#if enhancedPhotos[currentIndex]?.enhanced}
+						<enhanced:img
+							src={enhancedPhotos[currentIndex].src}
+							alt={`${place.nombre} - Foto ${currentIndex + 1}`}
+							sizes='(min-width: 1024px) 90vw, 100vw'
+							loading='lazy'
+							class='carousel-image'
+						/>
+					{:else}
+						<img
+							src={enhancedPhotos[currentIndex]?.src || photos[currentIndex]}
+							alt={`${place.nombre} - Foto ${currentIndex + 1}`}
+							loading='lazy'
+							class='carousel-image'
+						/>
+					{/if}
 
 					{#if photos.length > 1}
 						<button

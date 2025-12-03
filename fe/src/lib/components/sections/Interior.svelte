@@ -15,18 +15,22 @@
 	} from '$lib/constants/animation';
 
 	// ===== STATIC CONSTANTS =====
-	const interiorImageFiles = [
-		'4_DB_Lobby.jpg',
-		'5_DB_EXTERIOR_01 (6).jpg',
-		'6_DB_EXTERIOR_01 (5).jpg',
-		'7_DB_EXTERIOR_01 (7).jpg',
-		'8_Antebaño y Lavadero.jpg',
-		'9_DB_INT_BLANCO (5).png'
-	];
+	// Import images with ?enhanced for optimization
+	import interior1 from '$lib/assets/carousel-interior/4_DB_Lobby.jpg?enhanced';
+	import interior2 from '$lib/assets/carousel-interior/5_DB_EXTERIOR_01 (6).jpg?enhanced';
+	import interior3 from '$lib/assets/carousel-interior/6_DB_EXTERIOR_01 (5).jpg?enhanced';
+	import interior4 from '$lib/assets/carousel-interior/7_DB_EXTERIOR_01 (7).jpg?enhanced';
+	import interior5 from '$lib/assets/carousel-interior/8_Antebaño y Lavadero.jpg?enhanced';
+	import interior6 from '$lib/assets/carousel-interior/9_DB_INT_BLANCO (5).png?enhanced';
 
-	const INTERIOR_IMAGES = interiorImageFiles.map(
-		(file) => `/carrousel-interior/${encodeURIComponent(file)}`
-	);
+	const INTERIOR_IMAGES = [
+		{ src: interior1, alt: 'Lobby del edificio' },
+		{ src: interior2, alt: 'Exterior del edificio' },
+		{ src: interior3, alt: 'Exterior del edificio' },
+		{ src: interior4, alt: 'Exterior del edificio' },
+		{ src: interior5, alt: 'Antebaño y lavadero' },
+		{ src: interior6, alt: 'Interior del departamento' }
+	];
 </script>
 
 <script lang='ts'>
@@ -58,7 +62,7 @@
 				images={INTERIOR_IMAGES}
 				interval={2500}
 				ariaLabel='Galería de imágenes del diseño interior'
-				imageAriaLabel={(index) => `Imagen del diseño interior - ${index + 1}`}
+				imageAriaLabel={(index) => INTERIOR_IMAGES[index].alt}
 			/>
 		</div>
 		<div class='interior-text'>

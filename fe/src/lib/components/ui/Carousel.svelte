@@ -184,19 +184,26 @@
 
 	.carousel-image.enhanced {
 		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		display: block;
+		overflow: hidden;
 	}
 
 	.carousel-image-content {
+		/* Positioning */
+		position: absolute;
+		top: 0;
+		left: 0;
+
 		/* Layout */
 		width: 100%;
 		height: 100%;
+		min-width: 100%;
+		min-height: 100%;
 
 		/* Box/Visual */
 		object-fit: cover;
 		object-position: center;
+		display: block;
 	}
 
 	.carousel-navigation {

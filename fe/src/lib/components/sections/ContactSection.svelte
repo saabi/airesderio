@@ -4,6 +4,7 @@
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { theme } from '$lib/stores/theme';
+	import exteriorImage from '$lib/assets/exteriores/exterior_03.png?enhanced';
 </script>
 
 <script lang='ts'>
@@ -38,9 +39,10 @@
 			<ContactForm />
 		</div>
 		<div class='right-column'>
-			<img
-				src='/exteriores/exterior_03.png'
+			<enhanced:img
+				src={exteriorImage}
 				alt='Aires de Río exterior'
+				sizes='(min-width: 850px) 50vw, 100vw'
 				loading='lazy'
 				decoding='async'
 				class='exterior-image scroll-animate'
