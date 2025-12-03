@@ -147,7 +147,7 @@ Design proposals, mockups, and visual assets for the project.
 - **#014**: ✅ Refactor app.css Classes into Components (Code Quality, Component Architecture) - **Complete** - Note: `body.nav-open` refactoring moved to #017
 - **#017**: ✅ Decouple Header Component from document.body (Code Quality, State Management) - **Complete**
 - **#016**: ⏸️ Refactor scroll-animate Utility Class (Code Quality, Animation System) - **Not Started** - *Can be done after #014*
-- **#011**: ⏸️ Organize Place Photo Carousel Files (Content Management) - **Not Started** - *Do before #007*
+- **#011**: ✅ Organize Place Photo Carousel Files (Content Management) - **Complete** - *Photos organized manually*
 - **#018**: ✅ Complete Place Photos Carousel Implementation (Functionality, UX) - **Complete**
 - **#019**: ✅ Refactor Places Data Structure (Data Architecture, Code Quality) - **Complete**
 - **#020**: ✅ Add Photos with Descriptions to Floor Plan Section (Content, UX) - **Complete**

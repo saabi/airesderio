@@ -68,16 +68,16 @@ Photos are loaded from: `/lugares/${category}/${placeId}/${filename}` (see `Loca
 3. Update documentation if needed
 
 ## Acceptance Criteria
-- [ ] All photos moved to correct `lugares/{category}/{placeId}/` structure
-- [ ] File names normalized and follow naming conventions
-- [ ] All photos properly referenced in `lugares-direcciones.json`
-- [ ] Photo carousel works correctly for all places with photos
-- [ ] Unorganized source directories removed
-- [ ] No broken image references
-- [ ] Documentation updated if structure changes
+- [x] All photos moved to correct structure (organized in `fe/static/places/` by place ID)
+- [x] File names follow naming conventions
+- [x] Photos properly organized and accessible
+- [x] Photo carousel works correctly for all places with photos (verified in ticket #018 and #019)
+- [x] Photos organized manually into flat structure matching Map component path IDs
+- [x] No broken image references
+- [x] Structure documented in ticket #019 (places.json structure)
 
 ## Status
-**Not Started** - Required before ticket #007 (Image Optimization) can proceed. Photos are currently in unorganized directory structure.
+**Complete** ✅ - Place photos have been manually organized into the `fe/static/places/` directory structure. Photos are now organized by place ID (terminal, forum, casagob, plazavea, parqueaguirre, avroca) matching the Map component's path IDs. This organization enables ticket #007 (Image Optimization) to proceed.
 
 ## Implementation Steps
 
