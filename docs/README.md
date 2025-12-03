@@ -150,7 +150,7 @@ Design proposals, mockups, and visual assets for the project.
 - **#011**: ⏸️ Organize Place Photo Carousel Files (Content Management) - **Not Started** - *Do before #007*
 - **#018**: ✅ Complete Place Photos Carousel Implementation (Functionality, UX) - **Complete**
 - **#019**: ✅ Refactor Places Data Structure (Data Architecture, Code Quality) - **Complete**
-- **#020**: ⏸️ Add Photos with Descriptions to Floor Plan Section (Content, UX) - **Not Started** - *Medium Priority*
+- **#020**: ✅ Add Photos with Descriptions to Floor Plan Section (Content, UX) - **Complete**
 - **#007**: ⏸️ Image Optimization (Performance) - **Pending** - *Depends on #011*
 
 ### Low Priority
