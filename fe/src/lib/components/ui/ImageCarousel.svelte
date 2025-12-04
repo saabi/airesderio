@@ -422,6 +422,13 @@
 		will-change: opacity, transform, filter;
 	}
 
+	/* For instant transition, ensure images are positioned correctly */
+	.image-carousel.transition-instant .carousel-image {
+		/* Layout */
+		display: none;
+		opacity: 1; /* Override opacity for instant transition */
+	}
+
 	/* Transition: fade-scale */
 	.image-carousel.transition-fade-scale .carousel-image {
 		/* Box/Visual */
@@ -466,8 +473,13 @@
 
 	.carousel-image.enhanced {
 		/* Layout */
-		display: block;
 		overflow: hidden;
+	}
+
+	/* Ensure enhanced images are displayed when active in instant transition */
+	.image-carousel.transition-instant .carousel-image.enhanced.active {
+		/* Layout */
+		display: block;
 	}
 
 	.carousel-image-content {
