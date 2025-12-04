@@ -2,7 +2,7 @@
 	// ===== IMPORTS =====
 	// Local components
 	import Title from '$lib/components/ui/Title.svelte';
-	import Carousel from '$lib/components/ui/Carousel.svelte';
+	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 
 	// Local utilities
@@ -58,9 +58,19 @@
 			class='interior-gallery scroll-animate'
 			style={`--scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
 		>
-			<Carousel
+			<ImageCarousel
 				images={INTERIOR_IMAGES}
+				autoRotate={true}
 				interval={2500}
+				pauseOnHover={true}
+				showNavigation={true}
+				navigationPosition="around-dots"
+				buttonVariant="overlay"
+				buttonSize="md"
+				showDots={true}
+				dotsVariant="default"
+				transitionType="fade-scale"
+				imageFit="cover"
 				ariaLabel='Galería de imágenes del diseño interior'
 				imageAriaLabel={(index) => INTERIOR_IMAGES[index].alt}
 			/>

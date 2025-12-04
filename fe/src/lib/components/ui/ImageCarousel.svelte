@@ -32,7 +32,7 @@
 		keyboardNavigation?: boolean;
 
 		// State
-		currentIndex?: number; // If provided, makes it controlled
+		currentIndex?: number; // If provided, makes it controlled (bindable)
 		onIndexChange?: (index: number) => void;
 
 		// Navigation UI
@@ -77,7 +77,7 @@
 		interval = 5000,
 		pauseOnHover = true,
 		keyboardNavigation = false,
-		currentIndex: controlledIndex,
+		currentIndex: controlledIndex = $bindable(undefined),
 		onIndexChange,
 		showNavigation = true,
 		navigationPosition = 'around-dots',

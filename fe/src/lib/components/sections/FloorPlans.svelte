@@ -2,10 +2,7 @@
 	// ===== IMPORTS =====
 	import Title from '$lib/components/ui/Title.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
-	import CircularButton from '$lib/components/ui/CircularButton.svelte';
-	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
-	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
-	import CarouselDots from '$lib/components/ui/CarouselDots.svelte';
+	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
@@ -72,6 +69,14 @@
 
 	// ===== DERIVED =====
 	let currentPlan = $derived.by(() => FLOOR_PLANS[currentPlanIndex]);
+	
+	// Convert floor plans to image array for ImageCarousel
+	const floorPlanImages = $derived.by(() => 
+		FLOOR_PLANS.map(plan => ({
+			src: plan.image,
+			alt: plan.title
+		}))
+	);
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: floorPlansObserver, visible: floorPlansVisible } = createSectionObserver(
@@ -82,15 +87,7 @@
 	);
 
 	// ===== FUNCTIONS =====
-	function nextPlan() {
-		currentPlanIndex = (currentPlanIndex + 1) % FLOOR_PLANS.length;
-	}
-
-	function previousPlan() {
-		currentPlanIndex = (currentPlanIndex - 1 + FLOOR_PLANS.length) % FLOOR_PLANS.length;
-	}
-
-	function goToPlan(index: number) {
+	function handleIndexChange(index: number) {
 		currentPlanIndex = index;
 	}
 </script>
@@ -112,56 +109,26 @@
 		class='floor-plans-container scroll-animate'
 		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<div class='carousel-wrapper' role='region' aria-label='Galería de planos de distribución'>
-			{#each FLOOR_PLANS as plan, index}
-				{@const isString = typeof plan.image === 'string'}
-				<div
-					class='carousel-image'
-					class:active={index === currentPlanIndex}
-					class:enhanced={!isString}
-					style={isString ? "background-image: url('{plan.image}')" : undefined}
-					role='img'
-					aria-label={`Plano ${index + 1}: ${plan.title}`}
-				>
-					{#if !isString}
-						<enhanced:img
-							src={plan.image}
-							alt={plan.title}
-							sizes='(min-width: 1024px) 1024px, 100vw'
-							loading='lazy'
-							class='floor-plan-image'
-						/>
-					{/if}
-				</div>
-			{/each}
-			{#if FLOOR_PLANS.length > 1}
-				<div class='carousel-navigation'>
-					<CircularButton
-						variant="bordered"
-						size="md"
-						ariaLabel="Plano anterior"
-						onClick={previousPlan}
-					>
-						<ArrowLeft />
-					</CircularButton>
-					<CarouselDots
-						total={FLOOR_PLANS.length}
-						currentIndex={currentPlanIndex}
-						onDotClick={goToPlan}
-						ariaLabel={(index) => `Ver plano ${index + 1}`}
-						variant='inverse'
-						showTransform={true}
-					/>
-					<CircularButton
-						variant="bordered"
-						size="md"
-						ariaLabel="Siguiente plano"
-						onClick={nextPlan}
-					>
-						<ArrowRight />
-					</CircularButton>
-				</div>
-			{/if}
+		<div class='carousel-wrapper'>
+			<ImageCarousel
+				images={floorPlanImages}
+				bind:currentIndex={currentPlanIndex}
+				onIndexChange={handleIndexChange}
+				autoRotate={false}
+				showNavigation={true}
+				navigationPosition="around-dots"
+				buttonVariant="bordered"
+				buttonSize="md"
+				showDots={true}
+				dotsVariant="inverse"
+				transitionType="fade"
+				transitionDuration={600}
+				imageFit="contain"
+				imageSizes="(min-width: 1024px) 1024px, 100vw"
+				ariaLabel="Galería de planos de distribución"
+				imageAriaLabel={(index) => `Plano ${index + 1}: ${FLOOR_PLANS[index].title}`}
+				class="floor-plans-carousel"
+			/>
 		</div>
 		<figure class='floor-plan-info'>
 			<figcaption class='floor-plan-title'>{currentPlan.title}</figcaption>
@@ -199,68 +166,7 @@
 		background: var(--color-bg-canvas);
 	}
 
-	.carousel-image {
-		/* Positioning */
-		position: absolute;
-		top: 0;
-		left: 0;
-
-		/* Layout */
-		width: 100%;
-		height: 100%;
-
-		/* Box/Visual */
-		background-size: contain;
-		background-position: center;
-		background-repeat: no-repeat;
-		opacity: 0;
-
-		/* Effects & Motion */
-		transition: opacity 0.6s ease-in-out;
-	}
-
-	.carousel-image.active {
-		/* Box/Visual */
-		opacity: 1;
-	}
-
-	.carousel-image.enhanced {
-		/* Layout */
-		display: block;
-		overflow: hidden;
-	}
-
-	.floor-plan-image {
-		/* Positioning */
-		position: absolute;
-		top: 0;
-		left: 0;
-
-		/* Layout */
-		width: 100%;
-		height: 100%;
-
-		/* Box/Visual */
-		object-fit: contain;
-		object-position: center;
-		display: block;
-	}
-
-	.carousel-navigation {
-		/* Positioning */
-		position: absolute;
-		bottom: 1rem;
-		left: 50%;
-		z-index: 10;
-
-		/* Layout */
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-
-		/* Effects & Motion */
-		transform: translateX(-50%);
-	}
+	/* ImageCarousel handles image and navigation styles */
 
 
 

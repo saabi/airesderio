@@ -1,6 +1,6 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
-	import Carousel from '$lib/components/ui/Carousel.svelte';
+	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { ANIMATION, animationDuration, animationOffset } from '$lib/constants/animation';
@@ -46,9 +46,19 @@
 		class='hero-carousel scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Carousel
+		<ImageCarousel
 			images={CAROUSEL_IMAGES}
+			autoRotate={true}
 			interval={5000}
+			pauseOnHover={true}
+			showNavigation={true}
+			navigationPosition="around-dots"
+			buttonVariant="overlay"
+			buttonSize="md"
+			showDots={true}
+			dotsVariant="default"
+			transitionType="fade-scale"
+			imageFit="cover"
 			ariaLabel='Carrusel de imágenes del edificio'
 			imageAriaLabel={(index) => CAROUSEL_IMAGES[index].alt}
 		/>

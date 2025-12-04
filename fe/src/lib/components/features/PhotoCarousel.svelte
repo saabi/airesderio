@@ -2,10 +2,7 @@
 	// ===== IMPORTS =====
 	import type { PlaceMetadata } from '$lib/types';
 	import { PLACE_PHOTOS_MAP } from '$lib/assets/places/index';
-	import CircularButton from '$lib/components/ui/CircularButton.svelte';
-	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
-	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
-	import CarouselDots from '$lib/components/ui/CarouselDots.svelte';
+	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 
 	// ===== TYPES =====
 	interface Props {
@@ -30,7 +27,7 @@
 	}: Props = $props();
 
 	// ===== DERIVED =====
-	// Map photo filenames to enhanced images
+	// Map photo filenames to enhanced images for ImageCarousel
 	const enhancedPhotos = $derived.by(() => {
 		if (!placeId || !photos || photos.length === 0) {
 			return [];
@@ -44,8 +41,7 @@
 			// Fallback to original paths if place not in map
 			return photos.map((filename) => ({
 				src: `/places/${placeId}/${filename}`,
-				enhanced: false,
-				filename
+				alt: `${place.nombre} - ${filename}`
 			}));
 		}
 
@@ -54,47 +50,26 @@
 			if (!enhanced && import.meta.env.DEV) {
 				console.warn(`Photo "${filename}" not found in PLACE_PHOTOS_MAP for place "${placeId}". Using fallback.`);
 			}
-			return enhanced
-				? { src: enhanced, enhanced: true, filename }
-				: { src: `/places/${placeId}/${filename}`, enhanced: false, filename };
+			return {
+				src: enhanced || `/places/${placeId}/${filename}`,
+				alt: `${place.nombre} - ${filename}`
+			};
 		});
 	});
 
 	// ===== FUNCTIONS =====
-	// Navigate carousel
-	function navigateCarousel(direction: number) {
-		const newIndex = currentIndex + direction;
-		if (newIndex >= photos.length) {
-			currentIndex = 0;
-		} else if (newIndex < 0) {
-			currentIndex = photos.length - 1;
-		} else {
-			currentIndex = newIndex;
-		}
-	}
-
-	// Go to specific photo
-	function goToPhoto(index: number) {
-		currentIndex = index;
-	}
-
-	// Handle keyboard navigation
+	// Handle keyboard navigation (Escape key for closing modal)
 	function handleKeydown(e: KeyboardEvent) {
 		if (!visible) return;
 
-		switch (e.key) {
-			case 'Escape':
-				onClose();
-				break;
-			case 'ArrowLeft':
-				e.preventDefault();
-				navigateCarousel(-1);
-				break;
-			case 'ArrowRight':
-				e.preventDefault();
-				navigateCarousel(1);
-				break;
+		if (e.key === 'Escape') {
+			onClose();
 		}
+	}
+
+	// Handle index change from ImageCarousel
+	function handleIndexChange(index: number) {
+		currentIndex = index;
 	}
 </script>
 
@@ -113,68 +88,29 @@
 
 			<div class='content'>
 				<div class='photo-container'>
-					{#if enhancedPhotos.length > 0 && enhancedPhotos[currentIndex]}
-						{#if enhancedPhotos[currentIndex].enhanced}
-							<enhanced:img
-								src={enhancedPhotos[currentIndex].src}
-								alt={`${place.nombre} - Foto ${currentIndex + 1}`}
-								sizes='(min-width: 1024px) 90vw, 100vw'
-								loading='lazy'
-								class='carousel-image'
-							/>
-						{:else}
-							<img
-								src={enhancedPhotos[currentIndex].src}
-								alt={`${place.nombre} - Foto ${currentIndex + 1}`}
-								loading='lazy'
-								class='carousel-image'
-							/>
-						{/if}
-					{:else}
-						<!-- Fallback if enhancedPhotos is empty or invalid -->
-						{#if photos[currentIndex]}
-							{@const fallbackSrc = photos[currentIndex].startsWith('/') ? photos[currentIndex] : `/places/${placeId}/${photos[currentIndex]}`}
-							<img
-								src={fallbackSrc}
-								alt={`${place.nombre} - Foto ${currentIndex + 1}`}
-								loading='lazy'
-								class='carousel-image'
-							/>
-						{/if}
-					{/if}
-
-					{#if photos.length > 1}
-						<CircularButton
-							variant="overlay"
-							size="lg"
-							ariaLabel="Foto anterior"
-							onClick={() => navigateCarousel(-1)}
-							class="nav-button prev"
-						>
-							<ArrowLeft />
-						</CircularButton>
-						<CircularButton
-							variant="overlay"
-							size="lg"
-							ariaLabel="Siguiente foto"
-							onClick={() => navigateCarousel(1)}
-							class="nav-button next"
-						>
-							<ArrowRight />
-						</CircularButton>
+					{#if enhancedPhotos.length > 0}
+						<ImageCarousel
+							images={enhancedPhotos}
+							bind:currentIndex={currentIndex}
+							onIndexChange={handleIndexChange}
+							autoRotate={false}
+							keyboardNavigation={true}
+							showNavigation={true}
+							navigationPosition="absolute-sides"
+							buttonVariant="overlay"
+							buttonSize="lg"
+							showDots={true}
+							dotsVariant="inverse"
+							dotsPosition="below-image"
+							transitionType="instant"
+							imageFit="cover"
+							imageSizes="(min-width: 1024px) 90vw, 100vw"
+							ariaLabel="Galería de fotos"
+							imageAriaLabel={(index) => `${place.nombre} - Foto ${index + 1}`}
+							class="photo-carousel"
+						/>
 					{/if}
 				</div>
-
-				{#if photos.length > 1}
-					<CarouselDots
-						total={photos.length}
-						currentIndex={currentIndex}
-						onDotClick={goToPhoto}
-						ariaLabel={(index) => `Ver foto ${index + 1}`}
-						variant='inverse'
-						containerClass='container'
-					/>
-				{/if}
 
 				<div class='photo-info'>
 					<p>{currentIndex + 1} de {photos.length} fotos</p>
@@ -317,45 +253,7 @@
 		border-radius: 0.5rem;
 	}
 
-	.carousel-image {
-		/* Layout */
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	:global(.nav-button) {
-		/* Positioning */
-		position: absolute !important;
-		top: 50% !important;
-		z-index: 10 !important;
-
-		/* Effects & Motion */
-		transform: translateY(-50%) !important;
-	}
-
-	:global(.nav-button:hover) {
-		/* Effects & Motion */
-		transform: translateY(-50%) scale(1.1) !important;
-	}
-
-	:global(.nav-button:active) {
-		/* Effects & Motion */
-		transform: translateY(-50%) scale(0.95) !important;
-	}
-
-	:global(.nav-button.prev) {
-		/* Positioning */
-		left: 1rem !important;
-		right: auto !important;
-	}
-
-	:global(.nav-button.next) {
-		/* Positioning */
-		right: 1rem !important;
-		left: auto !important;
-	}
+	/* ImageCarousel handles image and navigation button styles */
 
 
 	.photo-info {
@@ -409,16 +307,6 @@
 		.content {
 			/* Layout */
 			padding: 1rem;
-		}
-
-		:global(.nav-button.prev) {
-			/* Positioning */
-			left: 0.5rem;
-		}
-
-		:global(.nav-button.next) {
-			/* Positioning */
-			right: 0.5rem;
 		}
 	}
 </style>
