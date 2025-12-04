@@ -1,6 +1,6 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import type { Snippet } from 'svelte';
 	import CircularButton from '$lib/components/ui/CircularButton.svelte';
@@ -130,11 +130,6 @@
 			stopCarousel();
 			cleanupKeyboardNavigation();
 		};
-	});
-
-	onDestroy(() => {
-		stopCarousel();
-		cleanupKeyboardNavigation();
 	});
 
 	// ===== KEYBOARD NAVIGATION SETUP =====

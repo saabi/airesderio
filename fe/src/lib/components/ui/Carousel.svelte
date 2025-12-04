@@ -1,6 +1,6 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import CircularButton from '$lib/components/ui/CircularButton.svelte';
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
@@ -41,10 +41,6 @@
 		return () => {
 			stopCarousel();
 		};
-	});
-
-	onDestroy(() => {
-		stopCarousel();
 	});
 
 	// ===== FUNCTIONS =====
