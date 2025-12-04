@@ -155,49 +155,70 @@
 	}
 
 	/**
-	 * Preloads a single image.
-	 * For string URLs, uses <link rel="preload">.
-	 * For enhanced images, creates an Image object to trigger loading.
+	 * Preloads a single image with support for responsive image sets (srcset).
+	 * For string URLs, uses <link rel="preload"> with href.
+	 * For enhanced images, uses <link rel="preload"> with imagesrcset and imagesizes
+	 * when srcset information is available, otherwise falls back to simple href.
 	 */
 	function preloadImage(image: ImageInput) {
 		if (!browser) return;
 
 		const imageSrc = getImageSrc(image);
+		const imageSrcset = getImageSrcset(image);
 		const isString = typeof image === 'string';
 
 		// Create a unique identifier for this image
-		const imageId = isString ? imageSrc : (typeof imageSrc === 'string' ? imageSrc : String(imageSrc));
+		const imageId = isString
+			? imageSrc
+			: typeof imageSrc === 'string'
+				? imageSrc
+				: String(imageSrc);
 
 		// Skip if already preloaded
 		if (preloadedImages.has(imageId)) {
 			return;
 		}
 
+		const link = document.createElement('link');
+		link.rel = 'preload';
+		link.as = 'image';
+
 		if (isString) {
-			// Use link preload for string URLs
-			const link = document.createElement('link');
-			link.rel = 'preload';
-			link.as = 'image';
+			// For string URLs, use simple href preload
 			link.href = imageSrc;
-			document.head.appendChild(link);
-			preloadedImages.add(imageId);
 		} else {
-			// For enhanced images, preload by creating an Image object
-			// This triggers the browser to fetch the image
-			// Enhanced images from @sveltejs/enhanced-img are objects that the browser handles
-			// We can't directly preload them with <link>, but creating an Image object
-			// will trigger the browser's natural image loading mechanism
-			if (typeof imageSrc === 'string') {
-				const img = new Image();
-				img.src = imageSrc;
-				preloadedImages.add(imageId);
+			// For enhanced images, check if we have srcset information
+			if (imageSrcset && typeof imageSrcset === 'string') {
+				// Use imagesrcset and imagesizes for responsive image preloading
+				// @ts-ignore - imagesrcset is a valid attribute for link preload
+				link.imagesrcset = imageSrcset;
+				if (imageSizes) {
+					// @ts-ignore - imagesizes is a valid attribute for link preload
+					link.imagesizes = imageSizes;
+				}
+				// href is still required as fallback
+				if (typeof imageSrc === 'string') {
+					link.href = imageSrc;
+				}
+			} else if (typeof imageSrc === 'string') {
+				// Fallback: if src is a string, use it directly
+				link.href = imageSrc;
+				// Add imagesizes if available to help browser select appropriate size
+				if (imageSizes) {
+					// @ts-ignore - imagesizes is a valid attribute for link preload
+					link.imagesizes = imageSizes;
+				}
 			} else {
-				// For enhanced image objects, the browser will handle loading
-				// when the <enhanced:img> component renders
-				// We mark it as preloaded to avoid duplicate attempts
+				// For enhanced image objects without accessible srcset,
+				// the browser will handle preloading when enhanced:img renders
+				// Mark as preloaded to avoid duplicate attempts
 				preloadedImages.add(imageId);
+				return;
 			}
 		}
+
+		document.head.appendChild(link);
+		preloadedImages.add(imageId);
 	}
 
 	// Watch for index changes and preload adjacent images
@@ -324,8 +345,19 @@
 	}
 
 	// Get image source
-	function getImageSrc(image: ImageInput): string {
+	function getImageSrc(image: ImageInput): string | any {
 		return typeof image === 'string' ? image : image.src;
+	}
+
+	/**
+	 * Gets srcset information from an enhanced image if available.
+	 * Enhanced images from @sveltejs/enhanced-img may have srcset in their structure.
+	 */
+	function getImageSrcset(image: ImageInput): string | undefined {
+		if (typeof image === 'string') return undefined;
+		// Enhanced images might have srcset property
+		// @ts-ignore - srcset may exist on enhanced image objects
+		return image.srcset;
 	}
 
 	// Get image alt text
