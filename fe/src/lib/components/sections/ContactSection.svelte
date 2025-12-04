@@ -39,15 +39,16 @@
 			<ContactForm />
 		</div>
 		<div class='right-column'>
-			<enhanced:img
-				src={exteriorImage}
-				alt='Aires de Río exterior'
-				sizes='(min-width: 850px) 50vw, 100vw'
-				loading='lazy'
-				decoding='async'
-				class='exterior-image scroll-animate'
-				style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
-			/>
+			<div class='exterior-image scroll-animate' style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}>
+				<enhanced:img
+					src={exteriorImage}
+					alt='Aires de Río exterior'
+					sizes='(min-width: 850px) 50vw, 100vw'
+					loading='lazy'
+					decoding='async'
+					class='exterior-image-content'
+				/>
+			</div>
 			<div class='logo-wrapper'>
 				<AiresDeRioLogo class='logo' theme={$theme} />
 			</div>
@@ -112,13 +113,32 @@
 
 	.exterior-image {
 		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex: 1 1 auto;
+		display: block;
 		max-width: 100vw;
 		min-height: 200px;
 		height: 100%;
+		overflow: hidden;
+	}
+
+	.exterior-image-content {
+		/* Layout */
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	.exterior-image-content :global(picture),
+	.exterior-image-content :global(img) {
+		/* Layout */
+		width: 100%;
+		height: 100%;
+		min-width: 100%;
+		min-height: 100%;
+
+		/* Box/Visual */
+		object-fit: cover;
+		object-position: center;
+		display: block;
 	}
 
 	.logo-wrapper {
