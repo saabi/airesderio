@@ -10,6 +10,8 @@
 
 This proposal outlines a plan to unify all carousel implementations into a single, flexible `ImageCarousel` component that can handle all current use cases while maintaining visual consistency and reducing code duplication.
 
+**Key Principle:** The `ImageCarousel` component focuses solely on image carousel functionality (images, navigation, transitions). Additional content like place descriptions should remain in wrapper components (e.g., PhotoCarousel) to maintain clear separation of concerns.
+
 ---
 
 ## Current State Analysis
@@ -41,9 +43,10 @@ This proposal outlines a plan to unify all carousel implementations into a singl
   - Image fit: `object-fit: cover`
   - Keyboard navigation: Arrow keys, Escape
   - Modal overlay structure
-  - Additional content: Photo info (title, description, things to do)
+  - Place descriptions: Shows place info (descripcion, thingstodo) **outside** the carousel
 - **State Management:** Bindable `currentIndex` prop
 - **Special:** Modal dialog with backdrop, header, close button
+- **Note:** The carousel component should only handle image navigation. Place descriptions remain in the PhotoCarousel wrapper component.
 
 #### 3. **FloorPlans.svelte** (Section Component - Inline Carousel)
 - **Location:** `fe/src/lib/components/sections/FloorPlans.svelte`
@@ -137,7 +140,7 @@ interface ImageCarouselProps {
   // Slots
   header?: Snippet; // For PhotoCarousel modal header
   footer?: Snippet; // For FloorPlans title/description
-  additionalContent?: Snippet; // For PhotoCarousel info
+  // Note: Place descriptions (descripcion, thingstodo) should remain in PhotoCarousel wrapper, not in ImageCarousel
 }
 ```
 
@@ -173,7 +176,7 @@ interface ImageCarouselProps {
     <CarouselDots ... />
   {/if}
   
-  <!-- Slots -->
+  <!-- Slots (optional, for custom content) -->
   {#if header}
     {@render header()}
   {/if}
@@ -181,11 +184,10 @@ interface ImageCarouselProps {
   {#if footer}
     {@render footer()}
   {/if}
-  
-  {#if additionalContent}
-    {@render additionalContent()}
-  {/if}
 </div>
+```
+
+**Note:** ImageCarousel focuses solely on image carousel functionality. For PhotoCarousel, place descriptions should be rendered outside ImageCarousel in the PhotoCarousel wrapper component.
 ```
 
 ---
@@ -234,34 +236,54 @@ interface ImageCarouselProps {
 
 ### Phase 3: Migrate PhotoCarousel.svelte
 
-**Configuration:**
+**Important:** The ImageCarousel component should only handle image carousel functionality. Place descriptions (descripcion, thingstodo) remain in the PhotoCarousel wrapper component.
+
+**PhotoCarousel.svelte Structure:**
 ```svelte
-<ImageCarousel
-  images={enhancedPhotos}
-  bind:currentIndex={currentIndex}
-  autoRotate={false}
-  keyboardNavigation={true}
-  showNavigation={true}
-  navigationPosition="absolute-sides"
-  buttonVariant="overlay"
-  buttonSize="lg"
-  showDots={true}
-  dotsVariant="inverse"
-  dotsPosition="below-image"
-  transitionType="instant"
-  imageFit="cover"
-  class="photo-carousel-modal"
->
-  <svelte:fragment slot="header">
-    <div class="header">...</div>
-  </svelte:fragment>
-  <svelte:fragment slot="additionalContent">
-    <div class="photo-info">...</div>
-  </svelte:fragment>
-</ImageCarousel>
+<div class="overlay">
+  <div class="modal">
+    <div class="header">
+      <h3>{place.nombre}</h3>
+      <button class="close-button" onclick={onClose}>×</button>
+    </div>
+    <div class="content">
+      <!-- ImageCarousel only handles images -->
+      <ImageCarousel
+        images={enhancedPhotos}
+        bind:currentIndex={currentIndex}
+        autoRotate={false}
+        keyboardNavigation={true}
+        showNavigation={true}
+        navigationPosition="absolute-sides"
+        buttonVariant="overlay"
+        buttonSize="lg"
+        showDots={true}
+        dotsVariant="inverse"
+        dotsPosition="below-image"
+        transitionType="instant"
+        imageFit="cover"
+        class="photo-carousel"
+      />
+      
+      <!-- Place descriptions remain outside ImageCarousel -->
+      <div class="photo-info">
+        <p>{currentIndex + 1} de {photos.length} fotos</p>
+        {#if place.descripcion}
+          <p class="photo-description">{place.descripcion}</p>
+        {/if}
+        {#if place.thingstodo}
+          <p class="photo-thingstodo">{place.thingstodo}</p>
+        {/if}
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
-**Note:** Modal overlay structure (backdrop, close button) stays in PhotoCarousel wrapper
+**Note:** 
+- Modal overlay structure (backdrop, close button) stays in PhotoCarousel wrapper
+- Place descriptions stay in PhotoCarousel wrapper, not in ImageCarousel
+- ImageCarousel focuses solely on image navigation
 
 **Estimated Effort:** 2-3 hours
 
@@ -446,9 +468,10 @@ When `keyboardNavigation={true}`:
 ### 4. PhotoCarousel Modal Structure
 - **Risk:** Low - Keep modal wrapper separate
 - **Mitigation:**
-  - ImageCarousel handles carousel logic only
-  - PhotoCarousel wrapper handles modal UI
-  - Clear separation of concerns
+  - ImageCarousel handles carousel logic only (images, navigation, transitions)
+  - PhotoCarousel wrapper handles modal UI (backdrop, header, close button)
+  - Place descriptions (descripcion, thingstodo) remain in PhotoCarousel wrapper
+  - Clear separation of concerns: carousel vs. modal vs. content
 
 ---
 
@@ -498,7 +521,15 @@ When `keyboardNavigation={true}`:
         <!-- Navigation buttons -->
       </div>
       <CarouselDots ... />
-      <div class="photo-info">...</div>
+      <div class="photo-info">
+        <p>{currentIndex + 1} de {photos.length} fotos</p>
+        {#if place.descripcion}
+          <p class="photo-description">{place.descripcion}</p>
+        {/if}
+        {#if place.thingstodo}
+          <p class="photo-thingstodo">{place.thingstodo}</p>
+        {/if}
+      </div>
     </div>
   </div>
 </div>
@@ -509,31 +540,44 @@ When `keyboardNavigation={true}`:
 <!-- PhotoCarousel.svelte wrapper -->
 <div class="overlay">
   <div class="modal">
-    <svelte:fragment slot="header">
-      <div class="header">...</div>
-    </svelte:fragment>
-    <ImageCarousel
-      images={enhancedPhotos}
-      bind:currentIndex={currentIndex}
-      keyboardNavigation={true}
-      showNavigation={true}
-      navigationPosition="absolute-sides"
-      buttonVariant="overlay"
-      buttonSize="lg"
-      showDots={true}
-      dotsVariant="inverse"
-      dotsPosition="below-image"
-      transitionType="instant"
-      imageFit="cover"
-      class="photo-carousel"
-    >
-      <svelte:fragment slot="additionalContent">
-        <div class="photo-info">...</div>
-      </svelte:fragment>
-    </ImageCarousel>
+    <div class="header">
+      <h3>{place.nombre}</h3>
+      <button class="close-button" onclick={onClose}>×</button>
+    </div>
+    <div class="content">
+      <!-- ImageCarousel only handles image navigation -->
+      <ImageCarousel
+        images={enhancedPhotos}
+        bind:currentIndex={currentIndex}
+        keyboardNavigation={true}
+        showNavigation={true}
+        navigationPosition="absolute-sides"
+        buttonVariant="overlay"
+        buttonSize="lg"
+        showDots={true}
+        dotsVariant="inverse"
+        dotsPosition="below-image"
+        transitionType="instant"
+        imageFit="cover"
+        class="photo-carousel"
+      />
+      
+      <!-- Place descriptions remain outside ImageCarousel -->
+      <div class="photo-info">
+        <p>{currentIndex + 1} de {photos.length} fotos</p>
+        {#if place.descripcion}
+          <p class="photo-description">{place.descripcion}</p>
+        {/if}
+        {#if place.thingstodo}
+          <p class="photo-thingstodo">{place.thingstodo}</p>
+        {/if}
+      </div>
+    </div>
   </div>
 </div>
 ```
+
+**Note:** ImageCarousel focuses solely on image carousel functionality. Place descriptions (descripcion, thingstodo) remain in the PhotoCarousel wrapper component to maintain separation of concerns.
 
 ### Example 3: FloorPlans (With Footer)
 
