@@ -105,14 +105,18 @@ interface ImageCarouselProps {
   
   // Navigation UI
   showNavigation?: boolean;
-  navigationPosition?: 'bottom-center' | 'absolute-sides';
+  navigationPosition?: 'absolute-sides' | 'around-dots';
+  // 'around-dots': buttons on either side of dots (bottom-center)
+  // 'absolute-sides': buttons absolutely positioned on left/right
   buttonVariant?: 'overlay' | 'solid' | 'bordered' | 'accent';
   buttonSize?: 'sm' | 'md' | 'lg' | 'xl';
   
   // Dots
   showDots?: boolean;
   dotsVariant?: 'default' | 'accent' | 'inverse';
-  dotsPosition?: 'bottom-center' | 'below-image';
+  dotsPosition?: 'below-image' | 'bottom-center';
+  // 'bottom-center': dots in navigation bar (when navigationPosition='around-dots')
+  // 'below-image': dots below image (when navigationPosition='absolute-sides')
   
   // Transitions
   transitionType?: 'fade' | 'fade-scale' | 'instant';
@@ -150,13 +154,15 @@ interface ImageCarouselProps {
   
   <!-- Navigation Buttons -->
   {#if showNavigation && images.length > 1}
-    {#if navigationPosition === 'bottom-center'}
-      <div class="carousel-navigation bottom-center">
+    {#if navigationPosition === 'around-dots'}
+      <div class="carousel-navigation around-dots">
         <CircularButton ... />
-        <CarouselDots ... />
+        {#if showDots}
+          <CarouselDots ... />
+        {/if}
         <CircularButton ... />
       </div>
-    {:else}
+    {:else if navigationPosition === 'absolute-sides'}
       <CircularButton class="nav-button prev" ... />
       <CircularButton class="nav-button next" ... />
     {/if}
@@ -213,7 +219,7 @@ interface ImageCarouselProps {
   interval={5000}
   pauseOnHover={true}
   showNavigation={true}
-  navigationPosition="bottom-center"
+  navigationPosition="around-dots"
   buttonVariant="overlay"
   buttonSize="md"
   showDots={true}
@@ -267,7 +273,7 @@ interface ImageCarouselProps {
   images={FLOOR_PLANS.map(p => p.image)}
   autoRotate={false}
   showNavigation={true}
-  navigationPosition="bottom-center"
+  navigationPosition="around-dots"
   buttonVariant="bordered"
   buttonSize="md"
   showDots={true}
@@ -304,9 +310,12 @@ interface ImageCarouselProps {
 
 ### Navigation Patterns
 
-#### Pattern 1: Bottom Center (Carousel, FloorPlans)
+#### Pattern 1: Around Dots (Carousel, FloorPlans)
+**Prop:** `navigationPosition="around-dots"`
+
+Buttons are positioned on either side of the dots at the bottom center:
 ```svelte
-<div class="carousel-navigation bottom-center">
+<div class="carousel-navigation around-dots">
   <CircularButton variant={buttonVariant} size={buttonSize} ... />
   <CarouselDots ... />
   <CircularButton variant={buttonVariant} size={buttonSize} ... />
@@ -314,6 +323,9 @@ interface ImageCarouselProps {
 ```
 
 #### Pattern 2: Absolute Sides (PhotoCarousel)
+**Prop:** `navigationPosition="absolute-sides"`
+
+Buttons are positioned absolutely on the left and right sides:
 ```svelte
 <CircularButton 
   class="nav-button prev" 
@@ -461,7 +473,7 @@ When `keyboardNavigation={true}`:
   interval={5000}
   pauseOnHover={true}
   showNavigation={true}
-  navigationPosition="bottom-center"
+  navigationPosition="around-dots"
   buttonVariant="overlay"
   buttonSize="md"
   showDots={true}
@@ -543,7 +555,7 @@ When `keyboardNavigation={true}`:
   images={FLOOR_PLANS.map(p => p.image)}
   bind:currentIndex={currentPlanIndex}
   showNavigation={true}
-  navigationPosition="bottom-center"
+  navigationPosition="around-dots"
   buttonVariant="bordered"
   buttonSize="md"
   showDots={true}
