@@ -1,6 +1,7 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
 	import { onMount, onDestroy } from 'svelte';
+	import { browser } from '$app/environment';
 	import type { Snippet } from 'svelte';
 	import CircularButton from '$lib/components/ui/CircularButton.svelte';
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
@@ -100,6 +101,9 @@
 	// ===== STATE =====
 	let internalIndex = $state(0);
 	let carouselInterval: ReturnType<typeof setInterval> | null = null;
+	let carouselElement: HTMLDivElement | null = $state(null);
+	let isVisible = $state(false);
+	let intersectionObserver: IntersectionObserver | null = null;
 
 	// ===== DERIVED =====
 	// Determine if component is controlled
@@ -115,23 +119,65 @@
 		if (autoRotate) {
 			startCarousel();
 		}
-		if (keyboardNavigation) {
-			window.addEventListener('keydown', handleKeydown);
+		// Set up keyboard navigation after element is bound
+		// Use requestAnimationFrame to ensure element is in DOM
+		if (keyboardNavigation && browser) {
+			requestAnimationFrame(() => {
+				setupKeyboardNavigation();
+			});
 		}
 		return () => {
 			stopCarousel();
-			if (keyboardNavigation) {
-				window.removeEventListener('keydown', handleKeydown);
-			}
+			cleanupKeyboardNavigation();
 		};
 	});
 
 	onDestroy(() => {
 		stopCarousel();
-		if (keyboardNavigation) {
+		cleanupKeyboardNavigation();
+	});
+
+	// ===== KEYBOARD NAVIGATION SETUP =====
+	/**
+	 * Sets up keyboard navigation with Intersection Observer to handle multiple carousels.
+	 * Only carousels that are at least 50% visible in the viewport will respond to keyboard events.
+	 * This prevents multiple carousels from responding simultaneously when multiple are on the page.
+	 */
+	function setupKeyboardNavigation() {
+		if (!browser || !keyboardNavigation) return;
+
+		// Set up Intersection Observer to track visibility
+		if (carouselElement) {
+			intersectionObserver = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						// Consider visible if at least 50% of the carousel is in viewport
+						// This threshold prevents multiple carousels from responding simultaneously
+						isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+					}
+				},
+				{
+					threshold: [0, 0.5, 1.0], // Track at 0%, 50%, and 100% visibility
+					rootMargin: '0px'
+				}
+			);
+			intersectionObserver.observe(carouselElement);
+		}
+
+		// Add global keyboard listener
+		// Note: All carousels listen, but only visible ones respond (checked in handleKeydown)
+		window.addEventListener('keydown', handleKeydown);
+	}
+
+	function cleanupKeyboardNavigation() {
+		if (intersectionObserver) {
+			intersectionObserver.disconnect();
+			intersectionObserver = null;
+		}
+		if (keyboardNavigation && browser) {
 			window.removeEventListener('keydown', handleKeydown);
 		}
-	});
+	}
 
 	// ===== FUNCTIONS =====
 	function nextImage() {
@@ -169,6 +215,17 @@
 
 	function handleKeydown(e: KeyboardEvent) {
 		if (!keyboardNavigation) return;
+
+		// Only respond if carousel is visible in viewport (at least 50% visible)
+		// This prevents multiple carousels from responding simultaneously when multiple
+		// carousels are on the same page. The Intersection Observer tracks visibility.
+		if (!isVisible) return;
+
+		// Don't handle if user is typing in an input field
+		const target = e.target as HTMLElement;
+		if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+			return;
+		}
 
 		switch (e.key) {
 			case 'ArrowLeft':
@@ -219,6 +276,7 @@
 </script>
 
 <div
+	bind:this={carouselElement}
 	class='image-carousel {containerClass} {className}'
 	class:transition-fade={transitionType === 'fade'}
 	class:transition-fade-scale={transitionType === 'fade-scale'}
