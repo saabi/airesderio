@@ -104,6 +104,7 @@
 	let carouselElement: HTMLDivElement | null = $state(null);
 	let isVisible = $state(false);
 	let intersectionObserver: IntersectionObserver | null = null;
+	let preloadedImages = $state<Set<string>>(new Set()); // Track preloaded images to avoid duplicates
 
 	// ===== DERIVED =====
 	// Determine if component is controlled
@@ -126,10 +127,86 @@
 				setupKeyboardNavigation();
 			});
 		}
+		// Preload adjacent images
+		preloadAdjacentImages();
 		return () => {
 			stopCarousel();
 			cleanupKeyboardNavigation();
 		};
+	});
+
+	// ===== IMAGE PRELOADING =====
+	/**
+	 * Preloads the next and previous images to improve navigation performance.
+	 * Uses <link rel="preload"> for string URLs and Image objects for enhanced images.
+	 */
+	function preloadAdjacentImages() {
+		if (!browser || images.length <= 1) return;
+
+		const current = currentImageIndex;
+		const nextIndex = (current + 1) % images.length;
+		const prevIndex = (current - 1 + images.length) % images.length;
+
+		// Preload next image
+		preloadImage(images[nextIndex]);
+
+		// Preload previous image (optional, but helps with back navigation)
+		preloadImage(images[prevIndex]);
+	}
+
+	/**
+	 * Preloads a single image.
+	 * For string URLs, uses <link rel="preload">.
+	 * For enhanced images, creates an Image object to trigger loading.
+	 */
+	function preloadImage(image: ImageInput) {
+		if (!browser) return;
+
+		const imageSrc = getImageSrc(image);
+		const isString = typeof image === 'string';
+
+		// Create a unique identifier for this image
+		const imageId = isString ? imageSrc : (typeof imageSrc === 'string' ? imageSrc : String(imageSrc));
+
+		// Skip if already preloaded
+		if (preloadedImages.has(imageId)) {
+			return;
+		}
+
+		if (isString) {
+			// Use link preload for string URLs
+			const link = document.createElement('link');
+			link.rel = 'preload';
+			link.as = 'image';
+			link.href = imageSrc;
+			document.head.appendChild(link);
+			preloadedImages.add(imageId);
+		} else {
+			// For enhanced images, preload by creating an Image object
+			// This triggers the browser to fetch the image
+			// Enhanced images from @sveltejs/enhanced-img are objects that the browser handles
+			// We can't directly preload them with <link>, but creating an Image object
+			// will trigger the browser's natural image loading mechanism
+			if (typeof imageSrc === 'string') {
+				const img = new Image();
+				img.src = imageSrc;
+				preloadedImages.add(imageId);
+			} else {
+				// For enhanced image objects, the browser will handle loading
+				// when the <enhanced:img> component renders
+				// We mark it as preloaded to avoid duplicate attempts
+				preloadedImages.add(imageId);
+			}
+		}
+	}
+
+	// Watch for index changes and preload adjacent images
+	$effect(() => {
+		// This effect runs whenever currentImageIndex changes
+		currentImageIndex; // Track the dependency
+		if (browser) {
+			preloadAdjacentImages();
+		}
 	});
 
 	// ===== KEYBOARD NAVIGATION SETUP =====
