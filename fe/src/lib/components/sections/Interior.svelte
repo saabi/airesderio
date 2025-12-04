@@ -151,8 +151,7 @@
 
 		.interior-gallery {
 			/* Layout */
-			aspect-ratio: auto;
-			height: 12rem;
+			aspect-ratio: 4 / 3;
 		}
 	}
 </style>
