@@ -994,6 +994,8 @@ let { value = $bindable('') } = $props();
 
 ## Styling
 
+**For complete CSS organization guidelines, see [CSS Organization Guidelines](./css-organization.md).**
+
 ### CSS Declaration Order
 
 Follow a consistent, logical order for CSS properties. This improves readability, makes styles easier to maintain, and reduces merge conflicts.
@@ -1090,6 +1092,8 @@ Use CSS custom properties for theming:
   }
 </style>
 ```
+
+**See [CSS Organization Guidelines](./css-organization.md) for detailed property categorization, examples, and best practices.**
 
 ## SvelteKit Specifics
 
@@ -1493,6 +1497,7 @@ When updating existing components or creating new ones, ensure:
 
 - [Architecture Documentation](./architecture.md) - Complete architecture overview
 - [Development Setup](./development-setup.md) - Development environment setup
+- [CSS Organization Guidelines](./css-organization.md) - Complete CSS organization and styling guidelines
 - [Process Documentation](../process/) - Development processes
 
 ---
