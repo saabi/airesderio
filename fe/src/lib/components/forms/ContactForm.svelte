@@ -152,22 +152,6 @@
 	</div>
 	<PhoneNumberInput id='telefono' name='telefono' />
 	<div class='form-group'>
-		<label for='consulta'>Consulta</label>
-		<Select
-			id='consulta'
-			name='consulta'
-			placeholder='Seleccioná'
-			ariaLabel='Tipo de consulta'
-			disabled={isLoading}
-		>
-			{#snippet children()}
-				<option>Precio y Financiación</option>
-				<option>Visitar el Showroom</option>
-				<option>Otras consultas</option>
-			{/snippet}
-		</Select>
-	</div>
-	<div class='form-group'>
 		<label for='mensaje'>Mensaje</label>
 		<Textarea
 			id='mensaje'

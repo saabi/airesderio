@@ -81,14 +81,19 @@
 		gap: 2rem;
 	}
 
+	.form {
+		/* Layout */
+		justify-self: end;
+	}
+
 	.right-column {
 		/* Layout */
 		display: grid;
 		grid-template-rows: 1fr min-content;
 		height: 100%;
 		gap: 1rem;
-		max-height: 36em;
-		justify-items: center;
+		max-height: 32em;
+		justify-items: start;
 	}
 
 	.form h2 {
@@ -100,6 +105,7 @@
 		font-weight: 600;
 		letter-spacing: 0.1em;
 		color: var(--color-accent-primary);
+		justify-self: start;
 	}
 
 	.form p {
@@ -156,9 +162,16 @@
 			grid-template-columns: 1fr;
 		}
 
+		.form {
+			/* Layout */
+			justify-self: center;
+		}
+
 		.right-column {
 			/* Layout */
 			margin-top: 1rem;
+			justify-self: center;
+			max-width: 80%;
 		}
 
 		.exterior-image {
