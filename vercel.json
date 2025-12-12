@@ -1,0 +1,4 @@
+{
+	"buildCommand": "cd fe && npm install && ADAPTER=vercel npm run build"
+}
+
