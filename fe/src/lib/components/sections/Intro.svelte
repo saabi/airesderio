@@ -63,13 +63,13 @@
 			>Características principales del proyecto</VisuallyHidden
 		>
 		<dl>
-			<dt class='kpi'><strong>2.500</strong><small>metros cuadrados</small></dt>
+			<dt class='kpi'><strong>2.500</strong><small>metros cuadrados totales</small></dt>
 			<VisuallyHidden tag='dd'>Superficie total del proyecto</VisuallyHidden>
-			<dt class='kpi'><strong>1/2 + 1</strong><small>dorms · estudio</small></dt>
+			<dt class='kpi'><strong>2 y 5 Ambientes</strong><small>1 dormitorio<br>2 dormitorios + estudio</small></dt>
 			<VisuallyHidden tag='dd'>Tipos de unidades disponibles</VisuallyHidden>
-			<dt class='kpi'><strong>TERRAZA</strong><small>PISCINA Y SOLARIUM HÚMEDO</small></dt>
+			<dt class='kpi'><strong>PISCINA</strong><small>Con solarium húmedo en terraza</small></dt>
 			<VisuallyHidden tag='dd'>Amenities en terraza con piscina y solarium húmedo</VisuallyHidden>
-			<dt class='kpi'><strong>CAFETERÍA</strong><small>&nbsp;</small></dt>
+			<dt class='kpi'><strong>CAFETERÍA</strong><small>En planta baja</small></dt>
 			<VisuallyHidden tag='dd'>Servicio de cafetería incluido</VisuallyHidden>
 		</dl>
 	</aside>
@@ -81,9 +81,10 @@
 		display: grid;
 		grid-template-columns: 1fr min-content;
 		gap: 4rem;
-		align-items: start;
+		align-items: center;
+		width: 80rem;
 		padding: 0;
-		font-size: 1.2rem;
+		font-size: 1.4rem;
 		max-width: var(--max);
 		margin: 0 auto;
 	}
@@ -128,6 +129,8 @@
 	.kpis dt {
 		/* Layout */
 		display: contents;
+
+		white-space: nowrap;
 	}
 
 	.kpi strong {

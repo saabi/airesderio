@@ -41,7 +41,7 @@
 		{
 			icon: '🖼️',
 			component: Carpinteria,
-			text: 'Carpintería de aluminio de alta prestación con aislación termoacústica superior.'
+			text: 'Carpintería de aluminio Aluar Línea A30 NEW de alta prestación.'
 		},
 		{
 			icon: '🍳',
@@ -51,7 +51,7 @@
 		{
 			icon: '🚪',
 			component: Puerta,
-			text: 'Puertas de madera con diseño exclusivo que aportan calidez y elegancia moderna.'
+			text: 'Puertas de madera con diseño exclusivo que aportan calidez y moderna elegancia.'
 		},
 		{
 			icon: '🌡️',
@@ -66,12 +66,12 @@
 		{
 			icon: '🛁',
 			component: Banos,
-			text: 'Baños de diseño con grifería de primera calidad, vanitory, espejo y mampara de vidrio.'
+			text: 'Baños de diseño con grifería de primera calidad, vanitory, espejo y mampara de vidrio color ámbar.'
 		},
 		{
 			icon: '🔥',
 			component: GasNatural,
-			text: 'Conexión de gas natural disponible específicamente para anafe y horno empotrado.'
+			text: 'Conexión de gas natural disponible específicamente para anafe, horno empotrado y calefactor.'
 		},
 		{
 			icon: '👔',

@@ -20,16 +20,16 @@
 	];
 
 	const contactInfo = [
-		{ label: 'Oficina Habitat Prime', value: 'Av. Rivadavia 1520 · Santiago del Estero' },
+/* 		{ label: 'Oficina Habitat Prime', value: 'Av. Rivadavia 1520 · Santiago del Estero' },
 		{ label: 'Whatsapp ventas', value: '+54 9 385 555 0000' },
 		{ label: 'Teléfono', value: '+54 385 421 1111' },
-		{ label: 'Email comercial', value: 'hola@habitatprime.com' }
+ */		{ label: 'Email comercial', value: 'info@airesderio.com.ar' }
 	];
 
 	const projectHighlights = [
-		{ label: 'Entrega estimada', value: 'Q1 · 2026' },
-		{ label: 'Unidades disponibles', value: '2 y 4 ambientes' },
-		{ label: 'Amenities', value: 'Piscina · Cowork · Rooftop' }
+		{ label: 'Entrega estimada', value: '2027' },
+		{ label: 'Unidades disponibles', value: '2 y 5 ambientes' },
+		{ label: 'Amenities', value: 'Piscina · Terraza · Cafetería' }
 	];
 </script>
 

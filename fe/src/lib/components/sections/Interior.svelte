@@ -95,8 +95,7 @@
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				La iluminación LED, ya integrada, resalta los ambientes con luz indirecta, creando espacios
-				armónicos y relajantes. Solo será necesario sumar artefactos de luz directa a gusto de cada
-				usuario.
+				armónicos y relajantes.
 			</p>
 		</div>
 	</div>
@@ -106,7 +105,7 @@
 	#interior {
 		max-width: var(--max);
 		margin: 0 auto;
-		font-size: 1.2rem;
+		font-size: 1.4rem;
 	}
 
 	.interior-container {

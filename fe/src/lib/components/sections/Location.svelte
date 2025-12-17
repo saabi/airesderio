@@ -267,7 +267,7 @@
 	#ubicacion {
 		max-width: var(--max);
 		margin: 0 auto;
-		font-size: 1.2rem;
+		font-size: 1.4rem;
 	}
 
 	.ubi {

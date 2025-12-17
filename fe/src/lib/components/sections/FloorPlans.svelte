@@ -121,13 +121,13 @@
 				buttonSize="md"
 				showDots={true}
 				dotsVariant="inverse"
+				dotsPosition="below-image"
 				transitionType="fade"
 				transitionDuration={600}
 				imageFit="contain"
 				imageSizes="(min-width: 1024px) 1024px, 100vw"
 				ariaLabel="Galería de planos de distribución"
 				imageAriaLabel={(index) => `Plano ${index + 1}: ${FLOOR_PLANS[index].title}`}
-				class="floor-plans-carousel"
 			/>
 		</div>
 		<figure class='floor-plan-info'>
