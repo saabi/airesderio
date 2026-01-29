@@ -11,6 +11,8 @@
 		ariaLabel?: string;
 		zoomMargin?: number;
 		includeAiresderio?: boolean;
+		showNearImage?: boolean;
+		radius?: number;
 	}
 
 	export interface MapComponent {
@@ -69,7 +71,9 @@
 		class: className = '',
 		ariaLabel = 'Mapa de ubicación',
 		zoomMargin = 0.1,
-		includeAiresderio = true
+		includeAiresderio = true,
+		showNearImage = true,
+		radius = 50
 	}: Props = $props();
 
 	// ===== STATE =====
@@ -84,7 +88,40 @@
 	// Reference to measurement label for getting dimensions
 	let measurementLabel: HTMLDivElement | null = $state(null);
 
+	// Airesderio pin coordinates (used as center when showNearImage is false)
+	const AIRESDERIO_CENTER = {
+		cx: 114.75736,
+		cy: 73.439285
+	};
+
+	// Calculate viewBox centered on airesderio with given radius
+	function calculateAiresderioViewBox(radiusValue: number) {
+		// Calculate viewBox dimensions based on radius
+		// The radius represents half the width/height of the viewBox
+		const viewBoxSize = radiusValue * 2;
+		
+		// Center the viewBox on airesderio coordinates
+		const centerX = AIRESDERIO_CENTER.cx;
+		const centerY = AIRESDERIO_CENTER.cy;
+		
+		// Calculate top-left corner
+		const x = Math.max(0, centerX - radiusValue);
+		const y = Math.max(0, centerY - radiusValue);
+		
+		// Calculate width and height, ensuring we don't go outside FULL_VIEWBOX bounds
+		const width = Math.min(viewBoxSize, FULL_VIEWBOX.width - x);
+		const height = Math.min(viewBoxSize, FULL_VIEWBOX.height - y);
+		
+		return { x, y, width, height };
+	}
+
+	// Determine default viewBox based on showNearImage prop
+	let defaultViewBox = $derived(
+		showNearImage ? NEAR_VIEWBOX : calculateAiresderioViewBox(radius)
+	);
+
 	// Tweened values for smooth animation
+	// Initialize with NEAR_VIEWBOX (default), will be updated by effect if showNearImage changes
 	let viewBoxX = tweened(NEAR_VIEWBOX.x, { duration: 600, easing: (t) => t * (2 - t) });
 	let viewBoxY = tweened(NEAR_VIEWBOX.y, { duration: 600, easing: (t) => t * (2 - t) });
 	let viewBoxWidth = tweened(NEAR_VIEWBOX.width, { duration: 600, easing: (t) => t * (2 - t) });
@@ -236,12 +273,13 @@
 
 	// ===== EFFECTS =====
 	$effect(() => {
-		// Reset to near viewBox if not programmatically zoomed
+		// Reset to default viewBox if not programmatically zoomed
+		// This also updates when showNearImage changes
 		if (currentZoomedIndex === null) {
-			viewBoxX.set(NEAR_VIEWBOX.x);
-			viewBoxY.set(NEAR_VIEWBOX.y);
-			viewBoxWidth.set(NEAR_VIEWBOX.width);
-			viewBoxHeight.set(NEAR_VIEWBOX.height);
+			viewBoxX.set(defaultViewBox.x);
+			viewBoxY.set(defaultViewBox.y);
+			viewBoxWidth.set(defaultViewBox.width);
+			viewBoxHeight.set(defaultViewBox.height);
 			selectedGroupName = null;
 			pinCoordinates = null;
 		}
@@ -447,10 +485,10 @@
 
 	function reset() {
 		currentZoomedIndex = null;
-		viewBoxX.set(NEAR_VIEWBOX.x);
-		viewBoxY.set(NEAR_VIEWBOX.y);
-		viewBoxWidth.set(NEAR_VIEWBOX.width);
-		viewBoxHeight.set(NEAR_VIEWBOX.height);
+		viewBoxX.set(defaultViewBox.x);
+		viewBoxY.set(defaultViewBox.y);
+		viewBoxWidth.set(defaultViewBox.width);
+		viewBoxHeight.set(defaultViewBox.height);
 	}
 
 	// Export functions, current path id, and state variables
@@ -479,15 +517,17 @@
 				height='225.68958'
 				preserveAspectRatio='none'
 			/>
-			<image
-				id='near'
-				href='/map/near.jpg'
-				x='81.364487'
-				y='52.243599'
-				width='69.217209'
-				height='41.755505'
-				preserveAspectRatio='none'
-			/>
+			{#if showNearImage}
+				<image
+					id='near'
+					href='/map/near.jpg'
+					x='81.364487'
+					y='52.243599'
+					width='69.217209'
+					height='41.755505'
+					preserveAspectRatio='none'
+				/>
+			{/if}
 		</g>
 		<g id='places' class='places-group' class:zoom-active={currentZoomedIndex !== null}>
 			<g
