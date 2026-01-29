@@ -34,6 +34,7 @@
 		}
 
 		const placeMap = PLACE_PHOTOS_MAP[placeId];
+
 		if (!placeMap) {
 			if (import.meta.env.DEV) {
 				console.warn(`Place "${placeId}" not found in PLACE_PHOTOS_MAP. Using fallback paths.`);
