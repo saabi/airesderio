@@ -4,6 +4,8 @@
 	import PinLabel from '$lib/components/ui/PinLabel.svelte';
 
 	// ===== TYPES =====
+	import type { MapPlaceData, MapConfig } from '$lib/types';
+
 	interface Props {
 		width?: string | number;
 		height?: string | number;
@@ -13,6 +15,8 @@
 		includeAiresderio?: boolean;
 		showNearImage?: boolean;
 		radius?: number;
+		places: MapPlaceData[];
+		mapConfig: MapConfig;
 	}
 
 	export interface MapComponent {
@@ -23,107 +27,7 @@
 	}
 
 	// ===== STATIC CONSTANTS =====
-	// Full viewBox (entire map)
-	const FULL_VIEWBOX = {
-		x: 0,
-		y: 0,
-		width: 374.12082,
-		height: 225.68958
-	};
-
-	// Near image viewBox (default state)
-	const NEAR_VIEWBOX = {
-		x: 81.364487,
-		y: 52.243599,
-		width: 69.217209,
-		height: 41.755505
-	};
-
-	// ===== PLACE DATA =====
-	// Centralized place data structure
-	// Note: IDs match the cleaned SVG file (map-cleaner2.svg)
-	// Order determines navigation sequence
-	interface PlaceData {
-		id: string;
-		name: string;
-	}
-
-	const PLACES: PlaceData[] = [
-		{
-			id: 'terminal',
-			name: 'Terminal de Ómnibus'
-		},
-		{
-			id: 'forum',
-			name: 'Fórum Santiago del Estero'
-		},
-		{
-			id: 'casa-de-gobierno',
-			name: 'Casa de Gobierno'
-		},
-		{
-			id: 'plaza-vea',
-			name: 'Plaza Vea'
-		},
-		{
-			id: 'parque-aguirre',
-			name: 'Parque Aguirre'
-		},
-		{
-			id: 'avenida-roca',
-			name: 'Avenida Roca'
-		},
-		{
-			id: 'avenida-irigoyen',
-			name: 'Avenida Irigoyen'
-		},
-		{
-			id: 'mercado',
-			name: 'Mercado'
-		},
-		{
-			id: 'calle-absalonrojas',
-			name: 'Calle Absalón Rojas'
-		},
-		{
-			id: 'teatro-25-de-mayo',
-			name: 'Teatro 25 de Mayo'
-		},
-		{
-			id: 'plaza-libertad',
-			name: 'Plaza Libertad'
-		},
-		{
-			id: 'avenida-rivadavia',
-			name: 'Avenida Rivadavia'
-		},
-		{
-			id: 'avenida-alvear',
-			name: 'Avenida Alvear'
-		},
-		{
-			id: 'tribunales',
-			name: 'Tribunales'
-		},
-		{
-			id: 'estadio-unico',
-			name: 'Estadio Único'
-		},
-		{
-			id: 'registro-civil',
-			name: 'Registro Civil'
-		},
-		{
-			id: 'ccb',
-			name: 'CCB'
-		}
-	];
-
-	// Derived constants from PLACES array
-	const PLACE_PATH_IDS = PLACES.map((place) => place.id);
-	const PLACE_NAMES: Record<string, string> = Object.fromEntries(
-		PLACES.map((place) => [place.id, place.name])
-	);
+	// (Constants will be derived from props in runtime script)
 </script>
 
 <script lang='ts'>
@@ -136,8 +40,23 @@
 		zoomMargin = 0.1,
 		includeAiresderio = true,
 		showNearImage = true,
-		radius = 50
+		radius = 50,
+		places,
+		mapConfig
 	}: Props = $props();
+
+	// ===== DERIVED FROM PROPS =====
+	let FULL_VIEWBOX = $derived(mapConfig.fullViewBox);
+	let NEAR_VIEWBOX = $derived(mapConfig.nearViewBox);
+	let AIRESDERIO_CENTER = $derived(mapConfig.airesderioCenter);
+	let FAR_IMAGE = $derived(mapConfig.farImage);
+	let NEAR_IMAGE = $derived(mapConfig.nearImage);
+
+	// Derived constants from places prop
+	let PLACE_PATH_IDS = $derived(places.map((place) => place.id));
+	let PLACE_NAMES = $derived(
+		Object.fromEntries(places.map((place) => [place.id, place.name]))
+	);
 
 	// ===== STATE =====
 	let currentZoomedIndex = $state<number | null>(null);
@@ -150,13 +69,6 @@
 
 	// Reference to measurement label for getting dimensions
 	let measurementLabel: HTMLDivElement | null = $state(null);
-
-	// Airesderio pin coordinates (used as center when showNearImage is false)
-	// Updated to match map-cleaner2.svg coordinates
-	const AIRESDERIO_CENTER = {
-		cx: 203.69386,
-		cy: 413.82022
-	};
 
 	// Calculate viewBox centered on airesderio with given radius
 	function calculateAiresderioViewBox(radiusValue: number) {
@@ -185,30 +97,20 @@
 	);
 
 	// Tweened values for smooth animation
-	// Initialize with NEAR_VIEWBOX (default), will be updated by effect if showNearImage changes
-	let viewBoxX = tweened(NEAR_VIEWBOX.x, { duration: 600, easing: (t) => t * (2 - t) });
-	let viewBoxY = tweened(NEAR_VIEWBOX.y, { duration: 600, easing: (t) => t * (2 - t) });
-	let viewBoxWidth = tweened(NEAR_VIEWBOX.width, { duration: 600, easing: (t) => t * (2 - t) });
-	let viewBoxHeight = tweened(NEAR_VIEWBOX.height, { duration: 600, easing: (t) => t * (2 - t) });
+	// Initialize with mapConfig.nearViewBox (default), will be updated by effect when defaultViewBox changes
+	let viewBoxX = tweened(mapConfig.nearViewBox.x, { duration: 600, easing: (t) => t * (2 - t) });
+	let viewBoxY = tweened(mapConfig.nearViewBox.y, { duration: 600, easing: (t) => t * (2 - t) });
+	let viewBoxWidth = tweened(mapConfig.nearViewBox.width, { duration: 600, easing: (t) => t * (2 - t) });
+	let viewBoxHeight = tweened(mapConfig.nearViewBox.height, { duration: 600, easing: (t) => t * (2 - t) });
 
-	// References to path elements for bounding box calculation
-	let terminalPath: SVGPathElement | null = $state(null);
-	let forumPath: SVGPathElement | null = $state(null);
-	let casaDeGobiernoPath: SVGPathElement | null = $state(null);
-	let plazaVeaPath: SVGPathElement | null = $state(null);
-	let parqueAguirrePath: SVGPathElement | null = $state(null);
-	let avenidaRocaPath: SVGPathElement | null = $state(null);
-	let avenidaIrigoyenPath: SVGPathElement | null = $state(null);
-	let mercadoPath: SVGPathElement | null = $state(null);
-	let calleAbsalonrojasPath: SVGPathElement | null = $state(null);
-	let teatro25DeMayoPath: SVGPathElement | null = $state(null);
-	let plazaLibertadPath: SVGPathElement | null = $state(null);
-	let avenidaRivadaviaPath: SVGPathElement | null = $state(null);
-	let avenidaAlvearPath: SVGPathElement | null = $state(null);
-	let tribunalesPath: SVGPathElement | null = $state(null);
-	let estadioUnicoPath: SVGPathElement | null = $state(null);
-	let registroCivilPath: SVGPathElement | null = $state(null);
-	let ccbPath: SVGPathElement | null = $state(null);
+	// Update tweened values when defaultViewBox changes
+	$effect(() => {
+		const _ = defaultViewBox.x + defaultViewBox.y + defaultViewBox.width + defaultViewBox.height;
+		viewBoxX.set(defaultViewBox.x);
+		viewBoxY.set(defaultViewBox.y);
+		viewBoxWidth.set(defaultViewBox.width);
+		viewBoxHeight.set(defaultViewBox.height);
+	});
 
 	// Reference to SVG element for container dimensions
 	let svgElement: SVGSVGElement | null = $state(null);
@@ -216,34 +118,25 @@
 	// Reference to airesderio path element
 	let airesderioPath: SVGPathElement | null = $state(null);
 
-	// Map of path IDs to elements
-	// Organized using PLACES array for consistency
-	let pathElements = $derived(
-		new Map(
-			PLACES.map((place, index) => {
-				const pathRefs = [
-					terminalPath,
-					forumPath,
-					casaDeGobiernoPath,
-					plazaVeaPath,
-					parqueAguirrePath,
-					avenidaRocaPath,
-					avenidaIrigoyenPath,
-					mercadoPath,
-					calleAbsalonrojasPath,
-					teatro25DeMayoPath,
-					plazaLibertadPath,
-					avenidaRivadaviaPath,
-					avenidaAlvearPath,
-					tribunalesPath,
-					estadioUnicoPath,
-					registroCivilPath,
-					ccbPath
-				];
-				return [place.id, pathRefs[index]] as [string, SVGPathElement | null];
-			}).filter(([_, el]) => el !== null) as Array<[string, SVGPathElement]>
-		)
-	);
+	// Map of path IDs to elements - dynamically queried from SVG DOM
+	let pathElements = $derived.by(() => {
+		if (!svgElement) return new Map<string, SVGPathElement | SVGRectElement | SVGCircleElement>();
+		
+		const placesGroup = svgElement.querySelector('#places');
+		if (!placesGroup) return new Map<string, SVGPathElement | SVGRectElement | SVGCircleElement>();
+		
+		const map = new Map<string, SVGPathElement | SVGRectElement | SVGCircleElement>();
+		for (const place of places) {
+			const group = placesGroup.querySelector(`#${place.id}`);
+			if (group) {
+				const shapeElement = group.querySelector('path.place-path, rect.place-path, circle.place-path') as SVGPathElement | SVGRectElement | SVGCircleElement | null;
+				if (shapeElement) {
+					map.set(place.id, shapeElement);
+				}
+			}
+		}
+		return map;
+	});
 
 	// ===== DERIVED =====
 	let widthAttr = $derived(typeof width === 'number' ? `${width}` : width);
@@ -647,277 +540,82 @@
 				/>
 			{/if}
 		</g>
-		<g id='places' class='places-group' class:zoom-active={currentZoomedIndex !== null}>
-			<!-- Terminal -->
-			<g id='terminal' class:group-active={currentPathId === 'terminal'}>
-				<path
-					bind:this={terminalPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Terminal'
-					d='m 151.67143,316.93007 3.38155,3.56796 3.72949,7.41057 1.10154,4.28414 0.82564,4.61497 0.12777,2.53719 -0.18475,2.46355 -1.50848,2.48144 -2.48268,1.85599 -2.81309,0.4586 -3.71363,-0.47936 c 0,0 -3.05073,-3.29207 -3.17931,-3.58627 -0.1286,-0.29421 -3.08612,-7.06103 -3.08612,-7.06103 l -1.13777,-5.81012 -0.10781,-6.82092 0.95833,-6.30575 z'
-				/>
-				<circle class='pin-circle' cx='151.09848' cy='333.03827' r='2.1235924' />
+		{#if currentPathId}
+			{@const selectedPlace = places.find((p) => p.id === currentPathId)}
+			{#if selectedPlace}
+				<g id='places' class='places-group' class:zoom-active={currentZoomedIndex !== null}>
+					<g id={selectedPlace.id} class='group-active'>
+						{#if selectedPlace.svg.shape.type === 'path'}
+							<path
+								class='place-path'
+								fill='#00be4d'
+								vector-effect='non-scaling-stroke'
+								role='button'
+								tabindex='0'
+								aria-label={selectedPlace.name}
+								d={selectedPlace.svg.shape.d}
+							/>
+						{:else if selectedPlace.svg.shape.type === 'rect'}
+							<rect
+								class='place-path'
+								fill='#00be4d'
+								vector-effect='non-scaling-stroke'
+								role='button'
+								tabindex='0'
+								aria-label={selectedPlace.name}
+								x={selectedPlace.svg.shape.x}
+								y={selectedPlace.svg.shape.y}
+								width={selectedPlace.svg.shape.width}
+								height={selectedPlace.svg.shape.height}
+							/>
+						{:else if selectedPlace.svg.shape.type === 'circle'}
+							<circle
+								class='place-path'
+								fill='#00be4d'
+								vector-effect='non-scaling-stroke'
+								role='button'
+								tabindex='0'
+								aria-label={selectedPlace.name}
+								cx={selectedPlace.svg.shape.cx}
+								cy={selectedPlace.svg.shape.cy}
+								r={selectedPlace.svg.shape.r}
+							/>
+						{/if}
+						<circle
+							class='pin-circle'
+							cx={selectedPlace.svg.pin.cx}
+							cy={selectedPlace.svg.pin.cy}
+							r={selectedPlace.svg.pin.r}
+						/>
+						{#if selectedPlace.svg.additionalElements}
+							{#each selectedPlace.svg.additionalElements as textEl}
+								{#if textEl.type === 'text'}
+									<text xml:space={textEl.xmlSpace || 'preserve'} x={textEl.x} y={textEl.y}>
+										<tspan x={textEl.x} y={textEl.y}>{textEl.content}</tspan>
+									</text>
+								{/if}
+							{/each}
+						{/if}
+					</g>
+				</g>
+			{/if}
+		{/if}
+		{#if includeAiresderio}
+			<g id='building' class='building-group' class:zoom-active={currentZoomedIndex !== null}>
+				<g id='airesderio' class='airesderio-path'>
+					<circle
+						class='pin-airesderio'
+						cx={AIRESDERIO_CENTER.cx}
+						cy={AIRESDERIO_CENTER.cy}
+						r='4.3814869'
+					/>
+					<path
+						bind:this={airesderioPath}
+						d='m 202.97288,409.90271 2.2931,0.0425 0.29238,0.2863 -0.002,5.19212 -0.23275,0.44892 0.001,1.48465 -3.31504,-0.0163 -0.0239,-1.23152 0.11181,-5.11477 z'
+					/>
+				</g>
 			</g>
-			<!-- Forum -->
-			<g id='forum' class:group-active={currentPathId === 'forum'}>
-				<path
-					bind:this={forumPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Forum'
-					d='m 138.71088,351.08881 h 6.24117 21.36553 v 57.33699 h -27.6067 v -44.779 z'
-				/>
-				<circle class='pin-circle' cx='148.93271' cy='376.11145' r='2.1235924' />
-			</g>
-			<!-- Casa de Gobierno -->
-			<g id='casa-de-gobierno' class:group-active={currentPathId === 'casa-de-gobierno'}>
-				<rect
-					bind:this={casaDeGobiernoPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Casa de Gobierno'
-					width='15.76687'
-					height='25.77758'
-					x='53.917145'
-					y='379.60132'
-				/>
-				<circle class='pin-circle' cx='61.8862' cy='393.94794' r='2.1235924' />
-			</g>
-			<!-- Plaza Vea -->
-			<g id='plaza-vea' class:group-active={currentPathId === 'plaza-vea'}>
-				<path
-					bind:this={plazaVeaPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Plaza Vea'
-					d='m 274.81336,371.94666 5.32091,29.49171 c 0,0 -4.0815,-0.0383 -3.2359,0.29297 0.8456,0.33124 -0.22301,6.54504 -0.22301,6.54504 l -42.21226,-0.0522 -0.0967,-37.10124 z'
-				/>
-				<circle class='pin-circle' cx='255.12759' cy='390.30475' r='2.1235924' />
-			</g>
-			<!-- Parque Aguirre -->
-			<g id='parque-aguirre' class:group-active={currentPathId === 'parque-aguirre'}>
-				<path
-					bind:this={parqueAguirrePath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Parque Aguirre'
-					d='m 333.45789,410.82288 -2.81949,4.5402 -2.46669,5.37748 0.003,11.23851 -48.05285,13.62132 -1.97889,35.41093 -2.34627,3.20714 -46.14176,-4.34921 0.90451,39.32514 -2.49225,2.62242 -30.61788,0.28371 -1.5907,4.75905 0.19667,197.22537 55.90789,0.2771 129.08003,51.92546 82.50681,4e-5 v -43.21939 l -37.4632,-118.54888 -5.98644,-28.79039 -8.28626,-22.44787 -5.3997,-17.95057 -1.17331,-5.65448 -5.99557,-6.74157 -2.20522,-6.16963 -3.178,-18.77411 1.76206,-3.30591 -0.44123,-1.98315 -4.27585,-3.12805 -3.8365,-8.63726 0.79168,-4.67197 -1.63135,-2.46767 -1.23428,-1.05742 -0.48546,-2.55612 1.63035,-1.2785 0.74886,-1.49866 -1.23428,-1.05743 -4.14319,-1.40925 -2.29269,-3.56931 1.1007,-4.40754 1.23334,-2.68875 -2.07159,-0.70463 -5.24483,-0.7479 -2.77954,-9.54411 0.79307,-0.92573 -2.82139,-2.95215 -0.79546,-8.4397 2.43012,-6.74433 -2.23697,-10.99984 5.55571,-20.1532 0.30654,-14.74381 -10.74751,-11.65754 -3.57895,-12.36281 1.61314,-11.88697 1.26051,-25.71991 -7.46724,-10.94532 -5.00091,-21.51151 -1.06435,-15.92312 -5.20146,-29.37883 -38.33623,-1.40629 21.9523,71.22363 5.53428,12.62888 10.61512,37.51805 3.70032,6.60504 9.36692,11.15628 1.63147,4.2275 z'
-				/>
-				<circle class='pin-circle' cx='279.82251' cy='571.65515' r='2.1235924' />
-				<text xml:space='preserve' x='313.02628' y='359.36108'>
-					<tspan x='313.02628' y='359.36108'>BALNEARIO 1</tspan>
-				</text>
-				<text xml:space='preserve' x='326.16437' y='471.83643'>
-					<tspan x='326.16437' y='471.83643'>BALNEARIO 2</tspan>
-				</text>
-				<text xml:space='preserve' x='374.28116' y='699.82135'>
-					<tspan x='374.28116' y='699.82135'>BALNEARIO 3</tspan>
-				</text>
-			</g>
-			<!-- Avenida Roca -->
-			<g id='avenida-roca' class:group-active={currentPathId === 'avenida-roca'}>
-				<path
-					bind:this={avenidaRocaPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Avenida Roca'
-					d='m 166.21154,410.95117 -0.85805,289.80137 3.30773,0.5892 0.31304,-290.31421 z'
-				/>
-				<circle class='pin-circle' cx='167.47708' cy='546.85071' r='2.1235924' />
-			</g>
-			<!-- Avenida Irigoyen -->
-			<g id='avenida-irigoyen' class:group-active={currentPathId === 'avenida-irigoyen'}>
-				<path
-					bind:this={avenidaIrigoyenPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Avenida Irigoyen'
-					d='m 90.211801,436.54384 2.44011,0.0626 -0.50054,91.4103 -2.50268,-0.0626 z'
-				/>
-				<circle class='pin-circle' cx='91.090652' cy='482.8299' r='2.1235924' />
-			</g>
-			<!-- Mercado -->
-			<g id='mercado' class:group-active={currentPathId === 'mercado'}>
-				<path
-					bind:this={mercadoPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Mercado'
-					d='m 68.812881,485.02638 21.64817,1.50161 -0.62567,14.26526 -22.1487,-1.75188 z'
-				/>
-				<circle class='pin-circle' cx='78.624725' cy='492.66431' r='2.1235924' />
-			</g>
-			<!-- Calle Absalón Rojas -->
-			<g id='calle-absalonrojas' class:group-active={currentPathId === 'calle-absalonrojas'}>
-				<path
-					bind:this={calleAbsalonrojasPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Calle Absalón Rojas'
-					d='m 67.658981,466.74856 h 2.50268 l -4.50482,59.06319 -2.50268,-0.25027 z'
-				/>
-				<circle class='pin-circle' cx='66.440079' cy='502.03876' r='2.1235924' />
-			</g>
-			<!-- Teatro 25 de Mayo -->
-			<g id='teatro-25-de-mayo' class:group-active={currentPathId === 'teatro-25-de-mayo'}>
-				<path
-					bind:this={teatro25DeMayoPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Teatro 25 de Mayo'
-					d='m 129.5451,557.56198 h 14.51553 l 0.87594,3.50375 -5.07121,1.31913 0.41604,1.60731 0.0895,1.8131 -0.3111,1.33008 -0.63856,0.92383 0.1085,2.31039 -0.98032,0.98061 -5.42855,0.0726 0.0466,-2.9957 -0.40255,-0.98594 -0.19589,-1.14091 0.22446,-1.92656 -3.18584,0.13323 z'
-				/>
-				<circle class='pin-circle' cx='136.58945' cy='564.62354' r='2.1235924' />
-			</g>
-			<!-- Plaza Libertad -->
-			<g id='plaza-libertad' class:group-active={currentPathId === 'plaza-libertad'}>
-				<path
-					bind:this={plazaLibertadPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Plaza Libertad'
-					d='m 64.465521,528.35564 26.0309,1.41573 -0.70786,23.30006 -26.38483,-1.76966 z'
-				/>
-				<circle class='pin-circle' cx='75.973892' cy='542.70227' r='2.1235924' />
-			</g>
-			<!-- Avenida Rivadavia -->
-			<g id='avenida-rivadavia' class:group-active={currentPathId === 'avenida-rivadavia'}>
-				<path
-					bind:this={avenidaRivadaviaPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Avenida Rivadavia'
-					d='m 24.897591,411.24854 255.074059,0.15718 -0.0162,-3.42918 -254.964559,0.5098 z'
-				/>
-				<circle class='pin-circle' cx='127.81216' cy='409.99713' r='2.1235924' />
-			</g>
-			<!-- Avenida Alvear -->
-			<g id='avenida-alvear' class:group-active={currentPathId === 'avenida-alvear'}>
-				<path
-					bind:this={avenidaAlvearPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Avenida Alvear'
-					d='m 22.425831,379.89559 115.009979,-0.25748 0.33773,-6.9685 -116.316209,-0.49127 z'
-				/>
-				<circle class='pin-circle' cx='85.01088' cy='376.09967' r='2.1235924' />
-			</g>
-			<!-- Tribunales -->
-			<g id='tribunales' class:group-active={currentPathId === 'tribunales'}>
-				<rect
-					bind:this={tribunalesPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Tribunales'
-					width='13.820243'
-					height='19.05287'
-					x='77.155823'
-					y='352.06348'
-				/>
-				<circle class='pin-circle' cx='83.532181' cy='361.98596' r='2.1235924' />
-			</g>
-			<!-- Estadio Único -->
-			<g id='estadio-unico' class:group-active={currentPathId === 'estadio-unico'}>
-				<circle
-					bind:this={estadioUnicoPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Estadio Único'
-					cx='229.02405'
-					cy='33.241516'
-					r='22.39249'
-				/>
-				<circle class='pin-circle' cx='231.18658' cy='32.347748' r='2.1235924' />
-			</g>
-			<!-- Registro Civil -->
-			<g id='registro-civil' class:group-active={currentPathId === 'registro-civil'}>
-				<path
-					bind:this={registroCivilPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='Registro Civil'
-					d='m 10.587451,381.52695 h 9.3792 l 2.65449,19.11233 h -9.20223 z'
-				/>
-				<circle class='pin-circle' cx='16.490738' cy='390.43738' r='2.1235924' />
-			</g>
-			<!-- CCB -->
-			<g id='ccb' class:group-active={currentPathId === 'ccb'}>
-				<path
-					bind:this={ccbPath}
-					class='place-path'
-					fill='#00be4d'
-					vector-effect='non-scaling-stroke'
-					role='button'
-					tabindex='0'
-					aria-label='CCB'
-					d='m 77.642551,502.46645 3.82167,0.35393 -0.57522,8.71664 4.21512,0.52408 -0.23538,4.35104 5.09271,0.35452 -0.0763,3.46314 -5.18929,-0.44551 -0.40021,7.22098 -8.77671,-0.35393 z'
-				/>
-				<circle class='pin-circle' cx='81.094269' cy='517.92395' r='2.1235924' />
-			</g>
-		</g>
-		<g id='building' class='building-group' class:zoom-active={currentZoomedIndex !== null}>
-			<g id='airesderio' class='airesderio-path'>
-				<circle
-					class='pin-airesderio'
-					cx='203.69386'
-					cy='413.82022'
-					r='4.3814869'
-				/>
-				<path
-					bind:this={airesderioPath}
-					d='m 202.97288,409.90271 2.2931,0.0425 0.29238,0.2863 -0.002,5.19212 -0.23275,0.44892 0.001,1.48465 -3.31504,-0.0163 -0.0239,-1.23152 0.11181,-5.11477 z'
-				/>
-			</g>
-		</g>
+		{/if}
 	</svg>
 
 	{#if selectedGroupName && pinCoordinates}

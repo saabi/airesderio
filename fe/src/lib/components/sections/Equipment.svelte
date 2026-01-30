@@ -92,7 +92,13 @@
 			icon: '🍽️',
 			component: Cocina,
 			text: 'Cocinas completamente equipadas con modernos muebles de guardado bajo y sobre mesada.'
+		},
+		{
+			icon: '🍽️',
+			component: Cocina,
+			text: 'Dos ascensores desde subsuelo a terraza. Uno con capacidad para traslados.'
 		}
+
 	];
 </script>
 

@@ -4,7 +4,14 @@ import { enhancedImages } from '@sveltejs/enhanced-img';
 
 export default defineConfig({
 	plugins: [
-		enhancedImages(), // Must come BEFORE sveltekit()
+		enhancedImages({
+			// Generate only JPG format (disable WebP/AVIF)
+			// Set default quality to 85 (range: 1-100, higher = better quality but larger files)
+			defaultDirectives: () => new URLSearchParams({
+				format: 'jpg',
+				quality: '80'
+			})
+		}), // Must come BEFORE sveltekit()
 		sveltekit()
 	],
 	test: {

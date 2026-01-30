@@ -9,7 +9,7 @@
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
 	import Building from '$lib/components/icons/Building.svelte';
 	import Gallery from '$lib/components/icons/Gallery.svelte';
-	import type { PlacesCarouselData, PlaceMetadata } from '$lib/types';
+	import type { PlacesCarouselData, PlaceMetadata, PlacesDataWithSvg, MapPlaceData, MapConfig } from '$lib/types';
 
 	// ===== TYPES =====
 	interface Props {
@@ -38,6 +38,9 @@
 
 	// ===== STATE =====
 	let placesMetadata = $state<PlacesCarouselData | null>(null);
+	let placesData = $state<PlacesDataWithSvg | null>(null);
+	let mapPlaces = $state<MapPlaceData[]>([]);
+	let mapConfig = $state<MapConfig | null>(null);
 	let photoCarouselVisible = $state(false);
 	let carouselPlace = $state<PlaceMetadata | null>(null);
 	let carouselPlaceId = $state<string>('');
@@ -99,25 +102,52 @@
 	// (Effects will be added here if needed)
 
 	// ===== ASYNC FUNCTIONS =====
-	// Load places metadata from JSON
+	// Load places data from JSON (includes SVG data)
 	async function loadPlacesMetadata() {
 		if (!browser) return;
 
 		if (import.meta.env.DEV) {
-			console.log('Loading places metadata from:', PLACES_JSON_URL);
+			console.log('Loading places data from:', PLACES_JSON_URL);
 		}
 		try {
 			const response = await fetch(PLACES_JSON_URL);
 			if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-			const data = await response.json();
-			placesMetadata = data;
+			const data: PlacesDataWithSvg = await response.json();
+			placesData = data;
+			
+			// Transform to PlacesCarouselData for carousel
+			placesMetadata = {
+				places: Object.fromEntries(
+					Object.entries(data.places).map(([id, place]) => [
+						id,
+						{
+							nombre: place.nombre,
+							descripcion: place.descripcion,
+							thingstodo: place.thingstodo,
+							photos: place.photos
+						}
+					])
+				)
+			};
+			
+			// Transform to MapPlaceData array for Map component
+			mapPlaces = Object.entries(data.places).map(([id, place]) => ({
+				id,
+				name: place.nombre,
+				svg: place.svg
+			}));
+			
+			// Extract mapConfig
+			mapConfig = data.mapConfig || null;
+			
 			if (import.meta.env.DEV) {
-				console.log('Places metadata loaded successfully:', {
-					totalPlaces: Object.keys(data.places || {}).length
+				console.log('Places data loaded successfully:', {
+					totalPlaces: Object.keys(data.places || {}).length,
+					hasMapConfig: !!data.mapConfig
 				});
 			}
 		} catch (error) {
-			console.error('Error loading places metadata:', error);
+			console.error('Error loading places data:', error);
 		}
 	}
 
@@ -241,11 +271,17 @@
 			class='map-container scroll-animate'
 			style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 		>
-			<Map
-				bind:this={mapComponent}
-				class='location-map'
-				ariaLabel='Mapa de ubicación del proyecto Aires de Río'
-			/>
+			{#if mapPlaces.length > 0 && mapConfig}
+				<Map
+					bind:this={mapComponent}
+					class='location-map'
+					ariaLabel='Mapa de ubicación del proyecto Aires de Río'
+					places={mapPlaces}
+					mapConfig={mapConfig}
+				/>
+			{:else}
+				<div class='location-map-loading'>Cargando mapa...</div>
+			{/if}
 		</div>
 	</div>
 </section>

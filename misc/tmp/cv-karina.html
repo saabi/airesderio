@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Karina Del Valle Salvatierra</title>
+    <style>
+        :root {
+            --primary-purple: #6a1b9a;   /* Deep Purple for Name/Headings */
+            --light-purple: #f3e5f5;     /* Lavender for Header Background */
+            --accent-purple: #9c27b0;    /* Bright Purple for timeline markers */
+            --text-dark: #333333;
+            --text-gray: #555555;
+            --border-color: #d1c4e9;     /* Soft purple for lines */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #555; /* Dark background outside the paper */
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .cv-paper {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            overflow: hidden; /* Contains the header image curve if we wanted one */
+        }
+
+        /* HEADER SECTION */
+        header {
+            background-color: var(--light-purple);
+            padding: 40px 40px 40px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .header-text {
+            width: 70%;
+        }
+
+        h1 {
+            color: var(--text-dark);
+            font-size: 2.2rem;
+            line-height: 1.2;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        h1 strong {
+            display: block;
+            font-weight: 700;
+            color: var(--primary-purple);
+        }
+
+        .subtitle {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .photo-container {
+            position: absolute;
+            top: 0;
+            right: 1.5cm;
+            width: 200px;
+            height: 240px;
+            border-radius: 25%; /* More square shape */
+            overflow: hidden;
+            border: 5px solid white;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-top: 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background-color: #ddd;
+            flex-shrink: 0;
+            margin-left: 20px;
+            /* Positioning to slightly overlap if needed, or just centered vertically in header */
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* CONTACT BAR */
+        .contact-bar {
+            background-color: #fff;
+            padding: 15px 40px;
+            border-bottom: 2px solid var(--border-color);
+            border-top: 2px solid white; /* just to separate from header slightly if needed */
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .contact-section-title {
+            /* If we want the title 'DATOS DE CONTACTO' above the bar like the image */
+            padding: 20px 40px 5px 40px;
+            color: var(--text-gray);
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            background-color: white;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* MAIN CONTENT COLUMNS */
+        .main-content {
+            display: flex;
+            padding: 30px 40px 50px 40px;
+        }
+
+        .col-left {
+            width: 65%;
+            padding-right: 30px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .col-right {
+            width: 35%;
+            padding-left: 30px;
+        }
+
+        h2.section-header {
+            color: var(--text-gray);
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            font-weight: 800;
+        }
+
+        /* TIMELINE STYLES */
+        .timeline-item {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 30px;
+            border-left: 2px solid var(--border-color);
+        }
+
+        /* The square dot on the timeline */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px; /* Center on the 2px border */
+            top: 0;
+            width: 10px;
+            height: 10px;
+            background-color: var(--text-gray); /* Grey square per image */
+            border: 1px solid white;
+        }
+        
+        /* Optional: Make the first dot colored to match the "color" request */
+        .timeline-item:hover::before {
+            background-color: var(--accent-purple);
+        }
+
+        .job-date {
+            font-weight: 800;
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .job-location {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .job-title {
+            font-size: 1.1rem;
+            color: var(--primary-purple); /* Using purple here for color */
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .job-ref {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .job-desc {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #444;
+        }
+
+        .job-desc p {
+            margin-bottom: 10px;
+        }
+
+        /* RIGHT COLUMN STYLES */
+        .study-item {
+            margin-bottom: 25px;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        /* Square bullets for studies too */
+        .study-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-gray);
+        }
+
+        .study-title {
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .study-school {
+            font-size: 0.95rem;
+            color: var(--primary-purple);
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+            .photo-container {
+                margin: 0 0 20px 0;
+            }
+            .header-text {
+                width: 100%;
+            }
+            .contact-bar {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            .contact-item {
+                justify-content: center;
+            }
+            .main-content {
+                flex-direction: column;
+            }
+            .col-left {
+                width: 100%;
+                border-right: none;
+                padding-right: 0;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 30px;
+                margin-bottom: 30px;
+            }
+            .col-right {
+                width: 100%;
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cv-paper">
+        
+        <header>
+            <div class="header-text">
+                <h1>
+                    Salvatierra <br>
+                    <strong>Karina Del Valle</strong>
+                </h1>
+                <div class="subtitle">Acompañante Terapéutica / Cuidadora de Niños</div>
+            </div>
+            <div class="photo-container">
+                <img src="karu.jpeg" alt="Karina">
+            </div>
+        </header>
+
+        <div class="contact-section-title">Datos de Contacto</div>
+        <div class="contact-bar">
+            <div class="contact-item">
+                <span>📞</span> +54 9 11 3476 6256
+            </div>
+            <div class="contact-item">
+                <span>✉️</span> Karusalva22750@gmail.com
+            </div>
+            <div class="contact-item">
+                <span>📍</span> Santiago del Estero
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="col-left">
+                <h2 class="section-header">Experiencia Laboral</h2>
+
+                <div class="timeline-item">
+                    <span class="job-date">Agosto de 2021 a Febrero de 2023</span>
+                    <span class="job-location">Buenos Aires, CABA</span>
+                    <div class="job-title">Niñera</div>
+                    <span class="job-ref">• REFERENCIAS: ANA RAINIERI +54 9 11 6142 5442</span>
+                    
+                    <div class="job-desc">
+                        <p>Responsable del cuidado diario de niños, incluyendo la planificación y realización de actividades educativas y recreativas acordes a cada etapa de desarrollo.</p>
+                        <p>Al incorporarme al hogar, mi función inicial era el cuidado de los niños; posteriormente asumí el acompañamiento integral de Felipe (niño con autismo) y Mariana, quienes presentaban dificultades para socializar y desenvolverse en espacios abiertos como consecuencia del contexto de pandemia.</p>
+                        <p>En conjunto con la terapeuta y mediante un trabajo constante y personalizado, logré establecer un vínculo de confianza que permitió acompañarlos en su desarrollo emocional y social, ayudándolos a recuperar habilidades cotidianas propias de la infancia.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="job-date">Febrero de 2019 a Julio de 2021</span>
+                    <span class="job-location">Buenos Aires, CABA</span>
+                    <div class="job-title">Niñera</div>
+                    <span class="job-ref">• REFERENCIAS: (BUNNY) MATILDE NORRIS +54 9 11 5096 4090</span>
+                    
+                    <div class="job-desc">
+                        <p>Atención y cuidado integral diario de los niños, diseñando y desarrollando actividades educativas y lúdicas acordes a su etapa evolutiva en conjunto con la terapeuta.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="job-date">Noviembre de 2018 a Febrero 2019</span>
+                    <span class="job-location">Buenos Aires, CABA</span>
+                    <div class="job-title">Atencion Al Cliente</div>
+                    
+                    <div class="job-desc">
+                        <p>Reposición de productos, asesoramiento al cliente, ventas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-right">
+                <h2 class="section-header">Estudios</h2>
+
+                <div class="study-item">
+                    <span class="study-title">Estudios Primarios:</span>
+                    <span class="study-school">Colegio Hermanas Franciscanas</span>
+                </div>
+
+                <div class="study-item">
+                    <span class="study-title">Estudios Secundarios:</span>
+                    <span class="study-school">Técnica N° 1. El Talar de Pacheco</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

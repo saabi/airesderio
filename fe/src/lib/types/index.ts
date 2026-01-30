@@ -109,3 +109,66 @@ export interface PlaceMetadata {
 export interface PlacesCarouselData {
 	places: Record<string, PlaceMetadata>;
 }
+
+/**
+ * SVG shape element types for map places
+ */
+export type SvgShape =
+	| { type: 'path'; d: string }
+	| { type: 'rect'; x: number; y: number; width: number; height: number }
+	| { type: 'circle'; cx: number; cy: number; r: number };
+
+/**
+ * Additional SVG elements (text, etc.)
+ */
+export interface SvgTextElement {
+	type: 'text';
+	x: number;
+	y: number;
+	content: string;
+	xmlSpace?: 'preserve';
+}
+
+/**
+ * SVG structure for a place on the map
+ */
+export interface PlaceSvgData {
+	shape: SvgShape;
+	pin: { cx: number; cy: number; r: number };
+	additionalElements?: SvgTextElement[];
+}
+
+/**
+ * Extended place metadata with SVG data
+ */
+export interface PlaceWithSvg extends PlaceMetadata {
+	svg: PlaceSvgData;
+}
+
+/**
+ * Map configuration
+ */
+export interface MapConfig {
+	fullViewBox: { x: number; y: number; width: number; height: number };
+	nearViewBox: { x: number; y: number; width: number; height: number };
+	airesderioCenter: { cx: number; cy: number };
+	farImage: string;
+	nearImage: string;
+}
+
+/**
+ * Complete places data with SVG and map config
+ */
+export interface PlacesDataWithSvg {
+	places: Record<string, PlaceWithSvg>;
+	mapConfig: MapConfig;
+}
+
+/**
+ * Place data for Map component (simplified structure)
+ */
+export interface MapPlaceData {
+	id: string;
+	name: string;
+	svg: PlaceSvgData;
+}

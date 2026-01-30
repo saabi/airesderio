@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Karina Del Valle Salvatierra</title>
+    <!-- Fuente Montserrat para un look moderno y limpio -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Iconos para contacto -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #1e3a5f;      /* Azul Marino Profesional */
+            --accent: #c5a880;       /* Dorado/Beige elegante */
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-sidebar: #1e3a5f;
+            --text-sidebar: #ffffff;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            hyphens: none; 
+        }
+
+        /* Configuración de la hoja A4 */
+        .cv-page {
+            width: 210mm;
+            min-height: 297mm;
+            background: linear-gradient(to right, var(--bg-sidebar) 30%, var(--white) 30%);
+            background-color: var(--white);
+            display: grid;
+            grid-template-columns: 30% 70%;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        /* --- BARRA LATERAL (IZQUIERDA) --- */
+        .sidebar {
+            background-color: transparent; 
+            color: var(--text-sidebar);
+            padding: 40px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: left;
+        }
+
+        /* Espacio para la FOTO */
+        .photo-container {
+            width: 140px;
+            height: 140px;
+            background-color: #f1f2f6;
+            border-radius: 25%;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid var(--accent);
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        /* Si el usuario pone una imagen real */
+        .photo-container img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sidebar-section {
+            width: 100%;
+            margin-bottom: 35px;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .contact-item {
+            margin-bottom: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .contact-item i {
+            color: var(--accent);
+            margin-top: 3px;
+            width: 15px;
+            flex-shrink: 0;
+        }
+
+        .contact-text {
+            word-wrap: break-word;
+            overflow-wrap: break-word; 
+            line-height: 1.4;
+        }
+
+        /* --- CONTENIDO PRINCIPAL (DERECHA) --- */
+        .main-content {
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            margin-bottom: 35px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 34px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 5px;
+        }
+
+        .job-subtitle {
+            font-size: 16px;
+            color: var(--accent);
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* ESTILOS DE SECCIONES */
+        .section-title {
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            letter-spacing: 1px;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .timeline-item {
+            margin-bottom: 30px;
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid #eee;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            border-radius: 50%;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .item-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .item-date {
+            font-size: 11px;
+            color: var(--white);
+            background-color: var(--primary);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+        .item-institution {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .item-description {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 10px;
+            text-align: left;
+            max-width: 98%;
+        }
+
+        .reference-tag {
+            font-size: 11px;
+            color: #666;
+            background: #f1f2f6;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        /* --- MEDIA QUERY PARA IMPRESIÓN --- */
+        @media print {
+            @page { margin: 0; }
+            body { 
+                padding: 0; 
+                background-color: white; 
+            }
+            .cv-page { 
+                width: 100%; 
+                min-height: 100vh; 
+                box-shadow: none; 
+                grid-template-columns: 30% 70%;
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact;
+                background: linear-gradient(to right, var(--bg-sidebar) 30%, var(--white) 30%) !important;
+            }
+            .sidebar {
+                background-color: transparent !important;
+            }
+            .item-date {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            a { text-decoration: none; color: inherit; }
+        }
+
+        @media (max-width: 768px) {
+            .cv-page {
+                grid-template-columns: 1fr;
+                width: 100%;
+                height: auto;
+                background: var(--white);
+            }
+            .sidebar {
+                background-color: var(--bg-sidebar);
+                padding: 30px;
+                text-align: center;
+                align-items: center;
+            }
+            .contact-item {
+                justify-content: center;
+            }
+            .header {
+                text-align: center;
+            }
+            h1 { font-size: 28px; }
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .item-date {
+                margin-top: 5px;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cv-page">
+        <!-- SECCIÓN IZQUIERDA -->
+        <aside class="sidebar">
+            <div class="photo-container">
+                <img src="karu.jpeg" alt="Foto de perfil">
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Datos de Contacto</h3>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span class="contact-text">+54 9 11 3476 6256</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span class="contact-text">Karusalva22750@gmail.com</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span class="contact-text">Santiago del Estero</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- SECCIÓN DERECHA -->
+        <main class="main-content">
+            <header>
+                <h1>Karina Del Valle<br>Salvatierra</h1>
+                <div class="job-subtitle">Acompañante Terapéutica / Cuidadora de Niños</div>
+            </header>
+
+            <!-- EXPERIENCIA LABORAL -->
+            <section>
+                <h3 class="section-title"><i class="fas fa-briefcase"></i> Experiencia Laboral</h3>
+
+                <!-- Puesto 1 -->
+                <div class="timeline-item">
+                    <div class="item-header">
+                        <span class="item-title">NIÑERA</span>
+                        <span class="item-date">AGOSTO 2021 - FEBRERO 2023</span>
+                    </div>
+                    <span class="item-institution">Buenos Aires, CABA</span>
+                    <p class="item-description">
+                        Responsable del cuidado diario de niños, incluyendo la planificación y realización de actividades educativas y recreativas acordes a cada etapa de desarrollo.
+                        <br><br>
+                        Al incorporarme al hogar, mi función inicial era el cuidado de los niños; posteriormente asumí el acompañamiento integral de Felipe (niño con autismo) y Mariana, quienes presentaban dificultades para socializar y desenvolverse en espacios abiertos como consecuencia del contexto de pandemia.
+                        <br><br>
+                        En conjunto con la terapeuta y mediante un trabajo constante y personalizado, logré establecer un vínculo de confianza que permitió acompañarlos en su desarrollo emocional y social, ayudándolos a recuperar habilidades cotidianas propias de la infancia, como el juego, la interacción social y la adaptación a actividades al aire libre.
+                    </p>
+                    <div class="reference-tag">REFERENCIAS: ANA RAINIERI +54 9 11 6142 5442</div>
+                </div>
+
+                <!-- Puesto 2 -->
+                <div class="timeline-item">
+                    <div class="item-header">
+                        <span class="item-title">NIÑERA</span>
+                        <span class="item-date">FEBRERO 2019 - JULIO 2021</span>
+                    </div>
+                    <span class="item-institution">Buenos Aires, CABA</span>
+                    <p class="item-description">
+                        Atención y cuidado integral diario de los niños, diseñando y desarrollando actividades educativas y lúdicas acordes a su etapa evolutiva en conjunto con la terapeuta.
+                    </p>
+                    <div class="reference-tag">REFERENCIAS: (BUNNY) MATILDE NORRIS +54 9 11 5096 4090</div>
+                </div>
+
+                <!-- Puesto 3 -->
+                <div class="timeline-item">
+                    <div class="item-header">
+                        <span class="item-title">ATENCION AL CLIENTE</span>
+                        <span class="item-date">NOVIEMBRE 2018 - FEBRERO 2019</span>
+                    </div>
+                    <span class="item-institution">Buenos Aires, CABA</span>
+                    <p class="item-description">
+                        Reposicion de productos, asesoramiento al cliente, ventas.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ESTUDIOS -->
+            <section>
+                <h3 class="section-title"><i class="fas fa-graduation-cap"></i> Estudios</h3>
+                
+                <div class="timeline-item">
+                    <div class="item-header">
+                        <span class="item-title">ESTUDIOS SECUNDARIOS</span>
+                    </div>
+                    <span class="item-institution">Técnica Nº 1 . El Talar de Pacheco</span>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="item-header">
+                        <span class="item-title">ESTUDIOS PRIMARIOS</span>
+                    </div>
+                    <span class="item-institution">Colegio Hermanas Franciscanas</span>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>
