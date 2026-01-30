@@ -46,94 +46,76 @@
 	interface PlaceData {
 		id: string;
 		name: string;
-		pin: { cx: number; cy: number };
 	}
 
 	const PLACES: PlaceData[] = [
 		{
 			id: 'terminal',
-			name: 'Terminal de Ómnibus',
-			pin: { cx: 151.09848, cy: 333.03827 }
+			name: 'Terminal de Ómnibus'
 		},
 		{
 			id: 'forum',
-			name: 'Fórum Santiago del Estero',
-			pin: { cx: 148.93271, cy: 376.11145 }
+			name: 'Fórum Santiago del Estero'
 		},
 		{
 			id: 'casa-de-gobierno',
-			name: 'Casa de Gobierno',
-			pin: { cx: 61.8862, cy: 393.94794 }
+			name: 'Casa de Gobierno'
 		},
 		{
 			id: 'plaza-vea',
-			name: 'Plaza Vea',
-			pin: { cx: 255.12759, cy: 390.30475 }
+			name: 'Plaza Vea'
 		},
 		{
 			id: 'parque-aguirre',
-			name: 'Parque Aguirre',
-			pin: { cx: 279.82251, cy: 571.65515 }
+			name: 'Parque Aguirre'
 		},
 		{
 			id: 'avenida-roca',
-			name: 'Avenida Roca',
-			pin: { cx: 167.47708, cy: 546.85071 }
+			name: 'Avenida Roca'
 		},
 		{
 			id: 'avenida-irigoyen',
-			name: 'Avenida Irigoyen',
-			pin: { cx: 91.090652, cy: 482.8299 }
+			name: 'Avenida Irigoyen'
 		},
 		{
 			id: 'mercado',
-			name: 'Mercado',
-			pin: { cx: 78.624725, cy: 492.66431 }
+			name: 'Mercado'
 		},
 		{
 			id: 'calle-absalonrojas',
-			name: 'Calle Absalón Rojas',
-			pin: { cx: 66.440079, cy: 502.03876 }
+			name: 'Calle Absalón Rojas'
 		},
 		{
 			id: 'teatro-25-de-mayo',
-			name: 'Teatro 25 de Mayo',
-			pin: { cx: 136.58945, cy: 564.62354 }
+			name: 'Teatro 25 de Mayo'
 		},
 		{
 			id: 'plaza-libertad',
-			name: 'Plaza Libertad',
-			pin: { cx: 75.973892, cy: 542.70227 }
+			name: 'Plaza Libertad'
 		},
 		{
 			id: 'avenida-rivadavia',
-			name: 'Avenida Rivadavia',
-			pin: { cx: 127.81216, cy: 409.99713 }
+			name: 'Avenida Rivadavia'
 		},
 		{
 			id: 'avenida-alvear',
-			name: 'Avenida Alvear',
-			pin: { cx: 85.01088, cy: 376.09967 }
+			name: 'Avenida Alvear'
 		},
 		{
 			id: 'tribunales',
-			name: 'Tribunales',
-			pin: { cx: 83.532181, cy: 361.98596 }
+			name: 'Tribunales'
 		},
 		{
 			id: 'estadio-unico',
-			name: 'Estadio Único',
-			pin: { cx: 231.18658, cy: 32.347748 }
+			name: 'Estadio Único'
 		},
 		{
 			id: 'registro-civil',
-			name: 'Registro Civil',
-			pin: { cx: 16.490738, cy: 390.43738 }
+			name: 'Registro Civil'
 		},
 		{
 			id: 'ccb',
-			name: 'CCB',
-			pin: { cx: 81.094269, cy: 517.92395 }
+			name: 'CCB'
 		}
 	];
 
@@ -141,9 +123,6 @@
 	const PLACE_PATH_IDS = PLACES.map((place) => place.id);
 	const PLACE_NAMES: Record<string, string> = Object.fromEntries(
 		PLACES.map((place) => [place.id, place.name])
-	);
-	const PIN_COORDINATES: Record<string, { cx: number; cy: number }> = Object.fromEntries(
-		PLACES.map((place) => [place.id, place.pin])
 	);
 </script>
 
@@ -282,6 +261,34 @@
 
 	// ===== FUNCTIONS =====
 	/**
+	 * Gets pin coordinates for a place ID by reading directly from the SVG DOM.
+	 * Finds the place group by ID and extracts cx/cy from its pin circle.
+	 */
+	function getPinCoordinates(placeId: string): { cx: number; cy: number } | null {
+		if (!svgElement) return null;
+
+		// Find the places group
+		const placesGroup = svgElement.querySelector('#places');
+		if (!placesGroup) return null;
+
+		// Find the specific place group by ID
+		const group = placesGroup.querySelector(`#${placeId}`);
+		if (!group) return null;
+
+		// Find the pin circle within the group
+		const pinCircle = group.querySelector('circle.pin-circle') as SVGCircleElement | null;
+		if (!pinCircle) return null;
+
+		// Extract coordinates from attributes
+		const cx = parseFloat(pinCircle.getAttribute('cx') || '0');
+		const cy = parseFloat(pinCircle.getAttribute('cy') || '0');
+
+		if (isNaN(cx) || isNaN(cy)) return null;
+
+		return { cx, cy };
+	}
+
+	/**
 	 * Converts SVG viewBox coordinates to parent offset coordinates
 	 */
 	function convertToParentOffset(svgX: number, svgY: number): { x: number; y: number } | null {
@@ -401,7 +408,7 @@
 		if (currentPathId) {
 			selectedGroupName = PLACE_NAMES[currentPathId] || null;
 
-			const pinCoords = PIN_COORDINATES[currentPathId];
+			const pinCoords = getPinCoordinates(currentPathId);
 			if (pinCoords) {
 				// Recalculate coordinates when viewBox or SVG element changes
 				const updateCoordinates = () => {
@@ -426,7 +433,7 @@
 	// Recalculate pin coordinates when viewBox changes (for smooth updates during animation)
 	$effect(() => {
 		if (currentPathId) {
-			const pinCoords = PIN_COORDINATES[currentPathId];
+			const pinCoords = getPinCoordinates(currentPathId);
 			if (pinCoords) {
 				// Access viewBox values to trigger recalculation when they change
 				const _ = $viewBoxX + $viewBoxY + $viewBoxWidth + $viewBoxHeight;
