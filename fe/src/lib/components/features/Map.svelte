@@ -545,57 +545,54 @@
 			{#if selectedPlace}
 				<g id='places' class='places-group' class:zoom-active={currentZoomedIndex !== null}>
 					<g id={selectedPlace.id} class='group-active'>
-						{#if selectedPlace.svg.shape.type === 'path'}
-							<path
-								class='place-path'
-								fill='#00be4d'
-								vector-effect='non-scaling-stroke'
-								role='button'
-								tabindex='0'
-								aria-label={selectedPlace.name}
-								d={selectedPlace.svg.shape.d}
-							/>
-						{:else if selectedPlace.svg.shape.type === 'rect'}
-							<rect
-								class='place-path'
-								fill='#00be4d'
-								vector-effect='non-scaling-stroke'
-								role='button'
-								tabindex='0'
-								aria-label={selectedPlace.name}
-								x={selectedPlace.svg.shape.x}
-								y={selectedPlace.svg.shape.y}
-								width={selectedPlace.svg.shape.width}
-								height={selectedPlace.svg.shape.height}
-							/>
-						{:else if selectedPlace.svg.shape.type === 'circle'}
-							<circle
-								class='place-path'
-								fill='#00be4d'
-								vector-effect='non-scaling-stroke'
-								role='button'
-								tabindex='0'
-								aria-label={selectedPlace.name}
-								cx={selectedPlace.svg.shape.cx}
-								cy={selectedPlace.svg.shape.cy}
-								r={selectedPlace.svg.shape.r}
-							/>
-						{/if}
+						{#each selectedPlace.svg.elements as element}
+							{#if element.type === 'path'}
+								<path
+									class='place-path'
+									fill='#00be4d'
+									vector-effect='non-scaling-stroke'
+									role='button'
+									tabindex='0'
+									aria-label={selectedPlace.name}
+									d={element.d}
+								/>
+							{:else if element.type === 'rect'}
+								<rect
+									class='place-path'
+									fill='#00be4d'
+									vector-effect='non-scaling-stroke'
+									role='button'
+									tabindex='0'
+									aria-label={selectedPlace.name}
+									x={element.x}
+									y={element.y}
+									width={element.width}
+									height={element.height}
+								/>
+							{:else if element.type === 'circle'}
+								<circle
+									class='place-path'
+									fill='#00be4d'
+									vector-effect='non-scaling-stroke'
+									role='button'
+									tabindex='0'
+									aria-label={selectedPlace.name}
+									cx={element.cx}
+									cy={element.cy}
+									r={element.r}
+								/>
+							{:else if element.type === 'text'}
+								<text xml:space={element.xmlSpace || 'preserve'} x={element.x} y={element.y}>
+									<tspan x={element.x} y={element.y}>{element.content}</tspan>
+								</text>
+							{/if}
+						{/each}
 						<circle
 							class='pin-circle'
 							cx={selectedPlace.svg.pin.cx}
 							cy={selectedPlace.svg.pin.cy}
 							r={selectedPlace.svg.pin.r}
 						/>
-						{#if selectedPlace.svg.additionalElements}
-							{#each selectedPlace.svg.additionalElements as textEl}
-								{#if textEl.type === 'text'}
-									<text xml:space={textEl.xmlSpace || 'preserve'} x={textEl.x} y={textEl.y}>
-										<tspan x={textEl.x} y={textEl.y}>{textEl.content}</tspan>
-									</text>
-								{/if}
-							{/each}
-						{/if}
 					</g>
 				</g>
 			{/if}

@@ -111,31 +111,20 @@ export interface PlacesCarouselData {
 }
 
 /**
- * SVG shape element types for map places
+ * SVG element types for map places
  */
-export type SvgShape =
+export type SvgElement =
 	| { type: 'path'; d: string }
 	| { type: 'rect'; x: number; y: number; width: number; height: number }
-	| { type: 'circle'; cx: number; cy: number; r: number };
-
-/**
- * Additional SVG elements (text, etc.)
- */
-export interface SvgTextElement {
-	type: 'text';
-	x: number;
-	y: number;
-	content: string;
-	xmlSpace?: 'preserve';
-}
+	| { type: 'circle'; cx: number; cy: number; r: number }
+	| { type: 'text'; x: number; y: number; content: string; xmlSpace?: 'preserve' };
 
 /**
  * SVG structure for a place on the map
  */
 export interface PlaceSvgData {
-	shape: SvgShape;
+	elements: SvgElement[];
 	pin: { cx: number; cy: number; r: number };
-	additionalElements?: SvgTextElement[];
 }
 
 /**
