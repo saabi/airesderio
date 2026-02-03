@@ -15,6 +15,8 @@
 		includeFocal?: boolean;
 		showDetailImage?: boolean;
 		mapData: MapData;
+		/** Pin radius in pixels. If set, pins maintain constant screen size regardless of zoom. */
+		pinRadius?: number;
 	}
 
 	export interface MapComponent {
@@ -46,7 +48,8 @@
 		zoomMargin = 0.1,
 		includeFocal = true,
 		showDetailImage = false,
-		mapData
+		mapData,
+		pinRadius
 	}: Props = $props();
 
 	// ===== STATE: Image dimensions (loaded from actual images) =====
@@ -227,6 +230,40 @@
 		if (!place) return null;
 
 		return { cx: denorm(place.pin.cx), cy: denorm(place.pin.cy) };
+	}
+
+	/**
+	 * Calculate pin radius in viewBox coordinates.
+	 * If pinRadius prop is set (pixels), converts to viewBox coords based on current scale.
+	 * Otherwise, uses the radius from JSON data (denormalized).
+	 */
+	function getPinRadius(jsonRadius: number): number {
+		if (pinRadius === undefined) {
+			// Use JSON radius (denormalized)
+			return denorm(jsonRadius);
+		}
+
+		// Convert pixel radius to viewBox coordinates
+		// Scale factor: viewBox units per pixel
+		if (!mapContainer || !svgElement) {
+			// Fallback to denormalized radius if container not ready
+			return denorm(jsonRadius);
+		}
+
+		const containerRect = mapContainer.getBoundingClientRect();
+		if (containerRect.width === 0 || containerRect.height === 0) {
+			return denorm(jsonRadius);
+		}
+
+		// Calculate scale: viewBox width / container width
+		// (or height, but they should be proportional due to preserveAspectRatio)
+		const scaleX = $viewBoxWidth / containerRect.width;
+		const scaleY = $viewBoxHeight / containerRect.height;
+		// Use average scale for more accurate conversion
+		const scale = (scaleX + scaleY) / 2;
+
+		// Convert pixel radius to viewBox coordinates
+		return pinRadius * scale;
 	}
 
 	/**
@@ -657,7 +694,7 @@
 							class='pin-circle'
 							cx={denorm(selectedPlace.pin.cx)}
 							cy={denorm(selectedPlace.pin.cy)}
-							r={denorm(selectedPlace.pin.r)}
+							r={getPinRadius(selectedPlace.pin.r)}
 						/>
 					</g>
 				</g>
