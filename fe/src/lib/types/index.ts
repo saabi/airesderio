@@ -112,6 +112,7 @@ export interface PlacesCarouselData {
 
 /**
  * SVG element types for map places
+ * @deprecated Use SvgShape and TextLabel from MapData types instead
  */
 export type SvgElement =
 	| { type: 'path'; d: string }
@@ -121,6 +122,7 @@ export type SvgElement =
 
 /**
  * SVG structure for a place on the map
+ * @deprecated Use PlaceData from MapData types instead
  */
 export interface PlaceSvgData {
 	elements: SvgElement[];
@@ -129,6 +131,7 @@ export interface PlaceSvgData {
 
 /**
  * Extended place metadata with SVG data
+ * @deprecated Use PlaceData from MapData types instead
  */
 export interface PlaceWithSvg extends PlaceMetadata {
 	svg: PlaceSvgData;
@@ -136,6 +139,7 @@ export interface PlaceWithSvg extends PlaceMetadata {
 
 /**
  * Map configuration
+ * @deprecated Use MapData structure instead (baseImage, detailImage, focal)
  */
 export interface MapConfig {
 	fullViewBox: { x: number; y: number; width: number; height: number };
@@ -147,6 +151,7 @@ export interface MapConfig {
 
 /**
  * Complete places data with SVG and map config
+ * @deprecated Use MapData instead
  */
 export interface PlacesDataWithSvg {
 	places: Record<string, PlaceWithSvg>;

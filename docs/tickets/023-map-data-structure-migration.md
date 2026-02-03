@@ -1,7 +1,7 @@
 # Ticket #023: Map Data Structure Migration
 
 ## Status
-**In Progress** 🔄
+**Complete** ✅ - Migration implemented. New `map.json` format with data-driven focal, computed default view, and array-based places. Old types marked as deprecated. Old `places.json` still available for backwards compatibility.
 
 ## Priority
 **Medium**
