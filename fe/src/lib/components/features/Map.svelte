@@ -197,25 +197,6 @@
 	// Reference to focal group element (for bounding box calculation)
 	let focalGroup: SVGGElement | null = $state(null);
 
-	// Map of path IDs to elements - dynamically queried from SVG DOM
-	let pathElements = $derived.by(() => {
-		if (!svgElement) return new Map<string, SVGPathElement | SVGRectElement | SVGCircleElement>();
-
-		const placesGroup = svgElement.querySelector('#places');
-		if (!placesGroup) return new Map<string, SVGPathElement | SVGRectElement | SVGCircleElement>();
-
-		const map = new Map<string, SVGPathElement | SVGRectElement | SVGCircleElement>();
-		for (const place of places) {
-			const group = placesGroup.querySelector(`#${CSS.escape(place.id)}`);
-			if (group) {
-				const shapeElement = group.querySelector('path.place-path, rect.place-path, circle.place-path') as SVGPathElement | SVGRectElement | SVGCircleElement | null;
-				if (shapeElement) {
-					map.set(place.id, shapeElement);
-				}
-			}
-		}
-		return map;
-	});
 
 	// ===== DERIVED =====
 	let widthAttr = $derived(typeof width === 'number' ? `${width}` : width);
@@ -433,106 +414,200 @@
 	});
 
 	// ===== ZOOM FUNCTIONS =====
-	function zoomToBoundingBox(pathId: string) {
-		const pathElement = pathElements.get(pathId);
-		if (!pathElement) return;
-
-		try {
-			const pathBbox = pathElement.getBBox();
-			let bbox = pathBbox;
-
-			// If includeFocal is true, calculate union with focal bounding box
-			if (includeFocal && focalGroup) {
-				try {
-					const focalBbox = focalGroup.getBBox();
-					// Calculate union of both bounding boxes
-					const minX = Math.min(pathBbox.x, focalBbox.x);
-					const minY = Math.min(pathBbox.y, focalBbox.y);
-					const maxX = Math.max(
-						pathBbox.x + pathBbox.width,
-						focalBbox.x + focalBbox.width
-					);
-					const maxY = Math.max(
-						pathBbox.y + pathBbox.height,
-						focalBbox.y + focalBbox.height
-					);
-
-					// Create a new DOMRect-like object for the union
-					bbox = new DOMRect(minX, minY, maxX - minX, maxY - minY);
-				} catch (error) {
-					// If focal bbox calculation fails, use original bbox
-					console.warn('Could not calculate focal bounding box, using path bbox only:', error);
+	
+	/**
+	 * Calculate bounding box from place data (denormalized coordinates)
+	 */
+	function calculatePlaceBbox(placeId: string): DOMRect | null {
+		const place = places.find((p) => p.id === placeId);
+		if (!place) return null;
+		
+		let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+		
+		// Get bounds from shape(s)
+		const shapes = Array.isArray(place.shape) ? place.shape : [place.shape];
+		for (const shape of shapes) {
+			if (shape.type === 'circle') {
+				const cx = denorm(shape.cx), cy = denorm(shape.cy), r = denorm(shape.r);
+				minX = Math.min(minX, cx - r);
+				minY = Math.min(minY, cy - r);
+				maxX = Math.max(maxX, cx + r);
+				maxY = Math.max(maxY, cy + r);
+			} else if (shape.type === 'rect') {
+				const x = denorm(shape.x), y = denorm(shape.y);
+				const w = denorm(shape.width), h = denorm(shape.height);
+				minX = Math.min(minX, x);
+				minY = Math.min(minY, y);
+				maxX = Math.max(maxX, x + w);
+				maxY = Math.max(maxY, y + h);
+			} else if (shape.type === 'path') {
+				// Parse path to extract coordinates (approximate bbox from path numbers)
+				const denormalized = denormPath(shape.d);
+				const numbers = denormalized.match(/-?\d+\.?\d*/g);
+				if (numbers) {
+					for (let i = 0; i < numbers.length; i += 2) {
+						if (i + 1 < numbers.length) {
+							const x = parseFloat(numbers[i]);
+							const y = parseFloat(numbers[i + 1]);
+							minX = Math.min(minX, x);
+							minY = Math.min(minY, y);
+							maxX = Math.max(maxX, x);
+							maxY = Math.max(maxY, y);
+						}
+					}
 				}
 			}
-
-			// Calculate margin based on container's actual pixel dimensions
-			// Get container dimensions in pixels
-			let containerWidth = FULL_VIEWBOX.width;
-			let containerHeight = FULL_VIEWBOX.height;
-
-			if (svgElement) {
-				const rect = svgElement.getBoundingClientRect();
-				containerWidth = rect.width;
-				containerHeight = rect.height;
-			}
-
-			// Calculate the bounding box dimensions
-			const bboxWidth = bbox.width;
-			const bboxHeight = bbox.height;
-
-			// Calculate container aspect ratio
-			const containerAspect = containerWidth / containerHeight;
-			const bboxAspect = bboxWidth / bboxHeight;
-
-			// Calculate margin in pixels based on container dimensions
-			// The margin should be a percentage of the container's smaller dimension
-			const containerSize = Math.min(containerWidth, containerHeight);
-			const marginPixels = containerSize * zoomMargin;
-
-			// Calculate scale factor: how many viewBox units per pixel
-			// Use FULL_VIEWBOX to get the base scale
-			const scaleX = FULL_VIEWBOX.width / containerWidth;
-			const scaleY = FULL_VIEWBOX.height / containerHeight;
-
-			// Convert pixel margin to viewBox coordinates
-			const marginX = marginPixels * scaleX;
-			const marginY = marginPixels * scaleY;
-
-			// Calculate content area (bbox + margins)
-			const contentWidth = bboxWidth + marginX * 2;
-			const contentHeight = bboxHeight + marginY * 2;
-			const contentAspect = contentWidth / contentHeight;
-
-			// Determine target viewBox dimensions that will fit the content
-			// while maintaining container aspect ratio (so it fills the container)
-			let targetViewBoxWidth: number;
-			let targetViewBoxHeight: number;
-
-			if (contentAspect > containerAspect) {
-				// Content is wider - width determines viewBox
-				targetViewBoxWidth = contentWidth;
-				targetViewBoxHeight = contentWidth / containerAspect;
-			} else {
-				// Content is taller - height determines viewBox
-				targetViewBoxHeight = contentHeight;
-				targetViewBoxWidth = contentHeight * containerAspect;
-			}
-
-			// Center the bounding box in the viewBox
-			const x = Math.max(0, bbox.x - (targetViewBoxWidth - bboxWidth) / 2);
-			const y = Math.max(0, bbox.y - (targetViewBoxHeight - bboxHeight) / 2);
-
-			// Ensure we don't go outside the full viewBox bounds
-			const width = Math.min(FULL_VIEWBOX.width - x, targetViewBoxWidth);
-			const height = Math.min(FULL_VIEWBOX.height - y, targetViewBoxHeight);
-
-			viewBoxX.set(x);
-			viewBoxY.set(y);
-			viewBoxWidth.set(width);
-			viewBoxHeight.set(height);
-		} catch (error) {
-			console.error(`Error calculating bounding box for ${pathId}:`, error);
 		}
+		
+		// Include pin in bounds
+		const pinCx = denorm(place.pin.cx), pinCy = denorm(place.pin.cy), pinR = denorm(place.pin.r);
+		minX = Math.min(minX, pinCx - pinR);
+		minY = Math.min(minY, pinCy - pinR);
+		maxX = Math.max(maxX, pinCx + pinR);
+		maxY = Math.max(maxY, pinCy + pinR);
+		
+		if (minX === Infinity) return null;
+		return new DOMRect(minX, minY, maxX - minX, maxY - minY);
+	}
+	
+	/**
+	 * Calculate bounding box from focal data (denormalized coordinates)
+	 */
+	function calculateFocalBbox(): DOMRect | null {
+		const focal = mapData.focal;
+		if (!focal.shapes || focal.shapes.length === 0) return null;
+		
+		let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+		
+		for (const shape of focal.shapes) {
+			if (shape.type === 'circle') {
+				const cx = denorm(shape.cx), cy = denorm(shape.cy), r = denorm(shape.r);
+				minX = Math.min(minX, cx - r);
+				minY = Math.min(minY, cy - r);
+				maxX = Math.max(maxX, cx + r);
+				maxY = Math.max(maxY, cy + r);
+			} else if (shape.type === 'rect') {
+				const x = denorm(shape.x), y = denorm(shape.y);
+				const w = denorm(shape.width), h = denorm(shape.height);
+				minX = Math.min(minX, x);
+				minY = Math.min(minY, y);
+				maxX = Math.max(maxX, x + w);
+				maxY = Math.max(maxY, y + h);
+			} else if (shape.type === 'path') {
+				const denormalized = denormPath(shape.d);
+				const numbers = denormalized.match(/-?\d+\.?\d*/g);
+				if (numbers) {
+					for (let i = 0; i < numbers.length; i += 2) {
+						if (i + 1 < numbers.length) {
+							const x = parseFloat(numbers[i]);
+							const y = parseFloat(numbers[i + 1]);
+							minX = Math.min(minX, x);
+							minY = Math.min(minY, y);
+							maxX = Math.max(maxX, x);
+							maxY = Math.max(maxY, y);
+						}
+					}
+				}
+			}
+		}
+		
+		// Include focal center
+		const cx = FOCAL_CENTER.cx, cy = FOCAL_CENTER.cy;
+		minX = Math.min(minX, cx);
+		minY = Math.min(minY, cy);
+		maxX = Math.max(maxX, cx);
+		maxY = Math.max(maxY, cy);
+		
+		if (minX === Infinity) return null;
+		return new DOMRect(minX, minY, maxX - minX, maxY - minY);
+	}
+	
+	function zoomToBoundingBox(pathId: string) {
+		// Calculate place bounding box from data
+		const placeBbox = calculatePlaceBbox(pathId);
+		if (!placeBbox) return;
+		
+		let bbox = placeBbox;
+
+		// If includeFocal is true, calculate union with focal bounding box
+		if (includeFocal) {
+			const focalBbox = calculateFocalBbox();
+			if (focalBbox) {
+				// Calculate union of both bounding boxes
+				const minX = Math.min(placeBbox.x, focalBbox.x);
+				const minY = Math.min(placeBbox.y, focalBbox.y);
+				const maxX = Math.max(
+					placeBbox.x + placeBbox.width,
+					focalBbox.x + focalBbox.width
+				);
+				const maxY = Math.max(
+					placeBbox.y + placeBbox.height,
+					focalBbox.y + focalBbox.height
+				);
+				bbox = new DOMRect(minX, minY, maxX - minX, maxY - minY);
+			}
+		}
+
+		// Calculate margin based on container's actual pixel dimensions
+		let containerWidth = FULL_VIEWBOX.width;
+		let containerHeight = FULL_VIEWBOX.height;
+
+		if (svgElement) {
+			const rect = svgElement.getBoundingClientRect();
+			containerWidth = rect.width;
+			containerHeight = rect.height;
+		}
+
+		// Calculate the bounding box dimensions
+		const bboxWidth = bbox.width;
+		const bboxHeight = bbox.height;
+
+		// Calculate container aspect ratio
+		const containerAspect = containerWidth / containerHeight;
+
+		// Calculate margin in pixels based on container dimensions
+		const containerSize = Math.min(containerWidth, containerHeight);
+		const marginPixels = containerSize * zoomMargin;
+
+		// Calculate scale factor: how many viewBox units per pixel
+		const scaleX = FULL_VIEWBOX.width / containerWidth;
+		const scaleY = FULL_VIEWBOX.height / containerHeight;
+
+		// Convert pixel margin to viewBox coordinates
+		const marginX = marginPixels * scaleX;
+		const marginY = marginPixels * scaleY;
+
+		// Calculate content area (bbox + margins)
+		const contentWidth = bboxWidth + marginX * 2;
+		const contentHeight = bboxHeight + marginY * 2;
+		const contentAspect = contentWidth / contentHeight;
+
+		// Determine target viewBox dimensions that will fit the content
+		// while maintaining container aspect ratio
+		let targetViewBoxWidth: number;
+		let targetViewBoxHeight: number;
+
+		if (contentAspect > containerAspect) {
+			targetViewBoxWidth = contentWidth;
+			targetViewBoxHeight = contentWidth / containerAspect;
+		} else {
+			targetViewBoxHeight = contentHeight;
+			targetViewBoxWidth = contentHeight * containerAspect;
+		}
+
+		// Center the bounding box in the viewBox
+		const x = Math.max(0, bbox.x - (targetViewBoxWidth - bboxWidth) / 2);
+		const y = Math.max(0, bbox.y - (targetViewBoxHeight - bboxHeight) / 2);
+
+		// Ensure we don't go outside the full viewBox bounds
+		const width = Math.min(FULL_VIEWBOX.width - x, targetViewBoxWidth);
+		const height = Math.min(FULL_VIEWBOX.height - y, targetViewBoxHeight);
+
+		// Tween to the new viewBox (smooth animation)
+		viewBoxX.set(x);
+		viewBoxY.set(y);
+		viewBoxWidth.set(width);
+		viewBoxHeight.set(height);
 	}
 
 	function next() {
