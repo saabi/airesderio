@@ -2,13 +2,6 @@
 	"baseImage": {
 		"src": "/map/far.jpg"
 	},
-	"detailImage": {
-		"src": "/map/near.jpg",
-		"x": 0.17552473413977926,
-		"y": 0.1127032709612025,
-		"width": 0.14931984033307474,
-		"height": 0.09007767619793662
-	},
 	"focal": {
 		"shapes": [
 			{
@@ -27,6 +20,7 @@
 			"cy": 0.8927197451286698
 		}
 	},
+	"defaultRadius": 0.15,
 	"places": [
 		{
 			"id": "terminal",
@@ -377,10 +371,10 @@
 		"originalViewBox": {
 			"x": 0,
 			"y": 0,
-			"width": 463.54998,
-			"height": 776.28749
+			"width": 2585,
+			"height": 4385
 		},
-		"scaleFactor": 463.54998,
+		"scaleFactor": 2585,
 		"note": "Coordinates are normalized. Smallest dimension = 1. Multiply by image's smaller pixel dimension to denormalize."
 	}
 }

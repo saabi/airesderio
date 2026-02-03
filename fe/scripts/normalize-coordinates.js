@@ -161,8 +161,10 @@ function normalize() {
 		note: "Coordinates are normalized. Smallest dimension = 1. Multiply by image's smaller pixel dimension to denormalize."
 	};
 	
-	// Remove defaultRadius since it was in old coordinate system
-	delete mapData.defaultRadius;
+	// Normalize defaultRadius if present (convert from original coords to normalized)
+	if (mapData.defaultRadius) {
+		mapData.defaultRadius = normalizeValue(mapData.defaultRadius);
+	}
 	
 	console.log('Writing normalized map.json...');
 	writeFileSync(OUTPUT_PATH, JSON.stringify(mapData, null, '\t'), 'utf-8');

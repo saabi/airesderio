@@ -302,6 +302,9 @@ export interface MapData {
 	/** Explicit default view in normalized coordinates */
 	defaultView?: ViewBox;
 	
+	/** Radius for focal-centered default view (normalized, 0-1, default 0.1) */
+	defaultRadius?: number;
+	
 	/** Interactive places/zones on the map */
 	places: PlaceData[];
 	

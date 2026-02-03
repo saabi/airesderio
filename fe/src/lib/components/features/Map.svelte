@@ -125,6 +125,29 @@
 	// Reference to measurement label for getting dimensions
 	let measurementLabel: HTMLDivElement | null = $state(null);
 
+	// Calculate viewBox centered on focal with given radius (in normalized coords)
+	function calculateFocalViewBox(normalizedRadius: number): ViewBox {
+		// Denormalize the radius
+		const radiusPixels = denorm(normalizedRadius);
+		
+		// Calculate viewBox dimensions (diameter = 2 * radius)
+		const viewBoxSize = radiusPixels * 2;
+
+		// Center the viewBox on focal coordinates (already denormalized)
+		const centerX = FOCAL_CENTER.cx;
+		const centerY = FOCAL_CENTER.cy;
+
+		// Calculate top-left corner, clamped to valid range
+		const x = Math.max(0, centerX - radiusPixels);
+		const y = Math.max(0, centerY - radiusPixels);
+
+		// Calculate width and height, ensuring we don't exceed image bounds
+		const viewBoxWidth = Math.min(viewBoxSize, FULL_VIEWBOX.width - x);
+		const viewBoxHeight = Math.min(viewBoxSize, FULL_VIEWBOX.height - y);
+
+		return { x, y, width: viewBoxWidth, height: viewBoxHeight };
+	}
+
 	// Compute default viewBox based on configuration
 	let defaultViewBox = $derived.by((): ViewBox => {
 		// Priority 1: Explicit defaultView from data (denormalize it)
@@ -142,7 +165,13 @@
 			return DETAIL_VIEWBOX;
 		}
 
-		// Priority 3: Full viewBox (show entire image)
+		// Priority 3: Compute from focal center + radius (default 0.1 in normalized coords)
+		if (baseImageDimensions) {
+			const radius = mapData.defaultRadius ?? 0.1;
+			return calculateFocalViewBox(radius);
+		}
+
+		// Priority 4: Fallback to full viewBox
 		return FULL_VIEWBOX;
 	});
 
