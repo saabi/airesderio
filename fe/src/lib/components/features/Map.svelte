@@ -46,13 +46,25 @@
 		mapData
 	}: Props = $props();
 
+	// ===== STATE: Image dimensions (loaded from actual images) =====
+	let baseImageDimensions = $state<{ width: number; height: number } | null>(null);
+
+	// Load base image to get natural dimensions
+	$effect(() => {
+		const img = new Image();
+		img.onload = () => {
+			baseImageDimensions = { width: img.naturalWidth, height: img.naturalHeight };
+		};
+		img.src = mapData.baseImage.src;
+	});
+
 	// ===== DERIVED FROM MAP DATA =====
-	// Full viewBox derived from base image dimensions
+	// Full viewBox derived from loaded base image dimensions
 	let FULL_VIEWBOX = $derived<ViewBox>({
 		x: 0,
 		y: 0,
-		width: mapData.baseImage.width,
-		height: mapData.baseImage.height
+		width: baseImageDimensions?.width ?? 1,
+		height: baseImageDimensions?.height ?? 1
 	});
 
 	// Detail image bounds (if present)
@@ -124,13 +136,17 @@
 			return DETAIL_VIEWBOX;
 		}
 
-		// Priority 3: Compute from focal center + radius
-		const radius = mapData.defaultRadius ?? Math.min(
-			mapData.baseImage.width,
-			mapData.baseImage.height
-		) * 0.2;
+		// Priority 3: If dimensions loaded, compute from focal center + radius
+		if (baseImageDimensions) {
+			const radius = mapData.defaultRadius ?? Math.min(
+				baseImageDimensions.width,
+				baseImageDimensions.height
+			) * 0.2;
+			return calculateFocalViewBox(radius);
+		}
 
-		return calculateFocalViewBox(radius);
+		// Priority 4: Fallback to full viewBox (will update when image loads)
+		return FULL_VIEWBOX;
 	});
 
 	// Tweened values for smooth animation
@@ -539,15 +555,17 @@
 	>
 		<!-- Base and detail images -->
 		<g id='maps'>
-			<image
-				id='base'
-				href={mapData.baseImage.src}
-				x='0'
-				y='0'
-				width={mapData.baseImage.width}
-				height={mapData.baseImage.height}
-				preserveAspectRatio='none'
-			/>
+			{#if baseImageDimensions}
+				<image
+					id='base'
+					href={mapData.baseImage.src}
+					x='0'
+					y='0'
+					width={baseImageDimensions.width}
+					height={baseImageDimensions.height}
+					preserveAspectRatio='none'
+				/>
+			{/if}
 			{#if showDetailImage && mapData.detailImage}
 				<image
 					id='detail'

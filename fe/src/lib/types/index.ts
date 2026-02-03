@@ -211,12 +211,11 @@ export interface PinPosition {
 }
 
 /**
- * Base image configuration (defines the coordinate space)
+ * Base image configuration
+ * Width and height are read from the loaded image automatically
  */
 export interface BaseImage {
 	src: string;
-	width: number;
-	height: number;
 }
 
 /**
