@@ -155,9 +155,131 @@ export interface PlacesDataWithSvg {
 
 /**
  * Place data for Map component (simplified structure)
+ * @deprecated Use PlaceData from MapData instead
  */
 export interface MapPlaceData {
 	id: string;
 	name: string;
 	svg: PlaceSvgData;
+}
+
+// ============================================================================
+// NEW MAP DATA TYPES (map.json structure)
+// ============================================================================
+
+/**
+ * ViewBox rectangle in SVG coordinate space
+ */
+export interface ViewBox {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
+
+/**
+ * SVG shape types (excluding text which is a label)
+ */
+export type SvgShape =
+	| { type: 'path'; d: string }
+	| { type: 'rect'; x: number; y: number; width: number; height: number }
+	| { type: 'circle'; cx: number; cy: number; r: number };
+
+/**
+ * Text label for annotating places on the map
+ */
+export interface TextLabel {
+	type: 'text';
+	x: number;
+	y: number;
+	content: string;
+	xmlSpace?: 'preserve';
+}
+
+/**
+ * Pin marker position for labels/tooltips
+ */
+export interface PinPosition {
+	cx: number;
+	cy: number;
+	r: number;
+}
+
+/**
+ * Base image configuration (defines the coordinate space)
+ */
+export interface BaseImage {
+	src: string;
+	width: number;
+	height: number;
+}
+
+/**
+ * Optional detail image overlay (higher resolution for specific area)
+ */
+export interface DetailImage {
+	src: string;
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
+
+/**
+ * Focal point - the main subject of the map (e.g., Aires de Río building)
+ */
+export interface Focal {
+	/** Shapes that visually represent the focal subject */
+	shapes?: SvgShape[];
+	/** Center point for default view calculation and labels */
+	center: { cx: number; cy: number };
+}
+
+/**
+ * Place/zone data combining geometry and content
+ */
+export interface PlaceData {
+	/** Unique identifier */
+	id: string;
+	
+	// === Geometry ===
+	/** Zone outline - single shape or array of shapes */
+	shape: SvgShape | SvgShape[];
+	/** Anchor point for labels/tooltips */
+	pin: PinPosition;
+	/** Optional text labels within the zone */
+	labels?: TextLabel[];
+	
+	// === Content ===
+	/** Display name */
+	name: string;
+	/** Short description */
+	description?: string;
+	/** Extended content (things to do) */
+	details?: string;
+	/** Photo filenames (relative to /places/{id}/) */
+	photos?: string[];
+}
+
+/**
+ * Complete map data structure (map.json)
+ */
+export interface MapData {
+	/** Base image defines the coordinate space */
+	baseImage: BaseImage;
+	
+	/** Optional higher-resolution overlay for a specific area */
+	detailImage?: DetailImage;
+	
+	/** The main subject of the map */
+	focal: Focal;
+	
+	/** Explicit default view (if omitted, computed from focal + defaultRadius) */
+	defaultView?: ViewBox;
+	
+	/** Radius for computed default view when defaultView is omitted */
+	defaultRadius?: number;
+	
+	/** Interactive places/zones on the map */
+	places: PlaceData[];
 }

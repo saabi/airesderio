@@ -4,7 +4,7 @@
 	import PinLabel from '$lib/components/ui/PinLabel.svelte';
 
 	// ===== TYPES =====
-	import type { MapPlaceData, MapConfig } from '$lib/types';
+	import type { MapData, PlaceData, SvgShape, ViewBox } from '$lib/types';
 
 	interface Props {
 		width?: string | number;
@@ -12,11 +12,9 @@
 		class?: string;
 		ariaLabel?: string;
 		zoomMargin?: number;
-		includeAiresderio?: boolean;
-		showNearImage?: boolean;
-		radius?: number;
-		places: MapPlaceData[];
-		mapConfig: MapConfig;
+		includeFocal?: boolean;
+		showDetailImage?: boolean;
+		mapData: MapData;
 	}
 
 	export interface MapComponent {
@@ -26,8 +24,13 @@
 		currentPathId: string | null;
 	}
 
-	// ===== STATIC CONSTANTS =====
-	// (Constants will be derived from props in runtime script)
+	// ===== HELPER FUNCTIONS =====
+	/**
+	 * Normalize shape to array (handles single shape or array of shapes)
+	 */
+	function normalizeShapes(shape: SvgShape | SvgShape[]): SvgShape[] {
+		return Array.isArray(shape) ? shape : [shape];
+	}
 </script>
 
 <script lang='ts'>
@@ -38,21 +41,39 @@
 		class: className = '',
 		ariaLabel = 'Mapa de ubicación',
 		zoomMargin = 0.1,
-		includeAiresderio = true,
-		showNearImage = true,
-		radius = 50,
-		places,
-		mapConfig
+		includeFocal = true,
+		showDetailImage = false,
+		mapData
 	}: Props = $props();
 
-	// ===== DERIVED FROM PROPS =====
-	let FULL_VIEWBOX = $derived(mapConfig.fullViewBox);
-	let NEAR_VIEWBOX = $derived(mapConfig.nearViewBox);
-	let AIRESDERIO_CENTER = $derived(mapConfig.airesderioCenter);
-	let FAR_IMAGE = $derived(mapConfig.farImage);
-	let NEAR_IMAGE = $derived(mapConfig.nearImage);
+	// ===== DERIVED FROM MAP DATA =====
+	// Full viewBox derived from base image dimensions
+	let FULL_VIEWBOX = $derived<ViewBox>({
+		x: 0,
+		y: 0,
+		width: mapData.baseImage.width,
+		height: mapData.baseImage.height
+	});
 
-	// Derived constants from places prop
+	// Detail image bounds (if present)
+	let DETAIL_VIEWBOX = $derived<ViewBox | null>(
+		mapData.detailImage
+			? {
+					x: mapData.detailImage.x,
+					y: mapData.detailImage.y,
+					width: mapData.detailImage.width,
+					height: mapData.detailImage.height
+				}
+			: null
+	);
+
+	// Focal center and shapes
+	let FOCAL = $derived(mapData.focal);
+
+	// Places array
+	let places = $derived(mapData.places);
+
+	// Derived constants from places
 	let PLACE_PATH_IDS = $derived(places.map((place) => place.id));
 	let PLACE_NAMES = $derived(
 		Object.fromEntries(places.map((place) => [place.id, place.name]))
@@ -70,38 +91,54 @@
 	// Reference to measurement label for getting dimensions
 	let measurementLabel: HTMLDivElement | null = $state(null);
 
-	// Calculate viewBox centered on airesderio with given radius
-	function calculateAiresderioViewBox(radiusValue: number) {
+	// Calculate viewBox centered on focal with given radius
+	function calculateFocalViewBox(radiusValue: number): ViewBox {
 		// Calculate viewBox dimensions based on radius
 		// The radius represents half the width/height of the viewBox
 		const viewBoxSize = radiusValue * 2;
-		
-		// Center the viewBox on airesderio coordinates
-		const centerX = AIRESDERIO_CENTER.cx;
-		const centerY = AIRESDERIO_CENTER.cy;
-		
+
+		// Center the viewBox on focal coordinates
+		const centerX = FOCAL.center.cx;
+		const centerY = FOCAL.center.cy;
+
 		// Calculate top-left corner
 		const x = Math.max(0, centerX - radiusValue);
 		const y = Math.max(0, centerY - radiusValue);
-		
+
 		// Calculate width and height, ensuring we don't go outside FULL_VIEWBOX bounds
-		const width = Math.min(viewBoxSize, FULL_VIEWBOX.width - x);
-		const height = Math.min(viewBoxSize, FULL_VIEWBOX.height - y);
-		
-		return { x, y, width, height };
+		const viewBoxWidth = Math.min(viewBoxSize, FULL_VIEWBOX.width - x);
+		const viewBoxHeight = Math.min(viewBoxSize, FULL_VIEWBOX.height - y);
+
+		return { x, y, width: viewBoxWidth, height: viewBoxHeight };
 	}
 
-	// Determine default viewBox based on showNearImage prop
-	let defaultViewBox = $derived(
-		showNearImage ? NEAR_VIEWBOX : calculateAiresderioViewBox(radius)
-	);
+	// Compute default viewBox based on configuration
+	let defaultViewBox = $derived.by((): ViewBox => {
+		// Priority 1: Explicit defaultView from data
+		if (mapData.defaultView) {
+			return mapData.defaultView;
+		}
+
+		// Priority 2: If showDetailImage and detailImage exists, use detail bounds
+		if (showDetailImage && DETAIL_VIEWBOX) {
+			return DETAIL_VIEWBOX;
+		}
+
+		// Priority 3: Compute from focal center + radius
+		const radius = mapData.defaultRadius ?? Math.min(
+			mapData.baseImage.width,
+			mapData.baseImage.height
+		) * 0.2;
+
+		return calculateFocalViewBox(radius);
+	});
 
 	// Tweened values for smooth animation
-	// Initialize with mapConfig.nearViewBox (default), will be updated by effect when defaultViewBox changes
-	let viewBoxX = tweened(mapConfig.nearViewBox.x, { duration: 600, easing: (t) => t * (2 - t) });
-	let viewBoxY = tweened(mapConfig.nearViewBox.y, { duration: 600, easing: (t) => t * (2 - t) });
-	let viewBoxWidth = tweened(mapConfig.nearViewBox.width, { duration: 600, easing: (t) => t * (2 - t) });
-	let viewBoxHeight = tweened(mapConfig.nearViewBox.height, { duration: 600, easing: (t) => t * (2 - t) });
+	// Initialize with computed defaultViewBox
+	let viewBoxX = tweened(defaultViewBox.x, { duration: 600, easing: (t) => t * (2 - t) });
+	let viewBoxY = tweened(defaultViewBox.y, { duration: 600, easing: (t) => t * (2 - t) });
+	let viewBoxWidth = tweened(defaultViewBox.width, { duration: 600, easing: (t) => t * (2 - t) });
+	let viewBoxHeight = tweened(defaultViewBox.height, { duration: 600, easing: (t) => t * (2 - t) });
 
 	// Update tweened values when defaultViewBox changes
 	$effect(() => {
@@ -115,19 +152,19 @@
 	// Reference to SVG element for container dimensions
 	let svgElement: SVGSVGElement | null = $state(null);
 
-	// Reference to airesderio path element
-	let airesderioPath: SVGPathElement | null = $state(null);
+	// Reference to focal group element (for bounding box calculation)
+	let focalGroup: SVGGElement | null = $state(null);
 
 	// Map of path IDs to elements - dynamically queried from SVG DOM
 	let pathElements = $derived.by(() => {
 		if (!svgElement) return new Map<string, SVGPathElement | SVGRectElement | SVGCircleElement>();
-		
+
 		const placesGroup = svgElement.querySelector('#places');
 		if (!placesGroup) return new Map<string, SVGPathElement | SVGRectElement | SVGCircleElement>();
-		
+
 		const map = new Map<string, SVGPathElement | SVGRectElement | SVGCircleElement>();
 		for (const place of places) {
-			const group = placesGroup.querySelector(`#${place.id}`);
+			const group = placesGroup.querySelector(`#${CSS.escape(place.id)}`);
 			if (group) {
 				const shapeElement = group.querySelector('path.place-path, rect.place-path, circle.place-path') as SVGPathElement | SVGRectElement | SVGCircleElement | null;
 				if (shapeElement) {
@@ -154,31 +191,13 @@
 
 	// ===== FUNCTIONS =====
 	/**
-	 * Gets pin coordinates for a place ID by reading directly from the SVG DOM.
-	 * Finds the place group by ID and extracts cx/cy from its pin circle.
+	 * Gets pin coordinates for a place ID from the places data.
 	 */
 	function getPinCoordinates(placeId: string): { cx: number; cy: number } | null {
-		if (!svgElement) return null;
+		const place = places.find((p) => p.id === placeId);
+		if (!place) return null;
 
-		// Find the places group
-		const placesGroup = svgElement.querySelector('#places');
-		if (!placesGroup) return null;
-
-		// Find the specific place group by ID
-		const group = placesGroup.querySelector(`#${placeId}`);
-		if (!group) return null;
-
-		// Find the pin circle within the group
-		const pinCircle = group.querySelector('circle.pin-circle') as SVGCircleElement | null;
-		if (!pinCircle) return null;
-
-		// Extract coordinates from attributes
-		const cx = parseFloat(pinCircle.getAttribute('cx') || '0');
-		const cy = parseFloat(pinCircle.getAttribute('cy') || '0');
-
-		if (isNaN(cx) || isNaN(cy)) return null;
-
-		return { cx, cy };
+		return { cx: place.pin.cx, cy: place.pin.cy };
 	}
 
 	/**
@@ -380,27 +399,27 @@
 			const pathBbox = pathElement.getBBox();
 			let bbox = pathBbox;
 
-			// If includeAiresderio is true, calculate union with airesderio bounding box
-			if (includeAiresderio && airesderioPath) {
+			// If includeFocal is true, calculate union with focal bounding box
+			if (includeFocal && focalGroup) {
 				try {
-					const airesderioBbox = airesderioPath.getBBox();
+					const focalBbox = focalGroup.getBBox();
 					// Calculate union of both bounding boxes
-					const minX = Math.min(pathBbox.x, airesderioBbox.x);
-					const minY = Math.min(pathBbox.y, airesderioBbox.y);
+					const minX = Math.min(pathBbox.x, focalBbox.x);
+					const minY = Math.min(pathBbox.y, focalBbox.y);
 					const maxX = Math.max(
 						pathBbox.x + pathBbox.width,
-						airesderioBbox.x + airesderioBbox.width
+						focalBbox.x + focalBbox.width
 					);
 					const maxY = Math.max(
 						pathBbox.y + pathBbox.height,
-						airesderioBbox.y + airesderioBbox.height
+						focalBbox.y + focalBbox.height
 					);
 
 					// Create a new DOMRect-like object for the union
 					bbox = new DOMRect(minX, minY, maxX - minX, maxY - minY);
 				} catch (error) {
-					// If airesderio bbox calculation fails, use original bbox
-					console.warn('Could not calculate airesderio bounding box, using path bbox only:', error);
+					// If focal bbox calculation fails, use original bbox
+					console.warn('Could not calculate focal bounding box, using path bbox only:', error);
 				}
 			}
 
@@ -518,35 +537,39 @@
 		role='img'
 		xmlns='http://www.w3.org/2000/svg'
 	>
+		<!-- Base and detail images -->
 		<g id='maps'>
 			<image
-				id='far'
-				href='/map/far.jpg'
+				id='base'
+				href={mapData.baseImage.src}
 				x='0'
 				y='0'
-				width='374.12082'
-				height='225.68958'
+				width={mapData.baseImage.width}
+				height={mapData.baseImage.height}
 				preserveAspectRatio='none'
 			/>
-			{#if showNearImage}
+			{#if showDetailImage && mapData.detailImage}
 				<image
-					id='near'
-					href='/map/near.jpg'
-					x='81.364487'
-					y='52.243599'
-					width='69.217209'
-					height='41.755505'
+					id='detail'
+					href={mapData.detailImage.src}
+					x={mapData.detailImage.x}
+					y={mapData.detailImage.y}
+					width={mapData.detailImage.width}
+					height={mapData.detailImage.height}
 					preserveAspectRatio='none'
 				/>
 			{/if}
 		</g>
+
+		<!-- Selected place rendering -->
 		{#if currentPathId}
 			{@const selectedPlace = places.find((p) => p.id === currentPathId)}
 			{#if selectedPlace}
 				<g id='places' class='places-group' class:zoom-active={currentZoomedIndex !== null}>
 					<g id={selectedPlace.id} class='group-active'>
-						{#each selectedPlace.svg.elements as element}
-							{#if element.type === 'path'}
+						<!-- Render shape(s) -->
+						{#each normalizeShapes(selectedPlace.shape) as shape}
+							{#if shape.type === 'path'}
 								<path
 									class='place-path'
 									fill='#00be4d'
@@ -554,9 +577,9 @@
 									role='button'
 									tabindex='0'
 									aria-label={selectedPlace.name}
-									d={element.d}
+									d={shape.d}
 								/>
-							{:else if element.type === 'rect'}
+							{:else if shape.type === 'rect'}
 								<rect
 									class='place-path'
 									fill='#00be4d'
@@ -564,12 +587,12 @@
 									role='button'
 									tabindex='0'
 									aria-label={selectedPlace.name}
-									x={element.x}
-									y={element.y}
-									width={element.width}
-									height={element.height}
+									x={shape.x}
+									y={shape.y}
+									width={shape.width}
+									height={shape.height}
 								/>
-							{:else if element.type === 'circle'}
+							{:else if shape.type === 'circle'}
 								<circle
 									class='place-path'
 									fill='#00be4d'
@@ -577,40 +600,46 @@
 									role='button'
 									tabindex='0'
 									aria-label={selectedPlace.name}
-									cx={element.cx}
-									cy={element.cy}
-									r={element.r}
+									cx={shape.cx}
+									cy={shape.cy}
+									r={shape.r}
 								/>
-							{:else if element.type === 'text'}
-								<text xml:space={element.xmlSpace || 'preserve'} x={element.x} y={element.y}>
-									<tspan x={element.x} y={element.y}>{element.content}</tspan>
-								</text>
 							{/if}
 						{/each}
+
+						<!-- Render labels if present -->
+						{#if selectedPlace.labels}
+							{#each selectedPlace.labels as label}
+								<text xml:space={label.xmlSpace || 'preserve'} x={label.x} y={label.y}>
+									<tspan x={label.x} y={label.y}>{label.content}</tspan>
+								</text>
+							{/each}
+						{/if}
+
+						<!-- Pin circle -->
 						<circle
 							class='pin-circle'
-							cx={selectedPlace.svg.pin.cx}
-							cy={selectedPlace.svg.pin.cy}
-							r={selectedPlace.svg.pin.r}
+							cx={selectedPlace.pin.cx}
+							cy={selectedPlace.pin.cy}
+							r={selectedPlace.pin.r}
 						/>
 					</g>
 				</g>
 			{/if}
 		{/if}
-		{#if includeAiresderio}
-			<g id='building' class='building-group' class:zoom-active={currentZoomedIndex !== null}>
-				<g id='airesderio' class='airesderio-path'>
-					<circle
-						class='pin-airesderio'
-						cx={AIRESDERIO_CENTER.cx}
-						cy={AIRESDERIO_CENTER.cy}
-						r='4.3814869'
-					/>
-					<path
-						bind:this={airesderioPath}
-						d='m 202.97288,409.90271 2.2931,0.0425 0.29238,0.2863 -0.002,5.19212 -0.23275,0.44892 0.001,1.48465 -3.31504,-0.0163 -0.0239,-1.23152 0.11181,-5.11477 z'
-					/>
-				</g>
+
+		<!-- Focal (main subject) rendering - data driven -->
+		{#if includeFocal && FOCAL.shapes && FOCAL.shapes.length > 0}
+			<g id='focal' class='focal-group' class:zoom-active={currentZoomedIndex !== null} bind:this={focalGroup}>
+				{#each FOCAL.shapes as shape}
+					{#if shape.type === 'path'}
+						<path class='focal-path' d={shape.d} />
+					{:else if shape.type === 'circle'}
+						<circle class='focal-pin' cx={shape.cx} cy={shape.cy} r={shape.r} />
+					{:else if shape.type === 'rect'}
+						<rect class='focal-path' x={shape.x} y={shape.y} width={shape.width} height={shape.height} />
+					{/if}
+				{/each}
 			</g>
 		{/if}
 	</svg>
@@ -742,7 +771,7 @@
 		fill-opacity: 0.471002;
 	}
 
-	.building-group {
+	.focal-group {
 		/* Box/Visual */
 		opacity: 0;
 
@@ -750,18 +779,33 @@
 		transition: opacity 0.4s ease;
 	}
 
-	/* When zoomed (viewbox not in initial state), show the building */
-	.building-group.zoom-active {
+	/* When zoomed (viewbox not in initial state), show the focal */
+	.focal-group.zoom-active {
 		/* Box/Visual */
 		opacity: 1;
 	}
 
-	.building-path {
+	.focal-path {
 		/* Box/Visual */
-		fill-opacity: 0.471002;
+		vector-effect: non-scaling-stroke;
+		fill: #e6f900;
+		fill-opacity: 0.51257861;
+		stroke-width: 0.1997;
+	}
 
-		/* Effects & Motion */
-		transition: fill-opacity 0.3s ease;
+	.focal-pin {
+		/* Box/Visual */
+		font-variation-settings: normal;
+		vector-effect: non-scaling-stroke;
+		fill: #800000;
+		fill-opacity: 0.455975;
+		stroke-width: 0.16213;
+		stroke-linecap: butt;
+		stroke-linejoin: miter;
+		stroke-miterlimit: 4;
+		stroke-dasharray: none;
+		stroke-dashoffset: 0;
+		stroke-opacity: 1;
 	}
 
 	.pin-circle {
@@ -787,24 +831,5 @@
 	.places-group.zoom-active .group-active .pin-circle {
 		/* Box/Visual */
 		fill-opacity: 1;
-	}
-	.pin-airesderio {
-		font-variation-settings: normal;
-		vector-effect: non-scaling-stroke;
-		fill: #800000;
-		fill-opacity: 0.455975;
-		stroke-width: 0.16213;
-		stroke-linecap: butt;
-		stroke-linejoin: miter;
-		stroke-miterlimit: 4;
-		stroke-dasharray: none;
-		stroke-dashoffset: 0;
-		stroke-opacity: 1;
-	}
-	.airesderio-path {
-		vector-effect: non-scaling-stroke;
-		fill: #e6f900;
-		fill-opacity: 0.51257861;
-		stroke-width: 0.1997;
 	}
 </style>

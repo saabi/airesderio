@@ -9,7 +9,7 @@
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
 	import Building from '$lib/components/icons/Building.svelte';
 	import Gallery from '$lib/components/icons/Gallery.svelte';
-	import type { PlacesCarouselData, PlaceMetadata, PlacesDataWithSvg, MapPlaceData, MapConfig } from '$lib/types';
+	import type { MapData, PlaceData, PlaceMetadata } from '$lib/types';
 
 	// ===== TYPES =====
 	interface Props {
@@ -26,7 +26,7 @@
 	} from '$lib/constants/animation';
 
 	// ===== STATIC CONSTANTS =====
-	const PLACES_JSON_URL = '/places/places.json';
+	const MAP_JSON_URL = '/places/map.json';
 </script>
 
 <script lang='ts'>
@@ -37,10 +37,7 @@
 	let {}: Props = $props();
 
 	// ===== STATE =====
-	let placesMetadata = $state<PlacesCarouselData | null>(null);
-	let placesData = $state<PlacesDataWithSvg | null>(null);
-	let mapPlaces = $state<MapPlaceData[]>([]);
-	let mapConfig = $state<MapConfig | null>(null);
+	let mapData = $state<MapData | null>(null);
 	let photoCarouselVisible = $state(false);
 	let carouselPlace = $state<PlaceMetadata | null>(null);
 	let carouselPlaceId = $state<string>('');
@@ -52,6 +49,12 @@
 	// Get current place from map to determine button states
 	let currentPlaceId = $derived.by(() => mapComponent?.currentPathId ?? null);
 	let hasPlaceSelected = $derived.by(() => currentPlaceId !== null);
+
+	// Get places record for quick lookup (id -> PlaceData)
+	let placesById = $derived.by((): Record<string, PlaceData> => {
+		if (!mapData) return {};
+		return Object.fromEntries(mapData.places.map((p) => [p.id, p]));
+	});
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: locationObserver, visible: locationVisible } = createSectionObserver('location', {
@@ -102,62 +105,44 @@
 	// (Effects will be added here if needed)
 
 	// ===== ASYNC FUNCTIONS =====
-	// Load places data from JSON (includes SVG data)
-	async function loadPlacesMetadata() {
+	// Load map data from JSON (new MapData format)
+	async function loadMapData() {
 		if (!browser) return;
 
 		if (import.meta.env.DEV) {
-			console.log('Loading places data from:', PLACES_JSON_URL);
+			console.log('Loading map data from:', MAP_JSON_URL);
 		}
 		try {
-			const response = await fetch(PLACES_JSON_URL);
+			const response = await fetch(MAP_JSON_URL);
 			if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-			const data: PlacesDataWithSvg = await response.json();
-			placesData = data;
-			
-			// Transform to PlacesCarouselData for carousel
-			placesMetadata = {
-				places: Object.fromEntries(
-					Object.entries(data.places).map(([id, place]) => [
-						id,
-						{
-							nombre: place.nombre,
-							descripcion: place.descripcion,
-							thingstodo: place.thingstodo,
-							photos: place.photos
-						}
-					])
-				)
-			};
-			
-			// Transform to MapPlaceData array for Map component
-			mapPlaces = Object.entries(data.places).map(([id, place]) => ({
-				id,
-				name: place.nombre,
-				svg: place.svg
-			}));
-			
-			// Extract mapConfig
-			mapConfig = data.mapConfig || null;
-			
+			const data: MapData = await response.json();
+			mapData = data;
+
 			if (import.meta.env.DEV) {
-				console.log('Places data loaded successfully:', {
-					totalPlaces: Object.keys(data.places || {}).length,
-					hasMapConfig: !!data.mapConfig
+				console.log('Map data loaded successfully:', {
+					totalPlaces: data.places.length,
+					hasFocal: !!data.focal,
+					hasDetailImage: !!data.detailImage
 				});
 			}
 		} catch (error) {
-			console.error('Error loading places data:', error);
+			console.error('Error loading map data:', error);
 		}
 	}
 
 	// ===== EVENT HANDLERS =====
-	// Open photo carousel
-	function openPhotoCarousel(place: PlaceMetadata, placeId: string) {
+	// Open photo carousel for a place
+	function openPhotoCarousel(place: PlaceData) {
 		if (!place.photos || place.photos.length === 0) return;
 
-		carouselPlace = place;
-		carouselPlaceId = placeId;
+		// Convert PlaceData to PlaceMetadata for carousel
+		carouselPlace = {
+			nombre: place.name,
+			descripcion: place.description,
+			thingstodo: place.details,
+			photos: place.photos
+		};
+		carouselPlaceId = place.id;
 		// Pass just filenames, not full paths - PhotoCarousel will construct paths
 		carouselPhotos = place.photos;
 		carouselCurrentIndex = 0;
@@ -175,23 +160,21 @@
 
 	// Open gallery for current place on map
 	function openGalleryForCurrentPlace() {
-		if (!mapComponent || !placesMetadata) return;
+		if (!mapComponent || !mapData) return;
 
 		const currentPathId = mapComponent.currentPathId;
 		if (!currentPathId) return;
 
-		const place = placesMetadata.places?.[currentPathId];
+		const place = placesById[currentPathId];
 		if (!place || !place.photos || place.photos.length === 0) return;
 
-		openPhotoCarousel(place, currentPathId);
+		openPhotoCarousel(place);
 	}
 
-	// Load places metadata when component mounts
+	// Load map data when component mounts
 	$effect(() => {
-		loadPlacesMetadata();
+		loadMapData();
 	});
-
-	// OLD FUNCTIONS - REMOVED (now handled by GoogleMap component)
 </script>
 
 <section
@@ -271,18 +254,17 @@
 			class='map-container scroll-animate'
 			style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 		>
-			{#if mapPlaces.length > 0 && mapConfig}
-				<Map
-					bind:this={mapComponent}
-					class='location-map'
-					ariaLabel='Mapa de ubicación del proyecto Aires de Río'
-					places={mapPlaces}
-					mapConfig={mapConfig}
-					showNearImage={false}
-				/>
-			{:else}
-				<div class='location-map-loading'>Cargando mapa...</div>
-			{/if}
+		{#if mapData}
+			<Map
+				bind:this={mapComponent}
+				class='location-map'
+				ariaLabel='Mapa de ubicación del proyecto Aires de Río'
+				{mapData}
+				showDetailImage={false}
+			/>
+		{:else}
+			<div class='location-map-loading'>Cargando mapa...</div>
+		{/if}
 		</div>
 	</div>
 </section>
