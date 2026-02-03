@@ -12,7 +12,9 @@ docs/
 │   ├── architecture-improvements.md       # Proposed improvements
 │   ├── feature-specification.md           # Feature specification
 │   ├── development-setup.md               # Development setup guide
-│   └── svelte-guidelines.md               # Svelte coding guidelines
+│   ├── svelte-guidelines.md               # Svelte coding guidelines
+│   ├── map-design.md                      # Map component design specification
+│   └── map-migration-plan.md              # Migration plan for map refactoring
 ├── process/            # Development processes and conventions
 │   ├── COMMITS.md                         # Commit message conventions
 │   └── TICKETS.md                         # Ticket workflow documentation
@@ -38,7 +40,8 @@ docs/
     ├── 019-refactor-places-data-structure.md
     ├── 020-add-floor-plan-photos.md
     ├── 021-select-typeface-system.md
-    └── 022-componentize-carousel-dots.md
+    ├── 022-componentize-carousel-dots.md
+    └── 023-map-data-structure-migration.md
 ```
 
 ## Quick Start
@@ -156,6 +159,7 @@ Design proposals, mockups, and visual assets for the project.
 - **#020**: ✅ Add Photos with Descriptions to Floor Plan Section (Content, UX) - **Complete**
 - **#021**: ✅ Select Typeface System for Titles and Body Text (Design, Branding) - **Complete**
 - **#022**: ⏸️ Componentize Carousel Dots (Code Quality, Component Architecture) - **Not Started**
+- **#023**: 🔄 Map Data Structure Migration (Data Architecture, Code Quality) - **In Progress**
 - **#007**: ⏸️ Image Optimization (Performance) - **Pending** - *Depends on #011*
 
 ### Low Priority
