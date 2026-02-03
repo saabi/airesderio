@@ -266,10 +266,31 @@ export interface PlaceData {
 }
 
 /**
+ * Coordinate system metadata for normalized coordinates
+ * All coordinates in the data are normalized:
+ * - Smallest dimension is 0-1
+ * - Largest dimension maintains aspect ratio
+ * To denormalize: multiply by image's smaller pixel dimension
+ */
+export interface CoordinateSystem {
+	/** Whether coordinates are normalized */
+	normalized: boolean;
+	/** Original viewBox the coordinates were designed for */
+	originalViewBox?: ViewBox;
+	/** Factor used to normalize (divide original coords by this) */
+	scaleFactor?: number;
+	/** Human-readable explanation */
+	note?: string;
+}
+
+/**
  * Complete map data structure (map.json)
+ * 
+ * Coordinates are normalized: smallest dimension = 1, largest scaled proportionally.
+ * At runtime, multiply all coordinates by the image's smaller pixel dimension.
  */
 export interface MapData {
-	/** Base image defines the coordinate space */
+	/** Base image (src only - dimensions read from loaded image) */
 	baseImage: BaseImage;
 	
 	/** Optional higher-resolution overlay for a specific area */
@@ -278,12 +299,12 @@ export interface MapData {
 	/** The main subject of the map */
 	focal: Focal;
 	
-	/** Explicit default view (if omitted, computed from focal + defaultRadius) */
+	/** Explicit default view in normalized coordinates */
 	defaultView?: ViewBox;
-	
-	/** Radius for computed default view when defaultView is omitted */
-	defaultRadius?: number;
 	
 	/** Interactive places/zones on the map */
 	places: PlaceData[];
+	
+	/** Coordinate system metadata */
+	coordinateSystem?: CoordinateSystem;
 }

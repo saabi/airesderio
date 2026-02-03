@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Mic → Waveform + Spectrogram (correct scaling)</title>
+<style>
+  body{background:#111;color:#ddd;font:14px monospace;margin:16px}
+  button,select{font:14px monospace;margin-right:8px}
+  canvas{display:block;background:#000}
+  #wave{width:95vw;height:180px}
+  #spec{width:95vw;height:520px;image-rendering:pixelated}
+  small{color:#aaa}
+</style>
+</head>
+<body>
+<h2>Microphone — Waveform & Spectrogram</h2>
+<div>
+  <button id="start">Start</button>
+  <button id="stop" disabled>Stop</button>
+  <label>FFT
+    <select id="fft">
+      <option>1024</option>
+      <option selected>2048</option>
+      <option>4096</option>
+    </select>
+  </label>
+  <label>Hop (samples)
+    <select id="hop">
+      <option>128</option>
+      <option selected>256</option>
+      <option>512</option>
+    </select>
+  </label>
+  <label><input type="checkbox" id="monitor" checked> Monitor audio</label>
+</div>
+<canvas id="wave" width="2048" height="180"></canvas>
+<canvas id="spec" width="1536" height="768"></canvas>
+<div id="info"></div>
+<small>Time → right. Frequency → up (0 Hz at bottom). Spectrogram is 10·log10(P/max P) with floor −80 dB.</small>
+
+<script>
+// ---------------- FFT (radix-2, in-place) ----------------
+function bitRev(n){const r=new Uint32Array(n);let j=0;for(let i=0;i<n;i++){r[i]=j;let b=n>>1;while(j&b){j^=b;b>>=1;}j|=b;}return r;}
+function fft(re,im){const n=re.length,rev=bitRev(n);
+  for(let i=0;i<n;i++){const j=rev[i];if(i<j){[re[i],re[j]]=[re[j],re[i]];[im[i],im[j]]=[im[j],im[i]];}}
+  for(let len=2;len<=n;len<<=1){const ang=-2*Math.PI/len,wlC=Math.cos(ang),wlS=Math.sin(ang);
+    for(let i=0;i<n;i+=len){let wc=1,ws=0;
+      for(let j=0;j<(len>>1);j++){const k=i+j+(len>>1);
+        const uR=re[i+j],uI=im[i+j];
+        const vR=re[k]*wc - im[k]*ws, vI=re[k]*ws + im[k]*wc;
+        re[i+j]=uR+vR; im[i+j]=uI+vI;
+        re[k]=uR-vR;   im[k]=uI-vI;
+        const nwc=wc*wlC-ws*wlS, nws=wc*wlS+ws*wlC; wc=nwc; ws=nws;
+}}}}
+function hann(N){const w=new Float64Array(N);for(let n=0;n<N;n++)w[n]=0.5*(1-Math.cos(2*Math.PI*n/(N-1)));return w;}
+function windowRMS(w){let s=0;for(let i=0;i<w.length;i++)s+=w[i]*w[i];return Math.sqrt(s/w.length);}
+
+// --------------- Ring buffer helpers ----------------
+function makeRing(cap){return {buf:new Float32Array(cap),cap,idx:0,write(samples){
+  const b=this.buf,c=this.cap;let i=this.idx;
+  for(let n=0;n<samples.length;n++){b[i]=samples[n];i++; if(i===c)i=0;} this.idx=i;},
+  readLast(dst){ // read last dst.length samples ending at idx-1
+    const c=this.cap; let i=this.idx - dst.length; if(i<0)i+=c;
+    if(i+dst.length<=c){dst.set(this.buf.subarray(i,i+dst.length));}
+    else{const p=c-i; dst.set(this.buf.subarray(i,c),0); dst.set(this.buf.subarray(0,dst.length-p),p);}
+  }}}
+
+// --------------- Plotting ----------------
+function minMax(a){let mn=Infinity,mx=-Infinity;for(let i=0;i<a.length;i++){const v=a[i];if(v<mn)mn=v;if(v>mx)mx=v;}return [mn,mx];}
+function plotWave(ctx,data){
+  const w=ctx.canvas.width,h=ctx.canvas.height, step=Math.max(1,Math.floor(data.length/w));
+  const [mn,mx]=minMax(data), amp=(mx-mn)||1; ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle="#9ad"; ctx.beginPath();
+  for(let x=0, i=0; x<w; x++, i+=step){
+    const idx=Math.min(data.length-1,i);
+    const y=h*(1-(data[idx]-mn)/amp);
+    if(x===0) ctx.moveTo(0,y); else ctx.lineTo(x,y);
+  }
+  ctx.stroke(); ctx.fillStyle="#ddd"; ctx.fillText("waveform",10,14);
+}
+function drawSpecColumn(ctx, col, yBins, x){
+  const h=ctx.canvas.height, w=ctx.canvas.width;
+  const img=ctx.getImageData(x,0,1,h), d=img.data;
+  for(let y=0;y<h;y++){
+    const k=Math.floor((h-1-y)*(yBins-1)/(h-1));
+    const v=col[k]; // 0..1
+    const [R,G,B]=cmapViridis01(v);
+    const idx=y*4; d[idx]=R; d[idx+1]=G; d[idx+2]=B; d[idx+3]=255;
+  }
+  ctx.putImageData(img,x,0);
+}
+function scrollSpec(ctx){const w=ctx.canvas.width,h=ctx.canvas.height;
+  const img=ctx.getImageData(1,0,w-1,h); ctx.putImageData(img,0,0);
+  ctx.clearRect(w-1,0,1,h);
+}
+function cmapViridis01(t){
+  const r=255*(0.267 + t*(-1.69 + t*(2.29 + t*(-1.45 + t*0.31))));
+  const g=255*(0.004 + t*( 2.43 + t*(-2.27 + t*( 0.72 + t*0.02))));
+  const b=255*(0.329 + t*( 0.79 + t*( 0.15 + t*(-1.27 + t*0.70))));
+  return [Math.max(0,Math.min(255,r|0)),Math.max(0,Math.min(255,g|0)),Math.max(0,Math.min(255,b|0))];
+}
+
+// --------------- Real-time STFT pipeline ----------------
+let ctx, node, src, ac, running=false, rb, waveBuf, wSamples=0;
+let specCtx, waveCtx, wCanvas, sCanvas, runningMax=1e-6;
+
+async function start(){
+  const fftSize=parseInt(document.getElementById('fft').value,10);
+  const hop=parseInt(document.getElementById('hop').value,10);
+  const monitor=document.getElementById('monitor').checked;
+
+  ac = new (window.AudioContext||window.webkitAudioContext)();
+  const stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+  src = ac.createMediaStreamSource(stream);
+
+  // Inject AudioWorklet from a Blob URL (inline)
+  const workletCode = `
+  class MicCapture extends AudioWorkletProcessor{
+    process(inputs,outputs){
+      const ch = inputs[0][0];
+      const out = outputs[0][0];
+      if(ch){
+        out.set(ch); // passthrough
+        // copy to transferable ArrayBuffer
+        const buf = new Float32Array(ch.length);
+        buf.set(ch);
+        this.port.postMessage(buf, [buf.buffer]);
+      }else{
+        out.fill(0);
+      }
+      return true;
+    }
+  }
+  registerProcessor('mic-capture', MicCapture);
+  `;
+  const blob = new Blob([workletCode], {type:'application/javascript'});
+  const url = URL.createObjectURL(blob);
+  await ac.audioWorklet.addModule(url);
+
+  node = new AudioWorkletNode(ac, 'mic-capture', {outputChannelCount:[1]});
+  if(monitor){ node.connect(ac.destination); } else { node.connect(ac.createGain()); }
+  src.connect(node);
+
+  // Buffers
+  const rbCap = 4*fftSize;
+  rb = makeRing(rbCap);
+  const waveSeconds = 3;
+  waveBuf = new Float32Array(Math.max(fftSize, Math.round(waveSeconds*ac.sampleRate)));
+  wSamples = 0;
+
+  // Precompute window & scale
+  const win = hann(fftSize);
+  const wRMS = windowRMS(win);
+  const magScale = 1/fftSize / wRMS;
+  const nBins = fftSize/2 + 1;
+  const re = new Float64Array(fftSize);
+  const im = new Float64Array(fftSize);
+  const frame = new Float32Array(fftSize);
+  const col = new Float32Array(nBins); // one column (linear 0..1 after dB mapping)
+
+  // Canvases
+  wCanvas = document.getElementById('wave'); waveCtx = wCanvas.getContext('2d');
+  sCanvas = document.getElementById('spec'); specCtx = sCanvas.getContext('2d');
+
+  // State
+  let wroteSinceLast = 0;
+  running = true;
+  runningMax = 1e-6;
+
+  node.port.onmessage = (ev)=>{
+    if(!running) return;
+    const chunk = ev.data; // Float32Array(128) typically
+    rb.write(chunk);
+
+    // waveform ring (for display)
+    const dst = waveBuf; // wrap copy
+    for(let i=0;i<chunk.length;i++){
+      dst[wSamples % dst.length] = chunk[i];
+      wSamples++;
+    }
+
+    // produce frames with hop
+    wroteSinceLast += chunk.length;
+    while(wroteSinceLast >= hop){
+      wroteSinceLast -= hop;
+
+      // read last fftSize samples
+      rb.readLast(frame);
+
+      // window
+      for(let i=0;i<fftSize;i++){ re[i]=frame[i]*win[i]; im[i]=0; }
+
+      // FFT
+      fft(re,im);
+
+      // one-sided magnitude scaling & power
+      let localMax = 1e-30;
+      for(let k=0;k<nBins;k++){
+        let r = re[k]*magScale, ii = im[k]*magScale;
+        if(k>0 && k<fftSize/2){ r*=2; ii*=2; } // one-sided energy preservation
+        const p = r*r + ii*ii;
+        col[k] = p;
+        if(p>localMax) localMax=p;
+      }
+      // running max with slow decay for stable dB reference
+      runningMax = Math.max(localMax, runningMax*0.995);
+
+      // map to dB -> 0..1
+      const ref = runningMax, dBMin = -80, floor = Math.pow(10, dBMin/10); // relative power
+      for(let k=0;k<nBins;k++){
+        const rel = col[k]/ref;
+        const db = Math.max(floor, rel);
+        // linear 0..1
+        col[k] = (10*Math.log10(db) - dBMin)/(-dBMin);
+      }
+
+      // scroll and draw new column at right
+      scrollSpec(specCtx);
+      drawSpecColumn(specCtx, col, nBins, sCanvas.width-1);
+    }
+
+    // draw waveform (decimated)
+    plotWave(waveCtx, waveBuf);
+  };
+
+  // Info
+  document.getElementById('info').innerHTML = `<pre>
+Sample rate: ${ac.sampleRate} Hz
+FFT size: ${fftSize}, Hop: ${hop}, Overlap: ${((1 - hop/fftSize)*100).toFixed(1)}%
+Bins: ${nBins} (0..Nyquist)
+Scaling: Hann window, /(N·RMS(Hann)); one-sided doubling (except DC & Nyquist); power→dB (max-ref with slow decay, floor −80 dB)
+</pre>`;
+
+  document.getElementById('start').disabled = true;
+  document.getElementById('stop').disabled = false;
+}
+async function stop(){
+  running=false;
+  try{ node?.port?.close?.(); }catch{}
+  try{ node?.disconnect?.(); src?.disconnect?.(); }catch{}
+  try{ await ac?.close?.(); }catch{}
+  document.getElementById('start').disabled = false;
+  document.getElementById('stop').disabled = true;
+}
+document.getElementById('start').onclick = start;
+document.getElementById('stop').onclick = stop;
+</script>
+</body>
+</html>

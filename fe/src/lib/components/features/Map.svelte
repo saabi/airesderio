@@ -58,8 +58,27 @@
 		img.src = mapData.baseImage.src;
 	});
 
-	// ===== DERIVED FROM MAP DATA =====
-	// Full viewBox derived from loaded base image dimensions
+	// ===== DENORMALIZATION =====
+	// Scale factor: smaller image dimension (normalized coords * scale = pixel coords)
+	let denormScale = $derived(
+		baseImageDimensions ? Math.min(baseImageDimensions.width, baseImageDimensions.height) : 1
+	);
+
+	// Denormalize a single value
+	function denorm(value: number): number {
+		return value * denormScale;
+	}
+
+	// Denormalize an SVG path "d" attribute
+	function denormPath(d: string): string {
+		return d.replace(/-?\d+\.?\d*/g, (match) => {
+			const num = parseFloat(match);
+			return (num * denormScale).toString();
+		});
+	}
+
+	// ===== DERIVED FROM MAP DATA (denormalized) =====
+	// Full viewBox from loaded base image dimensions
 	let FULL_VIEWBOX = $derived<ViewBox>({
 		x: 0,
 		y: 0,
@@ -67,20 +86,23 @@
 		height: baseImageDimensions?.height ?? 1
 	});
 
-	// Detail image bounds (if present)
+	// Detail image bounds (denormalized)
 	let DETAIL_VIEWBOX = $derived<ViewBox | null>(
 		mapData.detailImage
 			? {
-					x: mapData.detailImage.x,
-					y: mapData.detailImage.y,
-					width: mapData.detailImage.width,
-					height: mapData.detailImage.height
+					x: denorm(mapData.detailImage.x),
+					y: denorm(mapData.detailImage.y),
+					width: denorm(mapData.detailImage.width),
+					height: denorm(mapData.detailImage.height)
 				}
 			: null
 	);
 
-	// Focal center and shapes
-	let FOCAL = $derived(mapData.focal);
+	// Focal center (denormalized) - used for zoom calculations
+	let FOCAL_CENTER = $derived({
+		cx: denorm(mapData.focal.center.cx),
+		cy: denorm(mapData.focal.center.cy)
+	});
 
 	// Places array
 	let places = $derived(mapData.places);
@@ -103,32 +125,16 @@
 	// Reference to measurement label for getting dimensions
 	let measurementLabel: HTMLDivElement | null = $state(null);
 
-	// Calculate viewBox centered on focal with given radius
-	function calculateFocalViewBox(radiusValue: number): ViewBox {
-		// Calculate viewBox dimensions based on radius
-		// The radius represents half the width/height of the viewBox
-		const viewBoxSize = radiusValue * 2;
-
-		// Center the viewBox on focal coordinates
-		const centerX = FOCAL.center.cx;
-		const centerY = FOCAL.center.cy;
-
-		// Calculate top-left corner
-		const x = Math.max(0, centerX - radiusValue);
-		const y = Math.max(0, centerY - radiusValue);
-
-		// Calculate width and height, ensuring we don't go outside FULL_VIEWBOX bounds
-		const viewBoxWidth = Math.min(viewBoxSize, FULL_VIEWBOX.width - x);
-		const viewBoxHeight = Math.min(viewBoxSize, FULL_VIEWBOX.height - y);
-
-		return { x, y, width: viewBoxWidth, height: viewBoxHeight };
-	}
-
 	// Compute default viewBox based on configuration
 	let defaultViewBox = $derived.by((): ViewBox => {
-		// Priority 1: Explicit defaultView from data
+		// Priority 1: Explicit defaultView from data (denormalize it)
 		if (mapData.defaultView) {
-			return mapData.defaultView;
+			return {
+				x: denorm(mapData.defaultView.x),
+				y: denorm(mapData.defaultView.y),
+				width: denorm(mapData.defaultView.width),
+				height: denorm(mapData.defaultView.height)
+			};
 		}
 
 		// Priority 2: If showDetailImage and detailImage exists, use detail bounds
@@ -136,16 +142,7 @@
 			return DETAIL_VIEWBOX;
 		}
 
-		// Priority 3: If dimensions loaded, compute from focal center + radius
-		if (baseImageDimensions) {
-			const radius = mapData.defaultRadius ?? Math.min(
-				baseImageDimensions.width,
-				baseImageDimensions.height
-			) * 0.2;
-			return calculateFocalViewBox(radius);
-		}
-
-		// Priority 4: Fallback to full viewBox (will update when image loads)
+		// Priority 3: Full viewBox (show entire image)
 		return FULL_VIEWBOX;
 	});
 
@@ -207,13 +204,13 @@
 
 	// ===== FUNCTIONS =====
 	/**
-	 * Gets pin coordinates for a place ID from the places data.
+	 * Gets pin coordinates for a place ID from the places data (denormalized).
 	 */
 	function getPinCoordinates(placeId: string): { cx: number; cy: number } | null {
 		const place = places.find((p) => p.id === placeId);
 		if (!place) return null;
 
-		return { cx: place.pin.cx, cy: place.pin.cy };
+		return { cx: denorm(place.pin.cx), cy: denorm(place.pin.cy) };
 	}
 
 	/**
@@ -566,20 +563,20 @@
 					preserveAspectRatio='none'
 				/>
 			{/if}
-			{#if showDetailImage && mapData.detailImage}
-				<image
-					id='detail'
-					href={mapData.detailImage.src}
-					x={mapData.detailImage.x}
-					y={mapData.detailImage.y}
-					width={mapData.detailImage.width}
-					height={mapData.detailImage.height}
-					preserveAspectRatio='none'
-				/>
-			{/if}
+		{#if showDetailImage && mapData.detailImage && DETAIL_VIEWBOX}
+			<image
+				id='detail'
+				href={mapData.detailImage.src}
+				x={DETAIL_VIEWBOX.x}
+				y={DETAIL_VIEWBOX.y}
+				width={DETAIL_VIEWBOX.width}
+				height={DETAIL_VIEWBOX.height}
+				preserveAspectRatio='none'
+			/>
+		{/if}
 		</g>
 
-		<!-- Selected place rendering -->
+		<!-- Selected place rendering (coordinates denormalized) -->
 		{#if currentPathId}
 			{@const selectedPlace = places.find((p) => p.id === currentPathId)}
 			{#if selectedPlace}
@@ -595,7 +592,7 @@
 									role='button'
 									tabindex='0'
 									aria-label={selectedPlace.name}
-									d={shape.d}
+									d={denormPath(shape.d)}
 								/>
 							{:else if shape.type === 'rect'}
 								<rect
@@ -605,10 +602,10 @@
 									role='button'
 									tabindex='0'
 									aria-label={selectedPlace.name}
-									x={shape.x}
-									y={shape.y}
-									width={shape.width}
-									height={shape.height}
+									x={denorm(shape.x)}
+									y={denorm(shape.y)}
+									width={denorm(shape.width)}
+									height={denorm(shape.height)}
 								/>
 							{:else if shape.type === 'circle'}
 								<circle
@@ -618,9 +615,9 @@
 									role='button'
 									tabindex='0'
 									aria-label={selectedPlace.name}
-									cx={shape.cx}
-									cy={shape.cy}
-									r={shape.r}
+									cx={denorm(shape.cx)}
+									cy={denorm(shape.cy)}
+									r={denorm(shape.r)}
 								/>
 							{/if}
 						{/each}
@@ -628,8 +625,8 @@
 						<!-- Render labels if present -->
 						{#if selectedPlace.labels}
 							{#each selectedPlace.labels as label}
-								<text xml:space={label.xmlSpace || 'preserve'} x={label.x} y={label.y}>
-									<tspan x={label.x} y={label.y}>{label.content}</tspan>
+								<text xml:space={label.xmlSpace || 'preserve'} x={denorm(label.x)} y={denorm(label.y)}>
+									<tspan x={denorm(label.x)} y={denorm(label.y)}>{label.content}</tspan>
 								</text>
 							{/each}
 						{/if}
@@ -637,25 +634,25 @@
 						<!-- Pin circle -->
 						<circle
 							class='pin-circle'
-							cx={selectedPlace.pin.cx}
-							cy={selectedPlace.pin.cy}
-							r={selectedPlace.pin.r}
+							cx={denorm(selectedPlace.pin.cx)}
+							cy={denorm(selectedPlace.pin.cy)}
+							r={denorm(selectedPlace.pin.r)}
 						/>
 					</g>
 				</g>
 			{/if}
 		{/if}
 
-		<!-- Focal (main subject) rendering - data driven -->
-		{#if includeFocal && FOCAL.shapes && FOCAL.shapes.length > 0}
+		<!-- Focal (main subject) rendering - coordinates denormalized -->
+		{#if includeFocal && mapData.focal.shapes && mapData.focal.shapes.length > 0}
 			<g id='focal' class='focal-group' bind:this={focalGroup}>
-				{#each FOCAL.shapes as shape}
+				{#each mapData.focal.shapes as shape}
 					{#if shape.type === 'path'}
-						<path class='focal-path' d={shape.d} />
+						<path class='focal-path' d={denormPath(shape.d)} />
 					{:else if shape.type === 'circle'}
-						<circle class='focal-pin' cx={shape.cx} cy={shape.cy} r={shape.r} />
+						<circle class='focal-pin' cx={denorm(shape.cx)} cy={denorm(shape.cy)} r={denorm(shape.r)} />
 					{:else if shape.type === 'rect'}
-						<rect class='focal-path' x={shape.x} y={shape.y} width={shape.width} height={shape.height} />
+						<rect class='focal-path' x={denorm(shape.x)} y={denorm(shape.y)} width={denorm(shape.width)} height={denorm(shape.height)} />
 					{/if}
 				{/each}
 			</g>
