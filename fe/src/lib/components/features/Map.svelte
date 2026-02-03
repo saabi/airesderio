@@ -523,7 +523,7 @@
 	}
 	
 	function zoomToBoundingBox(pathId: string) {
-		// Calculate place bounding box from data
+		// Calculate place bounding box from data (denormalized pixel coords)
 		const placeBbox = calculatePlaceBbox(pathId);
 		if (!placeBbox) return;
 		
@@ -548,60 +548,50 @@
 			}
 		}
 
-		// Calculate margin based on container's actual pixel dimensions
-		let containerWidth = FULL_VIEWBOX.width;
-		let containerHeight = FULL_VIEWBOX.height;
+		// Add margin in normalized coordinates (denormalized to pixel coords)
+		// zoomMargin is in normalized units (0-1), so denormalize it
+		const marginPixels = denorm(zoomMargin);
+		
+		// Content area with margin
+		const contentX = bbox.x - marginPixels;
+		const contentY = bbox.y - marginPixels;
+		const contentWidth = bbox.width + marginPixels * 2;
+		const contentHeight = bbox.height + marginPixels * 2;
 
+		// Get container aspect ratio from SVG element
+		let containerAspect = FULL_VIEWBOX.width / FULL_VIEWBOX.height;
 		if (svgElement) {
 			const rect = svgElement.getBoundingClientRect();
-			containerWidth = rect.width;
-			containerHeight = rect.height;
+			if (rect.width > 0 && rect.height > 0) {
+				containerAspect = rect.width / rect.height;
+			}
 		}
 
-		// Calculate the bounding box dimensions
-		const bboxWidth = bbox.width;
-		const bboxHeight = bbox.height;
-
-		// Calculate container aspect ratio
-		const containerAspect = containerWidth / containerHeight;
-
-		// Calculate margin in pixels based on container dimensions
-		const containerSize = Math.min(containerWidth, containerHeight);
-		const marginPixels = containerSize * zoomMargin;
-
-		// Calculate scale factor: how many viewBox units per pixel
-		const scaleX = FULL_VIEWBOX.width / containerWidth;
-		const scaleY = FULL_VIEWBOX.height / containerHeight;
-
-		// Convert pixel margin to viewBox coordinates
-		const marginX = marginPixels * scaleX;
-		const marginY = marginPixels * scaleY;
-
-		// Calculate content area (bbox + margins)
-		const contentWidth = bboxWidth + marginX * 2;
-		const contentHeight = bboxHeight + marginY * 2;
+		// Calculate viewBox that fits content while maintaining container aspect ratio
 		const contentAspect = contentWidth / contentHeight;
-
-		// Determine target viewBox dimensions that will fit the content
-		// while maintaining container aspect ratio
-		let targetViewBoxWidth: number;
-		let targetViewBoxHeight: number;
+		
+		let viewWidth: number;
+		let viewHeight: number;
 
 		if (contentAspect > containerAspect) {
-			targetViewBoxWidth = contentWidth;
-			targetViewBoxHeight = contentWidth / containerAspect;
+			// Content is wider than container - fit by width
+			viewWidth = contentWidth;
+			viewHeight = contentWidth / containerAspect;
 		} else {
-			targetViewBoxHeight = contentHeight;
-			targetViewBoxWidth = contentHeight * containerAspect;
+			// Content is taller than container - fit by height
+			viewHeight = contentHeight;
+			viewWidth = contentHeight * containerAspect;
 		}
 
-		// Center the bounding box in the viewBox
-		const x = Math.max(0, bbox.x - (targetViewBoxWidth - bboxWidth) / 2);
-		const y = Math.max(0, bbox.y - (targetViewBoxHeight - bboxHeight) / 2);
+		// Center the content in the viewBox
+		const viewX = contentX - (viewWidth - contentWidth) / 2;
+		const viewY = contentY - (viewHeight - contentHeight) / 2;
 
-		// Ensure we don't go outside the full viewBox bounds
-		const width = Math.min(FULL_VIEWBOX.width - x, targetViewBoxWidth);
-		const height = Math.min(FULL_VIEWBOX.height - y, targetViewBoxHeight);
+		// Clamp to valid viewBox bounds
+		const x = Math.max(0, Math.min(viewX, FULL_VIEWBOX.width - viewWidth));
+		const y = Math.max(0, Math.min(viewY, FULL_VIEWBOX.height - viewHeight));
+		const width = Math.min(viewWidth, FULL_VIEWBOX.width);
+		const height = Math.min(viewHeight, FULL_VIEWBOX.height);
 
 		// Tween to the new viewBox (smooth animation)
 		viewBoxX.set(x);
