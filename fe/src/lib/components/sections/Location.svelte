@@ -278,6 +278,7 @@
 					ariaLabel='Mapa de ubicación del proyecto Aires de Río'
 					places={mapPlaces}
 					mapConfig={mapConfig}
+					showNearImage={false}
 				/>
 			{:else}
 				<div class='location-map-loading'>Cargando mapa...</div>
