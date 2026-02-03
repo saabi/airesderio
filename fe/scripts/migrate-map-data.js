@@ -94,12 +94,17 @@ function migrate() {
 		transformPlace(id, place)
 	);
 
+	// Full SVG coordinate space (from original SVG design)
+	// Note: fullViewBox in old data was just a cropped view, not the actual coordinate space
+	const SVG_COORDINATE_WIDTH = 463.54998;
+	const SVG_COORDINATE_HEIGHT = 776.28749;
+
 	// Build new structure
 	const mapData = {
 		baseImage: {
 			src: input.mapConfig.farImage,
-			width: input.mapConfig.fullViewBox.width,
-			height: input.mapConfig.fullViewBox.height
+			width: SVG_COORDINATE_WIDTH,
+			height: SVG_COORDINATE_HEIGHT
 		},
 		detailImage: {
 			src: input.mapConfig.nearImage,

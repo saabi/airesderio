@@ -630,7 +630,7 @@
 
 		<!-- Focal (main subject) rendering - data driven -->
 		{#if includeFocal && FOCAL.shapes && FOCAL.shapes.length > 0}
-			<g id='focal' class='focal-group' class:zoom-active={currentZoomedIndex !== null} bind:this={focalGroup}>
+			<g id='focal' class='focal-group' bind:this={focalGroup}>
 				{#each FOCAL.shapes as shape}
 					{#if shape.type === 'path'}
 						<path class='focal-path' d={shape.d} />
@@ -773,16 +773,10 @@
 
 	.focal-group {
 		/* Box/Visual */
-		opacity: 0;
+		opacity: 1;
 
 		/* Effects & Motion */
 		transition: opacity 0.4s ease;
-	}
-
-	/* When zoomed (viewbox not in initial state), show the focal */
-	.focal-group.zoom-active {
-		/* Box/Visual */
-		opacity: 1;
 	}
 
 	.focal-path {

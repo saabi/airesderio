@@ -1,8 +1,8 @@
 {
 	"baseImage": {
 		"src": "/map/far.jpg",
-		"width": 374.12082,
-		"height": 225.68958
+		"width": 463.54998,
+		"height": 776.28749
 	},
 	"detailImage": {
 		"src": "/map/near.jpg",
@@ -29,7 +29,12 @@
 			"cy": 413.82022
 		}
 	},
-	"defaultRadius": 50,
+	"defaultView": {
+		"x": 0,
+		"y": 0,
+		"width": 463.54998,
+		"height": 776.28749
+	},
 	"places": [
 		{
 			"id": "terminal",
