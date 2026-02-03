@@ -34,6 +34,9 @@
 </script>
 
 <script lang='ts'>
+	// ===== IMPORTS =====
+	import { tick } from 'svelte';
+	
 	// ===== PROPS =====
 	let {
 		width = '100%',
@@ -196,6 +199,9 @@
 
 	// Reference to focal group element (for bounding box calculation)
 	let focalGroup: SVGGElement | null = $state(null);
+	
+	// Reference to places group element (for bounding box calculation)
+	let placesGroup: SVGGElement | null = $state(null);
 
 
 	// ===== DERIVED =====
@@ -414,184 +420,105 @@
 	});
 
 	// ===== ZOOM FUNCTIONS =====
-	
-	/**
-	 * Calculate bounding box from place data (denormalized coordinates)
-	 */
-	function calculatePlaceBbox(placeId: string): DOMRect | null {
-		const place = places.find((p) => p.id === placeId);
-		if (!place) return null;
+	async function zoomToBoundingBox(pathId: string) {
+		// Wait for DOM to update so elements are rendered
+		await tick();
 		
-		let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-		
-		// Get bounds from shape(s)
-		const shapes = Array.isArray(place.shape) ? place.shape : [place.shape];
-		for (const shape of shapes) {
-			if (shape.type === 'circle') {
-				const cx = denorm(shape.cx), cy = denorm(shape.cy), r = denorm(shape.r);
-				minX = Math.min(minX, cx - r);
-				minY = Math.min(minY, cy - r);
-				maxX = Math.max(maxX, cx + r);
-				maxY = Math.max(maxY, cy + r);
-			} else if (shape.type === 'rect') {
-				const x = denorm(shape.x), y = denorm(shape.y);
-				const w = denorm(shape.width), h = denorm(shape.height);
-				minX = Math.min(minX, x);
-				minY = Math.min(minY, y);
-				maxX = Math.max(maxX, x + w);
-				maxY = Math.max(maxY, y + h);
-			} else if (shape.type === 'path') {
-				// Parse path to extract coordinates (approximate bbox from path numbers)
-				const denormalized = denormPath(shape.d);
-				const numbers = denormalized.match(/-?\d+\.?\d*/g);
-				if (numbers) {
-					for (let i = 0; i < numbers.length; i += 2) {
-						if (i + 1 < numbers.length) {
-							const x = parseFloat(numbers[i]);
-							const y = parseFloat(numbers[i + 1]);
-							minX = Math.min(minX, x);
-							minY = Math.min(minY, y);
-							maxX = Math.max(maxX, x);
-							maxY = Math.max(maxY, y);
-						}
-					}
+		// Get the place group element
+		let placeBbox: DOMRect | null = null;
+		if (placesGroup && svgElement) {
+			const placeGroup = placesGroup.querySelector(`#${CSS.escape(pathId)}`) as SVGGElement | null;
+			if (placeGroup) {
+				try {
+					placeBbox = placeGroup.getBBox();
+				} catch (error) {
+					console.warn('Could not get bounding box for place:', pathId, error);
 				}
 			}
 		}
 		
-		// Include pin in bounds
-		const pinCx = denorm(place.pin.cx), pinCy = denorm(place.pin.cy), pinR = denorm(place.pin.r);
-		minX = Math.min(minX, pinCx - pinR);
-		minY = Math.min(minY, pinCy - pinR);
-		maxX = Math.max(maxX, pinCx + pinR);
-		maxY = Math.max(maxY, pinCy + pinR);
-		
-		if (minX === Infinity) return null;
-		return new DOMRect(minX, minY, maxX - minX, maxY - minY);
-	}
-	
-	/**
-	 * Calculate bounding box from focal data (denormalized coordinates)
-	 */
-	function calculateFocalBbox(): DOMRect | null {
-		const focal = mapData.focal;
-		if (!focal.shapes || focal.shapes.length === 0) return null;
-		
-		let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-		
-		for (const shape of focal.shapes) {
-			if (shape.type === 'circle') {
-				const cx = denorm(shape.cx), cy = denorm(shape.cy), r = denorm(shape.r);
-				minX = Math.min(minX, cx - r);
-				minY = Math.min(minY, cy - r);
-				maxX = Math.max(maxX, cx + r);
-				maxY = Math.max(maxY, cy + r);
-			} else if (shape.type === 'rect') {
-				const x = denorm(shape.x), y = denorm(shape.y);
-				const w = denorm(shape.width), h = denorm(shape.height);
-				minX = Math.min(minX, x);
-				minY = Math.min(minY, y);
-				maxX = Math.max(maxX, x + w);
-				maxY = Math.max(maxY, y + h);
-			} else if (shape.type === 'path') {
-				const denormalized = denormPath(shape.d);
-				const numbers = denormalized.match(/-?\d+\.?\d*/g);
-				if (numbers) {
-					for (let i = 0; i < numbers.length; i += 2) {
-						if (i + 1 < numbers.length) {
-							const x = parseFloat(numbers[i]);
-							const y = parseFloat(numbers[i + 1]);
-							minX = Math.min(minX, x);
-							minY = Math.min(minY, y);
-							maxX = Math.max(maxX, x);
-							maxY = Math.max(maxY, y);
-						}
-					}
-				}
+		// Get the focal group bounding box
+		let focalBbox: DOMRect | null = null;
+		if (includeFocal && focalGroup) {
+			try {
+				focalBbox = focalGroup.getBBox();
+			} catch (error) {
+				console.warn('Could not get bounding box for focal:', error);
 			}
 		}
 		
-		// Include focal center
-		const cx = FOCAL_CENTER.cx, cy = FOCAL_CENTER.cy;
-		minX = Math.min(minX, cx);
-		minY = Math.min(minY, cy);
-		maxX = Math.max(maxX, cx);
-		maxY = Math.max(maxY, cy);
-		
-		if (minX === Infinity) return null;
-		return new DOMRect(minX, minY, maxX - minX, maxY - minY);
-	}
-	
-	function zoomToBoundingBox(pathId: string) {
-		// Calculate place bounding box from data (denormalized pixel coords)
-		const placeBbox = calculatePlaceBbox(pathId);
-		if (!placeBbox) return;
-		
-		let bbox = placeBbox;
-
-		// If includeFocal is true, calculate union with focal bounding box
-		if (includeFocal) {
-			const focalBbox = calculateFocalBbox();
-			if (focalBbox) {
-				// Calculate union of both bounding boxes
-				const minX = Math.min(placeBbox.x, focalBbox.x);
-				const minY = Math.min(placeBbox.y, focalBbox.y);
-				const maxX = Math.max(
-					placeBbox.x + placeBbox.width,
-					focalBbox.x + focalBbox.width
-				);
-				const maxY = Math.max(
-					placeBbox.y + placeBbox.height,
-					focalBbox.y + focalBbox.height
-				);
-				bbox = new DOMRect(minX, minY, maxX - minX, maxY - minY);
-			}
+		// Calculate union of bounding boxes
+		let bbox: DOMRect;
+		if (placeBbox && focalBbox) {
+			// Union of both
+			const minX = Math.min(placeBbox.x, focalBbox.x);
+			const minY = Math.min(placeBbox.y, focalBbox.y);
+			const maxX = Math.max(placeBbox.x + placeBbox.width, focalBbox.x + focalBbox.width);
+			const maxY = Math.max(placeBbox.y + placeBbox.height, focalBbox.y + focalBbox.height);
+			bbox = new DOMRect(minX, minY, maxX - minX, maxY - minY);
+		} else if (placeBbox) {
+			bbox = placeBbox;
+		} else if (focalBbox) {
+			bbox = focalBbox;
+		} else {
+			// Fallback: use pin coordinates
+			const place = places.find((p) => p.id === pathId);
+			if (!place) return;
+			const pinCx = denorm(place.pin.cx);
+			const pinCy = denorm(place.pin.cy);
+			const pinR = denorm(place.pin.r);
+			bbox = new DOMRect(pinCx - pinR, pinCy - pinR, pinR * 2, pinR * 2);
 		}
-
-		// Add margin in normalized coordinates (denormalized to pixel coords)
-		// zoomMargin is in normalized units (0-1), so denormalize it
-		const marginPixels = denorm(zoomMargin);
+		
+		// Calculate margin as percentage of content size
+		const marginX = bbox.width * zoomMargin;
+		const marginY = bbox.height * zoomMargin;
+		
+		// If content has zero size, use a minimum margin
+		const minMargin = denorm(0.05); // 5% of smaller image dimension as fallback
+		const finalMarginX = bbox.width > 0 ? marginX : minMargin;
+		const finalMarginY = bbox.height > 0 ? marginY : minMargin;
 		
 		// Content area with margin
-		const contentX = bbox.x - marginPixels;
-		const contentY = bbox.y - marginPixels;
-		const contentWidth = bbox.width + marginPixels * 2;
-		const contentHeight = bbox.height + marginPixels * 2;
+		const contentX = bbox.x - finalMarginX;
+		const contentY = bbox.y - finalMarginY;
+		const paddedWidth = bbox.width + finalMarginX * 2;
+		const paddedHeight = bbox.height + finalMarginY * 2;
 
-		// Get container aspect ratio from SVG element
+		// Get container aspect ratio from mapContainer (the display area)
 		let containerAspect = FULL_VIEWBOX.width / FULL_VIEWBOX.height;
-		if (svgElement) {
-			const rect = svgElement.getBoundingClientRect();
+		if (mapContainer) {
+			const rect = mapContainer.getBoundingClientRect();
 			if (rect.width > 0 && rect.height > 0) {
 				containerAspect = rect.width / rect.height;
 			}
 		}
 
 		// Calculate viewBox that fits content while maintaining container aspect ratio
-		const contentAspect = contentWidth / contentHeight;
+		const contentAspect = paddedWidth / paddedHeight;
 		
 		let viewWidth: number;
 		let viewHeight: number;
 
 		if (contentAspect > containerAspect) {
 			// Content is wider than container - fit by width
-			viewWidth = contentWidth;
-			viewHeight = contentWidth / containerAspect;
+			viewWidth = paddedWidth;
+			viewHeight = paddedWidth / containerAspect;
 		} else {
 			// Content is taller than container - fit by height
-			viewHeight = contentHeight;
-			viewWidth = contentHeight * containerAspect;
+			viewHeight = paddedHeight;
+			viewWidth = paddedHeight * containerAspect;
 		}
 
 		// Center the content in the viewBox
-		const viewX = contentX - (viewWidth - contentWidth) / 2;
-		const viewY = contentY - (viewHeight - contentHeight) / 2;
+		const viewX = contentX - (viewWidth - paddedWidth) / 2;
+		const viewY = contentY - (viewHeight - paddedHeight) / 2;
 
 		// Clamp to valid viewBox bounds
 		const x = Math.max(0, Math.min(viewX, FULL_VIEWBOX.width - viewWidth));
 		const y = Math.max(0, Math.min(viewY, FULL_VIEWBOX.height - viewHeight));
-		const width = Math.min(viewWidth, FULL_VIEWBOX.width);
-		const height = Math.min(viewHeight, FULL_VIEWBOX.height);
+		const width = Math.min(viewWidth, FULL_VIEWBOX.width - x);
+		const height = Math.min(viewHeight, FULL_VIEWBOX.height - y);
 
 		// Tween to the new viewBox (smooth animation)
 		viewBoxX.set(x);
@@ -632,7 +559,7 @@
 	export { next, prev, reset, currentPathId, selectedGroupName, pinCoordinates };
 </script>
 
-<div class='map-container' bind:this={mapContainer}>
+<div class='map-viewport' bind:this={mapContainer}>
 	<svg
 		bind:this={svgElement}
 		width={widthAttr}
@@ -674,7 +601,7 @@
 		{#if currentPathId}
 			{@const selectedPlace = places.find((p) => p.id === currentPathId)}
 			{#if selectedPlace}
-				<g id='places' class='places-group' class:zoom-active={currentZoomedIndex !== null}>
+				<g id='places' class='places-group' class:zoom-active={currentZoomedIndex !== null} bind:this={placesGroup}>
 					<g id={selectedPlace.id} class='group-active'>
 						<!-- Render shape(s) -->
 						{#each normalizeShapes(selectedPlace.shape) as shape}
@@ -765,11 +692,12 @@
 </div>
 
 <style>
-	.map-container {
+	.map-viewport {
 		/* Layout */
 		position: relative;
 		width: 100%;
 		height: 100%;
+		overflow: hidden;
 	}
 
 	svg {
