@@ -261,6 +261,7 @@
 				ariaLabel='Mapa de ubicación del proyecto Aires de Río'
 				{mapData}
 				showDetailImage={false}
+				pinRadius={20}
 			/>
 		{:else}
 			<div class='location-map-loading'>Cargando mapa...</div>
