@@ -77,9 +77,38 @@
 
 	// Denormalize an SVG path "d" attribute
 	function denormPath(d: string): string {
-		return d.replace(/-?\d+\.?\d*/g, (match) => {
-			const num = parseFloat(match);
-			return (num * denormScale).toString();
+		return d.replace(/-?\d+\.?\d*(?:[eE][+-]?\d+)?/g, (match) => {
+			// Handle malformed scientific notation (e.g., "0.008629e-0.010786")
+			// If exponent is not an integer, treat as regular decimal
+			const sciNotationMatch = match.match(/^([+-]?\d+\.?\d*)[eE]([+-]?\d+\.?\d*)$/);
+			let num: number;
+			
+			if (sciNotationMatch) {
+				const base = parseFloat(sciNotationMatch[1]);
+				const exponent = parseFloat(sciNotationMatch[2]);
+				// If exponent is not an integer, ignore scientific notation part
+				if (!Number.isInteger(exponent)) {
+					num = base;
+				} else {
+					num = parseFloat(match);
+				}
+			} else {
+				num = parseFloat(match);
+			}
+			
+			if (isNaN(num)) {
+				// If parsing fails, return original match
+				return match;
+			}
+			
+			const denormalized = num * denormScale;
+			// Format to avoid scientific notation (SVG paths don't accept it)
+			// Use toFixed with enough precision, then remove trailing zeros
+			// Handle very small numbers by using a minimum precision
+			if (Math.abs(denormalized) < 0.000001 && denormalized !== 0) {
+				return denormalized.toFixed(10).replace(/\.?0+$/, '');
+			}
+			return denormalized.toFixed(6).replace(/\.?0+$/, '');
 		});
 	}
 
@@ -292,15 +321,6 @@
 				break;
 		}
 
-		console.log('pinCoordinates', pinCoordinates.x, pinCoordinates.y);
-		console.log('offsetX', offsetX, 'offsetY', offsetY);
-		// log pin coordinates in viewBox coordinates
-		const pc = getPinCoordinates(currentPathId);
-		console.log('pinCoordinates in viewBox', pc?.cx, pc?.cy);
-		// log pin coordinates in parent coordinates
-		if (pc) {
-			console.log('pinCoordinates in parent', convertToParentOffset(pc.cx, pc.cy));
-		}
 		
 		return {
 			x: pinCoordinates.x - offsetX,
@@ -383,7 +403,6 @@
 				x: transformedPoint.x - parentRect.left,
 				y: transformedPoint.y - parentRect.top
 			};
-			console.log('offset', offset);
 			return offset;
 		} catch (error) {
 			console.error('Error converting coordinates:', error);
@@ -637,14 +656,89 @@
 		}
 
 		// Center the content in the viewBox
-		const viewX = contentX - (viewWidth - paddedWidth) / 2;
-		const viewY = contentY - (viewHeight - paddedHeight) / 2;
+		let viewX = contentX - (viewWidth - paddedWidth) / 2;
+		let viewY = contentY - (viewHeight - paddedHeight) / 2;
 
-		// Clamp to valid viewBox bounds
-		const x = Math.max(0, Math.min(viewX, FULL_VIEWBOX.width - viewWidth));
-		const y = Math.max(0, Math.min(viewY, FULL_VIEWBOX.height - viewHeight));
-		const width = Math.min(viewWidth, FULL_VIEWBOX.width - x);
-		const height = Math.min(viewHeight, FULL_VIEWBOX.height - y);
+		// Check if compound bbox (with margins) is larger than display area
+		// If so, use fallback method: constrain width to be less than container
+		let needsFallback = false;
+		if (includeFocal && placeBbox && focalBbox) {
+			// Check if the padded content dimensions exceed what can fit in the display
+			// The display area is constrained by FULL_VIEWBOX dimensions
+			// If viewWidth or viewHeight exceeds FULL_VIEWBOX, we need fallback
+			needsFallback = viewWidth > FULL_VIEWBOX.width || viewHeight > FULL_VIEWBOX.height;
+		}
+		// Fallback method: fit padded bbox entirely in viewBox while maintaining container aspect ratio
+		// This may show more of the image than the padded bbox, but padded bbox will be entirely visible
+		if (needsFallback) {
+			// Recalculate with padded bbox as the minimum visible area
+			// but extend to match container aspect ratio
+			const paddedAspect = paddedWidth / paddedHeight;
+			
+			if (paddedAspect > containerAspect) {
+				// Padded bbox is wider than container - fit by width, extend height
+				viewWidth = paddedWidth;
+				viewHeight = paddedWidth / containerAspect;
+			} else {
+				// Padded bbox is taller than container - fit by height, extend width
+				viewHeight = paddedHeight;
+				viewWidth = paddedHeight * containerAspect;
+			}
+			
+			// Center the padded bbox in the viewBox
+			viewX = contentX - (viewWidth - paddedWidth) / 2;
+			viewY = contentY - (viewHeight - paddedHeight) / 2;
+		}
+
+		// Clamp position to stay within image bounds (but allow viewBox larger than image)
+		let x = Math.max(0, viewX);
+		let y = Math.max(0, viewY);
+		
+		// Ensure width/height are at least as large as needed to show content
+		let width = viewWidth;
+		let height = viewHeight;
+		
+		// If clamping x/y shifted the position, we need to ensure the right/bottom edges still include the content
+		if (needsFallback) {
+			const rightEdge = contentX + paddedWidth;
+			const bottomEdge = contentY + paddedHeight;
+			
+			// Ensure content is still visible after clamping
+			if (x > contentX) {
+				// We shifted right, so need to ensure rightEdge is still in view
+				const minWidth = rightEdge - x;
+				if (minWidth > width) {
+					width = minWidth;
+					// Recalculate height to maintain aspect ratio
+					height = width / containerAspect;
+				}
+			}
+			if (y > contentY) {
+				// We shifted down, so need to ensure bottomEdge is still in view
+				const minHeight = bottomEdge - y;
+				if (minHeight > height) {
+					height = minHeight;
+					// Recalculate width to maintain aspect ratio
+					width = height * containerAspect;
+				}
+			}
+		} else {
+			// Normal case: clamp to FULL_VIEWBOX bounds
+			x = Math.max(0, Math.min(viewX, Math.max(0, FULL_VIEWBOX.width - viewWidth)));
+			y = Math.max(0, Math.min(viewY, Math.max(0, FULL_VIEWBOX.height - viewHeight)));
+			width = Math.min(viewWidth, FULL_VIEWBOX.width);
+			height = Math.min(viewHeight, FULL_VIEWBOX.height);
+		}
+
+		// Debug logging
+		console.log('zoomToBoundingBox:', {
+			needsFallback,
+			bbox: { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height },
+			padded: { contentX, contentY, paddedWidth, paddedHeight },
+			containerAspect,
+			final: { x, y, width, height },
+			FULL_VIEWBOX
+		});
 
 		// Tween to the new viewBox (smooth animation)
 		viewBoxX.set(x);
