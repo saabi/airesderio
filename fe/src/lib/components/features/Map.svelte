@@ -221,8 +221,82 @@
 			: null
 	);
 
-	// Adjusted label position (arrow tip touches pin edge)
-	let labelPosition = $state<{ x: number; y: number } | null>(null);
+	// Calculate label coordinates offset by pin radius so arrow tip touches pin edge
+	let labelCoordinates = $derived.by(() => {
+		if (!pinCoordinates || !currentPathId || !svgElement || !mapContainer) {
+			return pinCoordinates;
+		}
+
+		const place = places.find((p) => p.id === currentPathId);
+		if (!place) return pinCoordinates;
+
+		// Get pin radius in viewBox coordinates
+		const pinRadiusViewBox = getPinRadius(place.pin.r);
+
+		// Convert pin radius from viewBox to screen pixels
+		const containerRect = mapContainer.getBoundingClientRect();
+		if (containerRect.width === 0 || containerRect.height === 0) {
+			return pinCoordinates;
+		}
+
+		// Calculate scale: screen pixels per viewBox unit
+		const scaleX = containerRect.width / $viewBoxWidth;
+		const scaleY = containerRect.height / $viewBoxHeight;
+		const scale = (scaleX + scaleY) / 2;
+
+		// Pin radius in screen pixels
+		const pinRadiusPixels = pinRadiusViewBox * scale;
+
+		// Arrow dimensions (from PinLabel component)
+		const arrowSize = 6; // Arrow height/width
+		const arrowMargin = 8; // Margin between label and arrow
+		const arrowOffset = arrowMargin + arrowSize; // Total offset from label edge to arrow tip
+
+		// Offset coordinates based on arrow position
+		// Arrow tip should be at pin edge, accounting for arrow size and margin
+		let offsetX = 0;
+		let offsetY = 0;
+
+		switch (arrowPosition) {
+			case 'bottom':
+				// Label above pin, arrow pointing down
+				// Arrow tip should touch bottom of pin (pinY + pinRadius)
+				// Label bottom is at y (due to -100% transform), arrow tip is at y + arrowOffset
+				// So: y + arrowOffset = pinY + pinRadius
+				// Therefore: y = pinY + pinRadius - arrowOffset
+				offsetY = pinRadiusPixels - arrowOffset;
+				break;
+			case 'top':
+				// Label below pin, arrow pointing up
+				// Arrow tip should touch top of pin (pinY - pinRadius)
+				// Label top is at y (due to 0% transform), arrow tip is at y - arrowOffset
+				// So: y - arrowOffset = pinY - pinRadius
+				// Therefore: y = pinY - pinRadius + arrowOffset
+				offsetY = -pinRadiusPixels + arrowOffset;
+				break;
+			case 'left':
+				// Label right of pin, arrow pointing right
+				// Arrow tip should touch left edge of pin (pinX - pinRadius)
+				// Label left edge is at x (due to 0% transform), arrow tip is at x - arrowOffset
+				// So: x - arrowOffset = pinX - pinRadius
+				// Therefore: x = pinX - pinRadius + arrowOffset
+				offsetX = -pinRadiusPixels + arrowOffset;
+				break;
+			case 'right':
+				// Label left of pin, arrow pointing left
+				// Arrow tip should touch right edge of pin (pinX + pinRadius)
+				// Label right edge is at x (due to -100% transform), arrow tip is at x + arrowOffset
+				// So: x + arrowOffset = pinX + pinRadius
+				// Therefore: x = pinX + pinRadius - arrowOffset
+				offsetX = pinRadiusPixels - arrowOffset;
+				break;
+		}
+
+		return {
+			x: pinCoordinates.x + offsetX,
+			y: pinCoordinates.y + offsetY
+		};
+	});
 
 	// ===== FUNCTIONS =====
 	/**
@@ -302,94 +376,6 @@
 		} catch (error) {
 			console.error('Error converting coordinates:', error);
 			return null;
-		}
-	}
-
-	/**
-	 * Converts a distance in viewBox coordinates to screen/pixel coordinates
-	 */
-	function convertDistanceToScreen(distanceViewBox: number): number {
-		if (!svgElement || !mapContainer) return distanceViewBox;
-
-		const containerRect = mapContainer.getBoundingClientRect();
-		if (containerRect.width === 0 || containerRect.height === 0) return distanceViewBox;
-
-		// Calculate scale: pixels per viewBox unit
-		const scaleX = containerRect.width / $viewBoxWidth;
-		const scaleY = containerRect.height / $viewBoxHeight;
-		const scale = (scaleX + scaleY) / 2;
-
-		return distanceViewBox * scale;
-	}
-
-	/**
-	 * Calculates adjusted label position so arrow tip touches pin edge
-	 * Accounts for label dimensions, arrow size, and margin
-	 */
-	function calculateLabelPosition(
-		pinCenter: { x: number; y: number },
-		arrowPos: 'bottom' | 'top' | 'left' | 'right',
-		pinRadiusViewBox: number
-	): { x: number; y: number } | null {
-		if (!measurementLabel) return pinCenter;
-
-		// Get label dimensions
-		const labelRect = measurementLabel.getBoundingClientRect();
-		const labelWidth = labelRect.width;
-		const labelHeight = labelRect.height;
-
-		// Convert pin radius to screen coordinates
-		const pinRadiusPx = convertDistanceToScreen(pinRadiusViewBox);
-		
-		// Arrow size and margin
-		const arrowSize = 6; // Arrow height/width
-		const margin = 8; // Margin between arrow and label
-
-		switch (arrowPos) {
-			case 'bottom':
-				// Label above pin, arrow pointing down
-				// Label uses transform: translate(-50%, -100%), so label bottom is at y
-				// Arrow is at top: 100% (below label), so arrow tip is at y + labelHeight + margin + arrowSize
-				// Arrow tip should touch pin bottom: pinCenter.y + pinRadiusPx
-				// So: y + labelHeight + margin + arrowSize = pinCenter.y + pinRadiusPx
-				// Therefore: y = pinCenter.y + pinRadiusPx - labelHeight - margin - arrowSize
-				return {
-					x: pinCenter.x,
-					y: pinCenter.y + pinRadiusPx - labelHeight - margin - arrowSize
-				};
-			case 'top':
-				// Label below pin, arrow pointing up
-				// Label uses transform: translate(-50%, 0), so label top is at y
-				// Arrow is at bottom: 100% (above label), so arrow tip is at y - margin - arrowSize
-				// Arrow tip should touch pin top: pinCenter.y - pinRadiusPx
-				// So: y - margin - arrowSize = pinCenter.y - pinRadiusPx
-				// Therefore: y = pinCenter.y - pinRadiusPx + margin + arrowSize
-				return {
-					x: pinCenter.x,
-					y: pinCenter.y - pinRadiusPx + margin + arrowSize
-				};
-			case 'left':
-				// Label right of pin, arrow pointing right
-				// Label uses transform: translate(0, -50%), so label left edge is at x
-				// Arrow is at right: 100% (right of label), so arrow tip is at x + labelWidth + margin + arrowSize
-				// Arrow tip should touch pin left edge: pinCenter.x - pinRadiusPx
-				// So: x + labelWidth + margin + arrowSize = pinCenter.x - pinRadiusPx
-				// Therefore: x = pinCenter.x - pinRadiusPx - labelWidth - margin - arrowSize
-				return {
-					x: pinCenter.x - pinRadiusPx - labelWidth - margin - arrowSize,
-					y: pinCenter.y
-				};
-			case 'right':
-				// Label left of pin, arrow pointing left
-				// Label uses transform: translate(-100%, -50%), so label right edge is at x
-				// Arrow is at left: 100% (left of label), so arrow tip is at x - margin - arrowSize
-				// Arrow tip should touch pin right edge: pinCenter.x + pinRadiusPx
-				// So: x - margin - arrowSize = pinCenter.x + pinRadiusPx
-				// Therefore: x = pinCenter.x + pinRadiusPx + margin + arrowSize
-				return {
-					x: pinCenter.x + pinRadiusPx + margin + arrowSize,
-					y: pinCenter.y
-				};
 		}
 	}
 
@@ -509,7 +495,6 @@
 				const converted = convertToParentOffset(pinCoords.cx, pinCoords.cy);
 				if (converted) {
 					pinCoordinates = converted;
-					// Label position will be recalculated by the labelPosition effect
 				}
 			}
 		}
@@ -545,37 +530,6 @@
 		} else if (!pinCoordinates) {
 			// Reset to default when no pin is selected
 			arrowPosition = 'bottom';
-		}
-	});
-
-	// Calculate adjusted label position (arrow tip touches pin edge)
-	$effect(() => {
-		if (pinCoordinates && arrowPosition && currentPathId && measurementLabel) {
-			const updateLabelPosition = () => {
-				if (!pinCoordinates || !arrowPosition || !currentPathId || !measurementLabel) {
-					labelPosition = pinCoordinates;
-					return;
-				}
-
-				// Get pin radius in viewBox coordinates
-				const place = places.find((p) => p.id === currentPathId);
-				if (!place) {
-					labelPosition = pinCoordinates;
-					return;
-				}
-
-				const pinRadiusViewBox = getPinRadius(place.pin.r);
-				
-				// Calculate adjusted position
-				const adjusted = calculateLabelPosition(pinCoordinates, arrowPosition, pinRadiusViewBox);
-				labelPosition = adjusted || pinCoordinates;
-			};
-
-			// Update immediately and after a small delay
-			updateLabelPosition();
-			setTimeout(updateLabelPosition, 50);
-		} else {
-			labelPosition = pinCoordinates;
 		}
 	});
 
@@ -840,16 +794,14 @@
 		{/if}
 	</svg>
 
-	{#if selectedGroupName && pinCoordinates}
+	{#if selectedGroupName && pinCoordinates && labelCoordinates}
 		<!-- Hidden label for measurement -->
 		<div bind:this={measurementLabel} class='pin-label-measure' aria-hidden='true'>
 			{selectedGroupName}
 		</div>
 
 		<!-- Actual label -->
-		{#if labelPosition}
-			<PinLabel x={labelPosition.x} y={labelPosition.y} text={selectedGroupName} {arrowPosition} />
-		{/if}
+		<PinLabel x={labelCoordinates.x} y={labelCoordinates.y} text={selectedGroupName} {arrowPosition} />
 	{/if}
 </div>
 
