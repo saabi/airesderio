@@ -133,6 +133,18 @@
 <style>
 	.container {
 		/* Layout */
-		margin: 1.5rem 1.5rem;
+		margin: 1.5rem;
+		padding: 0;
+		width: calc(100% - 3rem);
+		max-width: 100%;
+		box-sizing: border-box;
+	}
+
+	@media (max-width: 640px) {
+		.container {
+			/* Layout */
+			margin: 1rem;
+			width: calc(100% - 2rem);
+		}
 	}
 </style>

@@ -269,9 +269,21 @@
 		/* Layout */
 		display: grid;
 		grid-template-columns: 3rem 1fr;
-		gap: 3rem;
+		gap: 1.5rem;
 		align-items: center;
 		padding: 1rem 0;
+	}
+
+	@media (max-width: 640px) {
+		.equip-list li {
+			/* Layout */
+			gap: 1rem;
+			padding: 0.75rem 0;
+		}
+		.equip-list {
+			/* Layout */
+			gap: 0 1.5rem;
+		}
 	}
 
 	.equip-list li span {

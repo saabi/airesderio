@@ -259,10 +259,12 @@
 		/* Positioning */
 		position: fixed;
 		top: 0;
+		left: 0;
+		right: 0;
 		z-index: 50;
 
 		/* Layout */
-		width: 100vw;
+		width: 100%;
 		height: var(--header-height);
 
 		/* Box/Visual */
@@ -284,9 +286,17 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0.75rem 2em;
+		box-sizing: border-box;
 
 		/* Box/Visual */
 		background: var(--ref-neutral-950);
+	}
+
+	@media (max-width: 640px) {
+		.bar {
+			/* Layout */
+			padding: 0.75rem 1rem;
+		}
 	}
 
 	:global(:root[data-theme='dark']) .bar {
@@ -496,13 +506,13 @@
 			position: fixed;
 			top: 0;
 			left: 0;
+			right: 0;
 
 			/* Layout */
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			max-width: 100vw;
-			width: 100vw;
+			width: 100%;
 			height: 100%;
 
 			/* Box/Visual */

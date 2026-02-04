@@ -82,10 +82,10 @@
 		grid-template-columns: 1fr min-content;
 		gap: 4rem;
 		align-items: center;
-		width: 80rem;
+		width: 100%;
+		max-width: 80rem;
 		padding: 0;
 		font-size: 1.4rem;
-		max-width: var(--max);
 		margin: 0 auto;
 	}
 	.welcome {
@@ -129,8 +129,6 @@
 	.kpis dt {
 		/* Layout */
 		display: contents;
-
-		white-space: nowrap;
 	}
 
 	.kpi strong {
@@ -159,10 +157,15 @@
 		.intro {
 			/* Layout */
 			grid-template-columns: 1fr;
+			gap: 2rem;
 		}
 		.kpi strong {
 			/* Typography */
-			font-size: 3.75rem; /* smaller KPI numbers */
+			font-size: 3rem; /* smaller KPI numbers for mobile */
+		}
+		.kpis {
+			/* Layout */
+			padding-left: 0;
 		}
 	}
 </style>
