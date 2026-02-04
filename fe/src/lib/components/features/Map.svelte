@@ -248,8 +248,8 @@
 		const pinRadiusPixels = pinRadiusViewBox * scale;
 
 		// Arrow dimensions (from PinLabel component)
-		const arrowSize = 6; // Arrow height/width
-		const arrowMargin = 8; // Margin between label and arrow
+		const arrowSize = -6; // Arrow height/width
+		const arrowMargin = -4; // Margin between label and arrow
 		const arrowOffset = arrowMargin + arrowSize; // Total offset from label edge to arrow tip
 
 		// Offset coordinates based on arrow position
@@ -292,9 +292,17 @@
 				break;
 		}
 
+		console.log('pinCoordinates', pinCoordinates.x, pinCoordinates.y);
+		console.log('offsetX', offsetX, 'offsetY', offsetY);
+		// log pin coordinates in viewBox coordinates
+		const pc = getPinCoordinates(currentPathId);
+		console.log('pinCoordinates in viewBox', pc?.cx, pc?.cy);
+		// log pin coordinates in parent coordinates
+		console.log('pinCoordinates in parent', convertToParentOffset(pc?.cx, pc?.cy));
+		
 		return {
-			x: pinCoordinates.x + offsetX,
-			y: pinCoordinates.y + offsetY
+			x: pinCoordinates.x - offsetX,
+			y: pinCoordinates.y - offsetY
 		};
 	});
 
@@ -369,10 +377,12 @@
 			const parentRect = parent.getBoundingClientRect();
 
 			// Calculate offset relative to parent
-			return {
+			const offset = {
 				x: transformedPoint.x - parentRect.left,
 				y: transformedPoint.y - parentRect.top
 			};
+			console.log('offset', offset);
+			return offset;
 		} catch (error) {
 			console.error('Error converting coordinates:', error);
 			return null;

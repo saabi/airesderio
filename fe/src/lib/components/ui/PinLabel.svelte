@@ -60,36 +60,24 @@
 
 	/* Positioning for each arrow direction */
 	.pin-label.arrow-bottom {
-		/* Layout */
-		margin-bottom: 8px;
-
 		/* Effects & Motion */
 		transform: translate(-50%, -100%);
 		animation: fadeInLabelBottom 0.3s ease forwards;
 	}
 
 	.pin-label.arrow-top {
-		/* Layout */
-		margin-top: 8px;
-
 		/* Effects & Motion */
 		transform: translate(-50%, 0);
 		animation: fadeInLabelTop 0.3s ease forwards;
 	}
 
 	.pin-label.arrow-left {
-		/* Layout */
-		margin-right: 8px;
-
 		/* Effects & Motion */
 		transform: translate(0, -50%);
 		animation: fadeInLabelLeft 0.3s ease forwards;
 	}
 
 	.pin-label.arrow-right {
-		/* Layout */
-		margin-left: 8px;
-
 		/* Effects & Motion */
 		transform: translate(-100%, -50%);
 		animation: fadeInLabelRight 0.3s ease forwards;
