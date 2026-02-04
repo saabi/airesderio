@@ -298,7 +298,9 @@
 		const pc = getPinCoordinates(currentPathId);
 		console.log('pinCoordinates in viewBox', pc?.cx, pc?.cy);
 		// log pin coordinates in parent coordinates
-		console.log('pinCoordinates in parent', convertToParentOffset(pc?.cx, pc?.cy));
+		if (pc) {
+			console.log('pinCoordinates in parent', convertToParentOffset(pc.cx, pc.cy));
+		}
 		
 		return {
 			x: pinCoordinates.x - offsetX,
@@ -791,6 +793,15 @@
 		<!-- Focal (main subject) rendering - coordinates denormalized -->
 		{#if includeFocal && mapData.focal.shapes && mapData.focal.shapes.length > 0}
 			<g id='focal' class='focal-group' bind:this={focalGroup}>
+				<!-- Pin circle behind focal shapes (same settings as zone pins) -->
+				{#if places.length > 0 && places[0].pin.r !== undefined}
+					<circle
+						class='pin-circle'
+						cx={FOCAL_CENTER.cx}
+						cy={FOCAL_CENTER.cy}
+						r={getPinRadius(places[0].pin.r)}
+					/>
+				{/if}
 				{#each mapData.focal.shapes as shape}
 					{#if shape.type === 'path'}
 						<path class='focal-path' d={denormPath(shape.d)} />
@@ -984,6 +995,12 @@
 
 	/* Show pins in the active group when zoomed */
 	.places-group.zoom-active .group-active .pin-circle {
+		/* Box/Visual */
+		fill-opacity: 1;
+	}
+
+	/* Show focal pin circle (always visible) */
+	.focal-group .pin-circle {
 		/* Box/Visual */
 		fill-opacity: 1;
 	}
