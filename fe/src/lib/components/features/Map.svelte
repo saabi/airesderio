@@ -730,16 +730,6 @@
 			height = Math.min(viewHeight, FULL_VIEWBOX.height);
 		}
 
-		// Debug logging
-		console.log('zoomToBoundingBox:', {
-			needsFallback,
-			bbox: { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height },
-			padded: { contentX, contentY, paddedWidth, paddedHeight },
-			containerAspect,
-			final: { x, y, width, height },
-			FULL_VIEWBOX
-		});
-
 		// Tween to the new viewBox (smooth animation)
 		viewBoxX.set(x);
 		viewBoxY.set(y);
