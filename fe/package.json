@@ -19,7 +19,8 @@
 		"sync:photos": "node scripts/updatePlacePhotos.js",
 		"sync:geo": "node scripts/updatePlaceGeo.js",
 		"clean": "node scripts/clean.js",
-		"clean:svg": "node scripts/cleanSvg.js"
+		"clean:svg": "node scripts/cleanSvg.js",
+		"generate:svg": "node scripts/generateSvgFromIcons.js"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.0",
