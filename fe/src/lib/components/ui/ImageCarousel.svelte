@@ -1,6 +1,6 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
-	import { onMount } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import { browser } from '$app/environment';
 	import type { Snippet } from 'svelte';
 	import CircularButton from '$lib/components/ui/CircularButton.svelte';
@@ -9,21 +9,15 @@
 	import CarouselDots from '$lib/components/ui/CarouselDots.svelte';
 
 	// ===== TYPES =====
-	interface ImageData {
-		src: string | any; // Enhanced image type
-		alt?: string;
-	}
-
-	type ImageInput = string | ImageData;
-
 	export type NavigationPosition = 'absolute-sides' | 'around-dots';
 	export type DotsPosition = 'below-image' | 'bottom-center';
 	export type TransitionType = 'fade' | 'fade-scale' | 'instant';
 	export type ImageFit = 'cover' | 'contain';
 
 	interface Props {
-		// Required
-		images: ImageInput[];
+		// Required: slot-based API
+		slideCount: number;
+		slide: Snippet<[number]>;
 
 		// Navigation
 		autoRotate?: boolean;
@@ -50,18 +44,17 @@
 		transitionType?: TransitionType;
 		transitionDuration?: number;
 
-		// Image
+		// Image (passed to Slide via context for type="image")
 		imageFit?: ImageFit;
-		imageSizes?: string; // For enhanced images
+		imageSizes?: string;
 
 		// Accessibility
 		ariaLabel?: string;
-		imageAriaLabel?: string | ((index: number) => string);
+		slideAriaLabel?: (index: number) => string;
 
 		// Styling
 		class?: string;
 		containerClass?: string;
-		// Note: 'class' prop is handled by Svelte, this is for additional classes
 
 		// Slots
 		header?: Snippet;
@@ -72,7 +65,8 @@
 <script lang='ts'>
 	// ===== PROPS =====
 	let {
-		images,
+		slideCount,
+		slide,
 		autoRotate = false,
 		interval = 5000,
 		pauseOnHover = true,
@@ -91,12 +85,23 @@
 		imageFit = 'cover',
 		imageSizes = '100vw',
 		ariaLabel = 'Carrusel de imágenes',
-		imageAriaLabel = (index: number) => `Imagen ${index + 1}`,
+		slideAriaLabel = (i: number) => `Slide ${i + 1}`,
 		class: className = '',
 		containerClass = '',
 		header,
 		footer
 	}: Props = $props();
+
+	// ===== CONTEXT =====
+	// Slide (image type) reads this for imageSizes and imageFit; use getters so values stay current
+	setContext('imageCarousel', {
+		get imageFit() {
+			return imageFit;
+		},
+		get imageSizes() {
+			return imageSizes;
+		}
+	});
 
 	// ===== STATE =====
 	let internalIndex = $state(0);
@@ -104,7 +109,6 @@
 	let carouselElement: HTMLDivElement | null = $state(null);
 	let isVisible = $state(false);
 	let intersectionObserver: IntersectionObserver | null = null;
-	let preloadedImages = $state<Set<string>>(new Set()); // Track preloaded images to avoid duplicates
 
 	// ===== DERIVED =====
 	// Determine if component is controlled
@@ -120,114 +124,15 @@
 		if (autoRotate) {
 			startCarousel();
 		}
-		// Set up keyboard navigation after element is bound
-		// Use requestAnimationFrame to ensure element is in DOM
 		if (keyboardNavigation && browser) {
 			requestAnimationFrame(() => {
 				setupKeyboardNavigation();
 			});
 		}
-		// Preload adjacent images
-		preloadAdjacentImages();
 		return () => {
 			stopCarousel();
 			cleanupKeyboardNavigation();
 		};
-	});
-
-	// ===== IMAGE PRELOADING =====
-	/**
-	 * Preloads the next and previous images to improve navigation performance.
-	 * Uses <link rel="preload"> for string URLs and Image objects for enhanced images.
-	 */
-	function preloadAdjacentImages() {
-		if (!browser || images.length <= 1) return;
-
-		const current = currentImageIndex;
-		const nextIndex = (current + 1) % images.length;
-		const prevIndex = (current - 1 + images.length) % images.length;
-
-		// Preload next image
-		preloadImage(images[nextIndex]);
-
-		// Preload previous image (optional, but helps with back navigation)
-		preloadImage(images[prevIndex]);
-	}
-
-	/**
-	 * Preloads a single image with support for responsive image sets (srcset).
-	 * For string URLs, uses <link rel="preload"> with href.
-	 * For enhanced images, uses <link rel="preload"> with imagesrcset and imagesizes
-	 * when srcset information is available, otherwise falls back to simple href.
-	 */
-	function preloadImage(image: ImageInput) {
-		if (!browser) return;
-
-		const imageSrc = getImageSrc(image);
-		const imageSrcset = getImageSrcset(image);
-		const isString = typeof image === 'string';
-
-		// Create a unique identifier for this image
-		const imageId = isString
-			? imageSrc
-			: typeof imageSrc === 'string'
-				? imageSrc
-				: String(imageSrc);
-
-		// Skip if already preloaded
-		if (preloadedImages.has(imageId)) {
-			return;
-		}
-
-		const link = document.createElement('link');
-		link.rel = 'preload';
-		link.as = 'image';
-
-		if (isString) {
-			// For string URLs, use simple href preload
-			link.href = imageSrc;
-		} else {
-			// For enhanced images, check if we have srcset information
-			if (imageSrcset && typeof imageSrcset === 'string') {
-				// Use imagesrcset and imagesizes for responsive image preloading
-				// @ts-ignore - imagesrcset is a valid attribute for link preload
-				link.imagesrcset = imageSrcset;
-				if (imageSizes) {
-					// @ts-ignore - imagesizes is a valid attribute for link preload
-					link.imagesizes = imageSizes;
-				}
-				// href is still required as fallback
-				if (typeof imageSrc === 'string') {
-					link.href = imageSrc;
-				}
-			} else if (typeof imageSrc === 'string') {
-				// Fallback: if src is a string, use it directly
-				link.href = imageSrc;
-				// Add imagesizes if available to help browser select appropriate size
-				if (imageSizes) {
-					// @ts-ignore - imagesizes is a valid attribute for link preload
-					link.imagesizes = imageSizes;
-				}
-			} else {
-				// For enhanced image objects without accessible srcset,
-				// the browser will handle preloading when enhanced:img renders
-				// Mark as preloaded to avoid duplicate attempts
-				preloadedImages.add(imageId);
-				return;
-			}
-		}
-
-		document.head.appendChild(link);
-		preloadedImages.add(imageId);
-	}
-
-	// Watch for index changes and preload adjacent images
-	$effect(() => {
-		// This effect runs whenever currentImageIndex changes
-		currentImageIndex; // Track the dependency
-		if (browser) {
-			preloadAdjacentImages();
-		}
 	});
 
 	// ===== KEYBOARD NAVIGATION SETUP =====
@@ -274,12 +179,12 @@
 
 	// ===== FUNCTIONS =====
 	function nextImage() {
-		const newIndex = (currentImageIndex + 1) % images.length;
+		const newIndex = (currentImageIndex + 1) % slideCount;
 		goToImage(newIndex);
 	}
 
 	function previousImage() {
-		const newIndex = (currentImageIndex - 1 + images.length) % images.length;
+		const newIndex = (currentImageIndex - 1 + slideCount) % slideCount;
 		goToImage(newIndex);
 	}
 
@@ -292,7 +197,7 @@
 	}
 
 	function startCarousel() {
-		if (!autoRotate || images.length <= 1) return;
+		if (!autoRotate || slideCount <= 1) return;
 		if (carouselInterval) {
 			clearInterval(carouselInterval);
 		}
@@ -343,40 +248,6 @@
 			startCarousel();
 		}
 	}
-
-	// Get image source
-	function getImageSrc(image: ImageInput): string | any {
-		return typeof image === 'string' ? image : image.src;
-	}
-
-	/**
-	 * Gets srcset information from an enhanced image if available.
-	 * Enhanced images from @sveltejs/enhanced-img may have srcset in their structure.
-	 */
-	function getImageSrcset(image: ImageInput): string | undefined {
-		if (typeof image === 'string') return undefined;
-		// Enhanced images might have srcset property
-		// @ts-ignore - srcset may exist on enhanced image objects
-		return image.srcset;
-	}
-
-	// Get image alt text
-	function getImageAlt(image: ImageInput, index: number): string {
-		if (typeof image === 'string') {
-			return typeof imageAriaLabel === 'function'
-				? imageAriaLabel(index)
-				: imageAriaLabel;
-		}
-		return (
-			image.alt ||
-			(typeof imageAriaLabel === 'function' ? imageAriaLabel(index) : imageAriaLabel)
-		);
-	}
-
-	// Check if image is enhanced
-	function isEnhancedImage(image: ImageInput): boolean {
-		return typeof image !== 'string';
-	}
 </script>
 
 <div
@@ -398,32 +269,19 @@
 	{/if}
 
 	<div class='carousel-images'>
-		{#each images as image, index}
-			{@const isString = typeof image === 'string'}
-			{@const imageSrc = getImageSrc(image)}
-			{@const imageAlt = getImageAlt(image, index)}
+		{#each Array(slideCount) as _, i}
 			<div
 				class='carousel-image'
-				class:active={index === currentImageIndex}
-				class:enhanced={!isString}
-				style={isString ? "background-image: url('{imageSrc}')" : undefined}
+				class:active={i === currentImageIndex}
 				role='img'
-				aria-label={imageAlt}
+				aria-label={slideAriaLabel(i)}
 			>
-				{#if !isString}
-					<enhanced:img
-						src={imageSrc}
-						alt={imageAlt}
-						sizes={imageSizes}
-						loading={index === 0 ? 'eager' : 'lazy'}
-						class='carousel-image-content'
-					/>
-				{/if}
+				{@render slide(i)}
 			</div>
 		{/each}
 	</div>
 
-	{#if showNavigation && images.length > 1}
+	{#if showNavigation && slideCount > 1}
 		{#if navigationPosition === 'around-dots'}
 			<div class='carousel-navigation around-dots'>
 				<CircularButton
@@ -436,7 +294,7 @@
 				</CircularButton>
 				{#if showDots}
 					<CarouselDots
-						total={images.length}
+						total={slideCount}
 						currentIndex={currentImageIndex}
 						onDotClick={goToImage}
 						ariaLabel={(index) => `Ver imagen ${index + 1}`}
@@ -475,9 +333,9 @@
 		{/if}
 	{/if}
 
-	{#if showDots && dotsPosition === 'below-image' && images.length > 1}
+	{#if showDots && dotsPosition === 'below-image' && slideCount > 1}
 		<CarouselDots
-			total={images.length}
+			total={slideCount}
 			currentIndex={currentImageIndex}
 			onDotClick={goToImage}
 			ariaLabel={(index) => `Ver imagen ${index + 1}`}
@@ -580,42 +438,27 @@
 		display: block;
 	}
 
-	.carousel-image.enhanced {
-		/* Layout */
-		overflow: hidden;
-	}
-
-	/* Ensure enhanced images are displayed when active in instant transition */
-	.image-carousel.transition-instant .carousel-image.enhanced.active {
-		/* Layout */
-		display: block;
-	}
-
-	.carousel-image-content {
+	/* Slide content (and legacy .carousel-image-content) fill the cell */
+	.carousel-image :global(.slide-content) {
 		/* Positioning */
 		position: absolute;
 		top: 0;
 		left: 0;
-
 		/* Layout */
 		width: 100%;
 		height: 100%;
 		min-width: 100%;
 		min-height: 100%;
-
-		/* Box/Visual */
-		object-position: center;
-		display: block;
 	}
 
-	/* Image fit: cover */
-	.image-carousel.fit-cover .carousel-image-content {
+	/* Image fit: cover (Slide uses .carousel-image-content on img/video) */
+	.image-carousel.fit-cover :global(.carousel-image-content) {
 		/* Box/Visual */
 		object-fit: cover;
 	}
 
 	/* Image fit: contain */
-	.image-carousel.fit-contain .carousel-image-content {
+	.image-carousel.fit-contain :global(.carousel-image-content) {
 		/* Box/Visual */
 		object-fit: contain;
 	}

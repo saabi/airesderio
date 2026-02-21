@@ -3,6 +3,7 @@
 	// Local components
 	import Title from '$lib/components/ui/Title.svelte';
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
+	import Slide from '$lib/components/ui/Slide.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 
 	// Local utilities
@@ -59,7 +60,8 @@
 			style={`--scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
 		>
 			<ImageCarousel
-				images={INTERIOR_IMAGES}
+				slideCount={INTERIOR_IMAGES.length}
+				slideAriaLabel={(index) => INTERIOR_IMAGES[index].alt}
 				autoRotate={true}
 				interval={2500}
 				pauseOnHover={true}
@@ -72,8 +74,15 @@
 				transitionType="fade-scale"
 				imageFit="cover"
 				ariaLabel='Galería de imágenes del diseño interior'
-				imageAriaLabel={(index) => INTERIOR_IMAGES[index].alt}
-			/>
+			>
+				{#snippet slide(index)}
+					<Slide
+						type="image"
+						src={INTERIOR_IMAGES[index].src}
+						alt={INTERIOR_IMAGES[index].alt}
+					/>
+				{/snippet}
+			</ImageCarousel>
 		</div>
 		<div class='interior-text'>
 			<p

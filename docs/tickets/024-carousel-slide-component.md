@@ -1,7 +1,7 @@
 # Ticket #024: Carousel Slide component and ImageCarousel slot-based API
 
 ## Status
-**Not Started**
+**Complete**
 
 ## Priority
 **Medium**

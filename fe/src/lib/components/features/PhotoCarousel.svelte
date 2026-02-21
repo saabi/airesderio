@@ -3,6 +3,7 @@
 	import type { PlaceMetadata } from '$lib/types';
 	import { PLACE_PHOTOS_MAP } from '$lib/assets/places/index';
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
+	import Slide from '$lib/components/ui/Slide.svelte';
 
 	// ===== TYPES =====
 	interface Props {
@@ -91,7 +92,8 @@
 				<div class='photo-container'>
 					{#if enhancedPhotos.length > 0}
 						<ImageCarousel
-							images={enhancedPhotos}
+							slideCount={enhancedPhotos.length}
+							slideAriaLabel={(index) => `${place.nombre} - Foto ${index + 1}`}
 							bind:currentIndex={currentIndex}
 							onIndexChange={handleIndexChange}
 							autoRotate={false}
@@ -107,9 +109,16 @@
 							imageFit="cover"
 							imageSizes="(min-width: 1024px) 90vw, 100vw"
 							ariaLabel="Galería de fotos"
-							imageAriaLabel={(index) => `${place.nombre} - Foto ${index + 1}`}
 							class="photo-carousel"
-						/>
+						>
+							{#snippet slide(index)}
+								<Slide
+									type="image"
+									src={enhancedPhotos[index].src}
+									alt={enhancedPhotos[index].alt}
+								/>
+							{/snippet}
+						</ImageCarousel>
 					{/if}
 				</div>
 

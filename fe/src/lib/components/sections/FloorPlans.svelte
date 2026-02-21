@@ -3,6 +3,7 @@
 	import Title from '$lib/components/ui/Title.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
+	import Slide from '$lib/components/ui/Slide.svelte';
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
@@ -69,14 +70,6 @@
 
 	// ===== DERIVED =====
 	let currentPlan = $derived.by(() => FLOOR_PLANS[currentPlanIndex]);
-	
-	// Convert floor plans to image array for ImageCarousel
-	const floorPlanImages = $derived.by(() => 
-		FLOOR_PLANS.map(plan => ({
-			src: plan.image,
-			alt: plan.title
-		}))
-	);
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: floorPlansObserver, visible: floorPlansVisible } = createSectionObserver(
@@ -111,7 +104,8 @@
 	>
 		<div class='carousel-wrapper'>
 			<ImageCarousel
-				images={floorPlanImages}
+				slideCount={FLOOR_PLANS.length}
+				slideAriaLabel={(index) => `Plano ${index + 1}: ${FLOOR_PLANS[index].title}`}
 				bind:currentIndex={currentPlanIndex}
 				onIndexChange={handleIndexChange}
 				autoRotate={false}
@@ -127,8 +121,15 @@
 				imageFit="contain"
 				imageSizes="(min-width: 1024px) 1024px, 100vw"
 				ariaLabel="Galería de planos de distribución"
-				imageAriaLabel={(index) => `Plano ${index + 1}: ${FLOOR_PLANS[index].title}`}
-			/>
+			>
+				{#snippet slide(index)}
+					<Slide
+						type="image"
+						src={FLOOR_PLANS[index].image}
+						alt={FLOOR_PLANS[index].title}
+					/>
+				{/snippet}
+			</ImageCarousel>
 		</div>
 		<figure class='floor-plan-info'>
 			<figcaption class='floor-plan-title'>{currentPlan.title}</figcaption>

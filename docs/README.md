@@ -160,7 +160,7 @@ Design proposals, mockups, and visual assets for the project.
 - **#021**: ✅ Select Typeface System for Titles and Body Text (Design, Branding) - **Complete**
 - **#022**: ⏸️ Componentize Carousel Dots (Code Quality, Component Architecture) - **Not Started**
 - **#023**: ✅ Map Data Structure Migration (Data Architecture, Code Quality) - **Complete**
-- **#024**: ⏸️ Carousel Slide component and ImageCarousel slot-based API (Refactoring) - **Not Started**
+- **#024**: ✅ Carousel Slide component and ImageCarousel slot-based API (Refactoring) - **Complete**
 - **#007**: ⏸️ Image Optimization (Performance) - **Pending** - *Depends on #011*
 
 ### Low Priority

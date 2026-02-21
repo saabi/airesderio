@@ -1,6 +1,7 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
+	import Slide from '$lib/components/ui/Slide.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { ANIMATION, animationDuration, animationOffset } from '$lib/constants/animation';
@@ -47,7 +48,8 @@
 		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<ImageCarousel
-			images={CAROUSEL_IMAGES}
+			slideCount={CAROUSEL_IMAGES.length}
+			slideAriaLabel={(index) => CAROUSEL_IMAGES[index].alt}
 			autoRotate={true}
 			interval={5000}
 			pauseOnHover={true}
@@ -60,8 +62,15 @@
 			transitionType="fade-scale"
 			imageFit="cover"
 			ariaLabel='Carrusel de imágenes del edificio'
-			imageAriaLabel={(index) => CAROUSEL_IMAGES[index].alt}
-		/>
+		>
+			{#snippet slide(index)}
+				<Slide
+					type="image"
+					src={CAROUSEL_IMAGES[index].src}
+					alt={CAROUSEL_IMAGES[index].alt}
+				/>
+			{/snippet}
+		</ImageCarousel>
 	</div>
 	<!--
 		<svg class="corner-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
