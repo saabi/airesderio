@@ -4,6 +4,7 @@
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 	import Slide from '$lib/components/ui/Slide.svelte';
+	import InteractiveFloorPlan from '$lib/components/features/InteractiveFloorPlan.svelte';
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
@@ -124,9 +125,9 @@
 			>
 				{#snippet slide(index)}
 					<Slide
-						type="image"
-						src={FLOOR_PLANS[index].image}
-						alt={FLOOR_PLANS[index].title}
+						type="component"
+						component={InteractiveFloorPlan as import('svelte').Component}
+						props={{ plan: FLOOR_PLANS[index] }}
 					/>
 				{/snippet}
 			</ImageCarousel>

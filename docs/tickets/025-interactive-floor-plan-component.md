@@ -1,7 +1,7 @@
 # Ticket #025: Interactive floor plan component (zones, hover, click zoom/high-res, mobile rotation)
 
 ## Status
-**Not Started**
+**Complete**
 
 ## Priority
 **Medium**
@@ -29,12 +29,12 @@ Floor plan carousel in [FloorPlans.svelte](fe/src/lib/components/sections/FloorP
 
 ## Acceptance Criteria
 
-- [ ] New component renders inside a Slide in the floor plan carousel.
-- [ ] Non-interactive plans display the image only (no overlay).
-- [ ] Interactive plans with zones: hover highlights the apartment zone; click zooms (viewBox) or loads high-res image per config.
-- [ ] Mobile rotation works when `rotateOnMobile` is true and aspect ratio indicates elongated plan on narrow viewport.
-- [ ] Svelte 5 only ($props, snippets, no slot/export let).
-- [ ] Accessibility: focusable zones, aria-label per zone, keyboard support where appropriate.
+- [x] New component renders inside a Slide in the floor plan carousel.
+- [x] Non-interactive plans display the image only (no overlay).
+- [x] Interactive plans with zones: hover highlights the apartment zone; click zooms (viewBox) or loads high-res image per config.
+- [x] Mobile rotation works when `rotateOnMobile` is true and aspect ratio indicates elongated plan on narrow viewport.
+- [x] Svelte 5 only ($props, snippets, no slot/export let).
+- [x] Accessibility: focusable zones, aria-label per zone, keyboard support where appropriate.
 
 ## Implementation Steps
 

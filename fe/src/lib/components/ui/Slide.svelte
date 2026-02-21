@@ -53,21 +53,13 @@
 
 <div class="slide-content">
 	{#if type === 'image' && src != null}
-		{#if typeof src === 'string'}
+		{@const imageSrc = typeof src === 'string' ? src : (src as { img?: { src?: string }; src?: string })?.img?.src ?? (src as { src?: string })?.src ?? ''}
+		{#if imageSrc}
 			<img
-				src={src}
+				src={imageSrc}
 				alt={alt}
 				class="carousel-image-content"
 				loading="lazy"
-			/>
-		{:else}
-			<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
-			<enhanced:img
-				src={src as any}
-				alt={alt}
-				sizes={imageSizes}
-				loading="lazy"
-				class="carousel-image-content"
 			/>
 		{/if}
 	{:else if type === 'video' && src != null && typeof src === 'string'}

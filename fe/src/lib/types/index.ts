@@ -191,6 +191,22 @@ export type SvgShape =
 	| { type: 'circle'; cx: number; cy: number; r: number };
 
 /**
+ * Interactive floor plan zone (apartment or region).
+ * Coordinates use the same normalized system as map data: 0-1 on the smaller image dimension.
+ */
+export interface FloorPlanZone {
+	id: string;
+	label: string;
+	/** One or more shapes (path, rect, circle) in normalized coordinates */
+	shape: SvgShape | SvgShape[];
+}
+
+/**
+ * Click behavior for interactive floor plan zones
+ */
+export type FloorPlanZoomMode = 'zoom' | 'highRes';
+
+/**
  * Text label for annotating places on the map
  */
 export interface TextLabel {
