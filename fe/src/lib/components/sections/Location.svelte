@@ -193,61 +193,63 @@
 		<Title eyebrow='¿Dónde se encuentra?' big='UBICACIÓN' />
 	</div>
 	<div class='location-block'>
-		<div
-			class='location-text scroll-animate'
-			style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
-		>
-			<p>
-				Aires de Río ofrece una ubicación de privilegio. Se emplaza sobre Avenida Rivadavia, a un
-				paso de todo lo que esta ciudad ofrece para brindarte una vida placentera y cómoda.
-			</p>
-			<p>
-				Ubicado en un área de modernos y elegantes desarrollos edilicios, centro de convenciones, de
-				parques y hermosas zonas verdes.
-			</p>
-			<p>
-				Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
-				de cercanía a solo una cuadra.
-			</p>
+		<div class='location-text-column'>
+			<div
+				class='location-text scroll-animate'
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+			>
+				<p>
+					Aires de Río ofrece una ubicación de privilegio. Se emplaza sobre Avenida Rivadavia, a un
+					paso de todo lo que esta ciudad ofrece para brindarte una vida placentera y cómoda.
+				</p>
+				<p>
+					Ubicado en un área de modernos y elegantes desarrollos edilicios, centro de convenciones, de
+					parques y hermosas zonas verdes.
+				</p>
+				<p>
+					Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
+					de cercanía a solo una cuadra.
+				</p>
+			</div>
 			<div class='map-navigation'>
-				<div class='navigation-row'>
+			<div class='navigation-row'>
+				<CircularButton
+					variant="solid"
+					size="sm"
+					ariaLabel="Anterior ubicación"
+					onClick={() => mapComponent?.prev()}
+				>
+					<ArrowLeft />
+				</CircularButton>
+				<div class='navigation-center'>
 					<CircularButton
 						variant="solid"
 						size="sm"
-						ariaLabel="Anterior ubicación"
-						onClick={() => mapComponent?.prev()}
+						ariaLabel="Volver al estado inicial"
+						onClick={() => mapComponent?.reset()}
+						disabled={!hasPlaceSelected}
 					>
-						<ArrowLeft />
+						<Building />
 					</CircularButton>
-					<div class='navigation-center'>
-						<CircularButton
-							variant="solid"
-							size="sm"
-							ariaLabel="Volver al estado inicial"
-							onClick={() => mapComponent?.reset()}
-							disabled={!hasPlaceSelected}
-						>
-							<Building />
-						</CircularButton>
-						<CircularButton
-							variant="solid"
-							size="sm"
-							ariaLabel="Abrir galería de fotos"
-							onClick={openGalleryForCurrentPlace}
-							disabled={!hasPlaceSelected}
-						>
-							<Gallery />
-						</CircularButton>
-					</div>
 					<CircularButton
 						variant="solid"
 						size="sm"
-						ariaLabel="Siguiente ubicación"
-						onClick={() => mapComponent?.next()}
+						ariaLabel="Abrir galería de fotos"
+						onClick={openGalleryForCurrentPlace}
+						disabled={!hasPlaceSelected}
 					>
-						<ArrowRight />
+						<Gallery />
 					</CircularButton>
 				</div>
+				<CircularButton
+					variant="solid"
+					size="sm"
+					ariaLabel="Siguiente ubicación"
+					onClick={() => mapComponent?.next()}
+				>
+					<ArrowRight />
+				</CircularButton>
+			</div>
 			</div>
 		</div>
 		<div
@@ -303,6 +305,7 @@
 		/* Layout */
 		display: grid;
 		grid-template-columns: 0.5fr 1fr;
+		grid-template-areas: "text map";
 		gap: 0;
 		overflow: hidden;
 		position: relative;
@@ -313,9 +316,21 @@
 		border-radius: 0.625rem;
 	}
 
+	.location-text-column {
+		/* Layout */
+		grid-area: text;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		overflow: hidden;
+	}
+
 	.location-text {
 		/* Layout */
+		flex: 1;
+		min-height: 0;
 		padding: 1.75rem;
+		overflow: auto;
 
 		/* Box/Visual */
 		/* Light, semi-transparent cream overlay with dark text for light theme */
@@ -333,7 +348,9 @@
 
 	.map-navigation {
 		/* Layout */
+		flex-shrink: 0;
 		margin-top: 1.5rem;
+		padding: 0 1.75rem 1.75rem;
 	}
 
 	.navigation-row {
@@ -358,9 +375,11 @@
 		overflow: hidden;
 
 		/* Layout */
+		grid-area: map;
 		display: grid;
 		grid-template-columns: 1fr min-content;
 		width: 100%;
+		height: 100%;
 		gap: 0;
 	}
 
@@ -389,18 +408,52 @@
 		.location-block {
 			/* Layout */
 			grid-template-columns: 1fr;
-			/* Invert order on mobile */
-			grid-template-rows: auto auto;
+			grid-template-areas: 
+				"text"
+				"nav"
+				"map";
+			grid-template-rows: auto auto 1fr;
+			height: calc(100vh - var(--header-height));
 		}
+
+		.location-text-column {
+			/* Span text and nav rows */
+			grid-row: 1 / 3;
+			grid-column: 1;
+		}
+
 		.location-text {
 			/* Layout */
 			max-width: 100%;
+			padding: 1.5rem;
+		}
+
+		.map-navigation {
+			/* Layout */
+			align-self: stretch;
+			padding: 1rem 1.5rem;
+			margin-top: 0;
+			background: color-mix(in oklch, var(--ref-cream) 90%, transparent);
+			backdrop-filter: blur(8px);
+		}
+
+		:global([data-theme='dark']) .map-navigation {
+			/* Box/Visual */
+			background: color-mix(in oklch, oklch(0.2 0 0deg) 85%, transparent);
 		}
 
 		.map-container {
 			/* Layout */
+			grid-area: map;
 			grid-template-columns: 1fr;
-			grid-template-rows: 50vh min-content;
+			height: 100%;
+			min-height: 0;
+		}
+
+		:global(.location-map) {
+			/* Layout */
+			min-height: 0;
+			height: 100%;
 		}
 	}
 
