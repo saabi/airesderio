@@ -258,6 +258,7 @@
 	class:transition-instant={transitionType === 'instant'}
 	class:fit-cover={imageFit === 'cover'}
 	class:fit-contain={imageFit === 'contain'}
+	class:dots-below={showDots && dotsPosition === 'below-image' && navigationPosition !== 'around-dots'}
 	role='region'
 	aria-label={ariaLabel}
 	onmouseenter={handleMouseEnter}
@@ -333,7 +334,7 @@
 		{/if}
 	{/if}
 
-	{#if showDots && dotsPosition === 'below-image' && slideCount > 1}
+	{#if showDots && dotsPosition === 'below-image' && navigationPosition !== 'around-dots' && slideCount > 1}
 		<CarouselDots
 			total={slideCount}
 			currentIndex={currentImageIndex}
@@ -369,11 +370,23 @@
 		height: 100%;
 	}
 
+	/* When dots are below, use flex so dots get space and are not clipped */
+	.image-carousel.dots-below {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.image-carousel.dots-below .carousel-images {
+		flex: 1;
+		min-height: 0;
+	}
+
 	.carousel-image {
 		/* Positioning */
 		position: absolute;
 		top: 0;
 		left: 0;
+		z-index: 0;
 
 		/* Layout */
 		width: 100%;
@@ -387,6 +400,11 @@
 
 		/* Misc/Overrides */
 		will-change: opacity, transform, filter;
+	}
+
+	/* Active slide on top so it receives pointer events (inactive slides keep opacity 0 but were blocking) */
+	.carousel-image.active {
+		z-index: 1;
 	}
 
 	/* For instant transition, ensure images are positioned correctly */

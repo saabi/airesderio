@@ -20,6 +20,13 @@
 		image: string | any; // Enhanced image type
 		title: string;
 		description: string;
+		interactive?: boolean;
+		zones?: import('$lib/types').FloorPlanZone[];
+		highlightOnHover?: boolean;
+		zoomMode?: import('$lib/types').FloorPlanZoomMode;
+		highResImage?: string | unknown;
+		rotateOnMobile?: boolean;
+		aspectRatio?: number;
 	}
 
 	// ===== STATIC CONSTANTS =====
@@ -35,7 +42,34 @@
 		{
 			image: plan1,
 			title: 'Primera Planta - 4 Departamentos',
-			description: 'Plano de la primera planta con 4 departamentos de 1 dormitorio cada uno.'
+			description: 'Plano de la primera planta con 4 departamentos de 1 dormitorio cada uno.',
+			interactive: true,
+			highlightOnHover: true,
+			zoomMode: 'zoom',
+			zones: [
+				{
+					id: 'zona-ejemplo',
+					label: 'Zona de ejemplo (hover y clic para zoom)',
+					shape: {
+						type: 'rect',
+						x: 0.19,
+						y: 0.03,
+						width: 0.85,
+						height: 0.5
+					}
+				},
+				{
+					id: 'zona-ejemplo2',
+					label: 'Zona de ejemplo (hover y clic para zoom)',
+					shape: {
+						type: 'rect',
+						x: 0.19,
+						y: 0.5,
+						width: 0.85,
+						height: 0.5
+					}
+				}
+			]
 		},
 		{
 			image: plan2,
@@ -111,7 +145,7 @@
 				onIndexChange={handleIndexChange}
 				autoRotate={false}
 				showNavigation={true}
-				navigationPosition="around-dots"
+				navigationPosition="absolute-sides"
 				buttonVariant="bordered"
 				buttonSize="md"
 				showDots={true}
@@ -127,7 +161,7 @@
 					<Slide
 						type="component"
 						component={InteractiveFloorPlan as import('svelte').Component}
-						props={{ plan: FLOOR_PLANS[index] }}
+						props={{ plan: FLOOR_PLANS[index], isActive: currentPlanIndex === index }}
 					/>
 				{/snippet}
 			</ImageCarousel>

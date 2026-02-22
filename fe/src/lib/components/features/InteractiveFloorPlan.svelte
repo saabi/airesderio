@@ -1,6 +1,9 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
+	import { tweened } from 'svelte/motion';
 	import type { FloorPlanZone, FloorPlanZoomMode, SvgShape, ViewBox } from '$lib/types';
+
+	const ZOOM_TWEEN = { duration: 400, easing: (t: number) => t * (2 - t) };
 
 	// ===== TYPES =====
 	export interface InteractiveFloorPlanData {
@@ -9,6 +12,8 @@
 		description: string;
 		interactive?: boolean;
 		zones?: FloorPlanZone[];
+		/** When true (default), hover shows semi-transparent fill + stroke over the zone so the image stays visible; cursor is pointer when zones are interactive regardless. */
+		highlightOnHover?: boolean;
 		zoomMode?: FloorPlanZoomMode;
 		highResImage?: string | unknown;
 		rotateOnMobile?: boolean;
@@ -22,7 +27,7 @@
 
 <script lang="ts">
 	// ===== PROPS =====
-	let { plan }: { plan: InteractiveFloorPlanData } = $props();
+	let { plan, isActive = true }: { plan: InteractiveFloorPlanData; isActive?: boolean } = $props();
 
 	// ===== STATE =====
 	let imageDimensions = $state<{ width: number; height: number } | null>(null);
@@ -32,11 +37,13 @@
 	let imageElement = $state<HTMLImageElement | null>(null);
 	let zonesGroupElement = $state<SVGGElement | null>(null);
 
-	// Reset zoom when plan changes (e.g. carousel slide change)
+	// Reset zoom when plan changes or when this slide is no longer active (e.g. user switched to another slide)
 	$effect(() => {
 		plan;
-		currentViewBox = null;
-		zoomedZoneId = null;
+		if (!isActive) {
+			currentViewBox = null;
+			zoomedZoneId = null;
+		}
 	});
 
 	// ===== DERIVED =====
@@ -52,10 +59,23 @@
 				? { x: 0, y: 0, width: imageDimensions.width, height: imageDimensions.height }
 				: { x: 0, y: 0, width: 1, height: 1 }
 	);
-	const activeViewBox = $derived.by(() => currentViewBox ?? fullViewBox);
-	const viewBoxAttr = $derived.by(
-		() =>
-			`${activeViewBox.x} ${activeViewBox.y} ${activeViewBox.width} ${activeViewBox.height}`
+
+	// Tweened viewBox for animated zoom / volver
+	let viewBoxX = tweened(0, ZOOM_TWEEN);
+	let viewBoxY = tweened(0, ZOOM_TWEEN);
+	let viewBoxWidth = tweened(1, ZOOM_TWEEN);
+	let viewBoxHeight = tweened(1, ZOOM_TWEEN);
+
+	$effect(() => {
+		const target = currentViewBox ?? fullViewBox;
+		viewBoxX.set(target.x, ZOOM_TWEEN);
+		viewBoxY.set(target.y, ZOOM_TWEEN);
+		viewBoxWidth.set(target.width, ZOOM_TWEEN);
+		viewBoxHeight.set(target.height, ZOOM_TWEEN);
+	});
+
+	const viewBoxAttr = $derived(
+		`${$viewBoxX} ${$viewBoxY} ${$viewBoxWidth} ${$viewBoxHeight}`
 	);
 	/** Plan image URL (for dimension loading); enhanced imports use .img.src */
 	const planImageSrc = $derived.by(() => {
@@ -136,22 +156,14 @@
 
 <div class="interactive-floor-plan" class:rotated={shouldRotateOnMobile}>
 	{#if !isInteractive}
-		<!-- Non-interactive: plain image -->
+		<!-- Non-interactive: plain image (always use resolved URL to avoid [object Object]) -->
 		<div class="plan-image-wrap">
-			{#if typeof plan.image === 'string'}
+			{#if planImageSrc}
 				<img
-					src={plan.image as string}
+					src={planImageSrc}
 					alt={plan.title}
 					class="plan-image"
 					loading="lazy"
-				/>
-			{:else}
-				<enhanced:img
-					src={plan.image as any}
-					alt={plan.title}
-					class="plan-image"
-					loading="lazy"
-					sizes="(min-width: 1024px) 1024px, 100vw"
 				/>
 			{/if}
 		</div>
@@ -163,7 +175,7 @@
 				src={planImageSrc}
 				alt={plan.title}
 				class="plan-image plan-image-hidden"
-				loading="lazy"
+				loading="eager"
 				onload={handleImageLoad}
 			/>
 			{#if imageDimensions}
@@ -173,6 +185,7 @@
 					preserveAspectRatio="xMidYMid meet"
 					role="img"
 					aria-label={plan.title}
+					data-interactive-floor-plan="overlay"
 				>
 					<image
 						href={currentImageSrc}
@@ -182,7 +195,23 @@
 						height={imageDimensions.height}
 						preserveAspectRatio="none"
 					/>
-					<g bind:this={zonesGroupElement} class="zones-group">
+					<rect
+						class="zoom-backdrop"
+						class:active={zoomedZoneId != null}
+						x="0"
+						y="0"
+						width={imageDimensions.width}
+						height={imageDimensions.height}
+						fill="transparent"
+						aria-hidden="true"
+						onclick={zoomedZoneId != null ? handleBack : undefined}
+					/>
+					<g
+						bind:this={zonesGroupElement}
+						class="zones-group"
+						class:highlight-on-hover={plan.highlightOnHover !== false}
+						data-floor-plan-zones
+					>
 						{#each plan.zones ?? [] as zone}
 							<g
 								id="zone-{zone.id}"
@@ -222,17 +251,9 @@
 					</g>
 				</svg>
 			{:else}
-				<!-- Fallback while dimensions load: show image only -->
-				{#if typeof plan.image === 'string'}
-					<img src={plan.image as string} alt={plan.title} class="plan-image" loading="lazy" />
-				{:else}
-					<enhanced:img
-						src={plan.image as any}
-						alt={plan.title}
-						class="plan-image"
-						loading="lazy"
-						sizes="(min-width: 1024px) 1024px, 100vw"
-					/>
+				<!-- Fallback while dimensions load: show image only (use resolved URL) -->
+				{#if planImageSrc}
+					<img src={planImageSrc} alt={plan.title} class="plan-image" loading="lazy" />
 				{/if}
 			{/if}
 			{#if zoomedZoneId}
@@ -308,6 +329,16 @@
 		pointer-events: auto;
 	}
 
+	/* Click outside zone when zoomed → volver; inactive so it doesn't block zone clicks */
+	.plan-overlay .zoom-backdrop {
+		pointer-events: none;
+	}
+	.plan-overlay .zoom-backdrop.active {
+		pointer-events: auto;
+		cursor: pointer;
+	}
+
+	/* Cursor reflects interactivity whenever zones are present */
 	.zone {
 		cursor: pointer;
 	}
@@ -318,13 +349,15 @@
 		transition: fill 0.15s ease, stroke 0.15s ease;
 	}
 
-	.zone:hovered .zone-shape {
+	/* Optional hover/focus highlight: semi-transparent fill so the image below stays visible.
+	   .hovered is the class added by Svelte (class:hovered), not the :hover pseudo. */
+	.zones-group.highlight-on-hover .zone.hovered .zone-shape {
 		fill: color-mix(in oklch, var(--color-accent-primary, oklch(0.55 0.2 145)) 25%, transparent);
 		stroke: var(--color-accent-primary, oklch(0.55 0.2 145));
 		stroke-width: 2px;
 	}
 
-	.zone:focus-visible .zone-shape {
+	.zones-group.highlight-on-hover .zone:focus-visible .zone-shape {
 		fill: color-mix(in oklch, var(--color-accent-primary, oklch(0.55 0.2 145)) 20%, transparent);
 		stroke: var(--color-accent-primary, oklch(0.55 0.2 145));
 		stroke-width: 2px;
