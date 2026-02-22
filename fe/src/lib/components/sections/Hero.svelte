@@ -17,16 +17,39 @@
 	import hero2 from '$lib/assets/carousel-hero/2_DB_EXTERIOR_01 (8).jpg?enhanced';
 	import hero3 from '$lib/assets/carousel-hero/3_DB_EXTERIOR_01 (1).jpg?enhanced';
 
-	const CAROUSEL_IMAGES = [
-		{ src: hero1, alt: 'Fachada del edificio Aires de Río - Imagen 1' },
-		{ src: hero2, alt: 'Fachada del edificio Aires de Río - Imagen 2' },
-		{ src: hero3, alt: 'Fachada del edificio Aires de Río - Imagen 3' }
+	const heroImages = { hero1, hero2, hero3 };
+
+	const CAROUSEL_ITEMS = [
+		{ type: 'video' as const, src: '/carrousel-hero/promo.mov' },
+		{ type: 'image' as const, src: heroImages.hero1, alt: 'Fachada del edificio Aires de Río - Imagen 1' },
+		{ type: 'image' as const, src: heroImages.hero2, alt: 'Fachada del edificio Aires de Río - Imagen 2' },
+		{ type: 'image' as const, src: heroImages.hero3, alt: 'Fachada del edificio Aires de Río - Imagen 3' }
 	];
 </script>
 
 <script lang='ts'>
 	// ===== PROPS =====
 	let {}: Props = $props();
+
+	// ===== STATE =====
+	let currentIndex = $state(0);
+	let videoNotEnded = $state(true);
+
+	// ===== DERIVED =====
+	// Pause carousel auto-step while the video slide is active and video is still playing
+	const pauseAutoRotate = $derived(currentIndex === 0 && videoNotEnded);
+
+	// Reset video-not-ended when leaving the video slide so next time we pause again
+	$effect(() => {
+		if (currentIndex !== 0) {
+			videoNotEnded = true;
+		}
+	});
+
+	function handleVideoEnd() {
+		videoNotEnded = false;
+		currentIndex = (currentIndex + 1) % CAROUSEL_ITEMS.length;
+	}
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: heroObserver, visible: heroVisible } = createSectionObserver('hero', {
@@ -48,11 +71,14 @@
 		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<ImageCarousel
-			slideCount={CAROUSEL_IMAGES.length}
-			slideAriaLabel={(index) => CAROUSEL_IMAGES[index].alt}
+			bind:currentIndex
+			onIndexChange={(i) => (currentIndex = i)}
+			slideCount={CAROUSEL_ITEMS.length}
+			slideAriaLabel={(index) => CAROUSEL_ITEMS[index].type === 'video' ? 'Video promocional Aires de Río' : CAROUSEL_ITEMS[index].alt}
 			autoRotate={true}
 			interval={5000}
 			pauseOnHover={true}
+			pauseAutoRotate={pauseAutoRotate}
 			showNavigation={true}
 			navigationPosition="around-dots"
 			buttonVariant="overlay"
@@ -64,10 +90,14 @@
 			ariaLabel='Carrusel de imágenes del edificio'
 		>
 			{#snippet slide(index)}
+				{@const item = CAROUSEL_ITEMS[index]}
 				<Slide
-					type="image"
-					src={CAROUSEL_IMAGES[index].src}
-					alt={CAROUSEL_IMAGES[index].alt}
+					type={item.type}
+					src={item.src}
+					alt={item.type === 'image' ? item.alt : undefined}
+					autoplay={item.type === 'video'}
+					onVideoEnd={item.type === 'video' ? handleVideoEnd : undefined}
+					isActive={index === currentIndex}
 				/>
 			{/snippet}
 		</ImageCarousel>

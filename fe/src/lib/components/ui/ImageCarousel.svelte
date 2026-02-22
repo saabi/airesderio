@@ -28,6 +28,8 @@
 		// State
 		currentIndex?: number; // If provided, makes it controlled (bindable)
 		onIndexChange?: (index: number) => void;
+		/** When true, auto-rotate is paused (e.g. until a video slide finishes). */
+		pauseAutoRotate?: boolean;
 
 		// Navigation UI
 		showNavigation?: boolean;
@@ -73,6 +75,7 @@
 		keyboardNavigation = false,
 		currentIndex: controlledIndex = $bindable(undefined),
 		onIndexChange,
+		pauseAutoRotate = false,
 		showNavigation = true,
 		navigationPosition = 'around-dots',
 		buttonVariant = 'overlay',
@@ -119,9 +122,19 @@
 		return isControlled ? controlledIndex! : internalIndex;
 	});
 
+	// ===== EFFECTS =====
+	// Pause/resume auto-rotate when pauseAutoRotate changes (e.g. video slide)
+	$effect(() => {
+		if (pauseAutoRotate) {
+			stopCarousel();
+		} else if (autoRotate && slideCount > 1) {
+			startCarousel();
+		}
+	});
+
 	// ===== LIFECYCLE =====
 	onMount(() => {
-		if (autoRotate) {
+		if (autoRotate && !pauseAutoRotate) {
 			startCarousel();
 		}
 		if (keyboardNavigation && browser) {
@@ -197,7 +210,7 @@
 	}
 
 	function startCarousel() {
-		if (!autoRotate || slideCount <= 1) return;
+		if (!autoRotate || slideCount <= 1 || pauseAutoRotate) return;
 		if (carouselInterval) {
 			clearInterval(carouselInterval);
 		}

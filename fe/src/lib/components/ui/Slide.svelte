@@ -22,6 +22,10 @@
 		muted?: boolean;
 		playsInline?: boolean;
 		controls?: boolean;
+		autoplay?: boolean;
+		onVideoEnd?: () => void;
+		/** When true and type is video, resets playback to start (e.g. when carousel steps to this slide). */
+		isActive?: boolean;
 		// Component
 		component?: Component;
 		props?: Record<string, unknown>;
@@ -40,6 +44,9 @@
 		muted = true,
 		playsInline = true,
 		controls = false,
+		autoplay = false,
+		onVideoEnd,
+		isActive = false,
 		component,
 		props = {},
 		children
@@ -49,6 +56,20 @@
 	// Optional: ImageCarousel provides imageSizes for enhanced images; fit is applied by parent CSS
 	const carouselContext = getContext<ImageCarouselContext | undefined>('imageCarousel');
 	const imageSizes = carouselContext?.imageSizes ?? '100vw';
+
+	// ===== VIDEO REF (for reset when slide becomes active) =====
+	let videoEl: HTMLVideoElement | null = $state(null);
+
+	// ===== EFFECTS =====
+	// When stepping into this slide, reset video to start and play if autoplay
+	$effect(() => {
+		if (type === 'video' && isActive && videoEl) {
+			videoEl.currentTime = 0;
+			if (autoplay) {
+				videoEl.play().catch(() => {});
+			}
+		}
+	});
 </script>
 
 <div class="slide-content">
@@ -64,12 +85,15 @@
 		{/if}
 	{:else if type === 'video' && src != null && typeof src === 'string'}
 		<video
+			bind:this={videoEl}
 			class="carousel-image-content"
 			{src}
 			poster={poster}
 			{muted}
 			playsinline={playsInline}
 			{controls}
+			loop={false}
+			onended={() => onVideoEnd?.()}
 		></video>
 	{:else if type === 'component' && component}
 		{@const Comp = component}
