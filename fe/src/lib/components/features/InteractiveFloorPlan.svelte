@@ -1,6 +1,7 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import { tweened } from 'svelte/motion';
+	import { floorPlanOverlayStore } from '$lib/stores/floorPlanOverlay';
 	import type { FloorPlanZone, FloorPlanZoomMode, SvgShape, ViewBox } from '$lib/types';
 
 	const ZOOM_TWEEN = { duration: 400, easing: (t: number) => t * (2 - t) };
@@ -15,6 +16,10 @@
 		/** When true (default), hover shows semi-transparent fill + stroke over the zone so the image stays visible; cursor is pointer when zones are interactive regardless. */
 		highlightOnHover?: boolean;
 		zoomMode?: FloorPlanZoomMode;
+		/** When true, clicking a zone opens a viewport-sized overlay (full screen) instead of zooming in-place. */
+		zoomToViewport?: boolean;
+		/** When false, the Volver (back) button is hidden; click outside the zone still zooms out. Default true. */
+		showBackButton?: boolean;
 		highResImage?: string | unknown;
 		rotateOnMobile?: boolean;
 		aspectRatio?: number; // width / height
@@ -34,6 +39,7 @@
 	let hoveredZoneId = $state<string | null>(null);
 	let zoomedZoneId = $state<string | null>(null);
 	let currentViewBox = $state<ViewBox | null>(null);
+	let maximized = $state(false);
 	let imageElement = $state<HTMLImageElement | null>(null);
 	let zonesGroupElement = $state<SVGGElement | null>(null);
 
@@ -41,6 +47,32 @@
 	$effect(() => {
 		plan;
 		if (!isActive) {
+			currentViewBox = null;
+			zoomedZoneId = null;
+			maximized = false;
+			floorPlanOverlayStore.set(null);
+		}
+	});
+
+	// Sync overlay state to store so overlay can be rendered in parent (avoids clipping by carousel overflow)
+	$effect(() => {
+		if (maximized && zoomedZoneId && imageDimensions) {
+			floorPlanOverlayStore.set({
+				viewBoxAttr,
+				currentImageSrc,
+				imageDimensions,
+				title: plan.title,
+				showBackButton: plan.showBackButton !== false
+			});
+		} else {
+			floorPlanOverlayStore.set(null);
+		}
+	});
+
+	// When overlay is closed from outside (e.g. Volver in FloorPlans), reset local state
+	$effect(() => {
+		if ($floorPlanOverlayStore === null) {
+			maximized = false;
 			currentViewBox = null;
 			zoomedZoneId = null;
 		}
@@ -129,32 +161,102 @@
 		if (w && h) imageDimensions = { width: w, height: h };
 	}
 
+	function getOverlayAspectRatio(): number {
+		if (typeof document === 'undefined' || !window) return 16 / 9;
+		const headerEl = document.querySelector('.site') as HTMLElement | null;
+		const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
+		const w = window.innerWidth;
+		const h = Math.max(1, window.innerHeight - headerHeight);
+		return w / h;
+	}
+
 	function handleZoneClick(zoneId: string) {
-		if (!zonesGroupElement || !plan.zoomMode) return;
+		if (!zonesGroupElement || !plan.zoomMode || !imageDimensions) return;
 		const g = zonesGroupElement.querySelector(`#zone-${zoneId}`) as SVGGElement | null;
 		if (!g) return;
 		try {
-			const bbox = g.getBBox();
-			const margin = Math.min(bbox.width, bbox.height) * 0.1;
-			currentViewBox = {
-				x: Math.max(0, bbox.x - margin),
-				y: Math.max(0, bbox.y - margin),
-				width: bbox.width + margin * 2,
-				height: bbox.height + margin * 2
-			};
+			// Prefer bbox that includes stroke (SVG 2) so hover/focus stroke is not clipped
+			let bbox: DOMRect;
+			try {
+				bbox = (g.getBBox as (opts?: { stroke?: boolean }) => DOMRect)({ stroke: true });
+			} catch {
+				bbox = g.getBBox();
+			}
+			const imgW = imageDimensions.width;
+			const imgH = imageDimensions.height;
+			// Generous margin so the full path is never clipped (vertically or horizontally)
+			const minSide = Math.min(bbox.width, bbox.height);
+			const margin = Math.max(minSide * 0.2, 8);
+			let x = Math.max(0, bbox.x - margin);
+			let y = Math.max(0, bbox.y - margin);
+			let width = bbox.width + margin * 2;
+			let height = bbox.height + margin * 2;
+
+			// When opening viewport overlay, expand viewBox to match overlay aspect ratio
+			// so the zoomed area fits the overlay well (overlay uses "meet" so full viewBox is always visible)
+			if (plan.zoomToViewport) {
+				const overlayAspect = getOverlayAspectRatio();
+				const viewAspect = width / height;
+				if (viewAspect < overlayAspect) {
+					// Overlay is wider: expand height so viewBox aspect matches
+					const newHeight = width / overlayAspect;
+					const addH = (newHeight - height) / 2;
+					y = Math.max(0, y - addH);
+					height = newHeight;
+					if (y + height > imgH) {
+						height = imgH - y;
+					}
+					if (y < 0) {
+						y = 0;
+						height = Math.min(newHeight, imgH);
+					}
+				} else if (viewAspect > overlayAspect) {
+					// Overlay is taller: expand width
+					const newWidth = height * overlayAspect;
+					const addW = (newWidth - width) / 2;
+					x = Math.max(0, x - addW);
+					width = newWidth;
+					if (x + width > imgW) {
+						width = imgW - x;
+					}
+					if (x < 0) {
+						x = 0;
+						width = Math.min(newWidth, imgW);
+					}
+				}
+			}
+
+			// Clamp to image bounds
+			x = Math.max(0, Math.min(x, imgW - 1));
+			y = Math.max(0, Math.min(y, imgH - 1));
+			width = Math.max(1, Math.min(width, imgW - x));
+			height = Math.max(1, Math.min(height, imgH - y));
+
+			currentViewBox = { x, y, width, height };
 			zoomedZoneId = zoneId;
+			if (plan.zoomToViewport) maximized = true;
 		} catch {
 			// ignore getBBox errors
 		}
 	}
 
 	function handleBack() {
+		maximized = false;
 		currentViewBox = null;
 		zoomedZoneId = null;
 	}
 </script>
 
 <div class="interactive-floor-plan" class:rotated={shouldRotateOnMobile}>
+	<!-- Full-component click-outside layer: when zoomed, covers entire component so clicking anywhere (including outside image) zooms out -->
+	{#if isInteractive && zoomedZoneId}
+		<button
+			type="button"
+			class="zoom-out-backdrop"
+			aria-label="Volver al plano completo"
+			onclick={handleBack}
+		></button>
+	{/if}
 	{#if !isInteractive}
 		<!-- Non-interactive: plain image (always use resolved URL to avoid [object Object]) -->
 		<div class="plan-image-wrap">
@@ -169,7 +271,10 @@
 		</div>
 	{:else}
 		<!-- Interactive: image + SVG overlay with zones -->
-		<div class="plan-interactive-wrap">
+		<div
+			class="plan-interactive-wrap"
+			class:zoomed={zoomedZoneId != null}
+		>
 			<img
 				bind:this={imageElement}
 				src={planImageSrc}
@@ -256,7 +361,7 @@
 					<img src={planImageSrc} alt={plan.title} class="plan-image" loading="lazy" />
 				{/if}
 			{/if}
-			{#if zoomedZoneId}
+			{#if zoomedZoneId && !maximized && plan.showBackButton !== false}
 				<button
 					type="button"
 					class="back-button"
@@ -296,6 +401,27 @@
 		inset: 0;
 		width: 100%;
 		height: 100%;
+	}
+
+	/* When zoomed, wrap is click-through so the zoom-out-backdrop (full component) receives clicks; zones still receive clicks */
+	.plan-interactive-wrap.zoomed {
+		pointer-events: none;
+	}
+	.plan-interactive-wrap.zoomed .zones-group {
+		pointer-events: auto;
+	}
+
+	.plan-interactive-wrap {
+		z-index: 1;
+	}
+
+	.zoom-out-backdrop {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		cursor: pointer;
+		border: none;
+		background: transparent;
 	}
 
 	.plan-image {

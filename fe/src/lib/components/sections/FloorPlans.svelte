@@ -5,6 +5,7 @@
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 	import Slide from '$lib/components/ui/Slide.svelte';
 	import InteractiveFloorPlan from '$lib/components/features/InteractiveFloorPlan.svelte';
+	import { floorPlanOverlayStore } from '$lib/stores/floorPlanOverlay';
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
@@ -24,6 +25,8 @@
 		zones?: import('$lib/types').FloorPlanZone[];
 		highlightOnHover?: boolean;
 		zoomMode?: import('$lib/types').FloorPlanZoomMode;
+		zoomToViewport?: boolean;
+		showBackButton?: boolean;
 		highResImage?: string | unknown;
 		rotateOnMobile?: boolean;
 		aspectRatio?: number;
@@ -54,6 +57,8 @@
 			interactive: true,
 			highlightOnHover: true,
 			zoomMode: 'zoom',
+			showBackButton: false,
+			// zoomToViewport: true,
 			zones: [
 				{
 					id: 'depto-fl',
@@ -86,14 +91,6 @@
 						type: 'path',
 						d: paths.fr
 					}
-				},
-				{
-					id: 'depto-b',
-					label: 'Depto Central',
-					shape: {
-						type: 'path',
-						d: paths.b
-					}
 				}
 			]
 		},
@@ -109,6 +106,8 @@
 			interactive: true,
 			highlightOnHover: true,
 			zoomMode: 'zoom',
+			showBackButton: false,
+			// zoomToViewport: true,
 			zones: [
 				{
 					id: 'zona-ejemplo',
@@ -254,6 +253,49 @@
 			<p class='floor-plan-description'>{currentPlan.description}</p>
 		</figure>
 	</div>
+	{#if $floorPlanOverlayStore}
+		{@const overlay = $floorPlanOverlayStore}
+		<div
+			class='floor-plan-viewport-overlay'
+			role='dialog'
+			aria-modal='true'
+			aria-label={overlay.title}
+		>
+			<button
+				type='button'
+				class='floor-plan-viewport-overlay-backdrop'
+				aria-label='Cerrar'
+				onclick={() => floorPlanOverlayStore.set(null)}
+			></button>
+			<div class='floor-plan-viewport-overlay-content'>
+				<svg
+					class='floor-plan-viewport-overlay-svg'
+					viewBox={overlay.viewBoxAttr}
+					preserveAspectRatio='xMidYMid meet'
+					aria-hidden='true'
+				>
+					<image
+						href={overlay.currentImageSrc}
+						x='0'
+						y='0'
+						width={overlay.imageDimensions.width}
+						height={overlay.imageDimensions.height}
+						preserveAspectRatio='none'
+					/>
+				</svg>
+			</div>
+			{#if overlay.showBackButton !== false}
+				<button
+					type='button'
+					class='floor-plan-viewport-overlay-close'
+					aria-label='Volver al plano completo'
+					onclick={() => floorPlanOverlayStore.set(null)}
+				>
+					Volver
+				</button>
+			{/if}
+		</div>
+	{/if}
 </section>
 
 <style>
@@ -314,6 +356,60 @@
 		color: var(--color-text-secondary);
 		line-height: var(--line-height-normal);
 		margin: 0;
+	}
+
+	/* Viewport overlay: fixed below the page header, full width and remaining height */
+	.floor-plan-viewport-overlay {
+		position: fixed;
+		top: var(--header-height);
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1000;
+		background: rgba(0, 0, 0, 0.6);
+	}
+
+	.floor-plan-viewport-overlay-backdrop {
+		position: absolute;
+		inset: 0;
+		cursor: pointer;
+		border: none;
+		background: transparent;
+	}
+
+	.floor-plan-viewport-overlay-content {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.floor-plan-viewport-overlay-svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	.floor-plan-viewport-overlay-close {
+		position: absolute;
+		bottom: 1.5rem;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 1001;
+		pointer-events: auto;
+		padding: 0.5rem 1rem;
+		font-size: 0.9rem;
+		border-radius: 0.5rem;
+		background: var(--color-bg-canvas);
+		color: var(--color-text-primary);
+		border: 1px solid var(--color-border-strong);
+		cursor: pointer;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	}
+
+	.floor-plan-viewport-overlay-close:hover {
+		background: var(--color-bg-contrast);
 	}
 
 	/* Mobile responsiveness */
