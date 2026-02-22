@@ -9,7 +9,7 @@
 	import CarouselDots from '$lib/components/ui/CarouselDots.svelte';
 
 	// ===== TYPES =====
-	export type NavigationPosition = 'absolute-sides' | 'around-dots';
+	export type NavigationPosition = 'absolute-sides' | 'around-dots' | 'below-image';
 	export type DotsPosition = 'below-image' | 'bottom-center';
 	export type TransitionType = 'fade' | 'fade-scale' | 'instant';
 	export type ImageFit = 'cover' | 'contain';
@@ -258,7 +258,7 @@
 	class:transition-instant={transitionType === 'instant'}
 	class:fit-cover={imageFit === 'cover'}
 	class:fit-contain={imageFit === 'contain'}
-	class:dots-below={showDots && dotsPosition === 'below-image' && navigationPosition !== 'around-dots'}
+	class:dots-below={navigationPosition === 'below-image' || (showDots && dotsPosition === 'below-image' && navigationPosition === 'absolute-sides')}
 	role='region'
 	aria-label={ariaLabel}
 	onmouseenter={handleMouseEnter}
@@ -312,6 +312,36 @@
 					<ArrowRight />
 				</CircularButton>
 			</div>
+		{:else if navigationPosition === 'below-image'}
+			<div class='carousel-navigation below-image'>
+				<CircularButton
+					variant={buttonVariant}
+					size={buttonSize}
+					ariaLabel='Imagen anterior'
+					onClick={previousImage}
+				>
+					<ArrowLeft />
+				</CircularButton>
+				{#if showDots}
+					<CarouselDots
+						total={slideCount}
+						currentIndex={currentImageIndex}
+						onDotClick={goToImage}
+						ariaLabel={(index) => `Ver imagen ${index + 1}`}
+						variant={dotsVariant}
+						showTransform={true}
+						containerClass='container'
+					/>
+				{/if}
+				<CircularButton
+					variant={buttonVariant}
+					size={buttonSize}
+					ariaLabel='Siguiente imagen'
+					onClick={nextImage}
+				>
+					<ArrowRight />
+				</CircularButton>
+			</div>
 		{:else if navigationPosition === 'absolute-sides'}
 			<CircularButton
 				class='nav-button prev'
@@ -334,7 +364,7 @@
 		{/if}
 	{/if}
 
-	{#if showDots && dotsPosition === 'below-image' && navigationPosition !== 'around-dots' && slideCount > 1}
+	{#if showDots && dotsPosition === 'below-image' && navigationPosition === 'absolute-sides' && slideCount > 1}
 		<CarouselDots
 			total={slideCount}
 			currentIndex={currentImageIndex}
@@ -486,7 +516,7 @@
 		background-size: contain;
 	}
 
-	/* Navigation: around-dots */
+	/* Navigation: around-dots (over image) */
 	.carousel-navigation.around-dots {
 		/* Positioning */
 		position: absolute;
@@ -501,6 +531,29 @@
 
 		/* Effects & Motion */
 		transform: translateX(-50%);
+	}
+
+	/* Navigation: below-image (arrows + dots in one row below, no overlay) */
+	.carousel-navigation.below-image {
+		/* Layout */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		align-content: center;
+		gap: 1rem;
+		padding: 1rem 0;
+		flex-shrink: 0;
+		min-height: 3rem;
+		box-sizing: border-box;
+	}
+
+	/* Vertically center dots with arrow buttons (avoid baseline/line-height shift) */
+	.carousel-navigation.below-image :global(.carousel-dots) {
+		display: inline-flex;
+		align-items: center;
+		align-self: center;
+		margin: 0;
+		line-height: 0;
 	}
 
 	/* Navigation: absolute-sides */

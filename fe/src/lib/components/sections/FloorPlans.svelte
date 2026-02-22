@@ -145,7 +145,7 @@
 				onIndexChange={handleIndexChange}
 				autoRotate={false}
 				showNavigation={true}
-				navigationPosition="absolute-sides"
+				navigationPosition="below-image"
 				buttonVariant="bordered"
 				buttonSize="md"
 				showDots={true}
