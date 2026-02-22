@@ -30,19 +30,82 @@
 	}
 
 	// ===== STATIC CONSTANTS =====
-	// Import images with ?enhanced for optimization
-	import plan1 from '$lib/assets/floor-plans/1ra-planta-4-deptos.png?enhanced';
-	import plan2 from '$lib/assets/floor-plans/1ra-planta-4-deptos-a.png?enhanced';
-	import plan3 from '$lib/assets/floor-plans/2 OCTUBRE_MODELO 1ra PLANTA_4 DPTOS 1 DORM.jpg?enhanced';
-	import plan4 from '$lib/assets/floor-plans/2da-planta-3-deptos.png?enhanced';
-	import plan5 from '$lib/assets/floor-plans/2da-planta-3-deptos-a.png?enhanced';
-	import plan6 from '$lib/assets/floor-plans/2 OCTUBRE_MODELO 2da PLANTA_2 DPTOS 1 DORM_1 DEPTO DOBLE.jpg?enhanced';
+	// Images in static/planos/ — use URL strings (no import) so Vite doesn't treat them as module scripts
+	const PLAN_IMAGES = {
+		planT4: '/planos/plano-texturado-4.png',
+		planT3: '/planos/plano-texturado-3.png',
+		plan5: '/planos/2da-planta-3-deptos-a.png',
+		plan2: '/planos/2 OCTUBRE_MODELO 2da PLANTA_2 DPTOS 1 DORM_1 DEPTO DOBLE.jpg'
+	} as const;
 
+	// Paths from limites-deptos.svg, normalized for image 1674×792 (smaller dim = 1)
+	const paths = {
+		fl: 'm 0.122566 0.026901 0.814173 0.009256 -0.000335 -0.019418 0.045531 0.000000 -0.001004 0.274862 -0.077336 0.000000 0.000335 0.110815 -0.111150 0.000670 0.001339 0.104454 -0.775706 0.002678 c 0.000000 0.000000 0.000603 -0.137922 0.000335 -0.216943 C 0.018206 0.133316 0.122566 0.026901 0.122566 0.026901 Z',
+		fr: 'm 0.121075 0.975656 0.859521 -0.001755 -0.000167 -0.274025 -0.063945 0.001004 c -0.015395 0.000242 -0.019184 -0.007838 -0.019250 -0.015233 -0.000167 -0.018581 0.000000 -0.089054 0.000000 -0.089054 l -0.102445 -0.001339 -0.000196 -0.105989 -0.776710 -0.000277 -0.000396 0.483597 0.103609 -0.000984 z',
+		bl: 'm 2.098525 0.012162 -0.870520 0.002234 -0.000335 0.277205 0.069971 0.000335 v 0.109141 l 0.117176 -0.000670 0.000335 0.108137 0.683639 -0.000335 z',
+		br: 'm 2.097709 0.979474 -0.323161 0.001792 -0.000167 -0.008872 -0.545902 0.000306 -0.000237 -0.274094 c 0.000000 0.000000 0.059200 -0.000081 0.066566 -0.000081 0.007365 0.000000 0.011538 -0.002245 0.011538 -0.011971 0.000000 -0.011383 0.001339 -0.092304 0.001339 -0.092304 l 0.107132 0.000335 v -0.105793 h 0.684308 z',
+		b: 'm 1.227302 0.294412 -0.000162 -0.279519 0.871790 -0.001813 -0.000139 0.968185 -0.322067 0.001004 -0.000167 -0.010378 -0.548049 0.000502 -0.000502 -0.270677 0.068799 -0.000167 c 0.006696 -0.000018 0.008872 -0.003850 0.008872 -0.010546 0.000000 -0.012052 -0.002560 -0.234863 -0.002560 -0.234863 l -0.003899 -0.000037 -0.000348 -0.161764 z'
+	}
 	const FLOOR_PLANS: FloorPlan[] = [
 		{
-			image: plan1,
+			image: PLAN_IMAGES.planT4,
 			title: 'Primera Planta - 4 Departamentos',
 			description: 'Plano de la primera planta con 4 departamentos de 1 dormitorio cada uno.',
+			interactive: true,
+			highlightOnHover: true,
+			zoomMode: 'zoom',
+			zones: [
+				{
+					id: 'depto-fl',
+					label: 'Depto Delantero Izquierdo',
+					shape: {
+						type: 'path',
+						d: paths.fl
+					}
+				},
+				{
+					id: 'depto-br',
+					label: 'Depto Trasero Derecho',
+					shape: {
+						type: 'path',
+						d: paths.br
+					}
+				},
+				{
+					id: 'depto-bl',
+					label: 'Depto Trasero Izquierdo',
+					shape: {
+						type: 'path',
+						d: paths.bl
+					}
+				},
+				{
+					id: 'depto-fr',
+					label: 'Depto Delantero Derecho',
+					shape: {
+						type: 'path',
+						d: paths.fr
+					}
+				},
+				{
+					id: 'depto-b',
+					label: 'Depto Central',
+					shape: {
+						type: 'path',
+						d: paths.b
+					}
+				}
+			]
+		},
+		{
+			image: PLAN_IMAGES.plan2,
+			title: 'Primera Planta - 4 Departamentos (Alternativa)',
+			description: 'Vista alternativa de la primera planta con distribución de los 4 departamentos.'
+		},
+		{
+			image: PLAN_IMAGES.planT3,
+			title: 'Segunda Planta - 3 Departamentos',
+			description: 'Plano de la segunda planta con 3 departamentos, incluyendo 2 departamentos de 1 dormitorio y 1 departamento doble.',
 			interactive: true,
 			highlightOnHover: true,
 			zoomMode: 'zoom',
@@ -68,33 +131,53 @@
 						width: 0.85,
 						height: 0.5
 					}
+				},
+				{
+					id: 'depto-fl',
+					label: 'Depto Delantero Izquierdo',
+					shape: {
+						type: 'path',
+						d: paths.fl
+					}
+				},
+				{
+					id: 'depto-br',
+					label: 'Depto Trasero Derecho',
+					shape: {
+						type: 'path',
+						d: paths.br
+					}
+				},
+				{
+					id: 'depto-bl',
+					label: 'Depto Trasero Izquierdo',
+					shape: {
+						type: 'path',
+						d: paths.bl
+					}
+				},
+				{
+					id: 'depto-fr',
+					label: 'Depto Delantero Derecho',
+					shape: {
+						type: 'path',
+						d: paths.fr
+					}
+				},
+				{
+					id: 'depto-b',
+					label: 'Depto Central',
+					shape: {
+						type: 'path',
+						d: paths.b
+					}
 				}
 			]
 		},
 		{
-			image: plan2,
-			title: 'Primera Planta - 4 Departamentos (Alternativa)',
-			description: 'Vista alternativa de la primera planta con distribución de los 4 departamentos.'
-		},
-		{
-			image: plan3,
-			title: 'Modelo Octubre - Primera Planta',
-			description: 'Modelo de octubre: primera planta con 4 departamentos de 1 dormitorio.'
-		},
-		{
-			image: plan4,
-			title: 'Segunda Planta - 3 Departamentos',
-			description: 'Plano de la segunda planta con 3 departamentos, incluyendo 2 departamentos de 1 dormitorio y 1 departamento doble.'
-		},
-		{
-			image: plan5,
+			image: PLAN_IMAGES.plan5,
 			title: 'Segunda Planta - 3 Departamentos (Alternativa)',
 			description: 'Vista alternativa de la segunda planta con distribución de los 3 departamentos.'
-		},
-		{
-			image: plan6,
-			title: 'Modelo Octubre - Segunda Planta',
-			description: 'Modelo de octubre: segunda planta con 2 departamentos de 1 dormitorio y 1 departamento doble.'
 		}
 	];
 </script>
