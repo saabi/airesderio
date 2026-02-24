@@ -4,6 +4,7 @@
 	import { page } from '$app/stores';
 
 	// Local components
+	import BuildingFeatures from '$lib/components/sections/BuildingFeatures.svelte';
 	import ContactSection from '$lib/components/sections/ContactSection.svelte';
 	import Equipment from '$lib/components/sections/Equipment.svelte';
 	import FloorPlans from '$lib/components/sections/FloorPlans.svelte';
@@ -124,8 +125,9 @@
 	<Location jsonUrl="/lugares/lugares-direcciones.json" showPlaceMarkers={true} />
 	<div class="container">
 		<Interior />
-		<Equipment />
 		<FloorPlans />
+		<BuildingFeatures />
+		<Equipment />
 	</div>
 	<ContactSection />
 </main>
