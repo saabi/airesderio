@@ -210,20 +210,20 @@
 		return FULL_VIEWBOX;
 	});
 
-	// Tweened values for smooth animation
-	// Initialize with computed defaultViewBox
-	let viewBoxX = tweened(defaultViewBox.x, { duration: 600, easing: (t) => t * (2 - t) });
-	let viewBoxY = tweened(defaultViewBox.y, { duration: 600, easing: (t) => t * (2 - t) });
-	let viewBoxWidth = tweened(defaultViewBox.width, { duration: 600, easing: (t) => t * (2 - t) });
-	let viewBoxHeight = tweened(defaultViewBox.height, { duration: 600, easing: (t) => t * (2 - t) });
+	// Tweened values for smooth animation (initialized with constants to avoid capturing reactive defaultViewBox at top level)
+	const TWEEN_OPTS = { duration: 600, easing: (t: number) => t * (2 - t) };
+	let viewBoxX = tweened(0, TWEEN_OPTS);
+	let viewBoxY = tweened(0, TWEEN_OPTS);
+	let viewBoxWidth = tweened(1, TWEEN_OPTS);
+	let viewBoxHeight = tweened(1, TWEEN_OPTS);
 
-	// Update tweened values when defaultViewBox changes
+	// Sync tweened values from defaultViewBox (runs when defaultViewBox is available or changes)
 	$effect(() => {
-		const _ = defaultViewBox.x + defaultViewBox.y + defaultViewBox.width + defaultViewBox.height;
-		viewBoxX.set(defaultViewBox.x);
-		viewBoxY.set(defaultViewBox.y);
-		viewBoxWidth.set(defaultViewBox.width);
-		viewBoxHeight.set(defaultViewBox.height);
+		const vb = defaultViewBox;
+		viewBoxX.set(vb.x);
+		viewBoxY.set(vb.y);
+		viewBoxWidth.set(vb.width);
+		viewBoxHeight.set(vb.height);
 	});
 
 	// Reference to SVG element for container dimensions
