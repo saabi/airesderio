@@ -21,3 +21,6 @@ vite.config.ts.timestamp-*
 
 # Untracked assets (moved from fe/static); not part of the app build
 /untracked/
+
+# Unreferenced images (moved out of tree but kept on disk)
+/unreferenced/
