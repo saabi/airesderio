@@ -1,13 +1,9 @@
-<defs>
-    <style type="text/css">
-     <![CDATA[
-      .fil3 {fill:black}
-      .fil2 {fill:#ACA298}
-      .fil0 {fill:#333333;fill-rule:nonzero}
-      .fil1 {fill:white;fill-rule:nonzero}
-     ]]>
-    </style>
-</defs>
+<style type="text/css">
+    .fil3 {fill:black}
+    .fil2 {fill:#ACA298}
+    .fil0 {fill:#333333;fill-rule:nonzero}
+    .fil1 {fill:white;fill-rule:nonzero}
+</style>
 <!-- Translate and scale from native content (y 107.2–987, width ~880) to 0 0 48 48 -->
 <g transform="scale(0.049)">
     <polygon class="fil0" points="439.91,792.52 711.22,425.56 570.86,311.32 309.11,311.32 168.6,425.56 "/>

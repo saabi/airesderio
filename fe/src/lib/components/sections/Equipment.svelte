@@ -18,6 +18,8 @@
 	import TechosAltos from '$lib/components/icons/TechosAltos.svelte';
 	import SeriesHarmony from '$lib/components/icons/SeriesHarmony.svelte';
 	import SeriesLuxury from '$lib/components/icons/SeriesLuxury.svelte';
+	import HarmonyText from '$lib/components/icons/HarmonyText.svelte';
+	import LuxuryText from '$lib/components/icons/LuxuryText.svelte';
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
@@ -214,18 +216,19 @@
 		<!-- LINEA HARMONY -->
 		<div class="equip-column">
 			<div class="equip-column-header">
+				<div class="equip-column-icon-wrap">
+					<!-- Lotus (stylized) -->
+					<SvgViewport viewBox="0 0 48 48" width="10rem" height="10rem">
+						<SeriesHarmony />
+					</SvgViewport>
+				</div>
 				<h3 class="equip-column-title">
 					<span class="equip-title-line">LINEA</span>
-					<span class="equip-title-line">HARMONY</span>
+					<!-- Harmony wordmark: native viewBox 540.14×73.66 (rounded to 541×72) -->
+					<SvgViewport viewBox="0 0 541 72" width="20rem" height="3rem" fit={true} align="left">
+						<HarmonyText />
+					</SvgViewport>
 				</h3>
-				<div class="equip-column-icon-wrap">
-					<div class="equip-column-icon" aria-hidden="true">
-						<!-- Lotus (stylized) -->
-						<SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
-							<SeriesHarmony />
-						</SvgViewport>
-					</div>
-				</div>
 			</div>
 			<div class="equip-outline">
 				<ul class="equip-list" role="list">
@@ -237,7 +240,7 @@
 							data-item-active={visibleHarmony.has(index) || undefined}
 							style={`--scroll-animate-delay: ${animationDelay(index + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 						>
-							<SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
+							<SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem" fit={true}>
 								{@const Component = item.component}
 								<Component />
 							</SvgViewport>
@@ -254,22 +257,22 @@
 		<!-- LINEA LUXURY -->
 		<div class="equip-column">
 			<div class="equip-column-header">
-				<h3 class="equip-column-title">
-					<span class="equip-title-line">LINEA</span>
-					<span class="equip-title-line">LUXURY</span>
-				</h3>
 				<div class="equip-column-icon-wrap">
-					<div class="equip-column-icon" aria-hidden="true">
-						<!-- Diamond -->
-						<SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
-							<SeriesLuxury />
-						</SvgViewport>
-					</div>
+					<!-- Diamond -->
+					<SvgViewport viewBox="0 0 48 48" width="10rem" height="10rem">
+						<SeriesLuxury />
+					</SvgViewport>
 				</div>
+				<h3 class="equip-column-title">
+					<!-- Luxury wordmark: native viewBox 316.31×54.77 (must match path bounds or graphic appears shorter) -->
+					<span class="equip-title-line">LINEA</span>
+					<SvgViewport viewBox="0 0 316.31 54.77" width="16rem" height="3rem" fit={true} align="left">
+						<LuxuryText />
+					</SvgViewport>
+				</h3>
 			</div>
 			<p class="equip-luxury-intro">{LUXURY_INTRO}</p>
 			<div class="equip-outline">
-				<h4 class="equip-adicionales-title">ADICIONALES DE ESTA LINEA</h4>
 				<ul class="equip-list" role="list">
 					{#each lineaLuxury as item, index (index)}
 						{@const luxuryAction = createItemObserver({ column: 'luxury', index })}
@@ -329,9 +332,10 @@
 	}
 
 	.equip-column-header {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
+		display: grid;
+		grid-auto-flow: column;
+		align-items: end;
+		justify-content: center;
 		gap: 1rem;
 		margin-bottom: 1.25rem;
 	}
@@ -343,6 +347,8 @@
 		letter-spacing: 0.02em;
 		color: var(--color-contrast-low);
 		line-height: 1.2;
+		text-transform: uppercase;
+		justify-content: center;
 	}
 
 	.equip-title-line {
@@ -350,7 +356,6 @@
 	}
 
 	.equip-column-icon-wrap {
-		display: flex;
 		justify-content: center;
 		width: 100%;
 	}
