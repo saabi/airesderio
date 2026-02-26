@@ -28,7 +28,7 @@
 
 	const projectHighlights = [
 		{ label: 'Entrega estimada', value: '2027' },
-		{ label: 'Unidades disponibles', value: '2 y 5 ambientes' },
+		{ label: 'Unidades disponibles', value: '2 y 4 ambientes' },
 		{ label: 'Amenities', value: 'Piscina · Terraza · Cafetería' }
 	];
 </script>

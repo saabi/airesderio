@@ -117,7 +117,7 @@
 	let visibleHarmony = $state<Set<number>>(new Set());
 	let visibleLuxury = $state<Set<number>>(new Set());
 	let titleVisible = $state(false);
-	/** Mobile tab selection (used when viewport < 900px) */
+	/** Mobile tab selection (used when viewport < 1080px) */
 	let selectedSeries = $state<'harmony' | 'luxury'>('harmony');
 	let isMobile = $state(false);
 
@@ -200,7 +200,7 @@
 	}
 
 	// ===== LIFECYCLE =====
-	const EQUIP_MOBILE_BREAKPOINT = 900;
+	const EQUIP_MOBILE_BREAKPOINT = 1080;
 	onMount(() => {
 		if (!browser) return;
 		const mq = window.matchMedia(`(max-width: ${EQUIP_MOBILE_BREAKPOINT}px)`);
@@ -229,7 +229,7 @@
 		<Title eyebrow="Cómo vienen" big="EQUIPADOS" />
 	</div>
 
-	<!-- Mobile-only tab bar (visible under 900px) -->
+	<!-- Mobile-only tab bar (visible under 1080px) -->
 	<div class="equip-tabs" role="tablist" aria-label="Líneas de equipamiento">
 		<button
 			type="button"
@@ -394,7 +394,7 @@
 		display: none;
 	}
 
-	@media (max-width: 900px) {
+	@media (max-width: 1080px) {
 		.equip-tabs {
 			display: flex;
 			flex-direction: row;
@@ -472,7 +472,7 @@
 		align-items: start;
 	}
 
-	@media (max-width: 900px) {
+	@media (max-width: 1080px) {
 		.equip-columns {
 			grid-template-columns: 1fr;
 		}
@@ -534,7 +534,7 @@
 		text-align: right;
 	}
 
-	@media (max-width: 900px) {
+	@media (max-width: 1080px) {
 		.equip-luxury-intro {
 			text-align: left;
 		}

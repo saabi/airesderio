@@ -37,8 +37,8 @@
 	const PLAN_IMAGES = {
 		planT4: '/planos/plano-texturado-4.png',
 		planT3: '/planos/plano-texturado-3.png',
-		plan5: '/planos/2da-planta-3-deptos-a.png',
-		plan2: '/planos/2 OCTUBRE_MODELO 2da PLANTA_2 DPTOS 1 DORM_1 DEPTO DOBLE.jpg'
+		plan2: '/planos/1ra-planta-4-deptos-a.png',
+		plan5: '/planos/2da-planta-3-deptos-a.png'
 	} as const;
 
 	// Paths from limites-deptos.svg, normalized for image 1674×792 (smaller dim = 1)
