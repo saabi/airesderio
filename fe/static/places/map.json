@@ -20,7 +20,7 @@
 			"cy": 0.8927197451286698
 		}
 	},
-	"defaultRadius": 0.15,
+	"defaultRadius": 0.3,
 	"places": [
 		{
 			"id": "terminal",

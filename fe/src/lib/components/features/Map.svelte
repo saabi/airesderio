@@ -148,6 +148,9 @@
 		Object.fromEntries(places.map((place) => [place.id, place.name]))
 	);
 
+	/** Label text for the apartment building (focal) in home state */
+	const FOCAL_LABEL = 'Aires de Río';
+
 	// ===== STATE =====
 	let currentZoomedIndex = $state<number | null>(null);
 	let selectedGroupName = $state<string | null>(null);
@@ -252,8 +255,43 @@
 
 	// Calculate label coordinates offset by pin radius so arrow tip touches pin edge
 	let labelCoordinates = $derived.by(() => {
-		if (!pinCoordinates || !currentPathId || !svgElement || !mapContainer) {
+		if (!pinCoordinates || !svgElement || !mapContainer) {
 			return pinCoordinates;
+		}
+
+		// Focal label (home state): use focal center and first place's pin radius for offset
+		if (!currentPathId) {
+			if (places.length === 0) return pinCoordinates;
+			const pinRadiusViewBox = getPinRadius(places[0].pin.r);
+			const containerRect = mapContainer.getBoundingClientRect();
+			if (containerRect.width === 0 || containerRect.height === 0) return pinCoordinates;
+			const scaleX = containerRect.width / $viewBoxWidth;
+			const scaleY = containerRect.height / $viewBoxHeight;
+			const scale = (scaleX + scaleY) / 2;
+			const pinRadiusPixels = pinRadiusViewBox * scale;
+			const arrowSize = -6;
+			const arrowMargin = -4;
+			const arrowOffset = arrowMargin + arrowSize;
+			let offsetX = 0;
+			let offsetY = 0;
+			switch (arrowPosition) {
+				case 'bottom':
+					offsetY = pinRadiusPixels - arrowOffset;
+					break;
+				case 'top':
+					offsetY = -pinRadiusPixels + arrowOffset;
+					break;
+				case 'left':
+					offsetX = -pinRadiusPixels + arrowOffset;
+					break;
+				case 'right':
+					offsetX = pinRadiusPixels - arrowOffset;
+					break;
+			}
+			return {
+				x: pinCoordinates.x - offsetX,
+				y: pinCoordinates.y - offsetY
+			};
 		}
 
 		const place = places.find((p) => p.id === currentPathId);
@@ -367,7 +405,7 @@
 		const scaleX = $viewBoxWidth / containerRect.width;
 		const scaleY = $viewBoxHeight / containerRect.height;
 		// Use average scale for more accurate conversion
-		const scale = (scaleX + scaleY) / 2;
+		const scale = (scaleX + scaleY) / 4;
 
 		// Convert pixel radius to viewBox coordinates
 		return pinRadius * scale;
@@ -510,6 +548,17 @@
 			} else {
 				pinCoordinates = null;
 			}
+		} else if (includeFocal) {
+			// Home state: show label on the apartment building (focal)
+			selectedGroupName = FOCAL_LABEL;
+			const updateCoordinates = () => {
+				const converted = convertToParentOffset(FOCAL_CENTER.cx, FOCAL_CENTER.cy);
+				if (converted) {
+					pinCoordinates = converted;
+				}
+			};
+			updateCoordinates();
+			setTimeout(updateCoordinates, 50);
 		} else {
 			selectedGroupName = null;
 			pinCoordinates = null;
@@ -527,6 +576,12 @@
 				if (converted) {
 					pinCoordinates = converted;
 				}
+			}
+		} else if (includeFocal) {
+			const _ = $viewBoxX + $viewBoxY + $viewBoxWidth + $viewBoxHeight;
+			const converted = convertToParentOffset(FOCAL_CENTER.cx, FOCAL_CENTER.cy);
+			if (converted) {
+				pinCoordinates = converted;
 			}
 		}
 	});
@@ -765,6 +820,13 @@
 		viewBoxHeight.set(defaultViewBox.height);
 	}
 
+	async function selectPlace(pathId: string) {
+		const idx = PLACE_PATH_IDS.indexOf(pathId);
+		if (idx === -1) return;
+		currentZoomedIndex = idx;
+		await zoomToBoundingBox(pathId);
+	}
+
 	// Export functions, current path id, and state variables
 	export { next, prev, reset, currentPathId, selectedGroupName, pinCoordinates };
 </script>
@@ -793,6 +855,17 @@
 					height={baseImageDimensions.height}
 					preserveAspectRatio='none'
 				/>
+				<!-- Click on map image (outside zones) resets to home state -->
+				<rect
+					x='0'
+					y='0'
+					width={baseImageDimensions.width}
+					height={baseImageDimensions.height}
+					fill='transparent'
+					style='cursor: default;'
+					aria-hidden='true'
+					onclick={() => reset()}
+				/>
 			{/if}
 		{#if showDetailImage && mapData.detailImage && DETAIL_VIEWBOX}
 			<image
@@ -806,6 +879,77 @@
 			/>
 		{/if}
 		</g>
+
+		<!-- Home state: all places with subdued shapes, pins, and name labels -->
+		{#if !currentPathId}
+			<g id='places-home' class='places-home'>
+				{#each places as place}
+					<g
+						id={place.id}
+						class='place-home'
+						role='button'
+						tabindex='0'
+						aria-label={place.name}
+						onclick={() => selectPlace(place.id)}
+						onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), selectPlace(place.id))}
+					>
+						{#each normalizeShapes(place.shape) as shape}
+							{#if shape.type === 'path'}
+								<path
+									class='place-path place-path-home'
+									vector-effect='non-scaling-stroke'
+									d={denormPath(shape.d)}
+								/>
+							{:else if shape.type === 'rect'}
+								<rect
+									class='place-path place-path-home'
+									vector-effect='non-scaling-stroke'
+									x={denorm(shape.x)}
+									y={denorm(shape.y)}
+									width={denorm(shape.width)}
+									height={denorm(shape.height)}
+								/>
+							{:else if shape.type === 'circle'}
+								<circle
+									class='place-path place-path-home'
+									vector-effect='non-scaling-stroke'
+									cx={denorm(shape.cx)}
+									cy={denorm(shape.cy)}
+									r={denorm(shape.r)}
+								/>
+							{/if}
+						{/each}
+						{#if place.labels}
+							{#each place.labels as label}
+								<text
+									class='place-label-inline'
+									xml:space={label.xmlSpace || 'preserve'}
+									x={denorm(label.x)}
+									y={denorm(label.y)}
+								>
+									<tspan x={denorm(label.x)} y={denorm(label.y)}>{label.content}</tspan>
+								</text>
+							{/each}
+						{/if}
+						<circle
+							class='pin-circle pin-circle-home'
+							cx={denorm(place.pin.cx)}
+							cy={denorm(place.pin.cy)}
+							r={getPinRadius(place.pin.r)}
+						/>
+						<text
+							class='place-name-label'
+							x={denorm(place.pin.cx)}
+							y={denorm(place.pin.cy)}
+							text-anchor='middle'
+							dominant-baseline='text-after-edge'
+						>
+							{place.name}
+						</text>
+					</g>
+				{/each}
+			</g>
+		{/if}
 
 		<!-- Selected place rendering (coordinates denormalized) -->
 		{#if currentPathId}
@@ -876,7 +1020,17 @@
 
 		<!-- Focal (main subject) rendering - coordinates denormalized -->
 		{#if includeFocal && mapData.focal.shapes && mapData.focal.shapes.length > 0}
-			<g id='focal' class='focal-group' bind:this={focalGroup}>
+			<g
+				id='focal'
+				class='focal-group'
+				class:has-selection={!!currentPathId}
+				bind:this={focalGroup}
+				role='button'
+				tabindex='0'
+				aria-label='Vista general del mapa'
+				onclick={() => reset()}
+				onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), reset())}
+			>
 				<!-- Pin circle behind focal shapes (same settings as zone pins) -->
 				{#if places.length > 0 && places[0].pin.r !== undefined}
 					<circle
@@ -1035,6 +1189,10 @@
 		transition: opacity 0.4s ease;
 	}
 
+	.focal-group.has-selection {
+		cursor: pointer;
+	}
+
 	.focal-path {
 		/* Box/Visual */
 		vector-effect: non-scaling-stroke;
@@ -1081,6 +1239,57 @@
 	.places-group.zoom-active .group-active .pin-circle {
 		/* Box/Visual */
 		fill-opacity: 1;
+	}
+
+	/* Home state: all places visible with subdued style */
+	.places-home {
+		/* Box/Visual */
+		opacity: 1;
+	}
+
+	.place-path-home {
+		/* Box/Visual */
+		fill: #00be4d;
+		fill-opacity: 0.22;
+		cursor: pointer;
+	}
+
+	.pin-circle-home {
+		/* Box/Visual */
+		fill-opacity: 0.65;
+		stroke-opacity: 0.9;
+	}
+
+	.place-home {
+		cursor: pointer;
+	}
+
+	/* Hide zone labels in home state on mobile to avoid illegible clutter */
+	@media (max-width: 850px) {
+		.places-home .place-name-label,
+		.places-home .place-label-inline {
+			display: none;
+		}
+	}
+
+	.place-name-label {
+		/* Box/Visual */
+		font-size: 16px;
+		fill: #1a1a1a;
+		stroke: #fff;
+		stroke-width: 2px;
+		paint-order: stroke fill;
+		pointer-events: none;
+	}
+
+	.place-label-inline {
+		/* Box/Visual */
+		font-size: 12px;
+		fill: #333;
+		stroke: #fff;
+		stroke-width: 1px;
+		paint-order: stroke fill;
+		pointer-events: none;
 	}
 
 	/* Show focal pin circle (always visible) */
