@@ -241,14 +241,18 @@
 			onclick={() => (selectedSeries = 'harmony')}
 		>
 			<span class="equip-tab-inner">
-				<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem" fit={true}>
-					<SeriesHarmony />
-				</SvgViewport>
+				<span class="equip-tab-icon">
+					<SvgViewport viewBox="0 0 48 48" width="100%" height="100%" fit={true}>
+						<SeriesHarmony />
+					</SvgViewport>
+				</span>
 				<span class="equip-tab-label">
 					<span class="equip-title-line">LINEA</span>
-					<SvgViewport viewBox="0 0 541 72" width="10rem" height="2rem" fit={true} align="left">
-						<HarmonyText />
-					</SvgViewport>
+					<span class="equip-tab-wordmark">
+						<SvgViewport viewBox="0 0 541 72" width="100%" height="100%" fit={true} align="left">
+							<HarmonyText />
+						</SvgViewport>
+					</span>
 				</span>
 			</span>
 		</button>
@@ -262,14 +266,18 @@
 			onclick={() => (selectedSeries = 'luxury')}
 		>
 			<span class="equip-tab-inner">
-				<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem" fit={true}>
-					<SeriesLuxury />
-				</SvgViewport>
+				<span class="equip-tab-icon">
+					<SvgViewport viewBox="0 0 48 48" width="100%" height="100%" fit={true}>
+						<SeriesLuxury />
+					</SvgViewport>
+				</span>
 				<span class="equip-tab-label">
 					<span class="equip-title-line">LINEA</span>
-					<SvgViewport viewBox="0 0 316.31 54.77" width="8rem" height="2rem" fit={true} align="left">
-						<LuxuryText />
-					</SvgViewport>
+					<span class="equip-tab-wordmark">
+						<SvgViewport viewBox="0 0 316.31 54.77" width="100%" height="100%" fit={true} align="left">
+							<LuxuryText />
+						</SvgViewport>
+					</span>
 				</span>
 			</span>
 		</button>
@@ -448,20 +456,30 @@
 			gap: 0.5rem;
 		}
 
+		.equip-tab-icon {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: clamp(2rem, 8vw, 3rem);
+			height: clamp(2rem, 8vw, 3rem);
+			flex-shrink: 0;
+		}
+
 		.equip-tab-label {
 			display: flex;
 			flex-direction: column;
 			align-items: flex-start;
 			text-align: left;
-			font-size: 0.875rem;
+			font-size: clamp(0.7rem, 2.2vw, 0.875rem);
 			font-weight: 600;
 			letter-spacing: 0.02em;
 			text-transform: uppercase;
 		}
 
-		/* On mobile, hide per-panel headers; tab bar is the header */
-		.equip-column-header {
-			display: none;
+		.equip-tab-wordmark {
+			display: inline-block;
+			width: clamp(5rem, 18vw, 10rem);
+			height: clamp(1.25rem, 3.5vw, 2rem);
 		}
 	}
 
@@ -511,6 +529,13 @@
 	.equip-column-icon-wrap {
 		justify-content: center;
 		width: 100%;
+	}
+
+	/* Re-assert hide on mobile so it wins over base .equip-column-header (cascade order) */
+	@media (max-width: 1080px) {
+		.equip-column-header {
+			display: none;
+		}
 	}
 
 	.equip-column-icon {
