@@ -4,6 +4,7 @@
 	import type { MapComponent } from '$lib/components/features/Map.svelte';
 	import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
 	import Title from '$lib/components/ui/Title.svelte';
+	import Highlight from '$lib/components/ui/Highlight.svelte';
 	import CircularButton from '$lib/components/ui/CircularButton.svelte';
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
@@ -210,9 +211,9 @@
 					Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
 					de cercanía a solo una cuadra.
 				</p>
-				<p class="location-nav-help" role="status">
+				<Highlight>
 					Puedes usar las flechas para cambiar de ubicación; el ícono de edificio vuelve a la vista general y el ícono de galería abre las fotos para el lugar seleccionado.
-				</p>
+				</Highlight>
 			</div>
 			<div class='map-navigation'>
 			<div class='navigation-row'>
@@ -349,22 +350,6 @@
 		font-size: 0.95em;
 	}
 
-	.location-nav-help {
-		/* Layout */
-		margin: 1rem 0 0.75rem;
-		padding: 0.75rem 1rem;
-
-		/* Box/Visual */
-		background: color-mix(in oklch, var(--color-accent-primary, var(--ref-brand-primary)) 12%, var(--ref-cream));
-		border-radius: 0.375rem;
-		border-left: 3px solid var(--color-accent-primary, var(--ref-brand-primary));
-
-		/* Typography */
-		font-size: 0.85em;
-		line-height: 1.35;
-		color: var(--color-text-on-light);
-	}
-
 	.map-navigation {
 		/* Layout */
 		flex-shrink: 0;
@@ -418,15 +403,6 @@
 		/* Darker semi-transparent overlay for dark mode */
 		background: color-mix(in oklch, oklch(0.2 0 0deg) 85%, transparent);
 		backdrop-filter: blur(8px);
-
-		/* Typography */
-		color: var(--color-text-primary);
-	}
-
-	:global([data-theme='dark']) .location-nav-help {
-		/* Box/Visual */
-		background: color-mix(in oklch, var(--color-accent-primary) 25%, oklch(0.2 0 0deg));
-		border-left-color: var(--color-accent-primary);
 
 		/* Typography */
 		color: var(--color-text-primary);

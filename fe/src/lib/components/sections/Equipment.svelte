@@ -6,6 +6,7 @@
 
 	// Local components
 	import Title from '$lib/components/ui/Title.svelte';
+	import Highlight from '$lib/components/ui/Highlight.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import Banos from '$lib/components/icons/Banos.svelte';
 	import Carpinteria from '$lib/components/icons/Carpinteria.svelte';
@@ -356,8 +357,8 @@
 					</SvgViewport>
 				</h3>
 			</div>
-			<p class="equip-luxury-intro">{LUXURY_INTRO}</p>
 			<div class="equip-outline">
+				<Highlight>{LUXURY_INTRO}</Highlight>
 				<ul class="equip-list" role="list">
 					{#each lineaLuxury as item, index (index)}
 						{@const luxuryAction = createItemObserver({ column: 'luxury', index })}
@@ -549,20 +550,6 @@
 		border: 1px solid var(--color-border-default, var(--ref-neutral-400));
 		border-radius: 2px;
 		color: var(--color-contrast-low);
-	}
-
-	.equip-luxury-intro {
-		margin: 0 0 1.25rem;
-		font-size: 1rem;
-		line-height: 1.45;
-		color: var(--color-contrast-low);
-		text-align: right;
-	}
-
-	@media (max-width: 1080px) {
-		.equip-luxury-intro {
-			text-align: left;
-		}
 	}
 
 	.equip-adicionales-title {

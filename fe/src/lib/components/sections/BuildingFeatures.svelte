@@ -3,6 +3,7 @@
 	import { browser } from '$app/environment';
 
 	import Title from '$lib/components/ui/Title.svelte';
+	import Highlight from '$lib/components/ui/Highlight.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import Ascensores from '$lib/components/icons/Ascensores.svelte';
 	import AguaSanitarias from '$lib/components/icons/AguaSanitarias.svelte';
@@ -130,9 +131,10 @@
 				data-item-active={titleVisible || undefined}
 				style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
-				<p>Si buscas un estilo de vida urbano y vibrante
+			<Highlight>
+					Si buscas un estilo de vida urbano y vibrante
 					<span class="bf-brand">AIRES DE RÍO</span> es para vos.
-				</p>
+				</Highlight>
 			</div>
 		</header>
 		<!-- Main content: left bullets | right gas + extras -->
