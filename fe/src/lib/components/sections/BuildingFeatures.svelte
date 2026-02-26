@@ -4,6 +4,7 @@
 
 	import Title from '$lib/components/ui/Title.svelte';
 	import Highlight from '$lib/components/ui/Highlight.svelte';
+	import IconTextRow from '$lib/components/ui/IconTextRow.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import Ascensores from '$lib/components/icons/Ascensores.svelte';
 	import AguaSanitarias from '$lib/components/icons/AguaSanitarias.svelte';
@@ -148,26 +149,27 @@
 							data-item-active={titleVisible || undefined}
 							style={`--scroll-animate-delay: ${animationDelay(i + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 						>
-							<span class="bf-bullet-icon" aria-hidden="true">
-								{#if item.icon === 'ascensores'}
-									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-										<Ascensores />
-									</SvgViewport>
-								{:else if item.icon === 'electric'}
-									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-										<EnergiaElectrica />
-									</SvgViewport>
-								{:else if item.icon === 'location'}
-									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-										<Ubicacion />
-									</SvgViewport>
-								{:else}
-									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-										<Estacionamiento />
-									</SvgViewport>
-								{/if}
-							</span>
-							<span class="bf-bullet-text">{item.text}</span>
+							<IconTextRow text={item.text}>
+								{#snippet icon()}
+									{#if item.icon === 'ascensores'}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<Ascensores />
+										</SvgViewport>
+									{:else if item.icon === 'electric'}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<EnergiaElectrica />
+										</SvgViewport>
+									{:else if item.icon === 'location'}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<Ubicacion />
+										</SvgViewport>
+									{:else}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<Estacionamiento />
+										</SvgViewport>
+									{/if}
+								{/snippet}
+							</IconTextRow>
 						</li>
 					{/each}
 				</ul>
@@ -182,26 +184,27 @@
 							data-item-active={titleVisible || undefined}
 							style={`--scroll-animate-delay: ${animationDelay(i + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 						>
-							<span class="bf-extra-icon" aria-hidden="true">
-								{#if item.icon === 'gas'}
-									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-										<GasNatural />
-									</SvgViewport>
-								{:else if item.icon === 'water'}
-									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-										<AguaSanitarias />
-									</SvgViewport>
-								{:else if item.icon === 'walls'}
-									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-										<LadrillosCeramicos />
-									</SvgViewport>
-								{:else}
-									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-										<TerrazaPiscina />
-									</SvgViewport>
-								{/if}
-							</span>
-							<span class="bf-extra-text">{item.text}</span>
+							<IconTextRow text={item.text}>
+								{#snippet icon()}
+									{#if item.icon === 'gas'}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<GasNatural />
+										</SvgViewport>
+									{:else if item.icon === 'water'}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<AguaSanitarias />
+										</SvgViewport>
+									{:else if item.icon === 'walls'}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<LadrillosCeramicos />
+										</SvgViewport>
+									{:else}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<TerrazaPiscina />
+										</SvgViewport>
+									{/if}
+								{/snippet}
+							</IconTextRow>
 						</li>
 					{/each}
 				</ul>
@@ -327,27 +330,6 @@
 		margin: 0;
 	}
 
-	.bf-bullet {
-		display: grid;
-		grid-template-columns: 3rem 1fr;
-		gap: 1.25rem;
-		align-items: center;
-		padding: 0.85rem 0;
-	}
-
-	.bf-bullet-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: var(--color-contrast-low);
-	}
-
-	.bf-bullet-text {
-		font-size: 1.4rem;
-		line-height: 1.4;
-		color: var(--color-contrast-low);
-	}
-
 	.bf-right {
 		display: flex;
 		flex-direction: column;
@@ -392,26 +374,5 @@
 		list-style: none;
 		padding: 0;
 		margin: 0;
-	}
-
-	.bf-extra-item {
-		display: grid;
-		grid-template-columns: 3rem 1fr;
-		gap: 1.25rem;
-		align-items: center;
-		padding: 0.85rem 0;
-	}
-
-	.bf-extra-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: var(--color-contrast-low);
-	}
-
-	.bf-extra-text {
-		font-size: 1.4rem;
-		line-height: 1.4;
-		color: var(--color-contrast-low);
 	}
 </style>

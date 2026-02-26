@@ -7,6 +7,7 @@
 	// Local components
 	import Title from '$lib/components/ui/Title.svelte';
 	import Highlight from '$lib/components/ui/Highlight.svelte';
+	import IconTextRow from '$lib/components/ui/IconTextRow.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import Banos from '$lib/components/icons/Banos.svelte';
 	import Carpinteria from '$lib/components/icons/Carpinteria.svelte';
@@ -319,11 +320,14 @@
 							data-item-active={visibleHarmony.has(index) || undefined}
 							style={`--scroll-animate-delay: ${animationDelay(index + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 						>
-							<SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem" fit={true}>
-								{@const Component = item.component}
-								<Component />
-							</SvgViewport>
-							<span>{item.text}</span>
+							<IconTextRow text={item.text}>
+								{#snippet icon()}
+									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem" fit={true}>
+										{@const Component = item.component}
+										<Component />
+									</SvgViewport>
+								{/snippet}
+							</IconTextRow>
 						</li>
 					{/each}
 				</ul>
@@ -368,11 +372,14 @@
 							data-item-active={visibleLuxury.has(index) || undefined}
 							style={`--scroll-animate-delay: ${animationDelay(index + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 						>
-							<SvgViewport viewBox="0 0 48 48" width="4.5rem" height="4.5rem">
-								{@const Component = item.component}
-								<Component />
-							</SvgViewport>
-							<span>{item.text}</span>
+							<IconTextRow text={item.text}>
+								{#snippet icon()}
+									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem" fit={true}>
+										{@const Component = item.component}
+										<Component />
+									</SvgViewport>
+								{/snippet}
+							</IconTextRow>
 						</li>
 					{/each}
 				</ul>
@@ -598,30 +605,10 @@
 		margin: 0 0 1.25rem;
 	}
 
-	.equip-list li {
-		display: grid;
-		grid-template-columns: 3rem 1fr;
-		gap: 1.5rem;
-		align-items: center;
-		padding: 1rem 0;
-	}
-
 	@media (max-width: 640px) {
-		.equip-list li {
-			gap: 1rem;
-			padding: 0.75rem 0;
-		}
 		.equip-outline {
 			padding: 1.25rem 1rem 1rem;
 		}
-	}
-
-	.equip-list li span {
-		position: relative;
-		padding: 0.75rem 0;
-		font-size: 1.4rem;
-		line-height: 1.4;
-		color: var(--color-contrast-low);
 	}
 
 	.equip-ficha {
