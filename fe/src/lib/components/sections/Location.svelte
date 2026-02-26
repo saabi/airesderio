@@ -211,7 +211,7 @@
 					de cercanía a solo una cuadra.
 				</p>
 				<p class="location-nav-help" role="status">
-					Puedes tocar un marcador en el mapa para seleccionar un lugar y usar las flechas para cambiar de ubicación; el ícono de edificio vuelve a la vista general y el ícono de galería abre las fotos.
+					Puedes usar las flechas para cambiar de ubicación; el ícono de edificio vuelve a la vista general y el ícono de galería abre las fotos para el lugar seleccionado.
 				</p>
 			</div>
 			<div class='map-navigation'>

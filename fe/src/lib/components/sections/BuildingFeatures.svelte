@@ -130,22 +130,9 @@
 				data-item-active={titleVisible || undefined}
 				style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
-				<h2 id="building-features-heading" class="bf-heading">Si buscas</h2>
-				<p class="bf-subheading">un estilo de vida urbano y vibrante</p>
-				<p class="bf-brand-line">
+				<p>Si buscas un estilo de vida urbano y vibrante
 					<span class="bf-brand">AIRES DE RÍO</span> es para vos.
 				</p>
-				<p class="bf-brand-departamentos">DEPARTAMENTOS</p>
-			</div>
-			<div class="bf-cta-wrap">
-				<button
-					type="button"
-					class="bf-cta"
-					data-ficha-tecnica
-					aria-label="Ver más detalles técnicos del edificio"
-				>
-					Más detalles técnicos de tu edificio
-				</button>
 			</div>
 		</header>
 		<!-- Main content: left bullets | right gas + extras -->
@@ -216,6 +203,17 @@
 						</li>
 					{/each}
 				</ul>
+				<div class="bf-cta-wrap">
+					<button
+						type="button"
+						class="bf-cta"
+						data-ficha-tecnica
+						aria-label="Ver más detalles técnicos del edificio"
+					>
+						Más detalles técnicos de tu edificio
+					</button>
+				</div>
+	
 			</div>
 		</div>
 	</div>
