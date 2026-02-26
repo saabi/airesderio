@@ -2,6 +2,7 @@
 	// ===== IMPORTS =====
 	// SvelteKit
 	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
 	// Local components
 	import Title from '$lib/components/ui/Title.svelte';
@@ -116,6 +117,9 @@
 	let visibleHarmony = $state<Set<number>>(new Set());
 	let visibleLuxury = $state<Set<number>>(new Set());
 	let titleVisible = $state(false);
+	/** Mobile tab selection (used when viewport < 900px) */
+	let selectedSeries = $state<'harmony' | 'luxury'>('harmony');
+	let isMobile = $state(false);
 
 	// ===== FUNCTIONS =====
 	function createTitleObserver(element: HTMLElement) {
@@ -194,6 +198,19 @@
 			};
 		};
 	}
+
+	// ===== LIFECYCLE =====
+	const EQUIP_MOBILE_BREAKPOINT = 900;
+	onMount(() => {
+		if (!browser) return;
+		const mq = window.matchMedia(`(max-width: ${EQUIP_MOBILE_BREAKPOINT}px)`);
+		isMobile = mq.matches;
+		const handler = () => {
+			isMobile = mq.matches;
+		};
+		mq.addEventListener('change', handler);
+		return () => mq.removeEventListener('change', handler);
+	});
 </script>
 
 <section
@@ -212,9 +229,62 @@
 		<Title eyebrow="Cómo vienen" big="EQUIPADOS" />
 	</div>
 
-	<div class="equip-columns">
+	<!-- Mobile-only tab bar (visible under 900px) -->
+	<div class="equip-tabs" role="tablist" aria-label="Líneas de equipamiento">
+		<button
+			type="button"
+			class="equip-tab"
+			role="tab"
+			id="tab-harmony"
+			aria-selected={selectedSeries === 'harmony'}
+			aria-controls="panel-harmony"
+			onclick={() => (selectedSeries = 'harmony')}
+		>
+			<span class="equip-tab-inner">
+				<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem" fit={true}>
+					<SeriesHarmony />
+				</SvgViewport>
+				<span class="equip-tab-label">
+					<span class="equip-title-line">LINEA</span>
+					<SvgViewport viewBox="0 0 541 72" width="10rem" height="2rem" fit={true} align="left">
+						<HarmonyText />
+					</SvgViewport>
+				</span>
+			</span>
+		</button>
+		<button
+			type="button"
+			class="equip-tab"
+			role="tab"
+			id="tab-luxury"
+			aria-selected={selectedSeries === 'luxury'}
+			aria-controls="panel-luxury"
+			onclick={() => (selectedSeries = 'luxury')}
+		>
+			<span class="equip-tab-inner">
+				<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem" fit={true}>
+					<SeriesLuxury />
+				</SvgViewport>
+				<span class="equip-tab-label">
+					<span class="equip-title-line">LINEA</span>
+					<SvgViewport viewBox="0 0 316.31 54.77" width="8rem" height="2rem" fit={true} align="left">
+						<LuxuryText />
+					</SvgViewport>
+				</span>
+			</span>
+		</button>
+	</div>
+
+	<div class="equip-columns" data-selected={selectedSeries}>
 		<!-- LINEA HARMONY -->
-		<div class="equip-column">
+		<div
+			class="equip-column"
+			role="tabpanel"
+			id="panel-harmony"
+			aria-labelledby="tab-harmony"
+			data-series="harmony"
+			hidden={isMobile && selectedSeries !== 'harmony'}
+		>
 			<div class="equip-column-header">
 				<div class="equip-column-icon-wrap">
 					<!-- Lotus (stylized) -->
@@ -255,7 +325,14 @@
 		</div>
 
 		<!-- LINEA LUXURY -->
-		<div class="equip-column">
+		<div
+			class="equip-column"
+			role="tabpanel"
+			id="panel-luxury"
+			aria-labelledby="tab-luxury"
+			data-series="luxury"
+			hidden={isMobile && selectedSeries !== 'luxury'}
+		>
 			<div class="equip-column-header">
 				<div class="equip-column-icon-wrap">
 					<!-- Diamond -->
@@ -310,6 +387,82 @@
 
 	.equip-title-wrap {
 		margin-bottom: 2rem;
+	}
+
+	/* Mobile-only tab bar: hidden on desktop */
+	.equip-tabs {
+		display: none;
+	}
+
+	@media (max-width: 900px) {
+		.equip-tabs {
+			display: flex;
+			flex-direction: row;
+			gap: 0;
+			margin-bottom: 1.25rem;
+			border-bottom: 2px solid var(--color-border-default, var(--ref-neutral-400));
+		}
+
+		/* Show only the panel matching the selected tab */
+		.equip-columns[data-selected='harmony'] .equip-column[data-series='luxury'] {
+			display: none;
+		}
+		.equip-columns[data-selected='luxury'] .equip-column[data-series='harmony'] {
+			display: none;
+		}
+
+		.equip-tab {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0.75rem 0.5rem;
+			font: inherit;
+			color: var(--color-contrast-low);
+			background: transparent;
+			border: none;
+			border-bottom: 3px solid transparent;
+			margin-bottom: -2px;
+			cursor: pointer;
+			transition: border-color 0.2s, background 0.2s;
+		}
+
+		.equip-tab:hover {
+			background: var(--color-bg-muted, var(--ref-neutral-200));
+		}
+
+		.equip-tab[aria-selected='true'] {
+			border-bottom-color: var(--color-accent-primary, var(--ref-brand-primary));
+			background: var(--color-bg-muted, var(--ref-neutral-200));
+		}
+
+		.equip-tab:focus-visible {
+			outline: 2px solid var(--color-accent-primary, var(--ref-brand-primary));
+			outline-offset: 2px;
+		}
+
+		.equip-tab-inner {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.equip-tab-label {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			text-align: left;
+			font-size: 0.875rem;
+			font-weight: 600;
+			letter-spacing: 0.02em;
+			text-transform: uppercase;
+		}
+
+		/* On mobile, hide per-panel headers; tab bar is the header */
+		.equip-column-header {
+			display: none;
+		}
 	}
 
 	.equip-columns {
