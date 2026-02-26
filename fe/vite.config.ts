@@ -1,19 +1,8 @@
 import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { enhancedImages } from '@sveltejs/enhanced-img';
 
 export default defineConfig({
-	plugins: [
-		enhancedImages({
-			// Generate only JPG format (disable WebP/AVIF)
-			// Set default quality to 85 (range: 1-100, higher = better quality but larger files)
-			defaultDirectives: () => new URLSearchParams({
-				format: 'jpg',
-				quality: '80'
-			})
-		}), // Must come BEFORE sveltekit()
-		sveltekit()
-	],
+	plugins: [sveltekit()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}'],
 		environment: 'jsdom',

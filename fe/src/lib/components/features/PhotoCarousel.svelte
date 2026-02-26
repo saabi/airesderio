@@ -28,7 +28,7 @@
 	}: Props = $props();
 
 	// ===== DERIVED =====
-	// Map photo filenames to enhanced images for ImageCarousel
+	// Map photo filenames to photo URLs for ImageCarousel
 	const enhancedPhotos = $derived.by(() => {
 		if (!placeId || !photos || photos.length === 0) {
 			return [];

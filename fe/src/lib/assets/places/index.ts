@@ -1,54 +1,54 @@
 // ===== IMPORTS =====
 // Terminal
-import terminal1 from './terminal/exterior.png?enhanced';
-import terminal2 from './terminal/interior.png?enhanced';
+import terminal1 from './terminal/exterior.png';
+import terminal2 from './terminal/interior.png';
 
 // Forum
-import forum1 from './forum/1_Forum 02.jpg?enhanced';
-import forum2 from './forum/2_FORUM_03 de Tripadvisor.jpg?enhanced';
-import forum3 from './forum/3_Forum 01.jpg?enhanced';
-import forum4 from './forum/4_Forum 04.jpg?enhanced';
-import forum5 from './forum/5_Forum_Santiago_del_Estero_3.jpeg?enhanced';
-import forum6 from './forum/forum4.png?enhanced';
+import forum1 from './forum/1_Forum 02.jpg';
+import forum2 from './forum/2_FORUM_03 de Tripadvisor.jpg';
+import forum3 from './forum/3_Forum 01.jpg';
+import forum4 from './forum/4_Forum 04.jpg';
+import forum5 from './forum/5_Forum_Santiago_del_Estero_3.jpeg';
+import forum6 from './forum/forum4.png';
 
 // Casa de Gobierno
-import casagob1 from './casa-de-gobierno/1.jpg?enhanced';
-import casagob2 from './casa-de-gobierno/aerea.JPG?enhanced';
-import casagob3 from './casa-de-gobierno/casayparque2.JPG?enhanced';
-import casagob4 from './casa-de-gobierno/casayparque3.JPG?enhanced';
-import casagob5 from './casa-de-gobierno/casayplaza.png?enhanced';
-import casagob6 from './casa-de-gobierno/estatuasanmartin.jpg?enhanced';
-import casagob7 from './casa-de-gobierno/nocturna.jpg?enhanced';
+import casagob1 from './casa-de-gobierno/1.jpg';
+import casagob2 from './casa-de-gobierno/aerea.JPG';
+import casagob3 from './casa-de-gobierno/casayparque2.JPG';
+import casagob4 from './casa-de-gobierno/casayparque3.JPG';
+import casagob5 from './casa-de-gobierno/casayplaza.png';
+import casagob6 from './casa-de-gobierno/estatuasanmartin.jpg';
+import casagob7 from './casa-de-gobierno/nocturna.jpg';
 
 // Plaza Vea
-import plazavea1 from './plaza-vea/cinemas.png?enhanced';
-import plazavea2 from './plaza-vea/comidas.jpg?enhanced';
-import plazavea3 from './plaza-vea/exterior1.png?enhanced';
-import plazavea4 from './plaza-vea/exterior2.png?enhanced';
+import plazavea1 from './plaza-vea/cinemas.png';
+import plazavea2 from './plaza-vea/comidas.jpg';
+import plazavea3 from './plaza-vea/exterior1.png';
+import plazavea4 from './plaza-vea/exterior2.png';
 
 // Parque Aguirre
-import parqueaguirre1 from './parque-aguirre/aerea.png?enhanced';
-import parqueaguirre2 from './parque-aguirre/calecita.png?enhanced';
-import parqueaguirre3 from './parque-aguirre/deportes.png?enhanced';
-import parqueaguirre4 from './parque-aguirre/guardavidas.png?enhanced';
-import parqueaguirre5 from './parque-aguirre/juegos.png?enhanced';
-import parqueaguirre6 from './parque-aguirre/recital.png?enhanced';
-import parqueaguirre7 from './parque-aguirre/recital1.png?enhanced';
+import parqueaguirre1 from './parque-aguirre/aerea.png';
+import parqueaguirre2 from './parque-aguirre/calecita.png';
+import parqueaguirre3 from './parque-aguirre/deportes.png';
+import parqueaguirre4 from './parque-aguirre/guardavidas.png';
+import parqueaguirre5 from './parque-aguirre/juegos.png';
+import parqueaguirre6 from './parque-aguirre/recital.png';
+import parqueaguirre7 from './parque-aguirre/recital1.png';
 
 // Avenida Roca
-import avroca1 from './avenida-roca/1_Untitled-1.jpg?enhanced';
-import avroca2 from './avenida-roca/2__Calle Roca Confiterias_08.jpg?enhanced';
-import avroca3 from './avenida-roca/3__CALLE LA ROCA_ENCONTRARTE_02 de TURISMO.jpg?enhanced';
-import avroca4 from './avenida-roca/4_Calle Roca Confiterias_03.jpg?enhanced';
-import avroca5 from './avenida-roca/5_CALLE LA ROCA_ENCONTRARTE_03 de TURISMO.jpg?enhanced';
-import avroca6 from './avenida-roca/6_Calle Roca Confiterias_01.jpg?enhanced';
-import avroca7 from './avenida-roca/7_istockphoto-1091469178-612x612.jpg?enhanced';
-import avroca8 from './avenida-roca/8_CALLE LA ROCA_ENCONTRARTE_05 de TURISMO.jpg?enhanced';
+import avroca1 from './avenida-roca/1_Untitled-1.jpg';
+import avroca2 from './avenida-roca/2__Calle Roca Confiterias_08.jpg';
+import avroca3 from './avenida-roca/3__CALLE LA ROCA_ENCONTRARTE_02 de TURISMO.jpg';
+import avroca4 from './avenida-roca/4_Calle Roca Confiterias_03.jpg';
+import avroca5 from './avenida-roca/5_CALLE LA ROCA_ENCONTRARTE_03 de TURISMO.jpg';
+import avroca6 from './avenida-roca/6_Calle Roca Confiterias_01.jpg';
+import avroca7 from './avenida-roca/7_istockphoto-1091469178-612x612.jpg';
+import avroca8 from './avenida-roca/8_CALLE LA ROCA_ENCONTRARTE_05 de TURISMO.jpg';
 
 // ===== EXPORTS =====
-// Create mapping object: placeId -> filename -> enhanced image
+// Create mapping object: placeId -> filename -> image URL
 // Note: Using new place IDs that match the cleaned SVG (map-cleaner2.svg)
-export const PLACE_PHOTOS_MAP: Record<string, Record<string, any>> = {
+export const PLACE_PHOTOS_MAP: Record<string, Record<string, string>> = {
 	terminal: {
 		'exterior.png': terminal1,
 		'interior.png': terminal2

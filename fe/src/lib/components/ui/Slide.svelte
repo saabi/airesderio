@@ -15,7 +15,7 @@
 	interface Props {
 		type: SlideType;
 		// Image
-		src?: string | unknown; // string | Enhanced image type
+		src?: string | unknown; // URL string for image/video
 		alt?: string;
 		// Video
 		poster?: string;
@@ -53,7 +53,7 @@
 	}: Props = $props();
 
 	// ===== CONTEXT =====
-	// Optional: ImageCarousel provides imageSizes for enhanced images; fit is applied by parent CSS
+	// Optional: ImageCarousel provides imageSizes; fit is applied by parent CSS
 	const carouselContext = getContext<ImageCarouselContext | undefined>('imageCarousel');
 	const imageSizes = carouselContext?.imageSizes ?? '100vw';
 

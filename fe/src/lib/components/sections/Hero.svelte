@@ -12,10 +12,10 @@
 	}
 
 	// ===== STATIC CONSTANTS =====
-	// Import images with ?enhanced for optimization
-	import hero1 from '$lib/assets/carousel-hero/1_DB_EXTERIOR_01 (2).jpg?enhanced';
-	import hero2 from '$lib/assets/carousel-hero/2_DB_EXTERIOR_01 (8).jpg?enhanced';
-	import hero3 from '$lib/assets/carousel-hero/3_DB_EXTERIOR_01 (1).jpg?enhanced';
+	// Import images (Vite resolves to URL strings)
+	import hero1 from '$lib/assets/carousel-hero/1_DB_EXTERIOR_01 (2).jpg';
+	import hero2 from '$lib/assets/carousel-hero/2_DB_EXTERIOR_01 (8).jpg';
+	import hero3 from '$lib/assets/carousel-hero/3_DB_EXTERIOR_01 (1).jpg';
 
 	const heroImages = { hero1, hero2, hero3 };
 

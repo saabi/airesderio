@@ -16,13 +16,13 @@
 	} from '$lib/constants/animation';
 
 	// ===== STATIC CONSTANTS =====
-	// Import images with ?enhanced for optimization
-	import interior1 from '$lib/assets/carousel-interior/4_DB_Lobby.jpg?enhanced';
-	import interior2 from '$lib/assets/carousel-interior/5_DB_EXTERIOR_01 (6).jpg?enhanced';
-	import interior3 from '$lib/assets/carousel-interior/6_DB_EXTERIOR_01 (5).jpg?enhanced';
-	import interior4 from '$lib/assets/carousel-interior/7_DB_EXTERIOR_01 (7).jpg?enhanced';
-	import interior5 from '$lib/assets/carousel-interior/8_Antebaño y Lavadero.jpg?enhanced';
-	import interior6 from '$lib/assets/carousel-interior/9_DB_INT_BLANCO (5).png?enhanced';
+	// Import images (Vite resolves to URL strings)
+	import interior1 from '$lib/assets/carousel-interior/4_DB_Lobby.jpg';
+	import interior2 from '$lib/assets/carousel-interior/5_DB_EXTERIOR_01 (6).jpg';
+	import interior3 from '$lib/assets/carousel-interior/6_DB_EXTERIOR_01 (5).jpg';
+	import interior4 from '$lib/assets/carousel-interior/7_DB_EXTERIOR_01 (7).jpg';
+	import interior5 from '$lib/assets/carousel-interior/8_Antebaño y Lavadero.jpg';
+	import interior6 from '$lib/assets/carousel-interior/9_DB_INT_BLANCO (5).png';
 
 	const INTERIOR_IMAGES = [
 		{ src: interior1, alt: 'Lobby del edificio' },

@@ -140,7 +140,7 @@ src/lib/components/
 **Current State**: Images are manually optimized  
 **Proposed Solutions**:
 - Implement image optimization pipeline
-- Use `vite-imagetools` or `@sveltejs/enhanced-img`
+- Use `vite-imagetools` or similar (optional; `@sveltejs/enhanced-img` was removed from the project)
 - Generate responsive image sets
 - Lazy load images below the fold
 - Use modern formats (WebP, AVIF) with fallbacks
