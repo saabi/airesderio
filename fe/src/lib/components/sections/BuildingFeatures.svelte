@@ -5,8 +5,13 @@
 	import Title from '$lib/components/ui/Title.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import Ascensores from '$lib/components/icons/Ascensores.svelte';
+	import AguaSanitarias from '$lib/components/icons/AguaSanitarias.svelte';
 	import EnergiaElectrica from '$lib/components/icons/EnergiaElectrica.svelte';
+	import Estacionamiento from '$lib/components/icons/Estacionamiento.svelte';
 	import GasNatural from '$lib/components/icons/GasNatural.svelte';
+	import LadrillosCeramicos from '$lib/components/icons/LadrillosCeramicos.svelte';
+	import TerrazaPiscina from '$lib/components/icons/TerrazaPiscina.svelte';
+	import Ubicacion from '$lib/components/icons/Ubicacion.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import {
 		ANIMATION,
@@ -18,7 +23,6 @@
 	type LeftBulletItem = {
 		text: string;
 		icon: 'location' | 'parking' | 'ascensores' | 'electric';
-		highlight?: boolean;
 	};
 
 	const leftBullets: LeftBulletItem[] = [
@@ -40,18 +44,32 @@
 		},
 		{
 			icon: 'electric',
-			text: 'Suministro eléctrico confiable garantizado por transformador propio en el edificio.',
-			highlight: true
+			text: 'Suministro eléctrico confiable garantizado por transformador propio en el edificio.'
 		}
 	];
 
-	const gasText =
-		'Conexión de gas natural disponible específicamente para anafe, horno empotrado y calefactor.';
+	type ExtraInfraItem = {
+		text: string;
+		icon: 'gas' | 'water' | 'walls' | 'terrace';
+	};
 
-	const extraInfra = [
-		'Conexiones de agua y sanitarias con materiales marca AWADUCT y TIGRE.',
-		'Muros con ladrillos cerámicos huecos de reconocida marca del medio.',
-		'Terraza con piscina y deck húmedo.'
+	const extraInfra: ExtraInfraItem[] = [
+		{
+			icon: 'gas',
+			text: 'Conexión de gas natural.'
+		},
+		{
+			icon: 'water',
+			text: 'Conexiones de agua y sanitarias con materiales marca AWADUCT y TIGRE.'
+		},
+		{
+			icon: 'walls',
+			text: 'Muros con ladrillos cerámicos huecos de reconocida marca del medio.'
+		},
+		{
+			icon: 'terrace',
+			text: 'Terraza con piscina y deck húmedo.'
+		}
 	];
 </script>
 
@@ -138,7 +156,6 @@
 					{#each leftBullets as item, i (i)}
 						<li
 							class="scroll-animate bf-bullet"
-							class:bf-bullet-highlight={item.highlight}
 							data-item-active={titleVisible || undefined}
 							style={`--scroll-animate-delay: ${animationDelay(i + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 						>
@@ -152,15 +169,13 @@
 										<EnergiaElectrica />
 									</SvgViewport>
 								{:else if item.icon === 'location'}
-									<svg class="bf-inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-										<path d="M12 21c0-6-4.5-10.5-4.5-14.5a4.5 4.5 0 1 1 9 0C16.5 10.5 12 15 12 21z" stroke-linecap="round" stroke-linejoin="round"/>
-										<circle cx="12" cy="6.5" r="1.5" fill="currentColor"/>
-									</svg>
+									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+										<Ubicacion />
+									</SvgViewport>
 								{:else}
-									<svg class="bf-inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-										<rect x="3" y="6" width="18" height="12" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
-										<path d="M3 10h18M7 6V4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2M7 14v2M17 14v2" stroke-linecap="round" stroke-linejoin="round"/>
-									</svg>
+									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+										<Estacionamiento />
+									</SvgViewport>
 								{/if}
 							</span>
 							<span class="bf-bullet-text">{item.text}</span>
@@ -169,19 +184,36 @@
 				</ul>
 			</div>
 
-			<!-- Right column: gas block + extra infra only (no CTA here) -->
+			<!-- Right column: extra infra list -->
 			<div class="bf-right">
-				<div class="bf-gas-block">
-					<span class="bf-gas-icon">
-						<SvgViewport viewBox="0 0 48 48" width="3.5rem" height="3.5rem">
-							<GasNatural />
-						</SvgViewport>
-					</span>
-					<p class="bf-gas-text">{gasText}</p>
-				</div>
 				<ul class="bf-extra" role="list">
-					{#each extraInfra as text (text)}
-						<li class="bf-extra-item">{text}</li>
+					{#each extraInfra as item, i (item.text)}
+						<li
+							class="scroll-animate bf-extra-item"
+							data-item-active={titleVisible || undefined}
+							style={`--scroll-animate-delay: ${animationDelay(i + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
+						>
+							<span class="bf-extra-icon" aria-hidden="true">
+								{#if item.icon === 'gas'}
+									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+										<GasNatural />
+									</SvgViewport>
+								{:else if item.icon === 'water'}
+									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+										<AguaSanitarias />
+									</SvgViewport>
+								{:else if item.icon === 'walls'}
+									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+										<LadrillosCeramicos />
+									</SvgViewport>
+								{:else}
+									<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+										<TerrazaPiscina />
+									</SvgViewport>
+								{/if}
+							</span>
+							<span class="bf-extra-text">{item.text}</span>
+						</li>
 					{/each}
 				</ul>
 			</div>
@@ -237,7 +269,7 @@
 
 	.bf-columns {
 		display: grid;
-		grid-template-columns: 1.2fr 0.8fr;
+		grid-template-columns: 1fr 1fr;
 		gap: 2.5rem;
 		align-items: start;
 	}
@@ -303,14 +335,6 @@
 		padding: 0.85rem 0;
 	}
 
-	.bf-bullet-highlight {
-		background: color-mix(in oklch, var(--color-accent-primary, var(--ref-brand-primary)) 8%, transparent);
-		margin: 0 -0.5rem;
-		padding-left: 0.5rem;
-		padding-right: 0.5rem;
-		border-radius: 4px;
-	}
-
 	.bf-bullet-icon {
 		display: flex;
 		align-items: center;
@@ -318,14 +342,9 @@
 		color: var(--color-contrast-low);
 	}
 
-	.bf-inline-icon {
-		width: 2.5rem;
-		height: 2.5rem;
-	}
-
 	.bf-bullet-text {
-		font-size: 1.15rem;
-		line-height: 1.45;
+		font-size: 1.4rem;
+		line-height: 1.4;
 		color: var(--color-contrast-low);
 	}
 
@@ -369,45 +388,30 @@
 		outline-offset: 2px;
 	}
 
-	.bf-gas-block {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: 1rem;
-		align-items: start;
-		padding: 1.25rem;
-		background: color-mix(in oklch, var(--color-accent-primary, var(--ref-brand-primary)) 10%, var(--color-bg-canvas));
-		border-left: 4px solid var(--color-accent-primary, var(--ref-brand-primary));
-		border-radius: 0 4px 4px 0;
-	}
-
-	.bf-gas-icon {
-		flex-shrink: 0;
-		color: var(--color-contrast-low);
-	}
-
-	.bf-gas-text {
-		margin: 0;
-		font-size: 1.1rem;
-		line-height: 1.45;
-		color: var(--ref-ink, var(--color-contrast-low));
-	}
-
 	.bf-extra {
 		list-style: none;
 		padding: 0;
 		margin: 0;
-		border-top: 1px solid var(--color-border-subtle, var(--ref-neutral-300));
-		padding-top: 1rem;
 	}
 
 	.bf-extra-item {
-		font-size: 1rem;
-		line-height: 1.5;
-		color: var(--color-contrast-low);
-		padding: 0.5rem 0;
+		display: grid;
+		grid-template-columns: 3rem 1fr;
+		gap: 1.25rem;
+		align-items: center;
+		padding: 0.85rem 0;
 	}
 
-	.bf-extra-item:not(:last-child) {
-		border-bottom: 1px solid var(--color-border-subtle, var(--ref-neutral-200));
+	.bf-extra-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--color-contrast-low);
+	}
+
+	.bf-extra-text {
+		font-size: 1.4rem;
+		line-height: 1.4;
+		color: var(--color-contrast-low);
 	}
 </style>
