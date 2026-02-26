@@ -210,6 +210,9 @@
 					Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
 					de cercanía a solo una cuadra.
 				</p>
+				<p class="location-nav-help" role="status">
+					Puedes tocar un marcador en el mapa para seleccionar un lugar y usar las flechas para cambiar de ubicación; el ícono de edificio vuelve a la vista general y el ícono de galería abre las fotos.
+				</p>
 			</div>
 			<div class='map-navigation'>
 			<div class='navigation-row'>
@@ -346,6 +349,22 @@
 		font-size: 0.95em;
 	}
 
+	.location-nav-help {
+		/* Layout */
+		margin: 1rem 0 0.75rem;
+		padding: 0.75rem 1rem;
+
+		/* Box/Visual */
+		background: color-mix(in oklch, var(--color-accent-primary, var(--ref-brand-primary)) 12%, var(--ref-cream));
+		border-radius: 0.375rem;
+		border-left: 3px solid var(--color-accent-primary, var(--ref-brand-primary));
+
+		/* Typography */
+		font-size: 0.85em;
+		line-height: 1.35;
+		color: var(--color-text-on-light);
+	}
+
 	.map-navigation {
 		/* Layout */
 		flex-shrink: 0;
@@ -404,28 +423,44 @@
 		color: var(--color-text-primary);
 	}
 
+	:global([data-theme='dark']) .location-nav-help {
+		/* Box/Visual */
+		background: color-mix(in oklch, var(--color-accent-primary) 25%, oklch(0.2 0 0deg));
+		border-left-color: var(--color-accent-primary);
+
+		/* Typography */
+		color: var(--color-text-primary);
+	}
+
 	@media (max-width: 850px) {
 		.location-block {
-			/* Layout */
+			/* Layout: allow scroll so map stays visible when text is tall */
 			grid-template-columns: 1fr;
-			grid-template-areas: 
+			grid-template-areas:
 				"text"
 				"nav"
 				"map";
-			grid-template-rows: auto auto 1fr;
-			height: calc(100vh - var(--header-height));
+			grid-template-rows: auto auto minmax(40vh, 1fr);
+			min-height: calc(100vh - var(--header-height));
+			height: auto;
+			overflow: auto;
 		}
 
 		.location-text-column {
-			/* Span text and nav rows */
+			/* Span text and nav rows; height fits content (no scroll) */
 			grid-row: 1 / 3;
 			grid-column: 1;
+			max-height: none;
+			overflow: visible;
 		}
 
 		.location-text {
-			/* Layout */
+			/* Layout: fit content so helper is always visible */
 			max-width: 100%;
 			padding: 1.5rem;
+			flex: none;
+			min-height: 0;
+			overflow: visible;
 		}
 
 		.map-navigation {
@@ -443,11 +478,11 @@
 		}
 
 		.map-container {
-			/* Layout */
+			/* Layout: guaranteed space so map and nav are always visible */
 			grid-area: map;
 			grid-template-columns: 1fr;
 			height: 100%;
-			min-height: 0;
+			min-height: 40vh;
 		}
 
 		:global(.location-map) {
