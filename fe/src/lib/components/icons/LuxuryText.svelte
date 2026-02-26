@@ -1,4 +1,4 @@
-<g>
+<g role="img" aria-label="Luxury">
     <g>
         <path
             class="fil0"

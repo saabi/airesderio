@@ -1,4 +1,4 @@
-<g>
+<g role="img" aria-label="Harmony">
 	<g>
 		<path
 			class="fil0"
