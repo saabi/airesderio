@@ -241,12 +241,14 @@
 						</li>
 					{/each}
 				</ul>
-				<p class="equip-terminaciones-intro">
-					Además, se podrá elegir entre distintas opciones de terminaciones y niveles de equipamiento, para
-					adaptar la calidad de cada ambiente a tus necesidades, como se detalla a continuación.
-				</p>
+				<hr class="equip-rule" />
 			</div>
 		</div>
+
+		<p class="equip-terminaciones-intro">
+			Además, se podrá elegir entre distintas opciones de terminaciones y niveles de equipamiento, para
+			adaptar la calidad de cada ambiente a tus necesidades, como se detalla a continuación.
+		</p>
 
 		<!-- LINEA LUXURY -->
 		<div
@@ -331,8 +333,17 @@
 		background: var(--color-bg-canvas);
 	}
 
+	.equip-rule {
+		margin: 1.25rem auto 1rem;
+		width: 50%;
+		min-width: 8rem;
+		border: none;
+		border-top: 2px solid var(--color-accent-primary, var(--ref-brand-primary));
+		opacity: 0.4;
+	}
+
 	.equip-terminaciones-intro {
-		margin: 4rem 0;
+		margin: 1rem 0;
 		text-align: center;
 		font-size: 1.4rem;
 	}
