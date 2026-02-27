@@ -46,7 +46,6 @@
 	.title .big {
 		/* Layout */
 		display: block;
-		position: relative;
 		padding-bottom: 0.5rem;
 
 		/* Typography */
@@ -56,18 +55,6 @@
 		letter-spacing: var(--letter-spacing-wide);
 		color: var(--color-accent-primary);
 		text-transform: uppercase;
-	}
-
-	/* Subtle underline decoration */
-	.title .big::after {
-		content: '';
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		width: 3rem;
-		height: 2px;
-		background: var(--color-accent-primary);
-		opacity: 0.3;
 	}
 
 	/* Responsive typography */

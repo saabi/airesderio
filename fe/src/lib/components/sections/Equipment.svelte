@@ -304,11 +304,6 @@
 		display: block;
 	}
 
-	.equip-title-wrap :global(.title .big::after) {
-		left: 50%;
-		transform: translateX(-50%);
-	}
-
 	/* Mobile: hide title; show both columns stacked */
 	@media (max-width: 1080px) {
 		.equip-title-wrap {
