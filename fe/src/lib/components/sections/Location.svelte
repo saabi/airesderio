@@ -222,7 +222,7 @@
 					de cercanía a solo una cuadra.
 				</p>
 				<dl class="location-help" role="status">
-					<dt><span class="location-help-icon location-help-icon-arrows" aria-hidden="true"><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><ArrowLeft /></SvgViewport><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><ArrowRight /></SvgViewport></span></dt><dd>cambiar de ubicación</dd>
+					<dt><span class="location-help-icon location-help-icon-arrows" aria-hidden="true"><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><ArrowLeft /></SvgViewport><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><ArrowRight /></SvgViewport></span></dt><dd>explorar lugares cercanos</dd>
 					<dt><span class="location-help-icon" aria-hidden="true"><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><Building /></SvgViewport></span></dt><dd>vista general</dd>
 					<dt><span class="location-help-icon" aria-hidden="true"><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><Gallery /></SvgViewport></span></dt><dd>fotos del lugar</dd>
 				</dl>
