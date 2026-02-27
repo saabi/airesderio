@@ -4,12 +4,14 @@
 	import type { MapComponent } from '$lib/components/features/Map.svelte';
 	import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
 	import Title from '$lib/components/ui/Title.svelte';
-	import Highlight from '$lib/components/ui/Highlight.svelte';
 	import CircularButton from '$lib/components/ui/CircularButton.svelte';
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
 	import Building from '$lib/components/icons/Building.svelte';
 	import Gallery from '$lib/components/icons/Gallery.svelte';
+	import Ubicacion from '$lib/components/icons/Ubicacion.svelte';
+	import Pointer from '$lib/components/icons/Pointer.svelte';
+	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import type { MapData, PlaceData, PlaceMetadata } from '$lib/types';
 
 	// ===== TYPES =====
@@ -219,9 +221,11 @@
 					Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
 					de cercanía a solo una cuadra.
 				</p>
-				<Highlight>
-					Puedes usar las flechas para cambiar de ubicación; el ícono de edificio vuelve a la vista general y el ícono de galería abre las fotos para el lugar seleccionado. En la vista general podés hacer clic en una zona para seleccionarla; con un lugar seleccionado, hacer clic fuera de las zonas vuelve a la vista general.
-				</Highlight>
+				<dl class="location-help" role="status">
+					<dt><span class="location-help-icon location-help-icon-arrows" aria-hidden="true"><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><ArrowLeft /></SvgViewport><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><ArrowRight /></SvgViewport></span></dt><dd>cambiar de ubicación</dd>
+					<dt><span class="location-help-icon" aria-hidden="true"><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><Building /></SvgViewport></span></dt><dd>vista general</dd>
+					<dt><span class="location-help-icon" aria-hidden="true"><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><Gallery /></SvgViewport></span></dt><dd>fotos del lugar</dd>
+				</dl>
 			</div>
 			<div class='map-navigation'>
 			<div class='navigation-row'>
@@ -357,6 +361,49 @@
 	.location-text p {
 		/* Typography */
 		font-size: 0.95em;
+	}
+
+	.location-help {
+		margin: 1rem 0 0.75rem;
+		padding: 0.75rem 1rem;
+		background: color-mix(in oklch, var(--color-accent-primary, var(--ref-brand-primary)) 12%, var(--ref-cream));
+		border-radius: 0.375rem;
+		border-left: 3px solid var(--color-accent-primary, var(--ref-brand-primary));
+		font-size: 0.78em;
+		line-height: 1.35;
+		color: var(--color-text-on-light);
+	}
+
+	.location-help dt {
+		display: inline-flex;
+		align-items: center;
+		vertical-align: middle;
+	}
+
+	.location-help-icon {
+		display: inline-flex;
+		align-items: center;
+		margin-right: 0.35em;
+	}
+
+	.location-help-icon-arrows {
+		gap: 0.15em;
+	}
+
+	.location-help dd {
+		display: inline;
+		margin: 0 0 0.25rem 0;
+	}
+
+	.location-help dd::after {
+		content: '';
+		display: block;
+	}
+
+	:global([data-theme='dark']) .location-help {
+		background: color-mix(in oklch, var(--color-accent-primary) 25%, oklch(0.2 0 0deg));
+		border-left-color: var(--color-accent-primary);
+		color: var(--color-text-primary);
 	}
 
 	.map-navigation {
