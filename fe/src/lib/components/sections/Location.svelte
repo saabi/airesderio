@@ -57,6 +57,14 @@
 		return Object.fromEntries(mapData.places.map((p) => [p.id, p]));
 	});
 
+	// Gallery button is enabled only when current place has photos
+	let currentPlaceHasPhotos = $derived.by(() => {
+		const id = currentPlaceId;
+		if (!id) return false;
+		const place = placesById[id];
+		return !!place?.photos?.length;
+	});
+
 	// ===== INSTANCE CONSTANTS =====
 	const { action: locationObserver, visible: locationVisible } = createSectionObserver('location', {
 		threshold: ANIMATION.threshold.section
@@ -240,7 +248,7 @@
 						size="sm"
 						ariaLabel="Abrir galería de fotos"
 						onClick={openGalleryForCurrentPlace}
-						disabled={!hasPlaceSelected}
+						disabled={!hasPlaceSelected || !currentPlaceHasPhotos}
 					>
 						<Gallery />
 					</CircularButton>
