@@ -60,9 +60,9 @@
 	// Gallery button is enabled only when current place has photos
 	let currentPlaceHasPhotos = $derived.by(() => {
 		const id = currentPlaceId;
-		if (!id) return false;
-		const place = placesById[id];
-		return !!place?.photos?.length;
+		if (!id || !mapData) return false;
+		const place = mapData.places.find((p) => p.id === id);
+		return !!(place?.photos && place.photos.length > 0);
 	});
 
 	// ===== INSTANCE CONSTANTS =====
