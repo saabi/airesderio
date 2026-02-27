@@ -276,6 +276,7 @@
 				{mapData}
 				showDetailImage={false}
 				pinRadius={20}
+				onOpenGallery={openGalleryForCurrentPlace}
 			/>
 		{:else}
 			<div class='location-map-loading'>Cargando mapa...</div>

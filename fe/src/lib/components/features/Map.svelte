@@ -17,6 +17,8 @@
 		mapData: MapData;
 		/** Pin radius in pixels. If set, pins maintain constant screen size regardless of zoom. */
 		pinRadius?: number;
+		/** Called when the gallery icon next to the selected zone pin is clicked. If not provided, the icon is hidden. */
+		onOpenGallery?: () => void;
 	}
 
 	export interface MapComponent {
@@ -49,7 +51,8 @@
 		includeFocal = true,
 		showDetailImage = false,
 		mapData,
-		pinRadius
+		pinRadius,
+		onOpenGallery
 	}: Props = $props();
 
 	// ===== STATE: Image dimensions (loaded from actual images) =====
@@ -1013,6 +1016,30 @@
 							cy={denorm(selectedPlace.pin.cy)}
 							r={getPinRadius(selectedPlace.pin.r)}
 						/>
+
+						<!-- Gallery icon (when place has photos and parent provides handler) -->
+						{#if onOpenGallery && (selectedPlace.photos?.length ?? 0) > 0}
+							{@const r = getPinRadius(selectedPlace.pin.r)}
+							{@const iconScale = r * 2 / 20}
+							{@const iconOffset = r * 2.5}
+							{@const iconDx = arrowPosition === 'left' ? -iconOffset : iconOffset}
+							{@const iconX = denorm(selectedPlace.pin.cx) + iconDx}
+							{@const iconY = denorm(selectedPlace.pin.cy)}
+							<g
+								class='pin-gallery-icon'
+								role='button'
+								tabindex='0'
+								aria-label='Abrir galería de fotos'
+								transform="translate({iconX}, {iconY}) scale({iconScale}) translate(-10, -10)"
+								onclick={(e) => (e.stopPropagation(), onOpenGallery())}
+								onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), e.stopPropagation(), onOpenGallery())}
+							>
+								<rect x="3" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
+								<rect x="12" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
+								<rect x="3" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
+								<rect x="12" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
+							</g>
+						{/if}
 					</g>
 				</g>
 			{/if}
@@ -1179,6 +1206,13 @@
 	.group-active .place-path {
 		/* Box/Visual */
 		fill-opacity: 0.471002;
+	}
+
+	.pin-gallery-icon {
+		/* Box/Visual */
+		cursor: pointer;
+		stroke: #800000;
+		color: #800000;
 	}
 
 	.focal-group {
