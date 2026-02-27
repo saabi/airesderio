@@ -1,380 +1,445 @@
 {
-	"baseImage": {
-		"src": "/map/far.jpg"
-	},
-	"focal": {
-		"shapes": [
-			{
-				"type": "circle",
-				"cx": 0.439421570032211,
-				"cy": 0.8927197451286698,
-				"r": 0.009452026942164899
-			},
-			{
-				"type": "path",
-				"d": "m 0.437866,0.884269 0.004947,0.000092 0.000631,0.000618 -0.000004,0.011201 -0.000502,0.000968 0.000002,0.003203 -0.007151,-0.000035 -0.000052,-0.002657 0.000241,-0.011034 z"
-			}
-		],
-		"center": {
-			"cx": 0.439421570032211,
-			"cy": 0.8927197451286698
-		}
-	},
-	"defaultRadius": 0.3,
-	"places": [
-		{
-			"id": "terminal",
-			"name": "Terminal de Ómnibus de Santiago del Estero",
-			"description": "Terminal principal de ómnibus de la ciudad",
-			"details": "La Terminal de Ómnibus es tu conexión con el resto del país. Desde aquí puedes viajar a destinos nacionales e internacionales con múltiples empresas de transporte. Ideal para residentes que necesitan desplazarse por trabajo, turismo o visitas familiares. La terminal cuenta con servicios básicos, boleterías, y está estratégicamente ubicada cerca del centro, facilitando el acceso desde Aires de Río.",
-			"photos": [
-				"exterior.png",
-				"interior.png"
-			],
-			"shape": {
-				"type": "path",
-				"d": "m 0.327195,0.683702 0.007295,0.007697 0.008045,0.015987 0.002376,0.009242 0.001781,0.009956 0.000276,0.005473 -0.000399,0.005315 -0.003254,0.005353 -0.005356,0.004004 -0.006069,0.000989 -0.008011,-0.001034 c 0,0 -0.006581,-0.007102 -0.006859,-0.007737 -0.000277,-0.000635 -0.006658,-0.015233 -0.006658,-0.015233 l -0.002454,-0.012534 -0.000233,-0.014715 0.002067,-0.013603 z"
-			},
-			"pin": {
-				"cx": 0.3259594143440584,
-				"cy": 0.7184516974847027,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "forum",
-			"name": "Fórum Santiago del Estero",
-			"description": "Centro de convenciones y eventos culturales",
-			"details": "El Fórum Santiago del Estero es un espacio cultural y de convenciones que enriquece la vida de los residentes. Aquí se realizan eventos culturales, ferias, exposiciones, conciertos y conferencias. Es un lugar perfecto para disfrutar de la cultura local, asistir a eventos familiares, y participar en actividades comunitarias. Su ubicación céntrica lo convierte en un punto de encuentro cultural accesible desde Aires de Río.",
-			"photos": [
-				"1_Forum 02.jpg",
-				"2_FORUM_03 de Tripadvisor.jpg",
-				"3_Forum 01.jpg",
-				"4_Forum 04.jpg",
-				"5_Forum_Santiago_del_Estero_3.jpeg",
-				"forum4.png"
-			],
-			"shape": {
-				"type": "path",
-				"d": "m 0.299236,0.757391 h 0.013464 0.046091 v 0.123691 h -0.059555 v -0.0966 z"
-			},
-			"pin": {
-				"cx": 0.32128727521463807,
-				"cy": 0.8113719474219371,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "casa-de-gobierno",
-			"name": "Casa de Gobierno",
-			"description": "Sede del gobierno provincial, edificio histórico",
-			"details": "La Casa de Gobierno es un símbolo histórico y arquitectónico de Santiago del Estero. Además de ser la sede del poder ejecutivo provincial, es un punto de interés turístico y cultural. Los residentes pueden realizar trámites gubernamentales, participar en eventos oficiales, y disfrutar de la arquitectura histórica del edificio. Su proximidad a Aires de Río facilita el acceso a servicios públicos y trámites administrativos.",
-			"photos": [
-				"1.jpg",
-				"aerea.JPG",
-				"casayparque2.JPG",
-				"casayparque3.JPG",
-				"casayplaza.png",
-				"estatuasanmartin.jpg",
-				"nocturna.jpg"
-			],
-			"shape": {
-				"type": "rect",
-				"x": 0.11700913242009132,
-				"y": 0.8189005207162343,
-				"width": 0.03401331179002532,
-				"height": 0.05560906291054095
-			},
-			"pin": {
-				"cx": 0.1335049135370473,
-				"cy": 0.8498499773422491,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "plaza-vea",
-			"name": "Plaza Vea",
-			"description": "Centro comercial y supermercado",
-			"details": "Plaza Vea es el único centro comercial dentro del área urbana, ofreciendo supermercado y shopping de cercanía a solo una cuadra de Aires de Río. Aquí puedes realizar todas tus compras diarias, desde alimentos frescos hasta productos para el hogar. El centro comercial también incluye cines, restaurantes, y tiendas diversas, convirtiéndolo en un destino completo para compras, entretenimiento y gastronomía. Su ubicación estratégica lo hace perfecto para resolver todas tus necesidades sin alejarte del edificio.",
-			"photos": [
-				"cinemas.png",
-				"comidas.jpg",
-				"exterior1.png",
-				"exterior2.png"
-			],
-			"shape": {
-				"type": "path",
-				"d": "m 0.592845,0.802387 0.011479,0.063621 c 0,0 -0.008805,-0.000083 -0.006981,0.000632 0.001824,0.000715 -0.000481,0.014119 -0.000481,0.014119 l -0.091063,-0.000113 -0.000209,-0.080037 z"
-			},
-			"pin": {
-				"cx": 0.5503777392030089,
-				"cy": 0.8419906522269724,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "parque-aguirre",
-			"name": "Parque Aguirre",
-			"description": "Principal parque de la ciudad, ideal para recreación",
-			"details": "El Parque Aguirre es el principal espacio verde y de recreación de Santiago del Estero. Es el lugar perfecto para actividades al aire libre, caminatas, ejercicios, y tiempo en familia. El parque cuenta con áreas de juegos infantiles, espacios para deportes, zonas de descanso, y acceso al río Dulce. Ideal para escapar del ritmo urbano, disfrutar de la naturaleza, hacer ejercicio, y organizar picnics familiares. Un oasis natural que complementa perfectamente la vida urbana en Aires de Río.",
-			"photos": [
-				"aerea.png",
-				"calecita.png",
-				"deportes.png",
-				"guardavidas.png",
-				"juegos.png",
-				"recital.png",
-				"recital1.png"
-			],
-			"shape": {
-				"type": "path",
-				"d": "m 0.719357,0.886254 -0.006082,0.009794 -0.005321,0.011601 0.000006,0.024244 -0.103663,0.029385 -0.004269,0.076391 -0.005062,0.006919 -0.09954,-0.009382 0.001951,0.084835 -0.005376,0.005657 -0.066051,0.000612 -0.003432,0.010267 0.000424,0.425467 0.120608,0.000598 0.27846,0.112017 0.177989,0.008629 v -0.093236 l -0.080818,-0.255741 -0.012914,-0.062108 -0.017876,-0.048426 -0.011649,-0.038724 -0.002531,-0.012198 -0.012934,-0.014543 -0.004757,-0.01331 -0.006856,-0.040501 0.003801,-0.007132 -0.000952,-0.004278 -0.009224,-0.006748 -0.008276,-0.018633 0.001708,-0.010079 -0.003519,-0.005323 -0.002663,-0.002281 -0.001047,-0.005514 0.003517,-0.002758 0.001615,-0.003233 -0.002663,-0.002281 -0.008938,-0.00304 -0.004946,-0.0077 0.002375,-0.009508 0.002661,-0.0058 -0.004469,-0.00152 -0.011314,-0.001613 -0.005996,-0.020589 0.001711,-0.001997 -0.006086,-0.006369 -0.001716,-0.018207 0.005242,-0.014549 -0.004826,-0.02373 0.011985,-0.043476 0.000661,-0.031806 -0.023185,-0.025148 -0.007721,-0.02667 0.00348,-0.025643 0.002719,-0.055485 -0.016109,-0.023612 -0.010788,-0.046406 -0.002296,-0.03435 -0.011221,-0.063378 -0.082701,-0.003034 0.047357,0.153648 0.011939,0.027244 0.0229,0.080936 0.007983,0.014249 0.020207,0.024067 0.00352,0.00912 z"
-			},
-			"pin": {
-				"cx": 0.6036512179333932,
-				"cy": 1.2332114651369417,
-				"r": 0.004581150882586598
-			},
-			"labels": [
-				{
-					"type": "text",
-					"x": 0.6752805382496186,
-					"y": 0.7752369658175803,
-					"content": "BALNEARIO 1",
-					"xmlSpace": "preserve"
-				},
-				{
-					"type": "text",
-					"x": 0.7036228757900065,
-					"y": 1.0178760659206587,
-					"content": "BALNEARIO 2",
-					"xmlSpace": "preserve"
-				},
-				{
-					"type": "text",
-					"x": 0.8074235274478925,
-					"y": 1.509699881768952,
-					"content": "BALNEARIO 3",
-					"xmlSpace": "preserve"
-				}
-			]
-		},
-		{
-			"id": "avenida-roca",
-			"name": "Avenida Roca",
-			"description": "Avenida principal con comercios y confiterías",
-			"details": "La Avenida Roca es una de las arterias comerciales más importantes de la ciudad, llena de vida y actividad. A lo largo de la avenida encontrarás una gran variedad de comercios, confiterías tradicionales, restaurantes, cafeterías, y servicios. Es el lugar perfecto para pasear, hacer compras locales, disfrutar de la gastronomía santiagueña, y experimentar la vida comercial de la ciudad. La avenida combina tradición y modernidad, ofreciendo desde establecimientos históricos hasta opciones contemporáneas, todo a poca distancia de Aires de Río.",
-			"photos": [
-				"1_Untitled-1.jpg",
-				"2__Calle Roca Confiterias_08.jpg",
-				"3__CALLE LA ROCA_ENCONTRARTE_02 de TURISMO.jpg",
-				"4_Calle Roca Confiterias_03.jpg",
-				"5_CALLE LA ROCA_ENCONTRARTE_03 de TURISMO.jpg",
-				"6_Calle Roca Confiterias_01.jpg",
-				"7_istockphoto-1091469178-612x612.jpg",
-				"8_CALLE LA ROCA_ENCONTRARTE_05 de TURISMO.jpg"
-			],
-			"shape": {
-				"type": "path",
-				"d": "m 0.358562,0.88653 -0.001851,0.625178 0.007136,0.001271 0.000675,-0.626285 z"
-			},
-			"pin": {
-				"cx": 0.3612923896577452,
-				"cy": 1.1797017227786313,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "avenida-irigoyen",
-			"name": "Avenida Irigoyen",
-			"description": "Avenida importante de la ciudad",
-			"details": "La Avenida Irigoyen es una arteria importante de Santiago del Estero, conectando diferentes zonas de la ciudad y facilitando el acceso a diversos servicios y comercios.",
-			"photos": [],
-			"shape": {
-				"type": "path",
-				"d": "m 0.194611,0.941741 0.005264,0.000135 -0.00108,0.197196 -0.005399,-0.000135 z"
-			},
-			"pin": {
-				"cx": 0.1965066463814754,
-				"cy": 1.0415918904796415,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "mercado",
-			"name": "Mercado",
-			"description": "Mercado local",
-			"details": "El mercado local ofrece productos frescos y artesanales, siendo un punto de encuentro para la comunidad y un lugar ideal para hacer compras diarias.",
-			"photos": [],
-			"shape": {
-				"type": "path",
-				"d": "m 0.148448,1.04633 0.046701,0.003239 -0.00135,0.030774 -0.047781,-0.003779 z"
-			},
-			"pin": {
-				"cx": 0.1696143423412509,
-				"cy": 1.062807315836795,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "calle-absalonrojas",
-			"name": "Calle Absalón Rojas",
-			"description": "Calle importante de la ciudad",
-			"details": "La Calle Absalón Rojas es una vía importante que conecta diferentes áreas de la ciudad, facilitando el acceso a diversos servicios y puntos de interés.",
-			"photos": [],
-			"shape": {
-				"type": "path",
-				"d": "m 0.145958,1.0069 h 0.005399 l -0.009718,0.127415 -0.005399,-0.00054 z"
-			},
-			"pin": {
-				"cx": 0.14332883586792516,
-				"cy": 1.08303048573101,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "teatro-25-de-mayo",
-			"name": "Teatro 25 de Mayo",
-			"description": "Teatro histórico de la ciudad",
-			"details": "El Teatro 25 de Mayo es un espacio cultural histórico donde se presentan obras de teatro, conciertos y eventos culturales, enriqueciendo la vida cultural de los residentes.",
-			"photos": [],
-			"shape": {
-				"type": "path",
-				"d": "m 0.279463,1.202809 h 0.031314 l 0.00189,0.007559 -0.01094,0.002846 0.000898,0.003467 0.000193,0.003911 -0.000671,0.002869 -0.001378,0.001993 0.000234,0.004984 -0.002115,0.002115 -0.011711,0.000157 0.000101,-0.006463 -0.000868,-0.002127 -0.000423,-0.002461 0.000484,-0.004156 -0.006873,0.000287 z"
-			},
-			"pin": {
-				"cx": 0.29465959636110867,
-				"cy": 1.218042421229314,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "plaza-libertad",
-			"name": "Plaza Libertad",
-			"description": "Plaza pública en el centro de la ciudad",
-			"details": "La Plaza Libertad es un espacio público central donde los residentes pueden disfrutar de actividades al aire libre, eventos comunitarios y momentos de esparcimiento.",
-			"photos": [],
-			"shape": {
-				"type": "path",
-				"d": "m 0.139069,1.139803 0.056156,0.003054 -0.001527,0.050264 -0.056919,-0.003818 z"
-			},
-			"pin": {
-				"cx": 0.16389579393359052,
-				"cy": 1.1707524396829874,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "avenida-rivadavia",
-			"name": "Avenida Rivadavia",
-			"description": "Avenida principal donde se encuentra Aires de Río",
-			"details": "La Avenida Rivadavia es la arteria principal donde se encuentra Aires de Río, conectando el edificio con el centro de la ciudad y todos sus servicios.",
-			"photos": [],
-			"shape": {
-				"type": "path",
-				"d": "m 0.053711,0.887172 0.550262,0.000339 -0.000035,-0.007398 -0.550026,0.0011 z"
-			},
-			"pin": {
-				"cx": 0.27572465864414447,
-				"cy": 0.8844723280971774,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "avenida-alvear",
-			"name": "Avenida Alvear",
-			"description": "Avenida importante de la ciudad",
-			"details": "La Avenida Alvear es una vía importante que facilita el acceso a diferentes zonas de la ciudad y sus servicios.",
-			"photos": [],
-			"shape": {
-				"type": "path",
-				"d": "m 0.048378,0.819535 0.248107,-0.000555 0.000729,-0.015033 -0.250925,-0.00106 z"
-			},
-			"pin": {
-				"cx": 0.18339096897383103,
-				"cy": 0.8113465348439881,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "tribunales",
-			"name": "Tribunales",
-			"description": "Palacio de Justicia",
-			"details": "Los Tribunales son la sede del poder judicial provincial, donde los residentes pueden realizar trámites legales y acceder a servicios de justicia.",
-			"photos": [],
-			"shape": {
-				"type": "rect",
-				"x": 0.16552511415525115,
-				"y": 0.7594941110772996,
-				"width": 0.02981392211471997,
-				"height": 0.041102083533689285
-			},
-			"pin": {
-				"cx": 0.18020102384644693,
-				"cy": 0.7808995267349595,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "estadio-unico",
-			"name": "Estadio Único",
-			"description": "Estadio principal de la ciudad",
-			"details": "El Estadio Único es el principal recinto deportivo de Santiago del Estero, donde se realizan eventos deportivos, conciertos y grandes espectáculos.",
-			"photos": [],
-			"shape": {
-				"type": "circle",
-				"cx": 0.4940654942968609,
-				"cy": 0.07171074842889648,
-				"r": 0.048306527809579454
-			},
-			"pin": {
-				"cx": 0.4987306438887129,
-				"cy": 0.06978265428897225,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "registro-civil",
-			"name": "Registro Civil",
-			"description": "Oficina del Registro Civil",
-			"details": "El Registro Civil es donde los residentes pueden realizar trámites relacionados con documentos de identidad, nacimientos, matrimonios y otros actos civiles.",
-			"photos": [],
-			"shape": {
-				"type": "path",
-				"d": "m 0.02284,0.823055 h 0.020233 l 0.005726,0.04123 h -0.019852 z"
-			},
-			"pin": {
-				"cx": 0.035574886660549525,
-				"cy": 0.84227677024169,
-				"r": 0.004581150882586598
-			}
-		},
-		{
-			"id": "ccb",
-			"name": "CCB",
-			"description": "Centro Cultural o Comercial",
-			"details": "El CCB es un espacio que ofrece servicios culturales o comerciales para la comunidad.",
-			"photos": [],
-			"shape": {
-				"type": "path",
-				"d": "m 0.167496,1.083953 0.008244,0.000764 -0.001241,0.018804 0.009093,0.001131 -0.000508,0.009386 0.010986,0.000765 -0.000165,0.007471 -0.011195,-0.000961 -0.000863,0.015578 -0.018934,-0.000764 z"
-			},
-			"pin": {
-				"cx": 0.17494180239205273,
-				"cy": 1.1172990450781597,
-				"r": 0.004581150882586598
-			}
-		}
-	],
-	"coordinateSystem": {
-		"normalized": true,
-		"originalViewBox": {
-			"x": 0,
-			"y": 0,
-			"width": 2585,
-			"height": 4385
-		},
-		"scaleFactor": 2585,
-		"note": "Coordinates are normalized. Smallest dimension = 1. Multiply by image's smaller pixel dimension to denormalize."
-	}
+  "baseImage": {
+    "src": "/map/far.jpg"
+  },
+  "focal": {
+    "shapes": [
+      {
+        "type": "circle",
+        "cx": 0.439421570032211,
+        "cy": 0.8927197451286698,
+        "r": 0.009452026942164899
+      },
+      {
+        "type": "path",
+        "d": "m 0.437866,0.884269 0.004947,0.000092 0.000631,0.000618 -0.000004,0.011201 -0.000502,0.000968 0.000002,0.003203 -0.007151,-0.000035 -0.000052,-0.002657 0.000241,-0.011034 z"
+      }
+    ],
+    "center": {
+      "cx": 0.439421570032211,
+      "cy": 0.8927197451286698
+    }
+  },
+  "defaultRadius": 0.3,
+  "places": [
+    {
+      "id": "terminal",
+      "name": "Terminal de Ómnibus de Santiago del Estero",
+      "description": "Terminal principal de ómnibus de la ciudad",
+      "details": "La Terminal de Ómnibus es tu conexión con el resto del país. Desde aquí puedes viajar a destinos nacionales e internacionales con múltiples empresas de transporte. Ideal para residentes que necesitan desplazarse por trabajo, turismo o visitas familiares. La terminal cuenta con servicios básicos, boleterías, y está estratégicamente ubicada cerca del centro, facilitando el acceso desde Aires de Río.",
+      "photos": [
+        "exterior.png",
+        "interior.png",
+        "frente-00.jpg",
+        "interior-00.jpg",
+        "interior-01.jpg"
+      ],
+      "shape": {
+        "type": "path",
+        "d": "m 0.327195,0.683702 0.007295,0.007697 0.008045,0.015987 0.002376,0.009242 0.001781,0.009956 0.000276,0.005473 -0.000399,0.005315 -0.003254,0.005353 -0.005356,0.004004 -0.006069,0.000989 -0.008011,-0.001034 c 0,0 -0.006581,-0.007102 -0.006859,-0.007737 -0.000277,-0.000635 -0.006658,-0.015233 -0.006658,-0.015233 l -0.002454,-0.012534 -0.000233,-0.014715 0.002067,-0.013603 z"
+      },
+      "pin": {
+        "cx": 0.3259594143440584,
+        "cy": 0.7184516974847027,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "forum",
+      "name": "Fórum Santiago del Estero",
+      "description": "Centro de convenciones y eventos culturales",
+      "details": "El Fórum Santiago del Estero es un espacio cultural y de convenciones que enriquece la vida de los residentes. Aquí se realizan eventos culturales, ferias, exposiciones, conciertos y conferencias. Es un lugar perfecto para disfrutar de la cultura local, asistir a eventos familiares, y participar en actividades comunitarias. Su ubicación céntrica lo convierte en un punto de encuentro cultural accesible desde Aires de Río.",
+      "photos": [
+        "1_Forum 02.jpg",
+        "forum4.png",
+        "00-marcar-el-edificio.jpg",
+        "01-marcar-el-edificio.jpg",
+        "1-forum-06.jpg",
+        "2-forum-03-de-tripadvisor.jpg",
+        "2-mvimg-20251016-114935.jpg",
+        "4-mvimg-20251016-115141.jpg",
+        "5-forum-santiago-del-estero-3.jpeg",
+        "6-mvimg-20251016-115159.jpg",
+        "7-edificio-poder-legislativo-00.jpg",
+        "9-mvimg-20251016-114925.jpg",
+        "forum-00.jpg"
+      ],
+      "shape": {
+        "type": "path",
+        "d": "m 0.299236,0.757391 h 0.013464 0.046091 v 0.123691 h -0.059555 v -0.0966 z"
+      },
+      "pin": {
+        "cx": 0.32128727521463807,
+        "cy": 0.8113719474219371,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "casa-de-gobierno",
+      "name": "Casa de Gobierno",
+      "description": "Sede del gobierno provincial, edificio histórico",
+      "details": "La Casa de Gobierno es un símbolo histórico y arquitectónico de Santiago del Estero. Además de ser la sede del poder ejecutivo provincial, es un punto de interés turístico y cultural. Los residentes pueden realizar trámites gubernamentales, participar en eventos oficiales, y disfrutar de la arquitectura histórica del edificio. Su proximidad a Aires de Río facilita el acceso a servicios públicos y trámites administrativos.",
+      "photos": [
+        "aerea.JPG",
+        "casayparque3.JPG",
+        "casayplaza.png",
+        "nocturna.jpg",
+        "casa-de-gobierno-03-de-tripadvisor.jpg"
+      ],
+      "shape": {
+        "type": "rect",
+        "x": 0.11700913242009132,
+        "y": 0.8189005207162343,
+        "width": 0.03401331179002532,
+        "height": 0.05560906291054095
+      },
+      "pin": {
+        "cx": 0.1335049135370473,
+        "cy": 0.8498499773422491,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "plaza-vea",
+      "name": "Plaza Vea",
+      "description": "Centro comercial y supermercado",
+      "details": "Plaza Vea es el único centro comercial dentro del área urbana, ofreciendo supermercado y shopping de cercanía a solo una cuadra de Aires de Río. Aquí puedes realizar todas tus compras diarias, desde alimentos frescos hasta productos para el hogar. El centro comercial también incluye cines, restaurantes, y tiendas diversas, convirtiéndolo en un destino completo para compras, entretenimiento y gastronomía. Su ubicación estratégica lo hace perfecto para resolver todas tus necesidades sin alejarte del edificio.",
+      "photos": [
+        "cinemas.png",
+        "comidas.jpg",
+        "exterior1.png",
+        "exterior2.png"
+      ],
+      "shape": {
+        "type": "path",
+        "d": "m 0.592845,0.802387 0.011479,0.063621 c 0,0 -0.008805,-0.000083 -0.006981,0.000632 0.001824,0.000715 -0.000481,0.014119 -0.000481,0.014119 l -0.091063,-0.000113 -0.000209,-0.080037 z"
+      },
+      "pin": {
+        "cx": 0.5503777392030089,
+        "cy": 0.8419906522269724,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "parque-aguirre",
+      "name": "Parque Aguirre",
+      "description": "Principal parque de la ciudad, ideal para recreación",
+      "details": "El Parque Aguirre es el principal espacio verde y de recreación de Santiago del Estero. Es el lugar perfecto para actividades al aire libre, caminatas, ejercicios, y tiempo en familia. El parque cuenta con áreas de juegos infantiles, espacios para deportes, zonas de descanso, y acceso al río Dulce. Ideal para escapar del ritmo urbano, disfrutar de la naturaleza, hacer ejercicio, y organizar picnics familiares. Un oasis natural que complementa perfectamente la vida urbana en Aires de Río.",
+      "photos": [
+        "aerea.png",
+        "calecita.png",
+        "deportes.png",
+        "guardavidas.png",
+        "juegos.png",
+        "recital.png",
+        "recital1.png",
+        "1-esta-va-parque-juegos-cpn-chicos-03.jpg",
+        "268685947285205858548696.jpg",
+        "2-esta-va-parque-de-noche-con-gente-01.jpg",
+        "4-parque-de-noche-con-gente-02.jpg",
+        "parqueaguirre02.jpg"
+      ],
+      "shape": {
+        "type": "path",
+        "d": "m 0.719357,0.886254 -0.006082,0.009794 -0.005321,0.011601 0.000006,0.024244 -0.103663,0.029385 -0.004269,0.076391 -0.005062,0.006919 -0.09954,-0.009382 0.001951,0.084835 -0.005376,0.005657 -0.066051,0.000612 -0.003432,0.010267 0.000424,0.425467 0.120608,0.000598 0.27846,0.112017 0.177989,0.008629 v -0.093236 l -0.080818,-0.255741 -0.012914,-0.062108 -0.017876,-0.048426 -0.011649,-0.038724 -0.002531,-0.012198 -0.012934,-0.014543 -0.004757,-0.01331 -0.006856,-0.040501 0.003801,-0.007132 -0.000952,-0.004278 -0.009224,-0.006748 -0.008276,-0.018633 0.001708,-0.010079 -0.003519,-0.005323 -0.002663,-0.002281 -0.001047,-0.005514 0.003517,-0.002758 0.001615,-0.003233 -0.002663,-0.002281 -0.008938,-0.00304 -0.004946,-0.0077 0.002375,-0.009508 0.002661,-0.0058 -0.004469,-0.00152 -0.011314,-0.001613 -0.005996,-0.020589 0.001711,-0.001997 -0.006086,-0.006369 -0.001716,-0.018207 0.005242,-0.014549 -0.004826,-0.02373 0.011985,-0.043476 0.000661,-0.031806 -0.023185,-0.025148 -0.007721,-0.02667 0.00348,-0.025643 0.002719,-0.055485 -0.016109,-0.023612 -0.010788,-0.046406 -0.002296,-0.03435 -0.011221,-0.063378 -0.082701,-0.003034 0.047357,0.153648 0.011939,0.027244 0.0229,0.080936 0.007983,0.014249 0.020207,0.024067 0.00352,0.00912 z"
+      },
+      "pin": {
+        "cx": 0.6036512179333932,
+        "cy": 1.2332114651369417,
+        "r": 0.004581150882586598
+      },
+      "labels": [
+        {
+          "type": "text",
+          "x": 0.6752805382496186,
+          "y": 0.7752369658175803,
+          "content": "BALNEARIO 1",
+          "xmlSpace": "preserve"
+        },
+        {
+          "type": "text",
+          "x": 0.7036228757900065,
+          "y": 1.0178760659206587,
+          "content": "BALNEARIO 2",
+          "xmlSpace": "preserve"
+        },
+        {
+          "type": "text",
+          "x": 0.8074235274478925,
+          "y": 1.509699881768952,
+          "content": "BALNEARIO 3",
+          "xmlSpace": "preserve"
+        }
+      ]
+    },
+    {
+      "id": "avenida-roca",
+      "name": "Avenida Roca",
+      "description": "Avenida principal con comercios y confiterías",
+      "details": "La Avenida Roca es una de las arterias comerciales más importantes de la ciudad, llena de vida y actividad. A lo largo de la avenida encontrarás una gran variedad de comercios, confiterías tradicionales, restaurantes, cafeterías, y servicios. Es el lugar perfecto para pasear, hacer compras locales, disfrutar de la gastronomía santiagueña, y experimentar la vida comercial de la ciudad. La avenida combina tradición y modernidad, ofreciendo desde establecimientos históricos hasta opciones contemporáneas, todo a poca distancia de Aires de Río.",
+      "photos": [
+        "1-untitled-1.jpg",
+        "2-calle-roca-confiterias-08.jpg",
+        "3-calle-la-roca-encontrarte-02-de-turismo.jpg",
+        "4-calle-roca-confiterias-03.jpg",
+        "5-calle-la-roca-encontrarte-03-de-turismo.jpg",
+        "6-calle-roca-confiterias-01.jpg",
+        "7-istockphoto-1091469178-612x612.jpg",
+        "8-calle-la-roca-encontrarte-05-de-turismo.jpg"
+      ],
+      "shape": {
+        "type": "path",
+        "d": "m 0.358562,0.88653 -0.001851,0.625178 0.007136,0.001271 0.000675,-0.626285 z"
+      },
+      "pin": {
+        "cx": 0.3612923896577452,
+        "cy": 1.1797017227786313,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "avenida-irigoyen",
+      "name": "Avenida Irigoyen",
+      "description": "Avenida importante de la ciudad",
+      "details": "La Avenida Irigoyen es una arteria importante de Santiago del Estero, conectando diferentes zonas de la ciudad y facilitando el acceso a diversos servicios y comercios.",
+      "photos": [],
+      "shape": {
+        "type": "path",
+        "d": "m 0.194611,0.941741 0.005264,0.000135 -0.00108,0.197196 -0.005399,-0.000135 z"
+      },
+      "pin": {
+        "cx": 0.1965066463814754,
+        "cy": 1.0415918904796415,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "mercado",
+      "name": "Mercado",
+      "description": "Mercado local",
+      "details": "El mercado local ofrece productos frescos y artesanales, siendo un punto de encuentro para la comunidad y un lugar ideal para hacer compras diarias.",
+      "photos": [
+        "img-20260102-200257.jpg",
+        "img-20260102-202204.jpg",
+        "inaugurado-en-1036.jpg",
+        "interior-00.jpg",
+        "interior-01.jpg",
+        "interior-02.jpg",
+        "interior-03.jpg",
+        "interior-04.jpg"
+      ],
+      "shape": {
+        "type": "path",
+        "d": "m 0.148448,1.04633 0.046701,0.003239 -0.00135,0.030774 -0.047781,-0.003779 z"
+      },
+      "pin": {
+        "cx": 0.1696143423412509,
+        "cy": 1.062807315836795,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "calle-absalonrojas",
+      "name": "Calle Absalón Rojas",
+      "description": "Calle importante de la ciudad",
+      "details": "La Calle Absalón Rojas es una vía importante que conecta diferentes áreas de la ciudad, facilitando el acceso a diversos servicios y puntos de interés.",
+      "photos": [],
+      "shape": {
+        "type": "path",
+        "d": "m 0.145958,1.0069 h 0.005399 l -0.009718,0.127415 -0.005399,-0.00054 z"
+      },
+      "pin": {
+        "cx": 0.14332883586792516,
+        "cy": 1.08303048573101,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "teatro-25-de-mayo",
+      "name": "Teatro 25 de Mayo",
+      "description": "Teatro histórico de la ciudad",
+      "details": "El Teatro 25 de Mayo es un espacio cultural histórico donde se presentan obras de teatro, conciertos y eventos culturales, enriqueciendo la vida cultural de los residentes.",
+      "photos": [
+        "exterior-00.jpg",
+        "exterior-01.jpg",
+        "interior-01.jpg",
+        "interior-02.jpg",
+        "interior-03.jpg",
+        "interior-04.jpg"
+      ],
+      "shape": {
+        "type": "path",
+        "d": "m 0.279463,1.202809 h 0.031314 l 0.00189,0.007559 -0.01094,0.002846 0.000898,0.003467 0.000193,0.003911 -0.000671,0.002869 -0.001378,0.001993 0.000234,0.004984 -0.002115,0.002115 -0.011711,0.000157 0.000101,-0.006463 -0.000868,-0.002127 -0.000423,-0.002461 0.000484,-0.004156 -0.006873,0.000287 z"
+      },
+      "pin": {
+        "cx": 0.29465959636110867,
+        "cy": 1.218042421229314,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "plaza-libertad",
+      "name": "Plaza Libertad",
+      "description": "Plaza pública en el centro de la ciudad",
+      "details": "La Plaza Libertad es un espacio público central donde los residentes pueden disfrutar de actividades al aire libre, eventos comunitarios y momentos de esparcimiento.",
+      "photos": [
+        "img-20260102-200824.jpg",
+        "img-20260102-201052.jpg",
+        "img-20260102-201148.jpg",
+        "img-20260102-201243.jpg",
+        "img-20260102-201450.jpg",
+        "plaza-05a.jpeg",
+        "plaza-08.jpg",
+        "plaza-libertad-santiago-del-estero.jpg"
+      ],
+      "shape": {
+        "type": "path",
+        "d": "m 0.139069,1.139803 0.056156,0.003054 -0.001527,0.050264 -0.056919,-0.003818 z"
+      },
+      "pin": {
+        "cx": 0.16389579393359052,
+        "cy": 1.1707524396829874,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "avenida-rivadavia",
+      "name": "Avenida Rivadavia",
+      "description": "Avenida principal donde se encuentra Aires de Río",
+      "details": "La Avenida Rivadavia es la arteria principal donde se encuentra Aires de Río, conectando el edificio con el centro de la ciudad y todos sus servicios.",
+      "photos": [
+        "5-mvimg-20251015-124749.jpg",
+        "avenida-rivadavia-0-img-20240820-wa0016.jpg",
+        "avenida-rivadavia-1-mvimg-20251015-124721.jpg",
+        "avenida-rivadavia-2-con-perimetro-04.jpg",
+        "avenida-rivadavia-3-con-perimetro-03.jpg",
+        "avenida-rivadavia-4-mvimg-20251015-122805.jpg",
+        "avenida-rivadavia-5-mvimg-20251015-124455.jpg",
+        "avenida-rivadavia-6-con-perimetro-01.jpg"
+      ],
+      "shape": {
+        "type": "path",
+        "d": "m 0.053711,0.887172 0.550262,0.000339 -0.000035,-0.007398 -0.550026,0.0011 z"
+      },
+      "pin": {
+        "cx": 0.27572465864414447,
+        "cy": 0.8844723280971774,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "avenida-alvear",
+      "name": "Avenida Alvear",
+      "description": "Avenida importante de la ciudad",
+      "details": "La Avenida Alvear es una vía importante que facilita el acceso a diferentes zonas de la ciudad y sus servicios.",
+      "photos": [],
+      "shape": {
+        "type": "path",
+        "d": "m 0.048378,0.819535 0.248107,-0.000555 0.000729,-0.015033 -0.250925,-0.00106 z"
+      },
+      "pin": {
+        "cx": 0.18339096897383103,
+        "cy": 0.8113465348439881,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "tribunales",
+      "name": "Tribunales",
+      "description": "Palacio de Justicia",
+      "details": "Los Tribunales son la sede del poder judicial provincial, donde los residentes pueden realizar trámites legales y acceder a servicios de justicia.",
+      "photos": [
+        "tribunales-00.jpg",
+        "tribunales-01.jpg",
+        "tribunales-03.jpg"
+      ],
+      "shape": {
+        "type": "rect",
+        "x": 0.16552511415525115,
+        "y": 0.7594941110772996,
+        "width": 0.02981392211471997,
+        "height": 0.041102083533689285
+      },
+      "pin": {
+        "cx": 0.18020102384644693,
+        "cy": 0.7808995267349595,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "estadio-unico",
+      "name": "Estadio Único",
+      "description": "Estadio principal de la ciudad",
+      "details": "El Estadio Único es el principal recinto deportivo de Santiago del Estero, donde se realizan eventos deportivos, conciertos y grandes espectáculos.",
+      "photos": [
+        "1-estadio-tren-desarrollo-01-de-turismo.jpg",
+        "estadio-01-de-wikipedia.jpeg"
+      ],
+      "shape": {
+        "type": "circle",
+        "cx": 0.4940654942968609,
+        "cy": 0.07171074842889648,
+        "r": 0.048306527809579454
+      },
+      "pin": {
+        "cx": 0.4987306438887129,
+        "cy": 0.06978265428897225,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "registro-civil",
+      "name": "Registro Civil",
+      "description": "Oficina del Registro Civil",
+      "details": "El Registro Civil es donde los residentes pueden realizar trámites relacionados con documentos de identidad, nacimientos, matrimonios y otros actos civiles.",
+      "photos": [],
+      "shape": {
+        "type": "path",
+        "d": "m 0.02284,0.823055 h 0.020233 l 0.005726,0.04123 h -0.019852 z"
+      },
+      "pin": {
+        "cx": 0.035574886660549525,
+        "cy": 0.84227677024169,
+        "r": 0.004581150882586598
+      }
+    },
+    {
+      "id": "ccb",
+      "name": "CCB",
+      "description": "Centro Cultural o Comercial",
+      "details": "El CCB es un espacio que ofrece servicios culturales o comerciales para la comunidad.",
+      "photos": [
+        "img-20260102-201445.jpg",
+        "img-20260102-201535.jpg",
+        "img-20260102-201701.jpg",
+        "img-20260102-201733.jpg",
+        "img-20260102-201749.jpg",
+        "img-20260102-201811.jpg",
+        "img-20260102-202413.jpg",
+        "img-20260102-202500.jpg",
+        "img-20260102-202509.jpg",
+        "interior-03.jpg"
+      ],
+      "shape": {
+        "type": "path",
+        "d": "m 0.167496,1.083953 0.008244,0.000764 -0.001241,0.018804 0.009093,0.001131 -0.000508,0.009386 0.010986,0.000765 -0.000165,0.007471 -0.011195,-0.000961 -0.000863,0.015578 -0.018934,-0.000764 z"
+      },
+      "pin": {
+        "cx": 0.17494180239205273,
+        "cy": 1.1172990450781597,
+        "r": 0.004581150882586598
+      }
+    }
+  ],
+  "coordinateSystem": {
+    "normalized": true,
+    "originalViewBox": {
+      "x": 0,
+      "y": 0,
+      "width": 2585,
+      "height": 4385
+    },
+    "scaleFactor": 2585,
+    "note": "Coordinates are normalized. Smallest dimension = 1. Multiply by image's smaller pixel dimension to denormalize."
+  }
 }

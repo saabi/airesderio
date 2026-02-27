@@ -4,7 +4,6 @@
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { theme } from '$lib/stores/theme';
-	import exteriorImage from '$lib/assets/exteriores/exterior_03.png';
 </script>
 
 <script lang='ts'>
@@ -41,7 +40,7 @@
 		<div class='right-column'>
 			<div class='exterior-image scroll-animate' style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}>
 				<img
-					src={exteriorImage}
+					src="/exteriores/exterior_03.png"
 					alt='Aires de Río exterior'
 					sizes='(min-width: 850px) 50vw, 100vw'
 					loading='lazy'

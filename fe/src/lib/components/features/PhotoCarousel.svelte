@@ -1,7 +1,6 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
 	import type { PlaceMetadata } from '$lib/types';
-	import { PLACE_PHOTOS_MAP } from '$lib/assets/places/index';
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 	import Slide from '$lib/components/ui/Slide.svelte';
 
@@ -28,35 +27,15 @@
 	}: Props = $props();
 
 	// ===== DERIVED =====
-	// Map photo filenames to photo URLs for ImageCarousel
+	// Map photo filenames to static URLs for ImageCarousel
 	const enhancedPhotos = $derived.by(() => {
 		if (!placeId || !photos || photos.length === 0) {
 			return [];
 		}
-
-		const placeMap = PLACE_PHOTOS_MAP[placeId];
-
-		if (!placeMap) {
-			if (import.meta.env.DEV) {
-				console.warn(`Place "${placeId}" not found in PLACE_PHOTOS_MAP. Using fallback paths.`);
-			}
-			// Fallback to original paths if place not in map
-			return photos.map((filename) => ({
-				src: `/places/${placeId}/${filename}`,
-				alt: `${place.nombre} - ${filename}`
-			}));
-		}
-
-		return photos.map((filename) => {
-			const enhanced = placeMap[filename];
-			if (!enhanced && import.meta.env.DEV) {
-				console.warn(`Photo "${filename}" not found in PLACE_PHOTOS_MAP for place "${placeId}". Using fallback.`);
-			}
-			return {
-				src: enhanced || `/places/${placeId}/${filename}`,
-				alt: `${place.nombre} - ${filename}`
-			};
-		});
+		return photos.map((filename) => ({
+			src: `/places/${placeId}/${encodeURIComponent(filename)}`,
+			alt: `${place.nombre} - ${filename}`
+		}));
 	});
 
 	// ===== FUNCTIONS =====

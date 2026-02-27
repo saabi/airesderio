@@ -12,18 +12,11 @@
 	}
 
 	// ===== STATIC CONSTANTS =====
-	// Import images (Vite resolves to URL strings)
-	import hero1 from '$lib/assets/carousel-hero/1_DB_EXTERIOR_01 (2).jpg';
-	import hero2 from '$lib/assets/carousel-hero/2_DB_EXTERIOR_01 (8).jpg';
-	import hero3 from '$lib/assets/carousel-hero/3_DB_EXTERIOR_01 (1).jpg';
-
-	const heroImages = { hero1, hero2, hero3 };
-
 	const CAROUSEL_ITEMS = [
 		{ type: 'video' as const, src: '/carrousel-hero/promo.mov' },
-		{ type: 'image' as const, src: heroImages.hero1, alt: 'Fachada del edificio Aires de Río - Imagen 1' },
-		{ type: 'image' as const, src: heroImages.hero2, alt: 'Fachada del edificio Aires de Río - Imagen 2' },
-		{ type: 'image' as const, src: heroImages.hero3, alt: 'Fachada del edificio Aires de Río - Imagen 3' }
+		{ type: 'image' as const, src: '/carrousel-hero/1-db-exterior-01-2.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 1' },
+		{ type: 'image' as const, src: '/carrousel-hero/2-db-exterior-01-8.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 2' },
+		{ type: 'image' as const, src: '/carrousel-hero/3-db-exterior-01-1.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 3' }
 	];
 </script>
 

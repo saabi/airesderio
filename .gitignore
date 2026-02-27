@@ -24,3 +24,5 @@ vite.config.ts.timestamp-*
 
 # Unreferenced images (moved out of tree but kept on disk)
 /unreferenced/
+
+/docs/proposals/lugares-nuevos/

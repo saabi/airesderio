@@ -16,21 +16,13 @@
 	} from '$lib/constants/animation';
 
 	// ===== STATIC CONSTANTS =====
-	// Import images (Vite resolves to URL strings)
-	import interior1 from '$lib/assets/carousel-interior/4_DB_Lobby.jpg';
-	import interior2 from '$lib/assets/carousel-interior/5_DB_EXTERIOR_01 (6).jpg';
-	import interior3 from '$lib/assets/carousel-interior/6_DB_EXTERIOR_01 (5).jpg';
-	import interior4 from '$lib/assets/carousel-interior/7_DB_EXTERIOR_01 (7).jpg';
-	import interior5 from '$lib/assets/carousel-interior/8_Antebaño y Lavadero.jpg';
-	import interior6 from '$lib/assets/carousel-interior/9_DB_INT_BLANCO (5).png';
-
 	const INTERIOR_IMAGES = [
-		{ src: interior1, alt: 'Lobby del edificio' },
-		{ src: interior2, alt: 'Exterior del edificio' },
-		{ src: interior3, alt: 'Exterior del edificio' },
-		{ src: interior4, alt: 'Exterior del edificio' },
-		{ src: interior5, alt: 'Antebaño y lavadero' },
-		{ src: interior6, alt: 'Interior del departamento' }
+		{ src: '/carrousel-interior/4-db-lobby.jpg', alt: 'Lobby del edificio' },
+		{ src: '/carrousel-interior/5-db-exterior-01-6.jpg', alt: 'Exterior del edificio' },
+		{ src: '/carrousel-interior/6-db-exterior-01-5.jpg', alt: 'Exterior del edificio' },
+		{ src: '/carrousel-interior/7-db-exterior-01-7.jpg', alt: 'Exterior del edificio' },
+		{ src: '/carrousel-interior/8-anteba-o-y-lavadero.jpg', alt: 'Antebaño y lavadero' },
+		{ src: '/carrousel-interior/9-db-int-blanco-5.png', alt: 'Interior del departamento' }
 	];
 </script>
 
