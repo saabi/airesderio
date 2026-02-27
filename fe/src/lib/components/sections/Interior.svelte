@@ -84,22 +84,8 @@
 				class='scroll-animate'
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-duration: ${animationDuration()};`}
 			>
-				Ambientes amplios de un dormitorio que combinan diseño contemporáneo y funcionalidad, con
-				materiales ecológicos, formas curvas y detalles en madera y vegetación.
-			</p>
-			<p
-				class='scroll-animate'
-				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(2)}; --scroll-animate-duration: ${animationDuration()};`}
-			>
-				Grandes aberturas optimizan luz y ventilación natural, mejorando el confort y la eficiencia
-				energética.
-			</p>
-			<p
-				class='scroll-animate'
-				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-duration: ${animationDuration()};`}
-			>
-				La iluminación LED, ya integrada, resalta los ambientes con luz indirecta, creando espacios
-				armónicos y relajantes.
+				Ambientes amplios que combinan diseño contemporáneo y funcionalidad, con
+				materiales ecológicos, formas curvas y detalles en madera.
 			</p>
 		</div>
 	</div>
@@ -114,17 +100,20 @@
 
 	.interior-container {
 		/* Layout */
-		display: grid;
-		grid-template-columns: 1fr 0.5fr;
-		gap: 2rem;
-		align-items: start;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 2.5rem;
 		margin-top: 1.5rem;
 	}
 
 	.interior-text {
 		/* Layout */
+		max-width: 56rem;
+		text-align: center;
 		display: flex;
 		flex-direction: column;
+		gap: 0.75rem;
 	}
 	.interior-text p {
 		/* Layout */
@@ -135,6 +124,8 @@
 		/* Layout */
 		aspect-ratio: 16 / 9;
 		width: 100%;
+		max-width: 56rem;
+		margin: 0 auto;
 
 		/* Box/Visual */
 		border-radius: 0.5rem;
@@ -146,15 +137,10 @@
 	}
 
 	@media (max-width: 850px) {
-		.interior-container {
-			/* Layout */
-			grid-template-columns: 1fr;
-			gap: 1.5rem;
-		}
-
 		.interior-gallery {
 			/* Layout */
 			aspect-ratio: 4 / 3;
 		}
 	}
+
 </style>

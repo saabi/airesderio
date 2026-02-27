@@ -3,7 +3,6 @@
 	import { browser } from '$app/environment';
 
 	import Title from '$lib/components/ui/Title.svelte';
-	import Highlight from '$lib/components/ui/Highlight.svelte';
 	import IconTextRow from '$lib/components/ui/IconTextRow.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import Ascensores from '$lib/components/icons/Ascensores.svelte';
@@ -124,20 +123,6 @@
 		<Title eyebrow="Características del" big="EDIFICIO" />
 	</div>
 	<div class="bf-frame">
-		<!-- Top row: intro left, CTA right (per mockup) -->
-		<header class="bf-header">
-			<div
-				use:createTitleObserver
-				class="scroll-animate bf-intro"
-				data-item-active={titleVisible || undefined}
-				style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
-			>
-			<Highlight>
-					Si buscas un estilo de vida urbano y vibrante
-					<span class="bf-brand">AIRES DE RÍO</span> es para vos.
-				</Highlight>
-			</div>
-		</header>
 		<!-- Main content: left bullets | right gas + extras -->
 		<div class="bf-columns">
 			<!-- Left column -->
@@ -231,7 +216,6 @@
 	}
 
 	.bf-frame {
-		border: 2px solid var(--color-accent-primary, var(--ref-brand-primary));
 		border-radius: 6px;
 		padding: 2rem;
 		background: var(--color-bg-canvas);
@@ -346,7 +330,7 @@
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
 		text-align: center;
-		color: var(--color-bg-canvas);
+		color: var(--color-text-on-accent);
 		background: var(--color-accent-primary, var(--ref-brand-primary));
 		border: none;
 		border-radius: 4px;
@@ -374,5 +358,13 @@
 		list-style: none;
 		padding: 0;
 		margin: 0;
+	}
+
+	:global([data-theme='dark']) .bf-frame {
+		background: var(--color-bg-elevated);
+	}
+
+	:global([data-theme='dark']) .bf-cta {
+		color: var(--color-text-on-accent);
 	}
 </style>

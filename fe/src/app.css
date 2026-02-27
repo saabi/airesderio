@@ -215,6 +215,7 @@
 	--color-text-primary: oklch(0.95 0 0deg); /* Off-white for body text */
 	--color-text-secondary: oklch(0.85 0 0deg); /* Light grey */
 	--color-text-secondary-dark: oklch(0.9 0 0deg);
+	--color-contrast-low: oklch(0.9 0 0deg);
 	--color-text-tertiary: oklch(0.75 0 0deg);
 	--color-text-inverse: oklch(0.25 0 0deg);
 	--color-text-link: color-mix(in oklch, var(--ref-blue-500) 85%, var(--ref-white) 15%);

@@ -125,9 +125,9 @@
 	<Location jsonUrl="/lugares/lugares-direcciones.json" showPlaceMarkers={true} />
 	<div class="container">
 		<Interior />
+		<Equipment />
 		<FloorPlans />
 		<BuildingFeatures />
-		<Equipment />
 	</div>
 	<ContactSection />
 </main>
