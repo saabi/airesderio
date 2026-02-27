@@ -27,6 +27,7 @@ const FOLDER_TO_PLACE_ID = {
 	'ESTADIO UNICO': 'estadio-unico',
 	'MERCADO ARMONIA': 'mercado',
 	'PARQUE AGUIRRE': 'parque-aguirre',
+	'PEATONALES': 'peatonales',
 	'PLAZA LIBERTAD': 'plaza-libertad',
 	'TEATRO 25 DE MAYO': 'teatro-25-de-mayo',
 	'TERMINAL DE OMNIBUS NESTOR KIRCHNER': 'terminal',

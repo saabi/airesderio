@@ -62,7 +62,9 @@
         "6-mvimg-20251016-115159.jpg",
         "7-edificio-poder-legislativo-00.jpg",
         "9-mvimg-20251016-114925.jpg",
-        "forum-00.jpg"
+        "forum-00.jpg",
+        "3-mvimg-20251016-115038.jpg",
+        "4-forum-04.jpg"
       ],
       "shape": {
         "type": "path",
@@ -137,7 +139,8 @@
         "268685947285205858548696.jpg",
         "2-esta-va-parque-de-noche-con-gente-01.jpg",
         "4-parque-de-noche-con-gente-02.jpg",
-        "parqueaguirre02.jpg"
+        "parqueaguirre02.jpg",
+        "3-parque-deporte-con-gente-01.jpg"
       ],
       "shape": {
         "type": "path",
@@ -198,18 +201,30 @@
       }
     },
     {
-      "id": "avenida-irigoyen",
-      "name": "Avenida Irigoyen",
-      "description": "Avenida importante de la ciudad",
-      "details": "La Avenida Irigoyen es una arteria importante de Santiago del Estero, conectando diferentes zonas de la ciudad y facilitando el acceso a diversos servicios y comercios.",
-      "photos": [],
-      "shape": {
-        "type": "path",
-        "d": "m 0.194611,0.941741 0.005264,0.000135 -0.00108,0.197196 -0.005399,-0.000135 z"
-      },
+      "id": "peatonales",
+      "name": "Peatonales",
+      "description": "Calles peatonales en el centro",
+      "details": "La Avenida Irigoyen y la Calle Absalón Rojas son calles peatonales que conectan distintas zonas del centro y facilitan el acceso a comercios y servicios a pie.",
+      "photos": [
+        "1-img-20260102-203947.jpg",
+        "2-img-20260102-200139.jpg",
+        "3-img-20260102-202801.jpg",
+        "4-img-20260102-201308.jpg",
+        "5-img-20260102-202539-1.jpg"
+      ],
+      "shape": [
+        {
+          "type": "path",
+          "d": "m 0.194611,0.941741 0.005264,0.000135 -0.00108,0.197196 -0.005399,-0.000135 z"
+        },
+        {
+          "type": "path",
+          "d": "m 0.145958,1.0069 h 0.005399 l -0.009718,0.127415 -0.005399,-0.00054 z"
+        }
+      ],
       "pin": {
-        "cx": 0.1965066463814754,
-        "cy": 1.0415918904796415,
+        "cx": 0.1699177411247003,
+        "cy": 1.0395,
         "r": 0.004581150882586598
       }
     },
@@ -235,22 +250,6 @@
       "pin": {
         "cx": 0.1696143423412509,
         "cy": 1.062807315836795,
-        "r": 0.004581150882586598
-      }
-    },
-    {
-      "id": "calle-absalonrojas",
-      "name": "Calle Absalón Rojas",
-      "description": "Calle importante de la ciudad",
-      "details": "La Calle Absalón Rojas es una vía importante que conecta diferentes áreas de la ciudad, facilitando el acceso a diversos servicios y puntos de interés.",
-      "photos": [],
-      "shape": {
-        "type": "path",
-        "d": "m 0.145958,1.0069 h 0.005399 l -0.009718,0.127415 -0.005399,-0.00054 z"
-      },
-      "pin": {
-        "cx": 0.14332883586792516,
-        "cy": 1.08303048573101,
         "r": 0.004581150882586598
       }
     },

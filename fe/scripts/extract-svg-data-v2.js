@@ -47,7 +47,7 @@ const placesGroupContent = mapContent.substring(placesStart, placesEnd);
 // Now extract individual place groups
 const placeIds = [
   'terminal', 'forum', 'casa-de-gobierno', 'plaza-vea', 'parque-aguirre',
-  'avenida-roca', 'avenida-irigoyen', 'mercado', 'calle-absalonrojas',
+  'avenida-roca', 'peatonales', 'mercado',
   'teatro-25-de-mayo', 'plaza-libertad', 'avenida-rivadavia',
   'avenida-alvear', 'tribunales', 'estadio-unico', 'registro-civil', 'ccb'
 ];
