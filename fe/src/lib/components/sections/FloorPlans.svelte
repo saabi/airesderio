@@ -110,28 +110,6 @@
 			// zoomToViewport: true,
 			zones: [
 				{
-					id: 'zona-ejemplo',
-					label: 'Zona de ejemplo (hover y clic para zoom)',
-					shape: {
-						type: 'rect',
-						x: 0.19,
-						y: 0.03,
-						width: 0.85,
-						height: 0.5
-					}
-				},
-				{
-					id: 'zona-ejemplo2',
-					label: 'Zona de ejemplo (hover y clic para zoom)',
-					shape: {
-						type: 'rect',
-						x: 0.19,
-						y: 0.5,
-						width: 0.85,
-						height: 0.5
-					}
-				},
-				{
 					id: 'depto-fl',
 					label: 'Depto Delantero Izquierdo',
 					shape: {
