@@ -1009,36 +1009,38 @@
 							{/each}
 						{/if}
 
-						<!-- Pin circle -->
-						<circle
-							class='pin-circle'
-							cx={denorm(selectedPlace.pin.cx)}
-							cy={denorm(selectedPlace.pin.cy)}
-							r={getPinRadius(selectedPlace.pin.r)}
-						/>
-
-						<!-- Gallery icon (when place has photos and parent provides handler) -->
+						<!-- Pin circle (fused with gallery icon when place has photos) -->
 						{#if onOpenGallery && (selectedPlace.photos?.length ?? 0) > 0}
 							{@const r = getPinRadius(selectedPlace.pin.r)}
 							{@const iconScale = r * 2 / 20}
-							{@const iconOffset = r * 2.5}
-							{@const iconDx = arrowPosition === 'left' ? -iconOffset : iconOffset}
-							{@const iconX = denorm(selectedPlace.pin.cx) + iconDx}
-							{@const iconY = denorm(selectedPlace.pin.cy)}
+							{@const pinCx = denorm(selectedPlace.pin.cx)}
+							{@const pinCy = denorm(selectedPlace.pin.cy)}
 							<g
-								class='pin-gallery-icon'
+								class='pin-gallery-button'
 								role='button'
 								tabindex='0'
 								aria-label='Abrir galería de fotos'
-								transform="translate({iconX}, {iconY}) scale({iconScale}) translate(-10, -10)"
 								onclick={(e) => (e.stopPropagation(), onOpenGallery())}
 								onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), e.stopPropagation(), onOpenGallery())}
 							>
-								<rect x="3" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
-								<rect x="12" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
-								<rect x="3" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
-								<rect x="12" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
+								<circle class='pin-circle' cx={pinCx} cy={pinCy} r={r} />
+								<g
+									class='pin-gallery-icon'
+									transform="translate({pinCx}, {pinCy}) scale({iconScale/1.5}) translate(-10, -10)"
+								>
+									<rect x="3" y="3" width="5" height="5" rx="1" stroke="white" stroke-width="2" fill="none" />
+									<rect x="12" y="3" width="5" height="5" rx="1" stroke="white" stroke-width="2" fill="none" />
+									<rect x="3" y="12" width="5" height="5" rx="1" stroke="white" stroke-width="2" fill="none" />
+									<rect x="12" y="12" width="5" height="5" rx="1" stroke="white" stroke-width="2" fill="none" />
+								</g>
 							</g>
+						{:else}
+							<circle
+								class='pin-circle'
+								cx={denorm(selectedPlace.pin.cx)}
+								cy={denorm(selectedPlace.pin.cy)}
+								r={getPinRadius(selectedPlace.pin.r)}
+							/>
 						{/if}
 					</g>
 				</g>
@@ -1208,11 +1210,14 @@
 		fill-opacity: 0.471002;
 	}
 
-	.pin-gallery-icon {
+	.pin-gallery-button {
 		/* Box/Visual */
 		cursor: pointer;
-		stroke: #800000;
-		color: #800000;
+	}
+
+	.pin-gallery-icon {
+		/* Icon is white, centered on red pin circle */
+		pointer-events: none;
 	}
 
 	.focal-group {

@@ -279,7 +279,7 @@
 				ariaLabel='Mapa de ubicación del proyecto Aires de Río'
 				{mapData}
 				showDetailImage={false}
-				pinRadius={20}
+				pinRadius={30}
 				onOpenGallery={openGalleryForCurrentPlace}
 			/>
 		{:else}
