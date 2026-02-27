@@ -220,7 +220,7 @@
 					de cercanía a solo una cuadra.
 				</p>
 				<Highlight>
-					Puedes usar las flechas para cambiar de ubicación; el ícono de edificio vuelve a la vista general y el ícono de galería abre las fotos para el lugar seleccionado.
+					Puedes usar las flechas para cambiar de ubicación; el ícono de edificio vuelve a la vista general y el ícono de galería abre las fotos para el lugar seleccionado. En la vista general podés hacer clic en una zona para seleccionarla; con un lugar seleccionado, hacer clic fuera de las zonas vuelve a la vista general.
 				</Highlight>
 			</div>
 			<div class='map-navigation'>
