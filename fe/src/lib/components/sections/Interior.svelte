@@ -18,9 +18,12 @@
 	// ===== STATIC CONSTANTS =====
 	const INTERIOR_IMAGES = [
 		{ src: '/carrousel-interior/4-db-lobby.jpg', alt: 'Lobby del edificio' },
-		{ src: '/carrousel-interior/5-db-exterior-01-6.jpg', alt: 'Exterior del edificio' },
-		{ src: '/carrousel-interior/6-db-exterior-01-5.jpg', alt: 'Exterior del edificio' },
-		{ src: '/carrousel-interior/7-db-exterior-01-7.jpg', alt: 'Exterior del edificio' },
+		{ src: '/carrousel-interior/IMG-20250124-WA0018.jpg', alt: 'Diseño interior' },
+		{ src: '/carrousel-interior/IMG-20250124-WA0019.jpg', alt: 'Diseño interior' },
+		{ src: '/carrousel-interior/IMG-20250124-WA0020.jpg', alt: 'Diseño interior' },
+		{ src: '/carrousel-interior/IMG-20250124-WA0025.jpg', alt: 'Diseño interior' },
+		{ src: '/carrousel-interior/IMG-20250124-WA0026.jpg', alt: 'Diseño interior' },
+		{ src: '/carrousel-interior/IMG-20250124-WA0029.jpg', alt: 'Diseño interior' },
 		{ src: '/carrousel-interior/8-anteba-o-y-lavadero.jpg', alt: 'Antebaño y lavadero' },
 		{ src: '/carrousel-interior/9-db-int-blanco-5.png', alt: 'Interior del departamento' }
 	];
