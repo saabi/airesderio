@@ -101,6 +101,8 @@ export interface PlaceMetadata {
 	descripcion?: string;
 	thingstodo?: string;
 	photos?: string[];
+	/** Vertical/mobile photo set; falls back to photos when absent */
+	photosMobile?: string[];
 }
 
 /**
@@ -279,6 +281,8 @@ export interface PlaceData {
 	details?: string;
 	/** Photo filenames (relative to /places/{id}/) */
 	photos?: string[];
+	/** Vertical/mobile photo set; falls back to photos when absent */
+	photosMobile?: string[];
 }
 
 /**

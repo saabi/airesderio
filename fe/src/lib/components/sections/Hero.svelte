@@ -4,6 +4,7 @@
 	import Slide from '$lib/components/ui/Slide.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { verticalViewport } from '$lib/utils/viewport';
 	import { ANIMATION, animationDuration, animationOffset } from '$lib/constants/animation';
 
 	// ===== TYPES =====
@@ -11,13 +12,18 @@
 		// Props removed - no longer needed
 	}
 
+	type CarouselItem = { type: 'video'; src: string } | { type: 'image'; src: string; alt: string };
+
 	// ===== STATIC CONSTANTS =====
-	const CAROUSEL_ITEMS = [
-		{ type: 'video' as const, src: '/carrousel-hero/promo.mov' },
-		{ type: 'image' as const, src: '/carrousel-hero/1-db-exterior-01-2.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 1' },
-		{ type: 'image' as const, src: '/carrousel-hero/2-db-exterior-01-8.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 2' },
-		{ type: 'image' as const, src: '/carrousel-hero/3-db-exterior-01-1.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 3' }
+	const CAROUSEL_ITEMS: CarouselItem[] = [
+		{ type: 'video', src: '/carrousel-hero/promo.mov' },
+		{ type: 'image', src: '/carrousel-hero/1-db-exterior-01-2.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 1' },
+		{ type: 'image', src: '/carrousel-hero/2-db-exterior-01-8.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 2' },
+		{ type: 'image', src: '/carrousel-hero/3-db-exterior-01-1.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 3' }
 	];
+
+	// Mobile/vertical: placeholder — duplicate desktop until vertical images are ready
+	const CAROUSEL_ITEMS_MOBILE: CarouselItem[] = [...CAROUSEL_ITEMS];
 </script>
 
 <script lang='ts'>
@@ -29,6 +35,16 @@
 	let videoNotEnded = $state(true);
 
 	// ===== DERIVED =====
+	const activeItems = $derived($verticalViewport ? CAROUSEL_ITEMS_MOBILE : CAROUSEL_ITEMS);
+
+	// Clamp index when active list changes length
+	$effect(() => {
+		const len = activeItems.length;
+		if (currentIndex >= len) {
+			currentIndex = Math.max(0, len - 1);
+		}
+	});
+
 	// Pause carousel auto-step while the video slide is active and video is still playing
 	const pauseAutoRotate = $derived(currentIndex === 0 && videoNotEnded);
 
@@ -41,7 +57,7 @@
 
 	function handleVideoEnd() {
 		videoNotEnded = false;
-		currentIndex = (currentIndex + 1) % CAROUSEL_ITEMS.length;
+		currentIndex = (currentIndex + 1) % activeItems.length;
 	}
 
 	// ===== INSTANCE CONSTANTS =====
@@ -66,8 +82,8 @@
 		<ImageCarousel
 			bind:currentIndex
 			onIndexChange={(i) => (currentIndex = i)}
-			slideCount={CAROUSEL_ITEMS.length}
-			slideAriaLabel={(index) => CAROUSEL_ITEMS[index].type === 'video' ? 'Video promocional Aires de Río' : CAROUSEL_ITEMS[index].alt}
+			slideCount={activeItems.length}
+			slideAriaLabel={(index) => activeItems[index].type === 'video' ? 'Video promocional Aires de Río' : activeItems[index].alt}
 			autoRotate={true}
 			interval={5000}
 			pauseOnHover={true}
@@ -83,7 +99,7 @@
 			ariaLabel='Carrusel de imágenes del edificio'
 		>
 			{#snippet slide(index)}
-				{@const item = CAROUSEL_ITEMS[index]}
+				{@const item = activeItems[index]}
 				<Slide
 					type={item.type}
 					src={item.src}

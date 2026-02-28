@@ -3,6 +3,7 @@
 	import type { PlaceMetadata } from '$lib/types';
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 	import Slide from '$lib/components/ui/Slide.svelte';
+	import { verticalViewport } from '$lib/utils/viewport';
 
 	// ===== TYPES =====
 	interface Props {
@@ -10,6 +11,8 @@
 		place: PlaceMetadata;
 		placeId: string;
 		photos: string[];
+		/** Vertical/mobile photo set; falls back to photos when absent */
+		photosMobile?: string[];
 		currentIndex?: number;
 		onClose: () => void;
 	}
@@ -22,17 +25,20 @@
 		place,
 		placeId,
 		photos = [],
+		photosMobile,
 		currentIndex = $bindable(0),
 		onClose
 	}: Props = $props();
 
 	// ===== DERIVED =====
+	const activePhotos = $derived($verticalViewport && photosMobile && photosMobile.length > 0 ? photosMobile : photos);
+
 	// Map photo filenames to static URLs for ImageCarousel
 	const enhancedPhotos = $derived.by(() => {
-		if (!placeId || !photos || photos.length === 0) {
+		if (!placeId || !activePhotos || activePhotos.length === 0) {
 			return [];
 		}
-		return photos.map((filename) => ({
+		return activePhotos.map((filename) => ({
 			src: `/places/${placeId}/${encodeURIComponent(filename)}`,
 			alt: `${place.nombre} - ${filename}`
 		}));
@@ -56,7 +62,7 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-{#if visible && place && photos.length > 0}
+{#if visible && place && activePhotos.length > 0}
 	<div class='overlay' role='dialog' aria-modal='true'>
 		<button type='button' class='backdrop' aria-label='Cerrar galería' onclick={onClose}></button>
 		<div class='modal' role='document'>
@@ -70,6 +76,7 @@
 			<div class='content'>
 				<div class='photo-container'>
 					{#if enhancedPhotos.length > 0}
+						{#key $verticalViewport}
 						<ImageCarousel
 							slideCount={enhancedPhotos.length}
 							slideAriaLabel={(index) => `${place.nombre} - Foto ${index + 1}`}
@@ -98,11 +105,12 @@
 								/>
 							{/snippet}
 						</ImageCarousel>
+						{/key}
 					{/if}
 				</div>
 
 				<div class='photo-info'>
-					<p>{currentIndex + 1} de {photos.length} fotos</p>
+					<p>{currentIndex + 1} de {activePhotos.length} fotos</p>
 					{#if place.descripcion}
 						<p class='photo-description'>{place.descripcion}</p>
 					{/if}

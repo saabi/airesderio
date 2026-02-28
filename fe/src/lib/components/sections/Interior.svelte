@@ -8,6 +8,7 @@
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { verticalViewport } from '$lib/utils/viewport';
 	import {
 		ANIMATION,
 		animationDelay,
@@ -26,9 +27,15 @@
 		{ src: '/carrousel-interior/7-baño-mampara-deslizante.png', alt: 'Baño con mampara deslizante' },
 		{ src: '/carrousel-interior/8-lava-secarropas.png', alt: 'Lavarropas y secarropas' }
 	];
+
+	// Mobile/vertical: placeholder — duplicate desktop until vertical images are ready
+	const INTERIOR_IMAGES_MOBILE = [...INTERIOR_IMAGES];
 </script>
 
 <script lang='ts'>
+	// ===== DERIVED =====
+	const activeImages = $derived($verticalViewport ? INTERIOR_IMAGES_MOBILE : INTERIOR_IMAGES);
+
 	// ===== INSTANCE CONSTANTS =====
 	const { action: interiorObserver, visible: interiorVisible } = createSectionObserver('interior', {
 		threshold: ANIMATION.threshold.section
@@ -53,30 +60,32 @@
 			class='interior-gallery scroll-animate'
 			style={`--scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
 		>
-			<ImageCarousel
-				slideCount={INTERIOR_IMAGES.length}
-				slideAriaLabel={(index) => INTERIOR_IMAGES[index].alt}
-				autoRotate={true}
-				interval={2500}
-				pauseOnHover={true}
-				showNavigation={true}
-				navigationPosition="around-dots"
-				buttonVariant="overlay"
-				buttonSize="md"
-				showDots={true}
-				dotsVariant="default"
-				transitionType="fade-scale"
-				imageFit="cover"
-				ariaLabel='Galería de imágenes del diseño interior'
-			>
-				{#snippet slide(index)}
-					<Slide
-						type="image"
-						src={INTERIOR_IMAGES[index].src}
-						alt={INTERIOR_IMAGES[index].alt}
-					/>
-				{/snippet}
-			</ImageCarousel>
+			{#key $verticalViewport}
+				<ImageCarousel
+					slideCount={activeImages.length}
+					slideAriaLabel={(index) => activeImages[index].alt}
+					autoRotate={true}
+					interval={2500}
+					pauseOnHover={true}
+					showNavigation={true}
+					navigationPosition="around-dots"
+					buttonVariant="overlay"
+					buttonSize="md"
+					showDots={true}
+					dotsVariant="default"
+					transitionType="fade-scale"
+					imageFit="cover"
+					ariaLabel='Galería de imágenes del diseño interior'
+				>
+					{#snippet slide(index)}
+						<Slide
+							type="image"
+							src={activeImages[index].src}
+							alt={activeImages[index].alt}
+						/>
+					{/snippet}
+				</ImageCarousel>
+			{/key}
 		</div>
 		<div class='interior-text'>
 			<p

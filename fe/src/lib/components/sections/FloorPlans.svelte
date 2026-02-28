@@ -9,6 +9,7 @@
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { verticalViewport } from '$lib/utils/viewport';
 	import {
 		ANIMATION,
 		animationDelay,
@@ -19,6 +20,8 @@
 	// ===== TYPES =====
 	interface FloorPlan {
 		image: string | any; // Enhanced image type
+		/** Vertical/mobile image; falls back to image when absent */
+		imageMobile?: string;
 		title: string;
 		description: string;
 		interactive?: boolean;
@@ -58,7 +61,13 @@
 	let currentPlanIndex = $state(0);
 
 	// ===== DERIVED =====
-	let currentPlan = $derived.by(() => FLOOR_PLANS[currentPlanIndex]);
+	const activePlans = $derived.by(() =>
+		FLOOR_PLANS.map((p) => ({
+			...p,
+			image: $verticalViewport && p.imageMobile ? p.imageMobile : p.image
+		}))
+	);
+	let currentPlan = $derived.by(() => activePlans[currentPlanIndex]);
 
 	// ===== INSTANCE CONSTANTS =====
 	const { action: floorPlansObserver, visible: floorPlansVisible } = createSectionObserver(
@@ -92,33 +101,35 @@
 		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<div class='carousel-wrapper'>
-			<ImageCarousel
-				slideCount={FLOOR_PLANS.length}
-				slideAriaLabel={(index) => `Plano ${index + 1}: ${FLOOR_PLANS[index].title}`}
-				bind:currentIndex={currentPlanIndex}
-				onIndexChange={handleIndexChange}
-				autoRotate={false}
-				showNavigation={true}
-				navigationPosition="below-image"
-				buttonVariant="bordered"
-				buttonSize="md"
-				showDots={true}
-				dotsVariant="inverse"
-				dotsPosition="below-image"
-				transitionType="fade"
-				transitionDuration={600}
-				imageFit="contain"
-				imageSizes="(min-width: 1024px) 1024px, 100vw"
-				ariaLabel="Galería de planos de distribución"
-			>
-				{#snippet slide(index)}
-					<Slide
-						type="component"
-						component={InteractiveFloorPlan as import('svelte').Component}
-						props={{ plan: FLOOR_PLANS[index], isActive: currentPlanIndex === index }}
-					/>
-				{/snippet}
-			</ImageCarousel>
+			{#key $verticalViewport}
+				<ImageCarousel
+					slideCount={activePlans.length}
+					slideAriaLabel={(index) => `Plano ${index + 1}: ${activePlans[index].title}`}
+					bind:currentIndex={currentPlanIndex}
+					onIndexChange={handleIndexChange}
+					autoRotate={false}
+					showNavigation={true}
+					navigationPosition="below-image"
+					buttonVariant="bordered"
+					buttonSize="md"
+					showDots={true}
+					dotsVariant="inverse"
+					dotsPosition="below-image"
+					transitionType="fade"
+					transitionDuration={600}
+					imageFit="contain"
+					imageSizes="(min-width: 1024px) 1024px, 100vw"
+					ariaLabel="Galería de planos de distribución"
+				>
+					{#snippet slide(index)}
+						<Slide
+							type="component"
+							component={InteractiveFloorPlan as import('svelte').Component}
+							props={{ plan: activePlans[index], isActive: currentPlanIndex === index }}
+						/>
+					{/snippet}
+				</ImageCarousel>
+			{/key}
 		</div>
 		<figure class='floor-plan-info'>
 			<figcaption class='floor-plan-title'>{currentPlan.title}</figcaption>
