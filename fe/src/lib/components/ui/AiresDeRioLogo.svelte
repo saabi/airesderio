@@ -6,24 +6,47 @@
 		width?: string;
 		height?: string;
 		theme?: 'dark' | 'light';
+		/** When false, hide the isotype (bar icon); use for inline text replacements. Default true. */
+		showIsotype?: boolean;
+		/** When true, fit viewBox to the actual graphics (no extra padding). Default false. */
+		fitViewBox?: boolean;
 	}
 </script>
 
 <script lang='ts'>
+	import { browser } from '$app/environment';
+
 	// ===== PROPS =====
-	let { class: className = '', loading = 'lazy', width, height, theme = 'light' }: Props = $props();
+	let { class: className = '', loading = 'lazy', width, height, theme = 'light', showIsotype = true, fitViewBox = false }: Props = $props();
+
+	// ===== VIEWBOX =====
+	const DEFAULT_VIEW_BOX = '0 0 67.733332 17.4625';
+	let contentEl = $state<SVGGElement | null>(null);
+	let viewBox = $state(DEFAULT_VIEW_BOX);
+
+	$effect(() => {
+		// Track showIsotype so we re-measure when isotype visibility changes
+		void showIsotype;
+		if (!browser || !fitViewBox || !contentEl) {
+			viewBox = DEFAULT_VIEW_BOX;
+			return;
+		}
+		const bbox = contentEl.getBBox();
+		const pad = 0.15;
+		viewBox = `${bbox.x - pad} ${bbox.y - pad} ${bbox.width + 2 * pad} ${bbox.height + 2 * pad}`;
+	});
 </script>
 
 <svg
 	class={className}
 	data-theme={theme}
-	width={width || '256'}
-	height={height || '66'}
-	viewBox='0 0 67.733332 17.4625'
+	width={width ?? (height == null ? '256' : undefined)}
+	height={height ?? '66'}
+	viewBox={viewBox}
 	xmlns='http://www.w3.org/2000/svg'
 	aria-label='Aires de Río'
 >
-	<g transform='translate(-20.155689,-26.676647)'>
+	<g bind:this={contentEl} {...(fitViewBox ? {} : { transform: 'translate(-20.155689,-26.676647)' })}>
 		<g transform='matrix(0.50701009,0,0,0.50701009,-16.667242,-10.821569)'>
 			<g class='text'>
 				<path
@@ -43,6 +66,7 @@
 					aria-label='DEPARTAMENTOS'
 				/>
 			</g>
+			{#if showIsotype}
 			<g class='isotype'>
 				<path
 					d='m 72.627612,73.959506 c 0,7.331697 5.943515,13.275212 13.275212,13.275212 h 8.724467 v 4.208608 h -8.724467 c -7.331697,0 -13.275212,-5.943515 -13.275212,-13.275212 z'
@@ -54,6 +78,7 @@
 					d='m 72.62761,90.860919 c 0,7.331697 5.943515,13.275211 13.275212,13.275211 h 8.724469 v 4.20861 h -8.724469 c -7.331697,0 -13.275212,-5.94352 -13.275212,-13.275213 z'
 				/>
 			</g>
+			{/if}
 		</g>
 	</g>
 </svg>
@@ -74,5 +99,12 @@
 	}
 	svg[data-theme='dark'] .isotype {
 		fill: #666666;
+	}
+
+	/* Inline variant — keeps normal text line height when used in paragraphs */
+	:global(svg.logo-inline) {
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 1;
 	}
 </style>

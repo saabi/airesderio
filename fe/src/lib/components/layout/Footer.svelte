@@ -1,6 +1,7 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
 	import HabitatPrimeLogo from '$lib/components/ui/HabitatPrimeLogo.svelte';
+	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import { theme } from '$lib/stores/theme';
 </script>
 
@@ -42,7 +43,7 @@
 				</div>
 				<p>
 					Habitat Prime SAS desarrolla experiencias residenciales premium en Santiago del Estero.
-					Aires de Río es uno de nuestros productos insignia, diseñado para vivir con vistas
+					<AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} /> es uno de nuestros productos insignia, diseñado para vivir con vistas
 					privilegiadas al río y acceso a amenities de alto nivel.
 				</p>
 				<ul class='project-highlights'>
@@ -86,7 +87,7 @@
 		</div>
 
 		<div class='footer-bottom'>
-			<p>© {year} Habitat Prime SAS · Aires de Río es una marca registrada.</p>
+			<p>© {year} Habitat Prime SAS · <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} /> es una marca registrada.</p>
 		</div>
 	</div>
 </footer>

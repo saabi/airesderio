@@ -1,6 +1,8 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
 	import Map from '$lib/components/features/Map.svelte';
+	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
+	import { theme } from '$lib/stores/theme';
 	import type { MapComponent } from '$lib/components/features/Map.svelte';
 	import PhotoCarousel from '$lib/components/features/PhotoCarousel.svelte';
 	import Title from '$lib/components/ui/Title.svelte';
@@ -151,7 +153,8 @@
 			nombre: place.name,
 			descripcion: place.description,
 			thingstodo: place.details,
-			photos: place.photos
+			photos: place.photos,
+			photosMobile: place.photosMobile
 		};
 		carouselPlaceId = place.id;
 		// Pass just filenames, not full paths - PhotoCarousel will construct paths
@@ -210,7 +213,7 @@
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				<p>
-					Aires de Río ofrece una ubicación de privilegio. Se emplaza sobre Avenida Rivadavia, a un
+					<AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} /> ofrece una ubicación de privilegio. Se emplaza sobre Avenida Rivadavia, a un
 					paso de todo lo que esta ciudad ofrece para brindarte una vida placentera y cómoda.
 				</p>
 				<p>
@@ -296,6 +299,7 @@
 		place={carouselPlace}
 		placeId={carouselPlaceId}
 		photos={carouselPhotos}
+		photosMobile={carouselPlace.photosMobile}
 		bind:currentIndex={carouselCurrentIndex}
 		onClose={closePhotoCarousel}
 	/>

@@ -1,6 +1,6 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
-	// (No imports needed for this component)
+	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 
 	// ===== TYPES =====
 	type ArrowPosition = 'bottom' | 'top' | 'left' | 'right';
@@ -11,12 +11,14 @@
 		text: string;
 		arrowPosition?: ArrowPosition;
 		class?: string;
+		/** When true, render logo instead of text (e.g. for focal label) */
+		useLogo?: boolean;
 	}
 </script>
 
 <script lang='ts'>
 	// ===== PROPS =====
-	let { x, y, text, arrowPosition = 'bottom', class: className = '' }: Props = $props();
+	let { x, y, text, arrowPosition = 'bottom', class: className = '', useLogo = false }: Props = $props();
 </script>
 
 <div
@@ -27,7 +29,11 @@
 	class:arrow-right={arrowPosition === 'right'}
 	style='left: {x}px; top: {y}px;'
 >
-	{text}
+	{#if useLogo}
+		<AiresDeRioLogo class='pin-label-logo' height='1.2em' theme='dark' showIsotype={false} fitViewBox={true} />
+	{:else}
+		{text}
+	{/if}
 </div>
 
 <style>
@@ -56,6 +62,12 @@
 
 		/* Misc/Overrides */
 		pointer-events: none;
+	}
+
+	.pin-label-logo {
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 1;
 	}
 
 	/* Positioning for each arrow direction */

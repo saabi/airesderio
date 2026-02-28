@@ -2,6 +2,7 @@
 	// ===== IMPORTS =====
 	import { tweened } from 'svelte/motion';
 	import PinLabel from '$lib/components/ui/PinLabel.svelte';
+	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 
 	// ===== TYPES =====
 	import type { MapData, PlaceData, SvgShape, ViewBox } from '$lib/types';
@@ -1085,11 +1086,21 @@
 	{#if selectedGroupName && pinCoordinates && labelCoordinates}
 		<!-- Hidden label for measurement -->
 		<div bind:this={measurementLabel} class='pin-label-measure' aria-hidden='true'>
-			{selectedGroupName}
+			{#if selectedGroupName === FOCAL_LABEL}
+				<AiresDeRioLogo class='pin-label-logo' height='1.2em' theme='dark' showIsotype={false} fitViewBox={true} />
+			{:else}
+				{selectedGroupName}
+			{/if}
 		</div>
 
 		<!-- Actual label -->
-		<PinLabel x={labelCoordinates.x} y={labelCoordinates.y} text={selectedGroupName} {arrowPosition} />
+		<PinLabel
+			x={labelCoordinates.x}
+			y={labelCoordinates.y}
+			text={selectedGroupName}
+			{arrowPosition}
+			useLogo={selectedGroupName === FOCAL_LABEL}
+		/>
 	{/if}
 </div>
 
@@ -1125,6 +1136,12 @@
 		font-weight: 500;
 		white-space: nowrap;
 		pointer-events: none;
+	}
+
+	.pin-label-measure :global(svg.pin-label-logo) {
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 1;
 	}
 
 	.pin-label {

@@ -1,6 +1,8 @@
 <script lang='ts'>
 	// ===== IMPORTS =====
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { theme } from '$lib/stores/theme';
+	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import {
 		ANIMATION,
 		animationDelay,
@@ -40,12 +42,12 @@
 				class='welcome scroll-animate'
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()}; --scroll-animate-delay: ${animationDelay(1)};`}
 			>
-				Santiago del Estero da la bienvenida a Aires de Río, un nuevo proyecto de departamentos con
+				Santiago del Estero da la bienvenida a <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} />, un nuevo proyecto de departamentos con
 				las mejores prestaciones y estratégica ubicación.
 			</p>
 		</section>
 		<p>
-			Quienes vivan en Aires de Río gozarán de una multi-oferta de entretenimiento, shopping, áreas
+			Quienes vivan en <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} /> gozarán de una multi-oferta de entretenimiento, shopping, áreas
 			verdes, deportes, confiterías y eventos culturales.
 		</p>
 		<p>
