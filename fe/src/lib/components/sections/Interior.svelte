@@ -17,15 +17,14 @@
 
 	// ===== STATIC CONSTANTS =====
 	const INTERIOR_IMAGES = [
-		{ src: '/carrousel-interior/4-db-lobby.jpg', alt: 'Lobby del edificio' },
-		{ src: '/carrousel-interior/IMG-20250124-WA0018.jpg', alt: 'Diseño interior' },
-		{ src: '/carrousel-interior/IMG-20250124-WA0019.jpg', alt: 'Diseño interior' },
-		{ src: '/carrousel-interior/IMG-20250124-WA0020.jpg', alt: 'Diseño interior' },
-		{ src: '/carrousel-interior/IMG-20250124-WA0025.jpg', alt: 'Diseño interior' },
-		{ src: '/carrousel-interior/IMG-20250124-WA0026.jpg', alt: 'Diseño interior' },
-		{ src: '/carrousel-interior/IMG-20250124-WA0029.jpg', alt: 'Diseño interior' },
-		{ src: '/carrousel-interior/8-anteba-o-y-lavadero.jpg', alt: 'Antebaño y lavadero' },
-		{ src: '/carrousel-interior/9-db-int-blanco-5.png', alt: 'Interior del departamento' }
+		{ src: '/carrousel-interior/1-lobby.png', alt: 'Lobby del edificio' },
+		{ src: '/carrousel-interior/2-traba-puerta.png', alt: 'Traba de puerta' },
+		{ src: '/carrousel-interior/3-1hab-cocina.png', alt: 'Cocina departamento 1 habitación' },
+		{ src: '/carrousel-interior/4-2hab-living.png', alt: 'Living departamento 2 habitaciones' },
+		{ src: '/carrousel-interior/5-1hab-habitacion-placard.png', alt: 'Habitación con placard' },
+		{ src: '/carrousel-interior/6-baño-mampara-fija.png', alt: 'Baño con mampara fija' },
+		{ src: '/carrousel-interior/7-baño-mampara-deslizante.png', alt: 'Baño con mampara deslizante' },
+		{ src: '/carrousel-interior/8-lava-secarropas.png', alt: 'Lavarropas y secarropas' }
 	];
 </script>
 
