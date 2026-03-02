@@ -109,7 +109,7 @@
 	/* Inline variant — keeps normal text line height when used in paragraphs */
 	:global(svg.logo-inline) {
 		display: inline-block;
-		vertical-align: middle;
+		vertical-align: baseline;
 		line-height: 1;
 	}
 </style>
