@@ -30,7 +30,7 @@
 	style='left: {x}px; top: {y}px;'
 >
 	{#if useLogo}
-		<AiresDeRioLogo class='pin-label-logo' height='1.2em' theme='dark' showIsotype={false} fitViewBox={true} />
+		<AiresDeRioLogo class='pin-label-logo' height='1.2em' theme='dark' showIsotype={false} fitViewBox={true} showDepartamentos={false} />
 	{:else}
 		{text}
 	{/if}

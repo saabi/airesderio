@@ -1087,7 +1087,7 @@
 		<!-- Hidden label for measurement -->
 		<div bind:this={measurementLabel} class='pin-label-measure' aria-hidden='true'>
 			{#if selectedGroupName === FOCAL_LABEL}
-				<AiresDeRioLogo class='pin-label-logo' height='1.2em' theme='dark' showIsotype={false} fitViewBox={true} />
+				<AiresDeRioLogo class='pin-label-logo' height='1.2em' theme='dark' showIsotype={false} fitViewBox={true} showDepartamentos={false} />
 			{:else}
 				{selectedGroupName}
 			{/if}

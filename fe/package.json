@@ -20,12 +20,13 @@
 		"sync:geo": "node scripts/updatePlaceGeo.js",
 		"clean": "node scripts/clean.js",
 		"clean:svg": "node scripts/cleanSvg.js",
-		"generate:svg": "node scripts/generateSvgFromIcons.js"
+		"generate:svg": "node scripts/generateSvgFromIcons.js",
+		"generate:icons": "node scripts/generate-icons-from-isotype.js",
+		"generate:og-image": "node scripts/generate-og-image.js"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.0",
 		"@eslint/js": "^9.39.2",
-		"@xmldom/xmldom": "^0.8.10",
 		"@sveltejs/adapter-node": "^5.4.0",
 		"@sveltejs/adapter-vercel": "^6.2.0",
 		"@sveltejs/kit": "^2.49.2",
@@ -34,6 +35,7 @@
 		"@testing-library/svelte": "^5.2.9",
 		"@testing-library/user-event": "^14.6.1",
 		"@types/google.maps": "^3.58.1",
+		"@xmldom/xmldom": "^0.8.10",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.13.1",
@@ -42,6 +44,7 @@
 		"mdsvex": "^0.12.6",
 		"prettier": "^3.7.4",
 		"prettier-plugin-svelte": "^3.4.1",
+		"sharp": "^0.34.5",
 		"svelte": "^5.46.0",
 		"svelte-check": "^4.3.4",
 		"typescript": "^5.9.3",
