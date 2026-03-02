@@ -17,14 +17,14 @@
 		{ label: 'Equipamiento', href: '#equipados' },
 		{ label: 'Planos', href: '#planos' },
 		{ label: 'Contacto', href: '#contacto' },
-		{ label: 'Habitat Prime', href: 'https://habitatprime.com', external: true }
+		{ label: 'Habitat Prime', href: 'https://habitat-prime.com.ar', external: true }
 	];
 
 	const contactInfo = [
 /* 		{ label: 'Oficina Habitat Prime', value: 'Av. Rivadavia 1520 · Santiago del Estero' },
 		{ label: 'Whatsapp ventas', value: '+54 9 385 555 0000' },
 		{ label: 'Teléfono', value: '+54 385 421 1111' },
- */		{ label: 'Email comercial', value: 'info@airesderio.com.ar' }
+ */		{ label: 'Email comercial', value: 'info@habitat-prime.com.ar' }
 	];
 
 	const projectHighlights = [
@@ -43,7 +43,7 @@
 				</div>
 				<p>
 					Habitat Prime SAS desarrolla experiencias residenciales premium en Santiago del Estero.
-					<AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} /> es uno de nuestros productos insignia, diseñado para vivir con vistas
+					<AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> es uno de nuestros productos insignia, diseñado para vivir con vistas
 					privilegiadas al río y acceso a amenities de alto nivel.
 				</p>
 				<ul class='project-highlights'>
@@ -87,7 +87,7 @@
 		</div>
 
 		<div class='footer-bottom'>
-			<p>© {year} Habitat Prime SAS · <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} /> es una marca registrada.</p>
+			<p>© {year} Habitat Prime SAS · <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> es una marca registrada.</p>
 		</div>
 	</div>
 </footer>
