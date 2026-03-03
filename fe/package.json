@@ -24,6 +24,7 @@
 		"generate:icons": "node scripts/generate-icons-from-isotype.js",
 		"generate:og-image": "node scripts/generate-og-image.js",
 		"test:smtp": "node scripts/test-smtp.js",
+		"test:db": "node scripts/test-db.js",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:push": "drizzle-kit push"
