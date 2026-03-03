@@ -20,7 +20,7 @@ The contact form submission has been **fully implemented** (both frontend and ba
 
 **Features:**
 - ✅ POST handler for form submissions
-- ✅ Resend email service integration
+- ✅ DreamHost SMTP (nodemailer) for email notifications
 - ✅ Server-side validation:
   - Required field validation
   - Email format validation
@@ -28,7 +28,7 @@ The contact form submission has been **fully implemented** (both frontend and ba
 - ✅ Honeypot spam protection
 - ✅ Rate limiting (5 submissions per 15 minutes per IP)
 - ✅ Error handling
-- ✅ Development mode fallback (logs to console if Resend not configured)
+- ✅ Development mode fallback (logs to console if SMTP not configured)
 - ✅ HTML email template with form data
 
 **Code Quality:**
@@ -38,9 +38,10 @@ The contact form submission has been **fully implemented** (both frontend and ba
 - ✅ Security features (honeypot, rate limiting)
 
 **Environment Variables Used:**
-- `RESEND_API_KEY` - Resend API key (private, server-side)
+- `DATABASE_URL` - PostgreSQL connection string (required)
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` - DreamHost SMTP
 - `CONTACT_FORM_RECIPIENT` - Email to receive submissions
-- `CONTACT_FORM_FROM` - Verified sender email
+- `CONTACT_FORM_FROM` - Sender email
 
 ### Frontend Form (`fe/src/lib/components/forms/ContactForm.svelte`)
 
@@ -73,9 +74,18 @@ The contact form submission has been **fully implemented** (both frontend and ba
 - ✅ Nombre (Name) - Required
 - ✅ Correo (Email) - Required, email type
 - ✅ Teléfono (Phone) - Optional, with country code
-- ✅ Consulta (Inquiry Type) - Required, dropdown
+- ✅ Intent - Sent as `direct-contact` for main form; PDF buttons use `ficha-tecnica` or `planos`
 - ✅ Mensaje (Message) - Optional, textarea
 - ✅ Website (Honeypot) - Hidden, for spam protection
+
+### PDF Download Flow
+
+**Status:** ✅ **Implemented**
+
+- **PdfRequestModal** – Popup form for PDF requests; opens when user clicks "FICHA TECNICA", "Más detalles técnicos", or "Descargar planos en PDF"
+- **Token gatekeeping** – One-time tokens generated on form submit; `GET /api/pdf/[type]?token=xxx` validates token and streams PDF
+- **Email verification** – Successful download sets `leads.email_verified_at`
+- **Static PDFs** – Placeholder files in `fe/static/pdf/` (ficha-tecnica.pdf, planos.pdf)
 
 ### Testing
 

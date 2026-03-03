@@ -47,13 +47,13 @@
 			nombre: formData.get('nombre') as string,
 			correo: formData.get('correo') as string,
 			telefono: (formData.get('telefono') as string) || '',
-			consulta: formData.get('consulta') as string,
 			mensaje: (formData.get('mensaje') as string) || '',
+			intent: 'direct-contact' as const,
 			website: (formData.get('website') as string) || '' // Honeypot
 		};
 
 		// Validate required fields
-		if (!data.nombre || !data.correo || !data.consulta) {
+		if (!data.nombre || !data.correo) {
 			errorMessage = 'Por favor completa todos los campos requeridos.';
 			return;
 		}

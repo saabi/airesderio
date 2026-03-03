@@ -14,6 +14,7 @@
 	import TerrazaPiscina from '$lib/components/icons/TerrazaPiscina.svelte';
 	import Ubicacion from '$lib/components/icons/Ubicacion.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 	import {
 		ANIMATION,
 		animationDelay,
@@ -197,7 +198,7 @@
 					<button
 						type="button"
 						class="bf-cta"
-						data-ficha-tecnica
+						onclick={() => pdfRequestModalStore.open('ficha-tecnica')}
 						aria-label="Ver más detalles técnicos del edificio"
 					>
 						Más detalles técnicos de tu edificio

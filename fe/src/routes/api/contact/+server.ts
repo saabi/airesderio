@@ -1,61 +1,61 @@
 /**
  * Contact Form API Route
  *
- * This API route works with @sveltejs/adapter-node, which is configured for
- * Node.js deployment with PM2 on a Linode VM running Debian with Nginx.
- *
- * The application is deployed as a Node.js server, enabling full API route support.
+ * Stores leads in PostgreSQL, sends notification via SMTP (DreamHost),
+ * and returns PDF access tokens when intent is a PDF type.
  */
 import { json, type RequestHandler } from '@sveltejs/kit';
-import { Resend } from 'resend';
 import { env } from '$env/dynamic/private';
+import { getDb } from '$lib/server/db/index.js';
+import { leads, pdfAccessTokens } from '$lib/server/db/schema.js';
+import { sendContactNotification } from '$lib/server/email.js';
+import { randomBytes } from 'crypto';
 
-const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
+const VALID_PDF_INTENTS = ['ficha-tecnica', 'planos'] as const;
+const TOKEN_EXPIRY_HOURS = 24;
 
-// Rate limiting: simple in-memory store (for production, use Redis or similar)
 const submissions = new Map<string, number[]>();
-const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
-const RATE_LIMIT_MAX = 5; // Max 5 submissions per window
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000;
+const RATE_LIMIT_MAX = 5;
 
 function checkRateLimit(identifier: string): boolean {
 	const now = Date.now();
 	const userSubmissions = submissions.get(identifier) || [];
-
-	// Remove old submissions outside the window
 	const recentSubmissions = userSubmissions.filter(
 		(timestamp) => now - timestamp < RATE_LIMIT_WINDOW
 	);
-
-	if (recentSubmissions.length >= RATE_LIMIT_MAX) {
-		return false;
-	}
-
+	if (recentSubmissions.length >= RATE_LIMIT_MAX) return false;
 	recentSubmissions.push(now);
 	submissions.set(identifier, recentSubmissions);
 	return true;
 }
 
 function validateEmail(email: string): boolean {
-	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	return emailRegex.test(email);
+	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function sanitizeInput(input: string): string {
-	return input.trim().slice(0, 1000); // Limit length
+	return input.trim().slice(0, 1000);
+}
+
+function generateToken(): string {
+	return randomBytes(32).toString('hex');
+}
+
+function isPdfIntent(intent: string): intent is (typeof VALID_PDF_INTENTS)[number] {
+	return VALID_PDF_INTENTS.includes(intent as (typeof VALID_PDF_INTENTS)[number]);
 }
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const data = await request.json();
 
-		// Honeypot check - if this field is filled, it's a bot
 		if (data.website) {
-			return json({ success: true }, { status: 200 }); // Silent fail for bots
+			return json({ success: true }, { status: 200 });
 		}
 
-		// Rate limiting by IP
 		const clientIp =
-			request.headers.get('x-forwarded-for')?.split(',')[0] ||
+			request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
 			request.headers.get('x-real-ip') ||
 			'unknown';
 
@@ -66,78 +66,83 @@ export const POST: RequestHandler = async ({ request }) => {
 			);
 		}
 
-		// Validate required fields
-		const { nombre, correo, telefono, consulta, mensaje } = data;
+		const { nombre, correo, telefono, mensaje, intent: rawIntent } = data;
 
-		if (!nombre || !correo || !consulta) {
+		if (!nombre || !correo) {
 			return json({ error: 'Por favor completa todos los campos requeridos.' }, { status: 400 });
 		}
 
-		// Validate email format
 		if (!validateEmail(correo)) {
 			return json({ error: 'Por favor ingresa un correo electrónico válido.' }, { status: 400 });
 		}
 
-		// Sanitize inputs
-		const sanitizedData = {
-			nombre: sanitizeInput(nombre),
-			correo: sanitizeInput(correo),
-			telefono: telefono ? sanitizeInput(telefono) : '',
-			consulta: sanitizeInput(consulta),
-			mensaje: mensaje ? sanitizeInput(mensaje) : ''
-		};
+		const intent = rawIntent ? sanitizeInput(String(rawIntent)) : 'direct-contact';
+		const name = sanitizeInput(nombre);
+		const email = sanitizeInput(correo);
+		const phone = telefono ? sanitizeInput(telefono) : null;
+		const message = mensaje ? sanitizeInput(mensaje) : null;
 
-		// Check if Resend API key is configured
-		if (!resend || !env.RESEND_API_KEY) {
-			console.error('RESEND_API_KEY is not configured');
-			// In development, log the submission instead
-			if (import.meta.env.DEV) {
-				console.log('Form submission (dev mode):', sanitizedData);
-				return json({
-					success: true,
-					message: 'Formulario enviado correctamente (modo desarrollo)'
-				});
+		const db = getDb();
+
+		const [lead] = await db
+			.insert(leads)
+			.values({
+				name,
+				email,
+				phone,
+				message,
+				intent,
+				ipAddress: clientIp
+			})
+			.returning();
+
+		if (!lead) {
+			throw new Error('Failed to insert lead');
+		}
+
+		let tokens: Record<string, string> = {};
+		if (isPdfIntent(intent)) {
+			const expiresAt = new Date(Date.now() + TOKEN_EXPIRY_HOURS * 60 * 60 * 1000);
+			const token = generateToken();
+			await db.insert(pdfAccessTokens).values({
+				leadId: lead.id,
+				token,
+				pdfType: intent,
+				expiresAt
+			});
+			tokens[intent] = token;
+		}
+
+		try {
+			await sendContactNotification({
+				leadName: name,
+				leadEmail: email,
+				leadPhone: phone ?? undefined,
+				leadMessage: message ?? undefined,
+				intent
+			});
+		} catch (emailErr) {
+			console.error('SMTP error:', emailErr);
+			if (!env.SMTP_HOST || import.meta.env.PROD) {
+				return json(
+					{ error: 'Error al enviar el formulario. Por favor, intenta de nuevo más tarde.' },
+					{ status: 500 }
+				);
 			}
-			return json(
-				{ error: 'Error de configuración del servidor. Por favor, contacta al administrador.' },
-				{ status: 500 }
-			);
 		}
 
-		// Get recipient email from environment or use default
-		const recipientEmail = env.CONTACT_FORM_RECIPIENT || 'info@airesderio.com';
-		const fromEmail = env.CONTACT_FORM_FROM || 'noreply@airesderio.com';
-
-		// Send email using Resend
-		const emailResult = await resend.emails.send({
-			from: fromEmail,
-			to: recipientEmail,
-			replyTo: sanitizedData.correo,
-			subject: `Nueva consulta: ${sanitizedData.consulta} - Aires de Río`,
-			html: `
-				<h2>Nueva consulta desde el sitio web</h2>
-				<p><strong>Nombre:</strong> ${sanitizedData.nombre}</p>
-				<p><strong>Correo:</strong> ${sanitizedData.correo}</p>
-				${sanitizedData.telefono ? `<p><strong>Teléfono:</strong> ${sanitizedData.telefono}</p>` : ''}
-				<p><strong>Tipo de consulta:</strong> ${sanitizedData.consulta}</p>
-				${sanitizedData.mensaje ? `<p><strong>Mensaje:</strong></p><p>${sanitizedData.mensaje.replace(/\n/g, '<br>')}</p>` : ''}
-				<hr>
-				<p><small>Enviado desde el formulario de contacto de Aires de Río</small></p>
-			`
-		});
-
-		if (emailResult.error) {
-			console.error('Resend error:', emailResult.error);
-			return json(
-				{ error: 'Error al enviar el formulario. Por favor, intenta de nuevo más tarde.' },
-				{ status: 500 }
-			);
-		}
-
-		return json({
+		const responsePayload: Record<string, unknown> = {
 			success: true,
-			message: 'Formulario enviado correctamente. Nos pondremos en contacto contigo pronto.'
-		});
+			message:
+				intent === 'direct-contact'
+					? 'Formulario enviado correctamente. Nos pondremos en contacto contigo pronto.'
+					: 'Formulario enviado correctamente. Tu descarga comenzará en breve.'
+		};
+		if (Object.keys(tokens).length > 0) {
+			responsePayload.tokens = tokens;
+		}
+
+		return json(responsePayload);
 	} catch (error) {
 		console.error('Form submission error:', error);
 		return json(

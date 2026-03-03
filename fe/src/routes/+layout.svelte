@@ -5,6 +5,7 @@
 	import Footer from '$lib/components/layout/Footer.svelte';
 	import Header from '$lib/components/layout/Header.svelte';
 	import SkipLink from '$lib/components/ui/SkipLink.svelte';
+	import PdfRequestModal from '$lib/components/forms/PdfRequestModal.svelte';
 </script>
 
 <script lang='ts'>
@@ -14,6 +15,7 @@
 	// Import stores to initialize systems (initializes on import)
 	import { theme } from '$lib/stores/theme';
 	import { menuStore } from '$lib/stores/menu';
+	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 
 	// ===== PROPS =====
 	let { children }: { children: Snippet } = $props();
@@ -37,3 +39,7 @@
 {@render children()}
 
 <Footer />
+
+{#if $pdfRequestModalStore}
+	<PdfRequestModal intent={$pdfRequestModalStore.intent} />
+{/if}

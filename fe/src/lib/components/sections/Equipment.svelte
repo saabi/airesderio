@@ -21,6 +21,7 @@
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 	import {
 		ANIMATION,
 		animationDelay,
@@ -280,7 +281,12 @@
 					{/each}
 				</ul>
 				<div class="equip-ficha-wrap">
-					<button type="button" class="equip-ficha" data-ficha-tecnica>FICHA TECNICA</button>
+					<button
+						type="button"
+						class="equip-ficha"
+						onclick={() => pdfRequestModalStore.open('ficha-tecnica')}
+						aria-label="Descargar ficha técnica"
+					>FICHA TECNICA</button>
 				</div>
 			</div>
 		</div>

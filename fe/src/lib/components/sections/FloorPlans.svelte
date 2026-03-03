@@ -9,6 +9,7 @@
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 	import { verticalViewport } from '$lib/utils/viewport';
 	import {
 		ANIMATION,
@@ -135,6 +136,16 @@
 			<figcaption class='floor-plan-title'>{currentPlan.title}</figcaption>
 			<p class='floor-plan-description'>{currentPlan.description}</p>
 		</figure>
+		<div class='floor-plan-download-wrap'>
+			<button
+				type='button'
+				class='floor-plan-download'
+				onclick={() => pdfRequestModalStore.open('planos')}
+				aria-label='Descargar planos en PDF'
+			>
+				Descargar planos en PDF
+			</button>
+		</div>
 	</div>
 	{#if $floorPlanOverlayStore}
 		{@const overlay = $floorPlanOverlayStore}
@@ -239,6 +250,38 @@
 		color: var(--color-text-secondary);
 		line-height: var(--line-height-normal);
 		margin: 0;
+	}
+
+	.floor-plan-download-wrap {
+		display: flex;
+		justify-content: center;
+		margin-top: 1rem;
+	}
+
+	.floor-plan-download {
+		display: block;
+		padding: 0.75rem 1.25rem;
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		text-align: center;
+		color: var(--color-text-on-accent);
+		background: var(--color-accent-primary);
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		font-family: inherit;
+		transition: opacity 0.2s;
+	}
+
+	.floor-plan-download:hover {
+		opacity: 0.92;
+	}
+
+	.floor-plan-download:focus-visible {
+		outline: 2px solid var(--color-accent-primary);
+		outline-offset: 2px;
 	}
 
 	/* Viewport overlay: fixed below the page header, full width and remaining height */
