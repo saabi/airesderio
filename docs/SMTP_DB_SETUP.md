@@ -110,6 +110,26 @@ CONTACT_FORM_FROM=noreply@airesderio.com
 
 ---
 
+## Step 4: Admin (Contactos)
+
+The `/admin/contactos` page lists leads. Configure in `.env`:
+
+```env
+ADMIN_EMAILS=admin1@airesderio.com,admin2@airesderio.com,admin3@airesderio.com
+ADMIN_PASSWORD=your_shared_admin_password
+ADMIN_SESSION_SECRET=generate_with_openssl_rand_hex_32
+```
+
+Generate `ADMIN_SESSION_SECRET`:
+
+```bash
+openssl rand -hex 32
+```
+
+Then visit `/admin/login` and sign in with any listed email and the shared password.
+
+---
+
 ## Troubleshooting
 
 ### Contact form fails with 500
