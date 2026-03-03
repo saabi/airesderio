@@ -105,8 +105,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		// Get recipient email from environment or use default
-		const recipientEmail = env.CONTACT_FORM_RECIPIENT || 'info@habitat-prime.com.ar';
-		const fromEmail = env.CONTACT_FORM_FROM || 'noreply@habitat-prime.com.ar';
+		const recipientEmail = env.CONTACT_FORM_RECIPIENT || 'info@airesderio.com';
+		const fromEmail = env.CONTACT_FORM_FROM || 'noreply@airesderio.com';
 
 		// Send email using Resend
 		const emailResult = await resend.emails.send({

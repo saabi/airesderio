@@ -17,14 +17,14 @@
 		{ label: 'Equipamiento', href: '#equipados' },
 		{ label: 'Planos', href: '#planos' },
 		{ label: 'Contacto', href: '#contacto' },
-		{ label: 'Habitat Prime', href: 'https://habitat-prime.com.ar', external: true }
+		{ label: 'Habitat Prime', href: 'https://airesderio.com', external: true }
 	];
 
 	const contactInfo = [
 /* 		{ label: 'Oficina Habitat Prime', value: 'Av. Rivadavia 1520 · Santiago del Estero' },
 		{ label: 'Whatsapp ventas', value: '+54 9 385 555 0000' },
 		{ label: 'Teléfono', value: '+54 385 421 1111' },
- */		{ label: 'Email comercial', value: 'info@habitat-prime.com.ar' }
+ */		{ label: 'Email comercial', value: 'info@airesderio.com' }
 	];
 
 	const projectHighlights = [

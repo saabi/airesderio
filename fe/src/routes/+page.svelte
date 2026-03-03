@@ -15,7 +15,7 @@
 	import Location from '$lib/components/sections/Location.svelte';
 
 	// ===== STATIC CONSTANTS =====
-	const DEFAULT_SITE_URL = 'https://habitat-prime.com.ar';
+	const DEFAULT_SITE_URL = 'https://airesderio.com';
 </script>
 
 <script lang="ts">
