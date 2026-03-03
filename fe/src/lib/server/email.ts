@@ -8,7 +8,8 @@ function getTransporter(): Transporter {
 	if (!transporter) {
 		const host = env.SMTP_HOST;
 		const port = parseInt(env.SMTP_PORT ?? '465', 10);
-		const secure = env.SMTP_SECURE === 'true' || port === 465;
+		// Port 587 uses STARTTLS (plain then upgrade), not implicit SSL
+		const secure = port === 465 ? (env.SMTP_SECURE !== 'false') : false;
 		const user = env.SMTP_USER;
 		const pass = env.SMTP_PASS;
 

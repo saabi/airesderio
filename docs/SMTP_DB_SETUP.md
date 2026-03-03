@@ -67,7 +67,7 @@ npm run db:migrate
 2. Go to **Mail** → **Manage**
 3. Create or use an existing email address (e.g. `noreply@airesderio.com`)
 4. Note the credentials:
-   - **Host:** `mail.yourdomain.com` (or `smtp.dreamhost.com`)
+   - **Host:** Use `smtp.dreamhost.com` (not `mail.yourdomain.com` – that causes certificate mismatch)
    - **Port:** 465 (SSL) or 587 (TLS)
    - **User:** full email address
    - **Password:** mailbox password
@@ -77,7 +77,7 @@ npm run db:migrate
 Set these in `.env`:
 
 ```env
-SMTP_HOST=mail.airesderio.com
+SMTP_HOST=smtp.dreamhost.com
 SMTP_PORT=465
 SMTP_SECURE=true
 SMTP_USER=noreply@airesderio.com
@@ -98,7 +98,7 @@ VITE_GOOGLE_MAPS_API_KEY=your_key
 
 DATABASE_URL=postgresql://user:password@host:5432/airesderio
 
-SMTP_HOST=mail.airesderio.com
+SMTP_HOST=smtp.dreamhost.com
 SMTP_PORT=465
 SMTP_SECURE=true
 SMTP_USER=noreply@airesderio.com
@@ -128,14 +128,44 @@ openssl rand -hex 32
 
 Then visit `/admin/login` and sign in with any listed email and the shared password.
 
+### Test SMTP
+
+Run the test script to verify your SMTP configuration:
+
+```bash
+cd fe
+npm run test:smtp
+```
+
+This sends a test email to `CONTACT_FORM_RECIPIENT`. To send to a different address:
+
+```bash
+npm run test:smtp -- --to=your@email.com
+```
+
 ---
 
 ## Troubleshooting
 
+### SMTP authentication failed (535)
+
+- **Mailbox vs forwarder** – SMTP requires a full **mailbox**, not an email forwarder. In DreamHost: Mail → Manage → the address must be a "Mailbox" (with storage). If it's "Forward only", create a new mailbox.
+- Use the **mailbox password** for the email address in `SMTP_USER`, not the DreamHost panel password
+- Reset the mailbox password in DreamHost: Mail → Manage → select the address → change password
+- **Test login in DreamHost webmail** – If you can log in at https://webmail.dreamhost.com with the same email and password, the mailbox is valid
+- Ensure no extra spaces or quotes around values in `.env`; if the password contains `$`, `"`, or `'`, it may need escaping or wrapping differently
+- Confirm `SMTP_USER` is the full email (e.g. `info@airesderio.com`)
+- **Try port 587** – DreamHost often works better with STARTTLS: add to `.env`:
+  ```env
+  SMTP_PORT=587
+  SMTP_SECURE=false
+  ```
+  Or run the test with: `npm run test:smtp -- --587`
+
 ### Contact form fails with 500
 
 - Ensure `DATABASE_URL` is set and migrations have run
-- If SMTP is misconfigured, the API may still return success but log the error (in dev)
+- If SMTP is misconfigured, the API may still return success and log the error (in dev)
 
 ### PDF download link not working
 
