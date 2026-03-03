@@ -14,26 +14,26 @@
 	};
 
 	interface Props {
-		// No props currently, but interface exists for future extensibility
+		adminEmail?: string | null;
 	}
 
 	// ===== STATIC CONSTANTS =====
 	const isDevMode = import.meta.env.DEV;
 
 	const navLinks: NavLink[] = [
-		{ href: '#top', text: 'Home', id: 'top' },
-		{ href: '#proyecto', text: 'Proyecto', id: 'proyecto' },
-		{ href: '#ubicacion', text: 'Ubicación', id: 'ubicacion' },
-		{ href: '#interior', text: 'Interior', id: 'interior' },
-		{ href: '#equipados', text: 'Equipamiento', id: 'equipados' },
-		{ href: '#planos', text: 'Planos', id: 'planos' },
-		{ href: '#contacto', text: 'Contacto', id: 'contacto' }
+		{ href: '/', text: 'Home', id: 'top' },
+		{ href: '/#proyecto', text: 'Proyecto', id: 'proyecto' },
+		{ href: '/#ubicacion', text: 'Ubicación', id: 'ubicacion' },
+		{ href: '/#interior', text: 'Interior', id: 'interior' },
+		{ href: '/#equipados', text: 'Equipamiento', id: 'equipados' },
+		{ href: '/#planos', text: 'Planos', id: 'planos' },
+		{ href: '/#contacto', text: 'Contacto', id: 'contacto' }
 	];
 </script>
 
 <script lang='ts'>
 	// ===== PROPS =====
-	let {}: Props = $props();
+	let { adminEmail = null }: Props = $props();
 
 	// ===== STATE =====
 	let colorEditorOpen = $state(false);
@@ -89,20 +89,17 @@
 			menuStore.close();
 		}
 
-		// Handle anchor links
-		if (href.startsWith('#')) {
-			event.preventDefault();
-			const targetId = href.slice(1);
-			const targetElement = document.getElementById(targetId);
-
-			if (targetElement) {
-				const targetPosition =
-					targetElement.getBoundingClientRect().top + window.pageYOffset - HEADER_HEIGHT;
-
-				window.scrollTo({
-					top: targetPosition,
-					behavior: 'smooth'
-				});
+		// Smooth scroll when on home page and link is to same-page anchor
+		if (browser && (href === '/' || href.startsWith('/#'))) {
+			const hash = href.includes('#') ? href.split('#')[1] : 'top';
+			if (window.location.pathname === '/' && hash) {
+				const targetElement = document.getElementById(hash);
+				if (targetElement) {
+					event.preventDefault();
+					const targetPosition =
+						targetElement.getBoundingClientRect().top + window.pageYOffset - HEADER_HEIGHT;
+					window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+				}
 			}
 		}
 	}
@@ -174,6 +171,16 @@
 						</a>
 					</li>
 				{/each}
+				{#if adminEmail}
+					<li>
+						<a href='/admin/contactos'>Contactos</a>
+					</li>
+					<li>
+						<form action='/api/admin/logout' method='post' class='logout-form'>
+							<button type='submit' class='logout-btn'>Salir</button>
+						</form>
+					</li>
+				{/if}
 			</ul>
 		</nav>
 		<div class='header-controls'>
@@ -342,6 +349,35 @@
 	.desktop-nav a.active {
 		/* Box/Visual */
 		border-color: var(--color-accent-secondary);
+	}
+
+	.logout-form {
+		display: inline;
+	}
+
+	.logout-btn {
+		padding: 0.375rem 0.125rem;
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-semibold);
+		font-size: inherit;
+		text-transform: uppercase;
+		color: inherit;
+		background: none;
+		border: none;
+		border-bottom: 2px solid transparent;
+		cursor: pointer;
+	}
+
+	.desktop-nav .logout-btn {
+		color: var(--color-text-inverse);
+	}
+
+	:global(:root[data-theme='dark']) .desktop-nav .logout-btn {
+		color: var(--color-accent-primary-text);
+	}
+
+	.logout-btn:hover {
+		border-color: var(--color-accent-border);
 	}
 
 	.header-controls {

@@ -18,7 +18,7 @@
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 
 	// ===== PROPS =====
-	let { children }: { children: Snippet } = $props();
+	let { data, children }: { data: { adminEmail?: string | null }; children: Snippet } = $props();
 
 	// ===== LIFECYCLE =====
 	// Store initializes theme automatically on import
@@ -34,7 +34,7 @@
 <!-- Skip to main content link for keyboard navigation -->
 <SkipLink />
 
-<Header />
+<Header adminEmail={data?.adminEmail ?? null} />
 
 {@render children()}
 

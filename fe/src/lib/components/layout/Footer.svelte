@@ -10,13 +10,13 @@
 	const year = new Date().getFullYear();
 
 	const navigationLinks = [
-		{ label: 'Home', href: '#top' },
-		{ label: 'Proyecto', href: '#proyecto' },
-		{ label: 'Ubicación', href: '#ubicacion' },
-		{ label: 'Interior', href: '#interior' },
-		{ label: 'Equipamiento', href: '#equipados' },
-		{ label: 'Planos', href: '#planos' },
-		{ label: 'Contacto', href: '#contacto' },
+		{ label: 'Home', href: '/' },
+		{ label: 'Proyecto', href: '/#proyecto' },
+		{ label: 'Ubicación', href: '/#ubicacion' },
+		{ label: 'Interior', href: '/#interior' },
+		{ label: 'Equipamiento', href: '/#equipados' },
+		{ label: 'Planos', href: '/#planos' },
+		{ label: 'Contacto', href: '/#contacto' },
 		{ label: 'Habitat Prime', href: 'https://airesderio.com', external: true }
 	];
 
