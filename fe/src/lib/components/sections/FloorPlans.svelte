@@ -43,7 +43,7 @@
 	const FLOOR_PLANS: FloorPlan[] = [
 		{
 			image: '/planos/depto-1hab-balcon.jpg',
-			title: 'Departamento 1 habitación con balcón',
+			title: 'Departamento 1 habitación con balcón ● Frente',
 			description: 'Plano de distribución del departamento de 1 dormitorio con balcón.',
 			clipShape: {
 				type: 'path',
@@ -52,7 +52,7 @@
 		},
 		{
 			image: '/planos/depto-1hab-contrafrente.jpg',
-			title: 'Departamento 1 habitación contrafrente',
+			title: 'Departamento 1 habitación ● Contrafrente',
 			description: 'Plano de distribución del departamento de 1 dormitorio contrafrente.',
 			clipShape: {
 				type: 'polygon',
@@ -61,8 +61,8 @@
 		},
 		{
 			image: '/planos/depto-2hab-1ofi.jpg',
-			title: 'Departamento 2 habitaciones + 1 oficina',
-			description: 'Plano de distribución del departamento con 2 habitaciones y 1 oficina.',
+			title: 'Departamento 2 habitaciones + estudio',
+			description: 'Plano de distribución del departamento con 2 habitaciones y estudio.',
 			clipShape: {
 				type: 'polygon',
 				points: '151.5,95.5 152.475,653.306 292.5,653.5 292.5,1462.5 152.5,1463.5 152.5,2006.5 1246.5,2006.5 1247.5,2026.5 1278.5,2026.5 1278.5,2023.5 1889.5,2024.5 1889.5,94.5'

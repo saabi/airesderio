@@ -89,6 +89,7 @@
 		/* Layout */
 		display: grid;
 		grid-template-rows: 1fr min-content;
+		grid-template-columns: max-content;
 		height: 100%;
 		gap: 1rem;
 		max-height: 32em;
