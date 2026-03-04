@@ -7,6 +7,10 @@
 	const ZOOM_TWEEN = { duration: 400, easing: (t: number) => t * (2 - t) };
 
 	// ===== TYPES =====
+	export type ClipShape =
+		| { type: 'polygon'; points: string }
+		| { type: 'path'; d: string };
+
 	export interface InteractiveFloorPlanData {
 		image: string | unknown;
 		title: string;
@@ -23,7 +27,11 @@
 		highResImage?: string | unknown;
 		rotateOnMobile?: boolean;
 		aspectRatio?: number; // width / height
+		/** SVG shape used to clip the image background (e.g. to hide white JPG padding) */
+		clipShape?: ClipShape;
 	}
+
+	let clipIdCounter = 0;
 
 	function normalizeShapes(shape: SvgShape | SvgShape[]): SvgShape[] {
 		return Array.isArray(shape) ? shape : [shape];
@@ -33,6 +41,9 @@
 <script lang="ts">
 	// ===== PROPS =====
 	let { plan, isActive = true }: { plan: InteractiveFloorPlanData; isActive?: boolean } = $props();
+
+	// ===== INSTANCE ID =====
+	const clipId = `fp-clip-${clipIdCounter++}`;
 
 	// ===== STATE =====
 	let imageDimensions = $state<{ width: number; height: number } | null>(null);
@@ -257,8 +268,8 @@
 			onclick={handleBack}
 		></button>
 	{/if}
-	{#if !isInteractive}
-		<!-- Non-interactive: plain image (always use resolved URL to avoid [object Object]) -->
+	{#if !isInteractive && !plan.clipShape}
+		<!-- Non-interactive without clip: plain image -->
 		<div class="plan-image-wrap">
 			{#if planImageSrc}
 				<img
@@ -270,7 +281,7 @@
 			{/if}
 		</div>
 	{:else}
-		<!-- Interactive: image + SVG overlay with zones -->
+		<!-- SVG rendering: supports interactive zones and/or clip shapes -->
 		<div
 			class="plan-interactive-wrap"
 			class:zoomed={zoomedZoneId != null}
@@ -292,6 +303,17 @@
 					aria-label={plan.title}
 					data-interactive-floor-plan="overlay"
 				>
+					{#if plan.clipShape}
+						<defs>
+							<clipPath id={clipId}>
+								{#if plan.clipShape.type === 'polygon'}
+									<polygon points={plan.clipShape.points} />
+								{:else}
+									<path d={plan.clipShape.d} />
+								{/if}
+							</clipPath>
+						</defs>
+					{/if}
 					<image
 						href={currentImageSrc}
 						x="0"
@@ -299,6 +321,7 @@
 						width={imageDimensions.width}
 						height={imageDimensions.height}
 						preserveAspectRatio="none"
+						clip-path={plan.clipShape ? `url(#${clipId})` : undefined}
 					/>
 					<rect
 						class="zoom-backdrop"
