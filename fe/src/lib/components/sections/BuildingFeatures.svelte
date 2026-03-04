@@ -201,7 +201,7 @@
 						onclick={() => pdfRequestModalStore.open('ficha-tecnica')}
 						aria-label="Ver más detalles técnicos del edificio"
 					>
-						Más detalles técnicos de tu edificio
+						SOLICITAR FICHA TÉCNICA
 					</button>
 				</div>
 	

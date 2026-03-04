@@ -286,7 +286,7 @@
 						class="equip-ficha"
 						onclick={() => pdfRequestModalStore.open('ficha-tecnica')}
 						aria-label="Descargar ficha técnica"
-					>FICHA TECNICA</button>
+					>SOLICITAR FICHA TÉCNICA</button>
 				</div>
 			</div>
 		</div>

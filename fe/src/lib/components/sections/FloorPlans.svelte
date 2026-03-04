@@ -141,9 +141,9 @@
 				type='button'
 				class='floor-plan-download'
 				onclick={() => pdfRequestModalStore.open('planos')}
-				aria-label='Descargar planos en PDF'
+				aria-label='Solicitar planos en PDF'
 			>
-				Descargar planos en PDF
+				SOLICITAR PLANOS EN PDF
 			</button>
 		</div>
 	</div>
