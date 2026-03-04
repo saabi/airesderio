@@ -8,7 +8,7 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { getDb } from '$lib/server/db/index.js';
 import { leads, pdfAccessTokens } from '$lib/server/db/schema.js';
-import { sendContactNotification } from '$lib/server/email.js';
+import { sendContactNotification, sendPdfDownloadLink, sendDirectContactThankYou } from '$lib/server/email.js';
 import { randomBytes } from 'crypto';
 
 const VALID_PDF_INTENTS = ['ficha-tecnica', 'planos'] as const;
@@ -121,6 +121,20 @@ export const POST: RequestHandler = async ({ request }) => {
 				leadMessage: message ?? undefined,
 				intent
 			});
+
+			if (isPdfIntent(intent) && tokens[intent]) {
+				await sendPdfDownloadLink({
+					leadName: name,
+					leadEmail: email,
+					pdfType: intent,
+					token: tokens[intent]
+				});
+			} else if (intent === 'direct-contact') {
+				await sendDirectContactThankYou({
+					leadName: name,
+					leadEmail: email
+				});
+			}
 		} catch (emailErr) {
 			console.error('SMTP error:', emailErr);
 			if (!env.SMTP_HOST || import.meta.env.PROD) {
@@ -131,18 +145,12 @@ export const POST: RequestHandler = async ({ request }) => {
 			}
 		}
 
-		const responsePayload: Record<string, unknown> = {
-			success: true,
-			message:
-				intent === 'direct-contact'
-					? 'Formulario enviado correctamente. Nos pondremos en contacto contigo pronto.'
-					: 'Formulario enviado correctamente. Tu descarga comenzará en breve.'
-		};
-		if (Object.keys(tokens).length > 0) {
-			responsePayload.tokens = tokens;
-		}
+		const responseMessage =
+			intent === 'direct-contact'
+				? 'Formulario enviado correctamente. Nos pondremos en contacto contigo pronto.'
+				: 'Formulario enviado correctamente. Revisá tu correo electrónico para descargar el archivo.';
 
-		return json(responsePayload);
+		return json({ success: true, message: responseMessage });
 	} catch (error) {
 		console.error('Form submission error:', error);
 		return json(

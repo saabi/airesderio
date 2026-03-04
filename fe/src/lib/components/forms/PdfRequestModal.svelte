@@ -83,19 +83,12 @@
 				return;
 			}
 
-			successMessage = 'Formulario enviado correctamente. Tu descarga comenzará en breve.';
+			successMessage = result.message || 'Revisá tu correo electrónico para descargar el archivo.';
 			formElement.reset();
-
-			// Trigger download if token returned
-			const tokens = result.tokens as Record<string, string> | undefined;
-			if (tokens && tokens[intent]) {
-				const url = `/api/pdf/${intent}?token=${encodeURIComponent(tokens[intent])}`;
-				window.location.href = url;
-			}
 
 			setTimeout(() => {
 				handleClose();
-			}, 2000);
+			}, 5000);
 		} catch (error) {
 			console.error('Form submission error:', error);
 			errorMessage =
@@ -119,7 +112,7 @@
 	<div class='modal-content'>
 		<button type='button' class='modal-close' aria-label='Cerrar' onclick={handleClose}>×</button>
 		<h2 id='pdf-modal-title'>Solicitar {INTENT_LABELS[intent]}</h2>
-		<p id='pdf-modal-desc'>Completá tus datos para descargar la {INTENT_LABELS[intent].toLowerCase()}.</p>
+		<p id='pdf-modal-desc'>Completá tus datos y te enviaremos la {INTENT_LABELS[intent].toLowerCase()} a tu correo.</p>
 
 		<form bind:this={formElement} action='#' method='POST' onsubmit={handleSubmit} novalidate>
 			<input
@@ -172,11 +165,11 @@
 				/>
 			</div>
 			<div class='form-group'>
-				<button type='submit' disabled={isLoading} aria-label='Enviar y descargar'>
+				<button type='submit' disabled={isLoading} aria-label='Solicitar'>
 					{#if isLoading}
 						<span class='button-loading'>Enviando...</span>
 					{:else}
-						ENVIAR Y DESCARGAR
+						SOLICITAR
 					{/if}
 				</button>
 			</div>
