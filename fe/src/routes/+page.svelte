@@ -124,10 +124,10 @@
 	</div>
 	<Location jsonUrl="/lugares/lugares-direcciones.json" showPlaceMarkers={true} />
 	<div class="container">
+		<BuildingFeatures />
 		<Interior />
 		<Equipment />
 		<FloorPlans />
-		<BuildingFeatures />
 	</div>
 	<ContactSection />
 </main>

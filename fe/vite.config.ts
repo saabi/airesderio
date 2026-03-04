@@ -33,6 +33,9 @@ export default defineConfig({
 		}
 	},
 	preview: {
-		allowedHosts: ['ferreyrapons.com']
+		allowedHosts: ['ferreyrapons.com', 'ad5e-181-116-253-82.ngrok-free.app']
+	},
+	server: {
+		allowedHosts: ['ferreyrapons.com', 'ad5e-181-116-253-82.ngrok-free.app']
 	}
 });
