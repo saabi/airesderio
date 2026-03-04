@@ -167,7 +167,7 @@
 					disabled={isLoading}
 				/>
 			</div>
-			<PhoneNumberInput id='pdf-telefono' name='telefono' />
+			<PhoneNumberInput id='pdf-telefono' name='telefono' label='Contacto de WhatsApp' />
 			<div class='form-group'>
 				<label for='pdf-mensaje'>Mensaje (opcional)</label>
 				<Textarea
