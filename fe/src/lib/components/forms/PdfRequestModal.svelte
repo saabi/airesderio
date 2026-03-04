@@ -4,7 +4,7 @@
 	import Textarea from '$lib/components/forms/Textarea.svelte';
 	import type { PdfIntent } from '$lib/stores/pdfRequestModal';
 
-	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 	const INTENT_LABELS: Record<PdfIntent, string> = {
 		'ficha-tecnica': 'Ficha técnica',
 		planos: 'Planos'
@@ -50,6 +50,7 @@
 		const formData = new FormData(formElement);
 		const data = {
 			nombre: formData.get('nombre') as string,
+			apellido: formData.get('apellido') as string,
 			correo: formData.get('correo') as string,
 			telefono: (formData.get('telefono') as string) || '',
 			mensaje: (formData.get('mensaje') as string) || '',
@@ -57,7 +58,7 @@
 			website: (formData.get('website') as string) || ''
 		};
 
-		if (!data.nombre || !data.correo) {
+		if (!data.nombre || !data.apellido || !data.correo) {
 			errorMessage = 'Por favor completa todos los campos requeridos.';
 			return;
 		}
@@ -131,16 +132,29 @@
 				<div class='form-message form-message--error' role='alert'>{errorMessage}</div>
 			{/if}
 
-			<div class='form-group'>
-				<label for='pdf-nombre'>Nombre</label>
-				<Input
-					type='text'
-					id='pdf-nombre'
-					name='nombre'
-					required
-					ariaLabel='Nombre completo'
-					disabled={isLoading}
-				/>
+			<div class='form-row'>
+				<div class='form-group'>
+					<label for='pdf-nombre'>Nombre</label>
+					<Input
+						type='text'
+						id='pdf-nombre'
+						name='nombre'
+						required
+						ariaLabel='Nombre'
+						disabled={isLoading}
+					/>
+				</div>
+				<div class='form-group'>
+					<label for='pdf-apellido'>Apellido</label>
+					<Input
+						type='text'
+						id='pdf-apellido'
+						name='apellido'
+						required
+						ariaLabel='Apellido'
+						disabled={isLoading}
+					/>
+				</div>
 			</div>
 			<div class='form-group'>
 				<label for='pdf-correo'>Correo</label>
@@ -232,6 +246,15 @@
 		margin: 0 0 1.5rem;
 		font-size: 0.9rem;
 		color: var(--color-text-secondary);
+	}
+
+	.form-row {
+		display: flex;
+		gap: 0.75rem;
+	}
+
+	.form-row .form-group {
+		flex: 1;
 	}
 
 	.form-group {

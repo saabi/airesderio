@@ -4,7 +4,8 @@ export const leads = pgTable(
 	'leads',
 	{
 		id: uuid('id').primaryKey().defaultRandom(),
-		name: varchar('name', { length: 255 }).notNull(),
+		firstName: varchar('first_name', { length: 255 }).notNull(),
+		lastName: varchar('last_name', { length: 255 }).notNull(),
 		email: varchar('email', { length: 255 }).notNull(),
 		phone: varchar('phone', { length: 50 }),
 		message: text('message'),

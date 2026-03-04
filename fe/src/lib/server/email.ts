@@ -88,7 +88,7 @@ export async function sendContactNotification(params: SendContactNotificationPar
 	const subject = `Nueva consulta: ${intent} - Aires de Río`;
 	const html = `
 		<h2>Nueva consulta desde el sitio web</h2>
-		<p><strong>Nombre:</strong> ${leadName}</p>
+		<p><strong>Nombre completo:</strong> ${leadName}</p>
 		<p><strong>Correo:</strong> ${leadEmail}</p>
 		${leadPhone ? `<p><strong>Teléfono:</strong> ${leadPhone}</p>` : ''}
 		<p><strong>Intención:</strong> ${intent}</p>

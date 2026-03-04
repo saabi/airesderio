@@ -11,7 +11,7 @@
 	}
 
 	// ===== STATIC CONSTANTS =====
-	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 	const SUCCESS_MESSAGE_TIMEOUT = 5000;
 </script>
 
@@ -45,15 +45,15 @@
 		const formData = new FormData(formElement);
 		const data = {
 			nombre: formData.get('nombre') as string,
+			apellido: formData.get('apellido') as string,
 			correo: formData.get('correo') as string,
 			telefono: (formData.get('telefono') as string) || '',
 			mensaje: (formData.get('mensaje') as string) || '',
 			intent: 'direct-contact' as const,
-			website: (formData.get('website') as string) || '' // Honeypot
+			website: (formData.get('website') as string) || ''
 		};
 
-		// Validate required fields
-		if (!data.nombre || !data.correo) {
+		if (!data.nombre || !data.apellido || !data.correo) {
 			errorMessage = 'Por favor completa todos los campos requeridos.';
 			return;
 		}
@@ -128,16 +128,29 @@
 		</div>
 	{/if}
 
-	<div class='form-group'>
-		<label for='nombre'>Nombre</label>
-		<Input
-			type='text'
-			id='nombre'
-			name='nombre'
-			required
-			ariaLabel='Nombre completo'
-			disabled={isLoading}
-		/>
+	<div class='form-row'>
+		<div class='form-group'>
+			<label for='nombre'>Nombre</label>
+			<Input
+				type='text'
+				id='nombre'
+				name='nombre'
+				required
+				ariaLabel='Nombre'
+				disabled={isLoading}
+			/>
+		</div>
+		<div class='form-group'>
+			<label for='apellido'>Apellido</label>
+			<Input
+				type='text'
+				id='apellido'
+				name='apellido'
+				required
+				ariaLabel='Apellido'
+				disabled={isLoading}
+			/>
+		</div>
 	</div>
 	<div class='form-group'>
 		<label for='correo'>Correo</label>
@@ -150,7 +163,7 @@
 			disabled={isLoading}
 		/>
 	</div>
-	<PhoneNumberInput id='telefono' name='telefono' />
+	<PhoneNumberInput id='telefono' name='telefono' label='Contacto de WhatsApp' />
 	<div class='form-group'>
 		<label for='mensaje'>Mensaje</label>
 		<Textarea
@@ -173,8 +186,16 @@
 </form>
 
 <style>
+	.form-row {
+		display: flex;
+		gap: 0.75rem;
+	}
+
+	.form-row .form-group {
+		flex: 1;
+	}
+
 	.form-group {
-		/* Layout */
 		margin-bottom: 0.75rem;
 	}
 

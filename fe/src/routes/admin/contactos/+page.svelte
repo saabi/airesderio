@@ -1,7 +1,8 @@
 <script lang="ts">
 	let leads = $state<Array<{
 		id: string;
-		name: string;
+		firstName: string;
+		lastName: string;
 		email: string;
 		phone: string | null;
 		message: string | null;
@@ -61,6 +62,7 @@
 				<tr>
 					<th>Fecha</th>
 					<th>Nombre</th>
+					<th>Apellido</th>
 					<th>Correo</th>
 					<th>Teléfono</th>
 					<th>Intención</th>
@@ -72,7 +74,8 @@
 				{#each leads as lead}
 					<tr>
 						<td>{formatDate(lead.createdAt)}</td>
-						<td>{lead.name}</td>
+						<td>{lead.firstName}</td>
+						<td>{lead.lastName}</td>
 						<td><a href="mailto:{lead.email}">{lead.email}</a></td>
 						<td>{lead.phone ?? '—'}</td>
 						<td>{lead.intent}</td>

@@ -31,7 +31,7 @@ function checkRateLimit(identifier: string): boolean {
 }
 
 function validateEmail(email: string): boolean {
-	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+	return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/.test(email);
 }
 
 function sanitizeInput(input: string): string {
@@ -66,9 +66,9 @@ export const POST: RequestHandler = async ({ request }) => {
 			);
 		}
 
-		const { nombre, correo, telefono, mensaje, intent: rawIntent } = data;
+		const { nombre, apellido, correo, telefono, mensaje, intent: rawIntent } = data;
 
-		if (!nombre || !correo) {
+		if (!nombre || !apellido || !correo) {
 			return json({ error: 'Por favor completa todos los campos requeridos.' }, { status: 400 });
 		}
 
@@ -77,7 +77,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		const intent = rawIntent ? sanitizeInput(String(rawIntent)) : 'direct-contact';
-		const name = sanitizeInput(nombre);
+		const firstName = sanitizeInput(nombre);
+		const lastName = sanitizeInput(apellido);
 		const email = sanitizeInput(correo);
 		const phone = telefono ? sanitizeInput(telefono) : null;
 		const message = mensaje ? sanitizeInput(mensaje) : null;
@@ -87,7 +88,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		const [lead] = await db
 			.insert(leads)
 			.values({
-				name,
+				firstName,
+				lastName,
 				email,
 				phone,
 				message,
@@ -113,9 +115,11 @@ export const POST: RequestHandler = async ({ request }) => {
 			tokens[intent] = token;
 		}
 
+		const fullName = `${firstName} ${lastName}`;
+
 		try {
 			await sendContactNotification({
-				leadName: name,
+				leadName: fullName,
 				leadEmail: email,
 				leadPhone: phone ?? undefined,
 				leadMessage: message ?? undefined,
@@ -124,14 +128,14 @@ export const POST: RequestHandler = async ({ request }) => {
 
 			if (isPdfIntent(intent) && tokens[intent]) {
 				await sendPdfDownloadLink({
-					leadName: name,
+					leadName: firstName,
 					leadEmail: email,
 					pdfType: intent,
 					token: tokens[intent]
 				});
 			} else if (intent === 'direct-contact') {
 				await sendDirectContactThankYou({
-					leadName: name,
+					leadName: firstName,
 					leadEmail: email
 				});
 			}
