@@ -185,7 +185,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: rgba(0, 0, 0, 0.5);
+		background: rgba(0, 0, 0, 0.4);
+		-webkit-backdrop-filter: blur(6px);
+		backdrop-filter: blur(6px);
 		padding: 1rem;
 	}
 
@@ -196,9 +198,9 @@
 		max-height: 90vh;
 		overflow-y: auto;
 		padding: 2rem;
-		background: var(--color-bg-base);
+		background: var(--color-bg-canvas);
 		border-radius: 0.5rem;
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 	}
 
 	.modal-close {

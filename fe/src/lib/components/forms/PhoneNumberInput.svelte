@@ -17,6 +17,8 @@
 	interface Props {
 		name?: string;
 		id?: string;
+		label?: string;
+		showHint?: boolean;
 	}
 
 	// ===== STATIC CONSTANTS =====
@@ -40,7 +42,7 @@
 
 <script lang='ts'>
 	// ===== PROPS =====
-	let { name = 'telefono', id = 'telefono' }: Props = $props();
+	let { name = 'telefono', id = 'telefono', label = 'Número de teléfono', showHint = false }: Props = $props();
 
 	// ===== STATE =====
 	let selectedCountry = $state<Country>(countries.find((c) => c.code === 'AR') || countries[0]);
@@ -295,8 +297,10 @@
 </script>
 
 <div class='group'>
-	<label for={id}>Número de teléfono</label>
-	<p class='hint'>Con código de área. Ej: +54 3512334353</p>
+	<label for={id}>{label}</label>
+	{#if showHint}
+		<p class='hint'>Con código de área. Ej: +54 3512334353</p>
+	{/if}
 	{#if showValidationError}
 		<p class='error' role='alert'>Número de teléfono inválido</p>
 	{/if}
