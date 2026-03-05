@@ -12,6 +12,8 @@
 		fitViewBox?: boolean;
 		/** When false, hide "DEPARTAMENTOS" subline; use for inline/brand-only. Default true. */
 		showDepartamentos?: boolean;
+		/** Vertical alignment when used inline. Default "baseline". */
+		verticalAlign?: 'baseline' | 'middle' | 'top' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
 	}
 </script>
 
@@ -19,7 +21,7 @@
 	import { browser } from '$app/environment';
 
 	// ===== PROPS =====
-	let { class: className = '', loading = 'lazy', width, height, theme = 'light', showIsotype = true, fitViewBox = false, showDepartamentos = true }: Props = $props();
+	let { class: className = '', loading = 'lazy', width, height, theme = 'light', showIsotype = true, fitViewBox = false, showDepartamentos = true, verticalAlign = 'baseline' }: Props = $props();
 
 	// ===== VIEWBOX =====
 	const DEFAULT_VIEW_BOX = '0 0 67.733332 17.4625';
@@ -48,6 +50,7 @@
 	viewBox={viewBox}
 	xmlns='http://www.w3.org/2000/svg'
 	aria-label='Aires de Río'
+	style='vertical-align: {verticalAlign};'
 >
 	<g bind:this={contentEl} {...(fitViewBox ? {} : { transform: 'translate(-20.155689,-26.676647)' })}>
 		<g transform='matrix(0.50701009,0,0,0.50701009,-16.667242,-10.821569)'>
@@ -109,7 +112,6 @@
 	/* Inline variant — keeps normal text line height when used in paragraphs */
 	:global(svg.logo-inline) {
 		display: inline-block;
-		vertical-align: baseline;
 		line-height: 1;
 	}
 </style>

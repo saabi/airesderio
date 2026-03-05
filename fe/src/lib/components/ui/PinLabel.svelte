@@ -1,6 +1,7 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
+	import { theme } from '$lib/stores/theme';
 
 	// ===== TYPES =====
 	type ArrowPosition = 'bottom' | 'top' | 'left' | 'right';
@@ -13,16 +14,19 @@
 		class?: string;
 		/** When true, render logo instead of text (e.g. for focal label) */
 		useLogo?: boolean;
+		/** When true, show the arrow pointer toward the pin. Default false. */
+		showArrow?: boolean;
 	}
 </script>
 
 <script lang='ts'>
 	// ===== PROPS =====
-	let { x, y, text, arrowPosition = 'bottom', class: className = '', useLogo = false }: Props = $props();
+	let { x, y, text, arrowPosition = 'bottom', class: className = '', useLogo = false, showArrow = false }: Props = $props();
 </script>
 
 <div
 	class='pin-label {className}'
+	class:show-arrow={showArrow}
 	class:arrow-bottom={arrowPosition === 'bottom'}
 	class:arrow-top={arrowPosition === 'top'}
 	class:arrow-left={arrowPosition === 'left'}
@@ -30,7 +34,7 @@
 	style='left: {x}px; top: {y}px;'
 >
 	{#if useLogo}
-		<AiresDeRioLogo class='pin-label-logo' height='1.2em' theme='dark' showIsotype={false} fitViewBox={true} showDepartamentos={false} />
+		<AiresDeRioLogo class='pin-label-logo' height='1.6em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} verticalAlign='text-bottom' />
 	{:else}
 		{text}
 	{/if}
@@ -45,12 +49,12 @@
 		padding: 6px 12px;
 
 		/* Box/Visual */
-		background-color: rgba(0, 0, 0, 0.8);
+		background-color: var(--color-bg-contrast);
 		border-radius: 4px;
 		opacity: 0;
 
 		/* Typography */
-		color: white;
+		color: var(--color-text-primary);
 		font-size: 14px;
 		font-weight: 500;
 		white-space: nowrap;
@@ -103,6 +107,11 @@
 		content: '';
 		width: 0;
 		height: 0;
+		display: none;
+	}
+
+	.pin-label.show-arrow::after {
+		display: block;
 	}
 
 	/* Arrow pointing down (bottom) */
@@ -114,7 +123,7 @@
 		/* Box/Visual */
 		border-left: 6px solid transparent;
 		border-right: 6px solid transparent;
-		border-top: 6px solid rgba(0, 0, 0, 0.8);
+		border-top: 6px solid var(--color-bg-contrast);
 
 		/* Effects & Motion */
 		transform: translateX(-50%);
@@ -129,7 +138,7 @@
 		/* Box/Visual */
 		border-left: 6px solid transparent;
 		border-right: 6px solid transparent;
-		border-bottom: 6px solid rgba(0, 0, 0, 0.8);
+		border-bottom: 6px solid var(--color-bg-contrast);
 
 		/* Effects & Motion */
 		transform: translateX(-50%);
@@ -144,7 +153,7 @@
 		/* Box/Visual */
 		border-top: 6px solid transparent;
 		border-bottom: 6px solid transparent;
-		border-right: 6px solid rgba(0, 0, 0, 0.8);
+		border-right: 6px solid var(--color-bg-contrast);
 
 		/* Effects & Motion */
 		transform: translateY(-50%);
@@ -159,7 +168,7 @@
 		/* Box/Visual */
 		border-top: 6px solid transparent;
 		border-bottom: 6px solid transparent;
-		border-left: 6px solid rgba(0, 0, 0, 0.8);
+		border-left: 6px solid var(--color-bg-contrast);
 
 		/* Effects & Motion */
 		transform: translateY(-50%);

@@ -42,7 +42,7 @@
 				class='welcome scroll-animate'
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()}; --scroll-animate-delay: ${animationDelay(1)};`}
 			>
-				Santiago del Estero da la bienvenida a <AiresDeRioLogo class='logo-inline' height='2em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} />, un nuevo proyecto de departamentos con
+				Santiago del Estero da la bienvenida a <AiresDeRioLogo class='logo-inline' height='2em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> un nuevo proyecto de departamentos con
 				las mejores prestaciones y estratégica ubicación.
 			</p>
 		</section>

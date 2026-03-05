@@ -9,7 +9,7 @@
 	import CircularButton from '$lib/components/ui/CircularButton.svelte';
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
-	import Building from '$lib/components/icons/Building.svelte';
+	import Isotype from '$lib/components/icons/Isotype.svelte';
 	import Gallery from '$lib/components/icons/Gallery.svelte';
 	import Ubicacion from '$lib/components/icons/Ubicacion.svelte';
 	import Pointer from '$lib/components/icons/Pointer.svelte';
@@ -222,19 +222,15 @@
 				</p>
 				<p>
 					Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
-					de cercanía a solo una cuadra.
+					de cercanía a sólo una cuadra.
 				</p>
-				<dl class="location-help" role="status">
-					<dt><span class="location-help-icon location-help-icon-arrows" aria-hidden="true"><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><ArrowLeft /></SvgViewport><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><ArrowRight /></SvgViewport></span></dt><dd>explorar lugares cercanos</dd>
-					<dt><span class="location-help-icon" aria-hidden="true"><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><Building /></SvgViewport></span></dt><dd>vista general</dd>
-					<dt><span class="location-help-icon" aria-hidden="true"><SvgViewport viewBox="0 0 20 20" width="1.1em" height="1.1em"><Gallery /></SvgViewport></span></dt><dd>fotos del lugar</dd>
-				</dl>
 			</div>
 			<div class='map-navigation'>
+
 			<div class='navigation-row'>
 				<CircularButton
-					variant="solid"
-					size="sm"
+					variant="accent"
+					size="xxl"
 					ariaLabel="Anterior ubicación"
 					onClick={() => mapComponent?.prev()}
 				>
@@ -242,17 +238,17 @@
 				</CircularButton>
 				<div class='navigation-center'>
 					<CircularButton
-						variant="solid"
-						size="sm"
+						variant="accent"
+						size="xxl"
 						ariaLabel="Volver al estado inicial"
 						onClick={() => mapComponent?.reset()}
 						disabled={!hasPlaceSelected}
 					>
-						<Building />
+						<Isotype />
 					</CircularButton>
 					<CircularButton
-						variant="solid"
-						size="sm"
+						variant="accent"
+						size="xxl"
 						ariaLabel="Abrir galería de fotos"
 						onClick={openGalleryForCurrentPlace}
 						disabled={!hasPlaceSelected || !currentPlaceHasPhotos}
@@ -261,8 +257,8 @@
 					</CircularButton>
 				</div>
 				<CircularButton
-					variant="solid"
-					size="sm"
+					variant="accent"
+					size="xxl"
 					ariaLabel="Siguiente ubicación"
 					onClick={() => mapComponent?.next()}
 				>
@@ -282,7 +278,7 @@
 				ariaLabel='Mapa de ubicación del proyecto Aires de Río'
 				{mapData}
 				showDetailImage={false}
-				pinRadius={30}
+				pinRadius={40}
 				onOpenGallery={openGalleryForCurrentPlace}
 			/>
 		{:else}
@@ -340,7 +336,7 @@
 	.location-text-column {
 		/* Layout */
 		grid-area: text;
-		display: flex;
+		display: grid;
 		flex-direction: column;
 		min-height: 0;
 		overflow: hidden;
@@ -494,6 +490,7 @@
 			/* Layout: fit content so helper is always visible */
 			max-width: 100%;
 			padding: 1.5rem;
+			padding-bottom: 0;
 			flex: none;
 			min-height: 0;
 			overflow: visible;

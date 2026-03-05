@@ -176,12 +176,19 @@
 	/* Disabled state */
 	.circular-button.disabled,
 	.circular-button:disabled {
-		opacity: 0.5;
+		opacity: 1;
 		background: var(--color-bg-muted);
-		border-color: var(--color-border-subtle);
+		border-color: var(--color-border);
 		color: var(--color-text-secondary);
 		cursor: not-allowed;
 		pointer-events: none;
+	}
+
+	.circular-button.accent.disabled {
+		background: color-mix(in oklch, var(--color-accent-primary) 50%, white 50%);
+		background: gray;
+		border-color: var(--color-border);
+		color: var(--color-text-on-accent);
 	}
 
 	.circular-button.disabled:hover,

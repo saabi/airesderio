@@ -155,6 +155,14 @@
 	/** Label text for the apartment building (focal) in home state */
 	const FOCAL_LABEL = 'Aires de Río';
 
+	// Isotype native bounding-box constants (from the source SVG paths)
+	const ISOTYPE_CENTER_X = 84.628;
+	const ISOTYPE_CENTER_Y = 94.152;
+	const ISOTYPE_HEIGHT = 34.385;
+
+	/** Scale factor for rendering the isotype at the focal point */
+	let focalIsotypeScale = $derived(denorm(0.016) / ISOTYPE_HEIGHT);
+
 	// ===== STATE =====
 	let currentZoomedIndex = $state<number | null>(null);
 	let selectedGroupName = $state<string | null>(null);
@@ -1070,15 +1078,20 @@
 						r={getPinRadius(places[0].pin.r)}
 					/>
 				{/if}
-				{#each mapData.focal.shapes as shape}
-					{#if shape.type === 'path'}
-						<path class='focal-path' d={denormPath(shape.d)} />
-					{:else if shape.type === 'circle'}
-						<circle class='focal-pin' cx={denorm(shape.cx)} cy={denorm(shape.cy)} r={denorm(shape.r)} />
-					{:else if shape.type === 'rect'}
-						<rect class='focal-path' x={denorm(shape.x)} y={denorm(shape.y)} width={denorm(shape.width)} height={denorm(shape.height)} />
-					{/if}
-				{/each}
+			{#each mapData.focal.shapes as shape}
+				{#if shape.type === 'circle'}
+				{:else if shape.type === 'rect'}
+					<rect class='focal-path' x={denorm(shape.x)} y={denorm(shape.y)} width={denorm(shape.width)} height={denorm(shape.height)} />
+				{/if}
+			{/each}
+			<g
+				class='focal-isotype'
+				transform="translate({FOCAL_CENTER.cx}, {FOCAL_CENTER.cy}) scale({focalIsotypeScale}) translate({-ISOTYPE_CENTER_X}, {-ISOTYPE_CENTER_Y})"
+			>
+				<path d="m 72.627612,73.959506 c 0,7.331697 5.943515,13.275212 13.275212,13.275212 h 8.724467 v 4.208608 h -8.724467 c -7.331697,0 -13.275212,-5.943515 -13.275212,-13.275212 z"/>
+				<path d="m 72.627612,82.410211 c 0,7.331697 5.943515,13.275212 13.275212,13.275212 h 8.724467 v 4.208611 h -8.724467 c -7.331697,0 -13.275212,-5.943518 -13.275212,-13.275215 z"/>
+				<path d="m 72.62761,90.860919 c 0,7.331697 5.943515,13.275211 13.275212,13.275211 h 8.724469 v 4.20861 h -8.724469 c -7.331697,0 -13.275212,-5.94352 -13.275212,-13.275213 z"/>
+			</g>
 			</g>
 		{/if}
 	</svg>
@@ -1128,8 +1141,8 @@
 		left: -9999px;
 
 		/* Box/Visual */
-		background-color: rgba(0, 0, 0, 0.8);
-		color: white;
+		background-color: var(--color-bg-contrast);
+		color: var(--color-text-primary);
 		padding: 6px 12px;
 		border-radius: 4px;
 		font-size: 14px;
@@ -1151,8 +1164,8 @@
 		margin-bottom: 8px;
 
 		/* Box/Visual */
-		background-color: rgba(0, 0, 0, 0.8);
-		color: white;
+		background-color: var(--color-bg-contrast);
+		color: var(--color-text-primary);
 		padding: 6px 12px;
 		border-radius: 4px;
 		font-size: 14px;
@@ -1181,7 +1194,7 @@
 		height: 0;
 		border-left: 6px solid transparent;
 		border-right: 6px solid transparent;
-		border-top: 6px solid rgba(0, 0, 0, 0.8);
+		border-top: 6px solid var(--color-bg-contrast);
 	}
 
 	@keyframes fadeInLabel {
@@ -1257,6 +1270,10 @@
 		stroke-width: 0.1997;
 	}
 
+	.focal-isotype path {
+		fill: black;
+	}
+
 	.focal-pin {
 		/* Box/Visual */
 		font-variation-settings: normal;
@@ -1274,8 +1291,8 @@
 
 	.pin-circle {
 		/* Box/Visual */
-		fill: #800000;
-		fill-opacity: 0;
+		fill: white;
+		fill-opacity: 1;
 		stroke-width: 0.0730401;
 		stroke-linecap: butt;
 		stroke-linejoin: miter;
@@ -1312,7 +1329,6 @@
 
 	.pin-circle-home {
 		/* Box/Visual */
-		fill-opacity: 0.65;
 		stroke-opacity: 0.9;
 	}
 
