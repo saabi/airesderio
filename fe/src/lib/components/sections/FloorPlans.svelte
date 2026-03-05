@@ -109,7 +109,7 @@
 		class='scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow='Distribución y' big='PLANOS' />
+		<Title eyebrow='PLANOS y' big='Distribución' />
 	</div>
 	<div
 		class='floor-plans-container scroll-animate'
@@ -124,12 +124,12 @@
 					onIndexChange={handleIndexChange}
 					autoRotate={false}
 					showNavigation={true}
-					navigationPosition="below-image"
+					navigationPosition="above-image"
 					buttonVariant="bordered"
 					buttonSize="md"
 					showDots={true}
 					dotsVariant="inverse"
-					dotsPosition="below-image"
+					dotsPosition="above-image"
 					transitionType="fade"
 					transitionDuration={600}
 					imageFit="contain"

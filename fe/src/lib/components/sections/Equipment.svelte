@@ -205,11 +205,11 @@
 	<div
 		id="equipados-heading"
 		use:createTitleObserver
-		class="scroll-animate equip-title-wrap"
+		class="scroll-animate"
 		data-item-active={titleVisible || undefined}
 		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="Cómo vienen" big="EQUIPADOS" />
+		<Title eyebrow="" big="EQUIPAMIENTO" isSubtitle={true} />
 	</div>
 
 	<div class="equip-columns">
@@ -242,13 +242,12 @@
 						</li>
 					{/each}
 				</ul>
-				<hr class="equip-rule" />
 			</div>
 		</div>
 
 		<p class="equip-terminaciones-intro">
-			Además, se podrá elegir entre distintas opciones de terminaciones y niveles de equipamiento, para
-			adaptar la calidad de cada ambiente a tus necesidades, como se detalla a continuación.
+			<strong>Además, se podrá elegir entre distintas opciones de terminaciones y niveles de equipamiento, para
+			adaptar la calidad de cada ambiente a tus necesidades.</strong>
 		</p>
 
 		<!-- LINEA LUXURY -->
@@ -350,8 +349,7 @@
 
 	.equip-terminaciones-intro {
 		margin: 1rem 0;
-		text-align: center;
-		font-size: 1.4rem;
+		font-size: 1.6rem;
 	}
 
 	.equip-ficha-wrap {
