@@ -6,7 +6,7 @@
 	interface Props {
 		onClick: () => void;
 		ariaLabel: string;
-		size?: 'sm' | 'md' | 'lg' | 'xl' | number;
+		size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | number;
 		variant?: 'overlay' | 'solid' | 'bordered' | 'accent';
 		disabled?: boolean;
 		class?: string;
@@ -36,7 +36,8 @@
 			sm: '2.5rem',
 			md: '3rem',
 			lg: '40px',
-			xl: '3.5rem'
+			xl: '3.5rem',
+			xxl: '4.5rem'
 		};
 		return sizeMap[size];
 	});
@@ -48,7 +49,8 @@
 			sm: '2.25rem',
 			md: '2.5rem',
 			lg: '35px',
-			xl: '3rem'
+			xl: '3rem',
+			xxl: '3.75rem'
 		};
 		return sizeMap[size];
 	});
@@ -91,6 +93,7 @@
 		font-size: inherit;
 		line-height: 1;
 		color: inherit;
+		
 
 		/* Misc/Overrides */
 		cursor: pointer;
@@ -222,10 +225,20 @@
 		height: 1.25rem;
 	}
 
+	.circular-button.size-xxl :global(svg) {
+		width: 1.75rem;
+		height: 1.75rem;
+	}
+
 	@media (max-width: 640px) {
 		.circular-button.size-lg :global(svg) {
 			width: 1rem;
 			height: 1rem;
+		}
+
+		.circular-button.size-xxl :global(svg) {
+			width: 1.5rem;
+			height: 1.5rem;
 		}
 	}
 </style>

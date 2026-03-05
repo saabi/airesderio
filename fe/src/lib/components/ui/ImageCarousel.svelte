@@ -35,7 +35,7 @@
 		showNavigation?: boolean;
 		navigationPosition?: NavigationPosition;
 		buttonVariant?: 'overlay' | 'solid' | 'bordered' | 'accent';
-		buttonSize?: 'sm' | 'md' | 'lg' | 'xl';
+		buttonSize?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
 		// Dots
 		showDots?: boolean;
