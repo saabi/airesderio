@@ -20,6 +20,8 @@
 		pinRadius?: number;
 		/** Called when the gallery icon next to the selected zone pin is clicked. If not provided, the icon is hidden. */
 		onOpenGallery?: () => void;
+		/** When true, base map is grayscale except inside place/focal zones (default true). */
+		desaturateOutsideZones?: boolean;
 	}
 
 	export interface MapComponent {
@@ -28,6 +30,9 @@
 		reset: () => void;
 		currentPathId: string | null;
 	}
+
+	// ===== MODULE STATE: Unique IDs for defs (multiple Map instances) =====
+	let mapDefsIdCounter = 0;
 
 	// ===== HELPER FUNCTIONS =====
 	/**
@@ -53,8 +58,14 @@
 		showDetailImage = false,
 		mapData,
 		pinRadius,
-		onOpenGallery
+		onOpenGallery,
+		desaturateOutsideZones = true
 	}: Props = $props();
+
+	// Unique ids for filter and clipPath (defs)
+	const mapDefsId = mapDefsIdCounter++;
+	const grayscaleFilterId = `map-grayscale-${mapDefsId}`;
+	const zonesClipId = `zones-clip-${mapDefsId}`;
 
 	// ===== STATE: Image dimensions (loaded from actual images) =====
 	let baseImageDimensions = $state<{ width: number; height: number } | null>(null);
@@ -855,18 +866,96 @@
 		role='img'
 		xmlns='http://www.w3.org/2000/svg'
 	>
+		<defs>
+			<filter id={grayscaleFilterId}>
+				<feColorMatrix type='saturate' values='0' />
+				<!-- Lighten grayscale: blend with white (0.65 * L + 0.35) -->
+				<feColorMatrix
+					type='matrix'
+					values='0.55 0 0 0 0.25 0 0.55 0 0 0.25 0 0 0.55 0 0.25 0 0 0 1 0'
+				/>
+			</filter>
+			<clipPath id={zonesClipId}>
+				<!-- Place shapes (union) -->
+				{#each places as place}
+					{#each normalizeShapes(place.shape) as shape}
+						{#if shape.type === 'path'}
+							<path d={denormPath(shape.d)} />
+						{:else if shape.type === 'rect'}
+							<rect
+								x={denorm(shape.x)}
+								y={denorm(shape.y)}
+								width={denorm(shape.width)}
+								height={denorm(shape.height)}
+							/>
+						{:else if shape.type === 'circle'}
+							<circle
+								cx={denorm(shape.cx)}
+								cy={denorm(shape.cy)}
+								r={denorm(shape.r)}
+							/>
+						{/if}
+					{/each}
+				{/each}
+				<!-- Focal shapes (union) -->
+				{#if includeFocal && mapData.focal.shapes && mapData.focal.shapes.length > 0}
+					{#each mapData.focal.shapes as shape}
+						{#if shape.type === 'path'}
+							<path d={denormPath(shape.d)} />
+						{:else if shape.type === 'rect'}
+							<rect
+								x={denorm(shape.x)}
+								y={denorm(shape.y)}
+								width={denorm(shape.width)}
+								height={denorm(shape.height)}
+							/>
+						{:else if shape.type === 'circle'}
+							<circle
+								cx={denorm(shape.cx)}
+								cy={denorm(shape.cy)}
+								r={denorm(shape.r)}
+							/>
+						{/if}
+					{/each}
+				{/if}
+			</clipPath>
+		</defs>
 		<!-- Base and detail images -->
 		<g id='maps'>
 			{#if baseImageDimensions}
-				<image
-					id='base'
-					href={mapData.baseImage.src}
-					x='0'
-					y='0'
-					width={baseImageDimensions.width}
-					height={baseImageDimensions.height}
-					preserveAspectRatio='none'
-				/>
+				{#if desaturateOutsideZones}
+					<!-- Bottom: full base image in grayscale -->
+					<image
+						id='base'
+						href={mapData.baseImage.src}
+						x='0'
+						y='0'
+						width={baseImageDimensions.width}
+						height={baseImageDimensions.height}
+						preserveAspectRatio='none'
+						filter={`url(#${grayscaleFilterId})`}
+					/>
+					<!-- Top: base image in color clipped to zones -->
+					<image
+						href={mapData.baseImage.src}
+						x='0'
+						y='0'
+						width={baseImageDimensions.width}
+						height={baseImageDimensions.height}
+						preserveAspectRatio='none'
+						clip-path={`url(#${zonesClipId})`}
+					/>
+				{:else}
+					<image
+						id='base'
+						href={mapData.baseImage.src}
+						x='0'
+						y='0'
+						width={baseImageDimensions.width}
+						height={baseImageDimensions.height}
+						preserveAspectRatio='none'
+					/>
+				{/if}
 				<!-- Click on map image (outside zones) resets to home state -->
 				<rect
 					x='0'

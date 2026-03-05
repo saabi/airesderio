@@ -6,15 +6,17 @@
 	interface Props {
 		eyebrow: string;
 		big: string;
+		/** When true, renders with reduced visual importance (smaller, less bold). */
+		isSubtitle?: boolean;
 	}
 </script>
 
 <script lang='ts'>
 	// ===== PROPS =====
-	let { eyebrow, big }: Props = $props();
+	let { eyebrow, big, isSubtitle = false }: Props = $props();
 </script>
 
-<div class='title'>
+<div class='title' class:subtitle={isSubtitle}>
 	<span class='eyebrow'>{eyebrow}</span>
 	<span class='big'>{big}</span>
 </div>
@@ -65,6 +67,32 @@
 
 		.title .big {
 			font-size: 1.4em;
+		}
+	}
+
+	/* Subtitle: reduced importance */
+	.title.subtitle {
+		margin: 2rem 0 1rem 0;
+		font-size: 1.4rem;
+	}
+
+	.title.subtitle .eyebrow {
+		font-size: 0.7em;
+	}
+
+	.title.subtitle .big {
+		font-size: 1.25em;
+		font-weight: var(--font-weight-semibold);
+		color: var(--color-text-primary);
+	}
+
+	@media (max-width: 640px) {
+		.title.subtitle {
+			font-size: 1.1rem;
+		}
+
+		.title.subtitle .big {
+			font-size: 1.2em;
 		}
 	}
 </style>
