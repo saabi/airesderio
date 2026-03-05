@@ -9,8 +9,8 @@
 	import CarouselDots from '$lib/components/ui/CarouselDots.svelte';
 
 	// ===== TYPES =====
-	export type NavigationPosition = 'absolute-sides' | 'around-dots' | 'below-image';
-	export type DotsPosition = 'below-image' | 'bottom-center';
+	export type NavigationPosition = 'absolute-sides' | 'around-dots' | 'below-image' | 'above-image';
+	export type DotsPosition = 'below-image' | 'bottom-center' | 'above-image';
 	export type TransitionType = 'fade' | 'fade-scale' | 'instant';
 	export type ImageFit = 'cover' | 'contain';
 
@@ -57,6 +57,8 @@
 		// Styling
 		class?: string;
 		containerClass?: string;
+		/** When true, show a border around the carousel wrapper. */
+		showBorders?: boolean;
 
 		// Slots
 		header?: Snippet;
@@ -91,6 +93,7 @@
 		slideAriaLabel = (i: number) => `Slide ${i + 1}`,
 		class: className = '',
 		containerClass = '',
+		showBorders = false,
 		header,
 		footer
 	}: Props = $props();
@@ -272,6 +275,8 @@
 	class:fit-cover={imageFit === 'cover'}
 	class:fit-contain={imageFit === 'contain'}
 	class:dots-below={navigationPosition === 'below-image' || (showDots && dotsPosition === 'below-image' && navigationPosition === 'absolute-sides')}
+	class:has-above={(navigationPosition === 'above-image' && showNavigation && slideCount > 1) || (showDots && dotsPosition === 'above-image' && navigationPosition === 'absolute-sides' && slideCount > 1)}
+	class:borders={showBorders}
 	role='region'
 	aria-label={ariaLabel}
 	onmouseenter={handleMouseEnter}
@@ -280,6 +285,49 @@
 >
 	{#if header}
 		{@render header()}
+	{/if}
+
+	{#if showNavigation && slideCount > 1 && navigationPosition === 'above-image'}
+		<div class='carousel-navigation above-image'>
+			<CircularButton
+				variant={buttonVariant}
+				size={buttonSize}
+				ariaLabel='Imagen anterior'
+				onClick={previousImage}
+			>
+				<ArrowLeft />
+			</CircularButton>
+			{#if showDots}
+				<CarouselDots
+					total={slideCount}
+					currentIndex={currentImageIndex}
+					onDotClick={goToImage}
+					ariaLabel={(index) => `Ver imagen ${index + 1}`}
+					variant={dotsVariant}
+					showTransform={true}
+					containerClass='container'
+				/>
+			{/if}
+			<CircularButton
+				variant={buttonVariant}
+				size={buttonSize}
+				ariaLabel='Siguiente imagen'
+				onClick={nextImage}
+			>
+				<ArrowRight />
+			</CircularButton>
+		</div>
+	{:else if showDots && dotsPosition === 'above-image' && navigationPosition === 'absolute-sides' && slideCount > 1}
+		<div class='carousel-dots-above'>
+			<CarouselDots
+				total={slideCount}
+				currentIndex={currentImageIndex}
+				onDotClick={goToImage}
+				ariaLabel={(index) => `Ver imagen ${index + 1}`}
+				variant={dotsVariant}
+				containerClass='container'
+			/>
+		</div>
 	{/if}
 
 	<div class='carousel-images'>
@@ -404,6 +452,12 @@
 		overflow: hidden;
 	}
 
+	.image-carousel.borders {
+		border: 1px solid var(--color-border-default);
+		border-radius: 0.25rem;
+		box-sizing: border-box;
+	}
+
 	.carousel-images {
 		/* Positioning */
 		position: relative;
@@ -422,6 +476,44 @@
 	.image-carousel.dots-below .carousel-images {
 		flex: 1;
 		min-height: 0;
+	}
+
+	/* When nav or dots are above image */
+	.image-carousel.has-above {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.image-carousel.has-above .carousel-images {
+		flex: 1;
+		min-height: 0;
+	}
+
+	.carousel-navigation.above-image {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		padding: 1rem 0;
+		flex-shrink: 0;
+		min-height: 3rem;
+		box-sizing: border-box;
+	}
+
+	.carousel-navigation.above-image :global(.carousel-dots) {
+		display: inline-flex;
+		align-items: center;
+		align-self: center;
+		margin: 0;
+		line-height: 0;
+	}
+
+	.carousel-dots-above {
+		flex-shrink: 0;
+		padding: 1rem 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.carousel-image {
