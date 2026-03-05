@@ -943,12 +943,14 @@
 								</text>
 							{/each}
 						{/if}
-						<circle
-							class='pin-circle pin-circle-home'
-							cx={denorm(place.pin.cx)}
-							cy={denorm(place.pin.cy)}
-							r={getPinRadius(place.pin.r)}
-						/>
+						<g
+							class='pin-location-icon'
+							transform="translate({denorm(place.pin.cx)}, {denorm(place.pin.cy)}) scale({getPinRadius(place.pin.r) / 12}) translate(-12, -21)"
+							aria-hidden='true'
+						>
+							<path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 21c0-6-4.5-10.5-4.5-14.5a4.5 4.5 0 1 1 9 0C16.5 10.5 12 15 12 21z" />
+							<circle cx="12" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+						</g>
 						<text
 							class='place-name-label'
 							x={denorm(place.pin.cx)}
@@ -1032,7 +1034,6 @@
 								onclick={(e) => (e.stopPropagation(), onOpenGallery())}
 								onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), e.stopPropagation(), onOpenGallery())}
 							>
-								<circle class='pin-circle' cx={pinCx} cy={pinCy} r={r} />
 								<g
 									class='pin-gallery-icon'
 									transform="translate({pinCx}, {pinCy}) scale({iconScale/1.5}) translate(-10, -10)"
@@ -1044,12 +1045,17 @@
 								</g>
 							</g>
 						{:else}
-							<circle
-								class='pin-circle'
-								cx={denorm(selectedPlace.pin.cx)}
-								cy={denorm(selectedPlace.pin.cy)}
-								r={getPinRadius(selectedPlace.pin.r)}
-							/>
+							{@const r = getPinRadius(selectedPlace.pin.r)}
+							{@const pinCx = denorm(selectedPlace.pin.cx)}
+							{@const pinCy = denorm(selectedPlace.pin.cy)}
+							<g
+								class='pin-location-icon'
+								transform="translate({pinCx}, {pinCy}) scale({r / 12}) translate(-12, -21)"
+								aria-hidden='true'
+							>
+								<path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 21c0-6-4.5-10.5-4.5-14.5a4.5 4.5 0 1 1 9 0C16.5 10.5 12 15 12 21z" />
+								<circle cx="12" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+							</g>
 						{/if}
 					</g>
 				</g>
@@ -1079,8 +1085,7 @@
 					/>
 				{/if}
 			{#each mapData.focal.shapes as shape}
-				{#if shape.type === 'circle'}
-				{:else if shape.type === 'rect'}
+				{#if shape.type === 'rect'}
 					<rect class='focal-path' x={denorm(shape.x)} y={denorm(shape.y)} width={denorm(shape.width)} height={denorm(shape.height)} />
 				{/if}
 			{/each}
@@ -1308,12 +1313,6 @@
 		transition: fill-opacity 0.3s ease;
 	}
 
-	/* Show pins in the active group when zoomed */
-	.places-group.zoom-active .group-active .pin-circle {
-		/* Box/Visual */
-		fill-opacity: 1;
-	}
-
 	/* Home state: all places visible with subdued style */
 	.places-home {
 		/* Box/Visual */
@@ -1327,9 +1326,10 @@
 		cursor: pointer;
 	}
 
-	.pin-circle-home {
-		/* Box/Visual */
-		stroke-opacity: 0.9;
+	/* Location pin icon inside place pins (not focal) */
+	.pin-location-icon {
+		color: #800000;
+		pointer-events: none;
 	}
 
 	.place-home {
