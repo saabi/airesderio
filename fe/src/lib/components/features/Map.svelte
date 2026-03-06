@@ -59,7 +59,7 @@
 		mapData,
 		pinRadius,
 		onOpenGallery,
-		desaturateOutsideZones = true
+		desaturateOutsideZones = false
 	}: Props = $props();
 
 	// Unique ids for filter and clipPath (defs)
