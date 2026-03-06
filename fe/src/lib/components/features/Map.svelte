@@ -612,6 +612,10 @@
 	// Calculate best arrow position based on available space
 	$effect(() => {
 		if (pinCoordinates && measurementLabel && mapContainer && selectedGroupName) {
+			if (selectedGroupName === FOCAL_LABEL) {
+				arrowPosition = 'top';
+				return;
+			}
 			// Use a small delay to ensure the measurement label is rendered
 			const updateArrowPosition = () => {
 				if (!measurementLabel || !mapContainer || !pinCoordinates) return;
