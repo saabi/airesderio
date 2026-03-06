@@ -1,6 +1,6 @@
 {
   "baseImage": {
-    "src": "/map/far.jpg"
+    "src": "/map/simplemap.svg"
   },
   "focal": {
     "shapes": [
