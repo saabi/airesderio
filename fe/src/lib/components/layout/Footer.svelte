@@ -3,6 +3,7 @@
 	import HabitatPrimeLogo from '$lib/components/ui/HabitatPrimeLogo.svelte';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import { theme } from '$lib/stores/theme';
+	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 </script>
 
 <script lang='ts'>
@@ -13,18 +14,17 @@
 		{ label: 'Home', href: '/' },
 		{ label: 'Proyecto', href: '/#proyecto' },
 		{ label: 'Ubicación', href: '/#ubicacion' },
-		{ label: 'Interior', href: '/#interior' },
+		{ label: 'Interiores', href: '/#interior' },
 		{ label: 'Equipamiento', href: '/#equipados' },
 		{ label: 'Planos', href: '/#planos' },
 		{ label: 'Contacto', href: '/#contacto' },
-		{ label: 'Habitat Prime', href: 'https://airesderio.com', external: true }
 	];
 
 	const contactInfo = [
 /* 		{ label: 'Oficina Habitat Prime', value: 'Av. Rivadavia 1520 · Santiago del Estero' },
-		{ label: 'Whatsapp ventas', value: '+54 9 385 555 0000' },
 		{ label: 'Teléfono', value: '+54 385 421 1111' },
- */		{ label: 'Email comercial', value: 'info@airesderio.com' }
+ */		{ label: 'Email comercial', value: 'info@airesderio.com' },
+		{ label: 'Whatsapp ventas', value: '+54 9 385 555 0000' }
 	];
 
 	const projectHighlights = [
@@ -41,11 +41,6 @@
 				<div class='footer-logo'>
 					<HabitatPrimeLogo theme={$theme} width='8rem' />
 				</div>
-				<p>
-					Habitat Prime SAS desarrolla experiencias residenciales premium en Santiago del Estero.
-					<AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> es uno de nuestros productos insignia, diseñado para vivir con vistas
-					privilegiadas al río y acceso a amenities de alto nivel.
-				</p>
 				<ul class='project-highlights'>
 					{#each projectHighlights as item (item.label)}
 						<li>
@@ -82,6 +77,16 @@
 							<strong>{item.value}</strong>
 						</li>
 					{/each}
+					<li class='footer-contact-btn-wrap'>
+						<button
+							type='button'
+							class='footer-contact-btn'
+							onclick={() => pdfRequestModalStore.open('ficha-tecnica')}
+							aria-label='Solicitar ficha técnica'
+						>
+							SOLICITAR FICHA TÉCNICA
+						</button>
+					</li>
 				</ul>
 			</section>
 		</div>
@@ -154,7 +159,7 @@
 	}
 
 	.project-highlights {
-		display: flex;
+		display: grid;
 		gap: 1rem;
 		margin: 0;
 		padding: 0;
@@ -170,6 +175,7 @@
 		border-radius: 0.5rem;
 		padding: 0.75rem 1rem;
 		min-width: 10rem;
+		width: 50%;
 	}
 
 	.project-highlights strong {
@@ -217,6 +223,37 @@
 		display: block;
 		font-size: 1rem;
 		color: var(--color-text-primary);
+	}
+
+	.footer-contact-btn-wrap {
+		margin-top: 1rem;
+		list-style: none;
+	}
+
+	.footer-contact-btn {
+		display: block;
+		padding: 0.75rem 1.25rem;
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		text-align: center;
+		color: var(--color-text-on-accent);
+		background: var(--color-accent-primary);
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		font-family: inherit;
+		transition: opacity 0.2s;
+	}
+
+	.footer-contact-btn:hover {
+		opacity: 0.92;
+	}
+
+	.footer-contact-btn:focus-visible {
+		outline: 2px solid var(--color-accent-primary);
+		outline-offset: 2px;
 	}
 
 	.footer-bottom {

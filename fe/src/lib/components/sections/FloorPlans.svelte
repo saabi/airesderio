@@ -43,8 +43,8 @@
 	const FLOOR_PLANS: FloorPlan[] = [
 		{
 			image: '/planos/depto-1hab-balcon.jpg',
-			title: 'Departamento 1 habitación con balcón ● Frente',
-			description: 'Plano de distribución del departamento de 1 dormitorio con balcón.',
+			title: 'Departamento de 2 ambientes con balcón',
+			description: 'FRENTE',
 			clipShape: {
 				type: 'path',
 				d: 'M30.5 561.5l1575.141 0.575 -1.141 220.425 213 -2 0.09 184.684c1.743,14.108 7.443,23.575 20,25l145.91 1.316 -1 558 -1741 4 0 -5 -211 1 0 -988z'
@@ -52,8 +52,8 @@
 		},
 		{
 			image: '/planos/depto-1hab-contrafrente.jpg',
-			title: 'Departamento 1 habitación ● Contrafrente',
-			description: 'Plano de distribución del departamento de 1 dormitorio contrafrente.',
+			title: 'Departamento de 2 ambientes',
+			description: 'CONTRAFRENTE',
 			clipShape: {
 				type: 'polygon',
 				points: '139.5,563.5 1877.5,559.5 1877.379,1549.742 516.5,1549.5 516.5,1334.426 279.5,1334.5 279.527,1116.5 139.5,1116.5'
@@ -61,8 +61,8 @@
 		},
 		{
 			image: '/planos/depto-2hab-1ofi.jpg',
-			title: 'Departamento 2 habitaciones + estudio',
-			description: 'Plano de distribución del departamento con 2 habitaciones y estudio.',
+			title: 'Departamento de 4 ambientes',
+			description: 'CONTRAFRENTE',
 			clipShape: {
 				type: 'polygon',
 				points: '151.5,95.5 152.475,653.306 292.5,653.5 292.5,1462.5 152.5,1463.5 152.5,2006.5 1246.5,2006.5 1247.5,2026.5 1278.5,2026.5 1278.5,2023.5 1889.5,2024.5 1889.5,94.5'
@@ -155,9 +155,9 @@
 				type='button'
 				class='floor-plan-download'
 				onclick={() => pdfRequestModalStore.open('planos')}
-				aria-label='Solicitar planos en PDF'
+				aria-label='Solicitar planos'
 			>
-				SOLICITAR PLANOS EN PDF
+				SOLICITAR PLANOS
 			</button>
 		</div>
 	</div>

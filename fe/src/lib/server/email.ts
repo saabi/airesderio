@@ -85,7 +85,7 @@ export async function sendContactNotification(params: SendContactNotificationPar
 	const { leadName, leadEmail, leadPhone, leadMessage, intent } = params;
 	const recipient = env.CONTACT_FORM_RECIPIENT || 'info@airesderio.com';
 
-	const subject = `Nueva consulta: ${intent} - Aires de Río`;
+	const subject = `${intent === 'direct-contact' ? 'RESPONDER! -' : 'Nuevo contacto:'} ${intent} - Aires de Río`;
 	const html = `
 		<h2>Nueva consulta desde el sitio web</h2>
 		<p><strong>Nombre completo:</strong> ${leadName}</p>
