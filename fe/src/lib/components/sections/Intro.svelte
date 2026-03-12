@@ -98,6 +98,11 @@
 		/* Box/Visual */
 		background: color-mix(in oklch, var(--ref-cream) 92%, var(--ref-neutral-200) 8%);
 		border-radius: 0.625rem;
+		/* Minimalistic, elegant + fun: thin copper accent with soft inner highlight */
+		border: 1px solid color-mix(in oklch, var(--ref-brand-primary) 55%, var(--ref-cream) 45%);
+		box-shadow:
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+			0 0 0 1px color-mix(in oklch, var(--ref-brand-primary) 25%, transparent 75%);
 
 		/* Typography */
 		font-size: 1.6rem;
