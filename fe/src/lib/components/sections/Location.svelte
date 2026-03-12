@@ -49,10 +49,9 @@
 	let carouselPhotos = $state<string[]>([]);
 	let carouselCurrentIndex = $state(0);
 	let mapComponent: MapComponent | null = $state(null);
+	let currentPlaceId = $state<string | null>(null);
 
 	// ===== DERIVED =====
-	// Get current place from map to determine button states
-	let currentPlaceId = $derived.by(() => mapComponent?.currentPathId ?? null);
 	let hasPlaceSelected = $derived.by(() => currentPlaceId !== null);
 
 	// Get places record for quick lookup (id -> PlaceData)
@@ -174,9 +173,8 @@
 
 	// Open gallery for current place on map
 	function openGalleryForCurrentPlace() {
-		if (!mapComponent || !mapData) return;
-
-		const currentPathId = mapComponent.currentPathId;
+		if (!mapData) return;
+		const currentPathId = currentPlaceId;
 		if (!currentPathId) return;
 
 		const place = placesById[currentPathId];
@@ -280,6 +278,7 @@
 				showDetailImage={false}
 				pinRadius={40}
 				onOpenGallery={openGalleryForCurrentPlace}
+				onSelectionChange={(id) => (currentPlaceId = id)}
 			/>
 		{:else}
 			<div class='location-map-loading'>Cargando mapa...</div>

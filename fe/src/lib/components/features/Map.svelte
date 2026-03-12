@@ -3,6 +3,7 @@
 	import { tweened } from 'svelte/motion';
 	import PinLabel from '$lib/components/ui/PinLabel.svelte';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
+	import SimpleMapBase from '$lib/components/features/SimpleMapBase.svelte';
 
 	// ===== TYPES =====
 	import type { MapData, PlaceData, SvgShape, ViewBox } from '$lib/types';
@@ -20,6 +21,8 @@
 		pinRadius?: number;
 		/** Called when the gallery icon next to the selected zone pin is clicked. If not provided, the icon is hidden. */
 		onOpenGallery?: () => void;
+		/** Called whenever the selected place (path) changes. */
+		onSelectionChange?: (placeId: string | null) => void;
 		/** When true, base map is grayscale except inside place/focal zones (default true). */
 		desaturateOutsideZones?: boolean;
 	}
@@ -59,19 +62,29 @@
 		mapData,
 		pinRadius,
 		onOpenGallery,
+		onSelectionChange,
 		desaturateOutsideZones = false
 	}: Props = $props();
 
 	// Unique ids for filter and clipPath (defs)
 	const mapDefsId = mapDefsIdCounter++;
 	const grayscaleFilterId = `map-grayscale-${mapDefsId}`;
+	const warmFilterId = `map-warm-${mapDefsId}`;
 	const zonesClipId = `zones-clip-${mapDefsId}`;
 
 	// ===== STATE: Image dimensions (loaded from actual images) =====
 	let baseImageDimensions = $state<{ width: number; height: number } | null>(null);
 
+	// Inline SVG base map dimensions (from `/map/simplemap.svg` viewBox)
+	const INLINE_BASE_MAP_DIMS = { width: 1760.86, height: 2941.76 };
+
 	// Load base image to get natural dimensions
 	$effect(() => {
+		// If we inline the base map, skip preloading and use the known viewBox dimensions.
+		if (mapData.baseImage.src === '/map/simplemap.svg') {
+			baseImageDimensions = INLINE_BASE_MAP_DIMS;
+			return;
+		}
 		const img = new Image();
 		img.onload = () => {
 			baseImageDimensions = { width: img.naturalWidth, height: img.naturalHeight };
@@ -275,6 +288,10 @@
 			? PLACE_PATH_IDS[currentZoomedIndex]
 			: null
 	);
+
+	$effect(() => {
+		onSelectionChange?.(currentPathId);
+	});
 
 	// Calculate label coordinates offset by pin radius so arrow tip touches pin edge
 	let labelCoordinates = $derived.by(() => {
@@ -873,10 +890,18 @@
 		<defs>
 			<filter id={grayscaleFilterId}>
 				<feColorMatrix type='saturate' values='0' />
-				<!-- Lighten grayscale: blend with white (0.65 * L + 0.35) -->
+				<!-- Warm, light grayscale to match beige/grey map palette -->
 				<feColorMatrix
 					type='matrix'
-					values='0.55 0 0 0 0.25 0 0.55 0 0 0.25 0 0 0.55 0 0.25 0 0 0 1 0'
+					values='0.54 0 0 0 0.30 0 0.53 0 0 0.29 0 0 0.50 0 0.25 0 0 0 1 0'
+				/>
+			</filter>
+			<filter id={warmFilterId}>
+				<!-- Desaturate a bit and add a gentle sepia warmth (parks less green) -->
+				<feColorMatrix type='saturate' values='0.82' />
+				<feColorMatrix
+					type='matrix'
+					values='0.92 0.12 0.02 0 0.02 0.06 0.90 0.04 0 0.02 0.03 0.12 0.78 0 0.01 0 0 0 1 0'
 				/>
 			</filter>
 			<clipPath id={zonesClipId}>
@@ -947,18 +972,26 @@
 						width={baseImageDimensions.width}
 						height={baseImageDimensions.height}
 						preserveAspectRatio='none'
+						filter={`url(#${warmFilterId})`}
 						clip-path={`url(#${zonesClipId})`}
 					/>
 				{:else}
-					<image
-						id='base'
-						href={mapData.baseImage.src}
-						x='0'
-						y='0'
-						width={baseImageDimensions.width}
-						height={baseImageDimensions.height}
-						preserveAspectRatio='none'
-					/>
+					{#if mapData.baseImage.src === '/map/simplemap.svg'}
+						<g id='base'>
+							<SimpleMapBase animate={true} />
+						</g>
+					{:else}
+						<image
+							id='base'
+							href={mapData.baseImage.src}
+							x='0'
+							y='0'
+							width={baseImageDimensions.width}
+							height={baseImageDimensions.height}
+							preserveAspectRatio='none'
+							filter={`url(#${warmFilterId})`}
+						/>
+					{/if}
 				{/if}
 				<!-- Click on map image (outside zones) resets to home state -->
 				<rect
@@ -981,6 +1014,7 @@
 				width={DETAIL_VIEWBOX.width}
 				height={DETAIL_VIEWBOX.height}
 				preserveAspectRatio='none'
+				filter={`url(#${warmFilterId})`}
 			/>
 		{/if}
 		</g>
@@ -1127,6 +1161,8 @@
 								onclick={(e) => (e.stopPropagation(), onOpenGallery())}
 								onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), e.stopPropagation(), onOpenGallery())}
 							>
+								<!-- Invisible hit target so the button is easy to click -->
+								<circle cx={pinCx} cy={pinCy} r={r * 0.85} fill="transparent" />
 								<g
 									class='pin-gallery-icon'
 									transform="translate({pinCx}, {pinCy}) scale({iconScale/1.5}) translate(-10, -10)"
@@ -1216,6 +1252,31 @@
 </div>
 
 <style>
+	/* Harmonized highlight palette (matches site: cream + blue-gray + muted teal) */
+	.map-viewport {
+		--map-ink: #6d6d6d;
+		--map-isotype-ink: #2f2f2f;
+		--map-paper: color-mix(in oklch, var(--ref-cream) 92%, var(--ref-neutral-200) 8%);
+		--map-highlight: var(--ref-cta-teal);
+		--map-highlight-strong: color-mix(in oklch, var(--ref-cta-teal) 65%, var(--header-bg) 35%);
+		--map-highlight-warm: #8b5431;
+
+		/* Base-map theme (SimpleMapBase.svelte) */
+		--simplemap-bg: var(--map-paper);
+		--simplemap-land: color-mix(in oklch, var(--map-paper) 88%, var(--ref-neutral-300) 12%);
+		--simplemap-water: color-mix(in oklch, var(--header-bg) 28%, var(--map-paper) 72%);
+		/* Desaturated + slightly sepia park tone */
+		--simplemap-park: color-mix(in oklch, var(--ref-cta-teal) 18%, #b8a77b 82%);
+		--simplemap-accent: color-mix(in oklch, #d6a88e 55%, var(--map-paper) 45%);
+		--simplemap-overlay: color-mix(in oklch, var(--header-bg) 10%, var(--map-paper) 90%);
+		--simplemap-road: color-mix(in oklch, var(--ref-neutral-600) 60%, var(--map-paper) 40%);
+		--simplemap-road-border: color-mix(in oklch, #b8a77b 60%, var(--map-paper) 40%);
+		--simplemap-stroke-light: color-mix(in oklch, var(--ref-neutral-350) 75%, var(--map-paper) 25%);
+		--simplemap-stroke-paper: color-mix(in oklch, var(--map-paper) 92%, var(--ref-neutral-300) 8%);
+		--simplemap-stroke-light-opacity: 0.35;
+		--simplemap-stroke-mid-opacity: 0.55;
+	}
+
 	.map-viewport {
 		/* Layout */
 		position: relative;
@@ -1239,8 +1300,8 @@
 		left: -9999px;
 
 		/* Box/Visual */
-		background-color: var(--color-bg-contrast);
-		color: var(--color-text-primary);
+		background-color: var(--map-paper);
+		color: var(--map-ink);
 		padding: 6px 12px;
 		border-radius: 4px;
 		font-size: 14px;
@@ -1262,8 +1323,8 @@
 		margin-bottom: 8px;
 
 		/* Box/Visual */
-		background-color: var(--color-bg-contrast);
-		color: var(--color-text-primary);
+		background-color: var(--map-paper);
+		color: var(--map-ink);
 		padding: 6px 12px;
 		border-radius: 4px;
 		font-size: 14px;
@@ -1292,7 +1353,7 @@
 		height: 0;
 		border-left: 6px solid transparent;
 		border-right: 6px solid transparent;
-		border-top: 6px solid var(--color-bg-contrast);
+		border-top: 6px solid var(--map-paper);
 	}
 
 	@keyframes fadeInLabel {
@@ -1317,13 +1378,18 @@
 	.place-path {
 		/* Box/Visual */
 		vector-effect: non-scaling-stroke;
-		fill: #008ef2;
+		fill: var(--map-highlight);
 		fill-opacity: 0;
+		stroke: var(--map-highlight-strong);
+		stroke-opacity: 0.55;
+		stroke-width: 1.25;
 		/* Misc/Overrides */
 		cursor: pointer;
 
 		/* Effects & Motion */
-		transition: fill-opacity 0.3s ease;
+		transition:
+			fill-opacity 0.3s ease,
+			stroke-opacity 0.3s ease;
 	}
 
 	/* When zoomed to a path, show the places group */
@@ -1335,12 +1401,15 @@
 	/* When a group is active (zoomed), show its path */
 	.group-active .place-path {
 		/* Box/Visual */
-		fill-opacity: 0.471002;
+		fill-opacity: 0.32;
+		stroke-opacity: 0.85;
+		animation: zoneFadeSelected 260ms ease both;
 	}
 
 	.pin-gallery-button {
 		/* Box/Visual */
 		cursor: pointer;
+		pointer-events: all;
 	}
 
 	.pin-gallery-icon {
@@ -1363,21 +1432,24 @@
 	.focal-path {
 		/* Box/Visual */
 		vector-effect: non-scaling-stroke;
-		fill: #e6f900;
-		fill-opacity: 0.51257861;
+		fill: var(--map-highlight-strong);
+		fill-opacity: 0.38;
+		stroke: var(--map-highlight-strong);
+		stroke-opacity: 0.9;
+		stroke-width: 1.25;
 		stroke-width: 0.1997;
 	}
 
 	.focal-isotype path {
-		fill: black;
+		fill: var(--map-isotype-ink);
 	}
 
 	.focal-pin {
 		/* Box/Visual */
 		font-variation-settings: normal;
 		vector-effect: non-scaling-stroke;
-		fill: #800000;
-		fill-opacity: 0.455975;
+		fill: var(--map-ink);
+		fill-opacity: 0.7;
 		stroke-width: 0.16213;
 		stroke-linecap: butt;
 		stroke-linejoin: miter;
@@ -1389,7 +1461,7 @@
 
 	.pin-circle {
 		/* Box/Visual */
-		fill: white;
+		fill: var(--map-paper);
 		fill-opacity: 1;
 		stroke-width: 0.0730401;
 		stroke-linecap: butt;
@@ -1414,14 +1486,18 @@
 
 	.place-path-home {
 		/* Box/Visual */
-		fill: #00be4d;
-		fill-opacity: 0.22;
+		fill: var(--map-highlight);
+		fill-opacity: 0.20;
+		stroke: var(--map-highlight-strong);
+		stroke-opacity: 0.35;
+		stroke-width: 1.1;
 		cursor: pointer;
+		animation: zoneFadeDefault 420ms ease both;
 	}
 
 	/* Location pin icon inside place pins (not focal) */
 	.pin-location-icon {
-		color: #800000;
+		color: var(--map-ink);
 		pointer-events: none;
 	}
 
@@ -1434,6 +1510,28 @@
 		.places-home .place-name-label,
 		.places-home .place-label-inline {
 			display: none;
+		}
+	}
+
+	@keyframes zoneFadeDefault {
+		from {
+			fill-opacity: 0;
+			stroke-opacity: 0;
+		}
+		to {
+			fill-opacity: 0.20;
+			stroke-opacity: 0.35;
+		}
+	}
+
+	@keyframes zoneFadeSelected {
+		from {
+			fill-opacity: 0;
+			stroke-opacity: 0;
+		}
+		to {
+			fill-opacity: 0.32;
+			stroke-opacity: 0.85;
 		}
 	}
 
