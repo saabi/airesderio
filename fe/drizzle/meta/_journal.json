@@ -15,6 +15,13 @@
       "when": 1772571100000,
       "tag": "0001_split_name",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772592091180,
+      "tag": "0002_overrated_speed",
+      "breakpoints": true
     }
   ]
 }
