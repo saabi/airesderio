@@ -153,7 +153,7 @@
 		<div class='floor-plan-download-wrap'>
 			<button
 				type='button'
-				class='floor-plan-download'
+				class='floor-plan-download btn-cta-primary'
 				onclick={() => pdfRequestModalStore.open('planos')}
 				aria-label='Solicitar planos'
 			>
@@ -281,7 +281,7 @@
 		text-transform: uppercase;
 		text-align: center;
 		color: var(--color-text-on-accent);
-		background: var(--color-accent-primary);
+		background: var(--ref-cta-teal);
 		border: none;
 		border-radius: 4px;
 		cursor: pointer;
@@ -294,7 +294,7 @@
 	}
 
 	.floor-plan-download:focus-visible {
-		outline: 2px solid var(--color-accent-primary);
+		outline: 2px solid var(--ref-cta-teal);
 		outline-offset: 2px;
 	}
 

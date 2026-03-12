@@ -119,11 +119,11 @@
 	<Hero />
 	<FloatingCTA />
 
-	<div class="container">
+	<div class="page-shell section">
 		<Intro />
 	</div>
 	<Location jsonUrl="/lugares/lugares-direcciones.json" showPlaceMarkers={true} />
-	<div class="container">
+	<div class="page-shell section">
 		<BuildingFeatures />
 		<Interior />
 		<Equipment />
@@ -133,20 +133,4 @@
 </main>
 
 <style>
-	.container {
-		/* Layout */
-		margin: 1.5rem;
-		padding: 0;
-		width: calc(100% - 3rem);
-		max-width: 100%;
-		box-sizing: border-box;
-	}
-
-	@media (max-width: 640px) {
-		.container {
-			/* Layout */
-			margin: 1rem;
-			width: calc(100% - 2rem);
-		}
-	}
 </style>

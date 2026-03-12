@@ -179,7 +179,7 @@
 				/>
 			</div>
 			<div class='form-group'>
-				<button type='submit' disabled={isLoading} aria-label='Solicitar'>
+				<button type='submit' class='btn-cta-primary' disabled={isLoading} aria-label='Solicitar'>
 					{#if isLoading}
 						<span class='button-loading'>Enviando...</span>
 					{:else}
@@ -275,15 +275,20 @@
 		padding: 0.75rem;
 		border: none;
 		border-radius: 0.25rem;
-		background: var(--color-accent-primary);
+		background: var(--ref-cta-teal);
 		font-family: var(--font-body);
 		font-weight: var(--font-weight-semibold);
-		color: var(--color-text-inverse);
+		color: var(--color-text-on-accent);
 		cursor: pointer;
 	}
 
 	.form-group button:hover:not(:disabled) {
-		background: var(--color-accent-strong);
+		background: var(--ref-cta-teal-hover);
+	}
+
+	.form-group button:focus-visible {
+		outline: 2px solid var(--ref-cta-teal);
+		outline-offset: 2px;
 	}
 
 	.form-group button:disabled {

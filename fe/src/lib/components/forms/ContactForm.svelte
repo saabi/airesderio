@@ -175,7 +175,7 @@
 		/>
 	</div>
 	<div class='form-group'>
-		<button type='submit' disabled={isLoading} aria-label='Enviar formulario de contacto'>
+		<button type='submit' class='btn-cta-primary' disabled={isLoading} aria-label='Enviar formulario de contacto'>
 			{#if isLoading}
 				<span class='button-loading'>Enviando...</span>
 			{:else}
@@ -220,12 +220,12 @@
 		/* Box/Visual */
 		border: none;
 		border-radius: 0.25rem;
-		background: var(--color-accent-primary);
+		background: var(--ref-cta-teal);
 
 		/* Typography */
 		font-family: var(--font-body);
 		font-weight: var(--font-weight-semibold);
-		color: var(--color-text-inverse);
+		color: var(--color-text-on-accent);
 
 		/* Misc/Overrides */
 		cursor: pointer;
@@ -233,7 +233,13 @@
 
 	.form-group button:hover:not(:disabled) {
 		/* Box/Visual */
-		background: var(--color-accent-strong);
+		background: var(--ref-cta-teal-hover);
+	}
+
+	.form-group button:focus-visible {
+		/* Box/Visual */
+		outline: 2px solid var(--ref-cta-teal);
+		outline-offset: 2px;
 	}
 
 	.form-group button:disabled {

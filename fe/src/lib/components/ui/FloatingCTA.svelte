@@ -136,7 +136,7 @@
 {#if showCTA || opacity > 0}
 	<a
 		href={ctaUrl}
-		class='floating-cta'
+		class='floating-cta btn-cta-primary'
 		style={`transform: translateY(${transformY}px); opacity: ${opacity}; transition-duration: ${fadeDuration}ms;`}
 		onclick={handleClick}
 		aria-label={ctaText}
@@ -162,7 +162,7 @@
 		/* Box/Visual */
 		border: none;
 		border-radius: 0.375rem;
-		background: var(--color-accent-primary);
+		background: var(--ref-cta-teal);
 		box-shadow:
 			0 0.75rem 0.75rem var(--shadow-soft),
 			0 0.5rem 0.25rem var(--shadow-subtle);
@@ -189,7 +189,7 @@
 
 	.floating-cta:hover {
 		/* Box/Visual */
-		background: var(--color-accent-hover);
+		background: var(--ref-cta-teal-hover);
 		box-shadow: 0 0.25rem 0.5rem var(--shadow-soft);
 
 		/* Effects & Motion */
@@ -203,7 +203,7 @@
 
 	.floating-cta:focus-visible {
 		/* Box/Visual */
-		outline: 2px solid var(--color-accent-secondary);
+		outline: 2px solid var(--ref-cta-teal);
 		outline-offset: 2px;
 	}
 

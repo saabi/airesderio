@@ -58,8 +58,8 @@
 						<li>
 							<a
 								href={link.href}
-								rel={link.external ? 'noreferrer' : undefined}
-								target={link.external ? '_blank' : undefined}
+								rel={undefined}
+								target={undefined}
 							>
 								{link.label}
 							</a>
@@ -80,7 +80,7 @@
 					<li class='footer-contact-btn-wrap'>
 						<button
 							type='button'
-							class='footer-contact-btn'
+							class='footer-contact-btn btn-cta-primary'
 							onclick={() => pdfRequestModalStore.open('ficha-tecnica')}
 							aria-label='Solicitar ficha técnica'
 						>
@@ -114,16 +114,12 @@
 		margin-top: 4rem;
 
 		/* Box/Visual */
-		border-top: 1px solid var(--color-border-subtle);
-		background: linear-gradient(
-			180deg,
-			color-mix(in oklch, var(--color-bg-muted) 85%, var(--color-bg-canvas) 15%) 0%,
-			var(--color-bg-muted) 100%
-		);
+		border-top: 1px solid color-mix(in oklch, var(--ref-brand-deep) 40%, var(--ref-neutral-900) 60%);
+		background: linear-gradient(0, #8b5431 0%, #3f2215 100%);
 		box-shadow: 0 -12px 32px var(--shadow-soft);
 
 		/* Typography */
-		color: var(--color-text-secondary);
+		color: var(--color-text-inverse);
 	}
 
 	.footer-grid {
@@ -170,8 +166,8 @@
 	.project-highlights li {
 		display: flex;
 		flex-direction: column;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border-subtle);
+		background: color-mix(in oklch, var(--ref-cream) 85%, var(--ref-brand-deep) 15%);
+		border: 1px solid color-mix(in oklch, var(--ref-gold) 40%, transparent);
 		border-radius: 0.5rem;
 		padding: 0.75rem 1rem;
 		min-width: 10rem;
@@ -204,7 +200,7 @@
 		font-family: var(--font-body);
 		font-weight: var(--font-weight-medium);
 		text-decoration: none;
-		color: var(--color-text-secondary);
+		color: color-mix(in oklch, var(--ref-cream) 90%, var(--ref-gold-dark) 10%);
 	}
 
 	.footer-links a:hover {
@@ -214,7 +210,7 @@
 	.footer-contact span {
 		display: block;
 		font-size: 0.85rem;
-		color: var(--color-text-tertiary);
+		color: color-mix(in oklch, var(--ref-cream) 80%, var(--ref-gold-dark) 20%);
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
 	}
@@ -222,7 +218,7 @@
 	.footer-contact strong {
 		display: block;
 		font-size: 1rem;
-		color: var(--color-text-primary);
+		color: var(--color-text-inverse);
 	}
 
 	.footer-contact-btn-wrap {
@@ -239,7 +235,7 @@
 		text-transform: uppercase;
 		text-align: center;
 		color: var(--color-text-on-accent);
-		background: var(--color-accent-primary);
+		background: var(--ref-cta-teal);
 		border: none;
 		border-radius: 4px;
 		cursor: pointer;
@@ -252,7 +248,7 @@
 	}
 
 	.footer-contact-btn:focus-visible {
-		outline: 2px solid var(--color-accent-primary);
+		outline: 2px solid var(--ref-cta-teal);
 		outline-offset: 2px;
 	}
 

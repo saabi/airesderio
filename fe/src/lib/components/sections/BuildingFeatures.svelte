@@ -197,7 +197,7 @@
 				<div class="bf-cta-wrap">
 					<button
 						type="button"
-						class="bf-cta"
+						class="bf-cta btn-cta-primary"
 						onclick={() => pdfRequestModalStore.open('ficha-tecnica')}
 						aria-label="Ver más detalles técnicos del edificio"
 					>
@@ -213,13 +213,19 @@
 <style>
 	.building-features {
 		max-width: var(--max, 1200px);
-		margin: 2rem auto;
+		margin: 0 auto;
 	}
 
 	.bf-frame {
 		border-radius: 6px;
 		padding: 2rem;
-		background: var(--color-bg-canvas);
+		/* Marble-style band over cream background */
+		background: linear-gradient(
+			180deg,
+			color-mix(in oklch, var(--ref-cream) 92%, var(--ref-neutral-200) 8%) 0%,
+			color-mix(in oklch, var(--ref-cream) 88%, var(--ref-neutral-250) 12%) 100%
+		);
+		border: 1px solid var(--color-border-subtle);
 	}
 
 	.bf-header {
@@ -332,7 +338,7 @@
 		text-transform: uppercase;
 		text-align: center;
 		color: var(--color-text-on-accent);
-		background: var(--color-accent-primary, var(--ref-brand-primary));
+		background: var(--ref-cta-teal);
 		border: none;
 		border-radius: 4px;
 		cursor: pointer;
@@ -351,7 +357,7 @@
 	}
 
 	.bf-cta:focus-visible {
-		outline: 2px solid var(--color-accent-primary);
+		outline: 2px solid var(--ref-cta-teal);
 		outline-offset: 2px;
 	}
 

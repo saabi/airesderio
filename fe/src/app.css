@@ -60,6 +60,18 @@
 	--ref-gold: #eaa43b;
 	--ref-gold-dark: #6b4000;
 
+	/* Muted greenish-teal CTA (Contáctanos, Solicitar ficha técnica) - from proposal */
+	--ref-cta-teal: #548487;
+	--ref-cta-teal-hover: #4a7679;
+
+	/* Header/nav from proposal (dark blue-gray bar, white text) */
+	--header-bg: #4A606A;
+	--header-text: #FFFFFF;
+	--header-text-muted: rgba(255, 255, 255, 0.85);
+	--header-border: rgba(255, 255, 255, 0.2);
+	--header-nav-text: #FFFFFF;
+	--header-active-underline: #FFFFFF;
+
 	--ref-neutral-950: color-mix(in oklch, var(--ref-black) 85%, var(--ref-white) 15%);
 	--ref-neutral-980: color-mix(in oklch, var(--ref-black) 92%, var(--ref-white) 8%);
 
@@ -290,6 +302,28 @@
 	}
 }
 
+/* === Global layout shells === */
+
+.page-shell {
+	/* Width & centering */
+	max-width: var(--max);
+	margin-inline: auto;
+
+	/* Horizontal padding */
+	padding-inline: clamp(1rem, 3vw, 1.75rem);
+	box-sizing: border-box;
+}
+
+.section {
+	/* Vertical rhythm between blocks */
+	padding-block: 2.5rem;
+}
+
+.section--band {
+	/* Slightly larger vertical padding for full-width bands */
+	padding-block: 3rem;
+}
+
 .scroll-animate {
 	transition:
 		transform var(--scroll-animate-duration, 500ms)
@@ -415,6 +449,23 @@ a:hover {
 	h3 {
 		font-size: 1.25rem;
 	}
+}
+
+/* Primary CTA buttons: greenish-teal (Contáctanos, ENVIAR, Solicitar planos, Solicitar ficha técnica) */
+.btn-cta-primary,
+button.btn-cta-primary,
+a.btn-cta-primary {
+	background: var(--ref-cta-teal) !important;
+	color: var(--color-text-on-accent) !important;
+}
+.btn-cta-primary:hover:not(:disabled),
+a.btn-cta-primary:hover {
+	background: var(--ref-cta-teal-hover) !important;
+}
+.btn-cta-primary:focus-visible,
+a.btn-cta-primary:focus-visible {
+	outline: 2px solid var(--ref-cta-teal) !important;
+	outline-offset: 2px;
 }
 
 /* Focus indicators for keyboard navigation */

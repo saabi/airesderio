@@ -132,6 +132,8 @@
 		padding: 1.5rem;
 		align-items: center;
 		justify-items: end;
+		/* Box/Visual */
+		color: var(--color-text-inverse);
 	}
 
 	.hero-carousel {
@@ -141,5 +143,22 @@
 		/* Layout */
 		width: 100%;
 		height: 100%;
+	}
+
+	.hero::before {
+		/* Positioning */
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+
+		/* Box/Visual */
+		background: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 0.25) 0%,
+			rgba(0, 0, 0, 0.05) 40%,
+			transparent 100%
+		);
+		pointer-events: none;
 	}
 </style>

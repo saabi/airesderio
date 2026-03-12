@@ -65,7 +65,7 @@
 			>Características principales del proyecto</VisuallyHidden
 		>
 		<dl>
-			<dt class='kpi'><strong>2 y 4 Ambientes</strong><small>1 dormitorio<br>2 dormitorios + estudio</small></dt>
+			<dt class='kpi kpi--grey'><strong>2 y 4 Ambientes</strong><small>1 dormitorio<br>2 dormitorios + estudio</small></dt>
 			<VisuallyHidden tag='dd'>Tipos de unidades disponibles</VisuallyHidden>
 			<dt class='kpi'><strong>PISCINA</strong><small>Con solarium húmedo en terraza</small></dt>
 			<VisuallyHidden tag='dd'>Amenities en terraza con piscina y solarium húmedo</VisuallyHidden>
@@ -96,7 +96,7 @@
 		margin: 2rem auto;
 
 		/* Box/Visual */
-		background: var(--color-accent-secondary);
+		background: color-mix(in oklch, var(--ref-cream) 92%, var(--ref-neutral-200) 8%);
 		border-radius: 0.625rem;
 
 		/* Typography */
@@ -140,6 +140,11 @@
 		font-weight: 700;
 		line-height: 1;
 		letter-spacing: 0.02em;
+		color: #8B5431;
+	}
+
+	.kpi--grey strong {
+		color: #6D6D6D;
 	}
 
 	.kpi small {

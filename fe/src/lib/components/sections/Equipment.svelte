@@ -282,7 +282,7 @@
 				<div class="equip-ficha-wrap">
 					<button
 						type="button"
-						class="equip-ficha"
+						class="equip-ficha btn-cta-primary"
 						onclick={() => pdfRequestModalStore.open('ficha-tecnica')}
 						aria-label="Descargar ficha técnica"
 					>SOLICITAR FICHA TÉCNICA</button>
@@ -386,9 +386,9 @@
 		font-weight: 500;
 		letter-spacing: 0.02em;
 		text-transform: uppercase;
-		color: var(--color-bg-canvas, #fff);
-		background: var(--color-contrast-low, #444);
-		border: 1px solid var(--color-border-default, var(--ref-neutral-500));
+		color: var(--color-text-on-accent);
+		background: var(--ref-cta-teal);
+		border: 1px solid var(--ref-cta-teal-hover);
 		border-radius: 4px;
 		text-decoration: none;
 		cursor: pointer;
@@ -398,7 +398,7 @@
 
 	.equip-ficha:hover {
 		opacity: 0.9;
-		background: var(--color-contrast-low, #444);
-		color: var(--color-bg-canvas, #fff);
+		background: var(--ref-cta-teal-hover);
+		color: var(--color-text-on-accent);
 	}
 </style>
