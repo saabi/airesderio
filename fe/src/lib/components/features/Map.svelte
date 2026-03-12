@@ -293,6 +293,14 @@
 		onSelectionChange?.(currentPathId);
 	});
 
+	function getPinInnerTranslateY(pinRadius: number): number {
+		const scaledRadius = getPinRadius(pinRadius);
+		const scale = scaledRadius / 12;
+		if (!scale) return -21;
+		const delta = 10 / scale;
+		return -21 - delta;
+	}
+
 	// Calculate label coordinates offset by pin radius so arrow tip touches pin edge
 	let labelCoordinates = $derived.by(() => {
 		if (!pinCoordinates || !svgElement || !mapContainer) {
@@ -1072,11 +1080,18 @@
 						{/if}
 						<g
 							class='pin-location-icon'
-							transform="translate({denorm(place.pin.cx)}, {denorm(place.pin.cy)}) scale({getPinRadius(place.pin.r) / 12}) translate(-12, -21)"
+							transform="translate({denorm(place.pin.cx)}, {denorm(place.pin.cy)}) scale({getPinRadius(place.pin.r) / 12}) translate(-12, {getPinInnerTranslateY(place.pin.r)})"
 							aria-hidden='true'
 						>
-							<path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 21c0-6-4.5-10.5-4.5-14.5a4.5 4.5 0 1 1 9 0C16.5 10.5 12 15 12 21z" />
-							<circle cx="12" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+							<!-- Solid teardrop pin -->
+							<path
+								fill="currentColor"
+								stroke="none"
+								d="M12 2.5C9.238 2.5 7 4.738 7 7.5c0 4.25 3.85 8.36 4.94 9.46.29.29.83.29 1.12 0C13.15 15.86 17 11.75 17 7.5 17 4.738 14.762 2.5 12 2.5z"
+							/>
+							<!-- Small circle accent near top of pin -->
+							<circle cx="12" cy="5.2" r="1.1" fill="white" />
+							<!-- Small house glyph inside pin -->
 						</g>
 						<text
 							class='place-name-label'
@@ -1179,11 +1194,15 @@
 							{@const pinCy = denorm(selectedPlace.pin.cy)}
 							<g
 								class='pin-location-icon'
-								transform="translate({pinCx}, {pinCy}) scale({r / 12}) translate(-12, -21)"
+								transform="translate({pinCx}, {pinCy}) scale({r / 12}) translate(-12, {getPinInnerTranslateY(selectedPlace.pin.r)})"
 								aria-hidden='true'
 							>
-								<path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 21c0-6-4.5-10.5-4.5-14.5a4.5 4.5 0 1 1 9 0C16.5 10.5 12 15 12 21z" />
-								<circle cx="12" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+								<path
+									fill="currentColor"
+									stroke="none"
+									d="M12 2.5C9.238 2.5 7 4.738 7 7.5c0 4.25 3.85 8.36 4.94 9.46.29.29.83.29 1.12 0C13.15 15.86 17 11.75 17 7.5 17 4.738 14.762 2.5 12 2.5z"
+								/>
+
 							</g>
 						{/if}
 					</g>
