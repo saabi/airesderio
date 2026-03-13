@@ -16,7 +16,7 @@
 
 	// ===== STATIC CONSTANTS =====
 	const CAROUSEL_ITEMS: CarouselItem[] = [
-		{ type: 'video', src: '/carrousel-hero/promo.mov' },
+		{ type: 'video', src: '/carrousel-hero/promo.webm' },
 		{ type: 'image', src: '/carrousel-hero/1-db-exterior-01-2.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 1' },
 		{ type: 'image', src: '/carrousel-hero/2-db-exterior-01-8.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 2' },
 		{ type: 'image', src: '/carrousel-hero/3-db-exterior-01-1.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 3' }
