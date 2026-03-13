@@ -2,6 +2,7 @@
 	// ===== IMPORTS =====
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
+	import Picture from '$lib/components/ui/Picture.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { theme } from '$lib/stores/theme';
 </script>
@@ -39,13 +40,13 @@
 		</div>
 		<div class='right-column'>
 			<div class='exterior-image scroll-animate' style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}>
-				<img
+				<Picture
 					src="/exteriores/exterior_03.png"
-					alt='Aires de Río exterior'
-					sizes='(min-width: 850px) 50vw, 100vw'
-					loading='lazy'
-					decoding='async'
-					class='exterior-image-content'
+					alt="Aires de Río exterior"
+					sizes="(min-width: 850px) 50vw, 100vw"
+					loading="lazy"
+					decoding="async"
+					class="exterior-image-content"
 				/>
 			</div>
 			<div class='logo-wrapper'>
@@ -126,15 +127,15 @@
 		overflow: hidden;
 	}
 
-	.exterior-image-content {
+	.exterior-image :global(.exterior-image-content) {
 		/* Layout */
 		width: 100%;
 		height: 100%;
 		display: block;
 	}
 
-	.exterior-image-content :global(picture),
-	.exterior-image-content :global(img) {
+	.exterior-image :global(picture),
+	.exterior-image :global(img) {
 		/* Layout */
 		width: 100%;
 		height: 100%;

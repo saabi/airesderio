@@ -3,6 +3,7 @@
 	import { getContext } from 'svelte';
 	import type { Snippet } from 'svelte';
 	import type { Component } from 'svelte';
+	import Picture from '$lib/components/ui/Picture.svelte';
 
 	// ===== TYPES =====
 	export type SlideType = 'image' | 'video' | 'component' | 'custom';
@@ -76,7 +77,7 @@
 	{#if type === 'image' && src != null}
 		{@const imageSrc = typeof src === 'string' ? src : (src as { img?: { src?: string }; src?: string })?.img?.src ?? (src as { src?: string })?.src ?? ''}
 		{#if imageSrc}
-			<img
+			<Picture
 				src={imageSrc}
 				alt={alt}
 				class="carousel-image-content"

@@ -1,6 +1,7 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import { tweened } from 'svelte/motion';
+	import Picture from '$lib/components/ui/Picture.svelte';
 	import { floorPlanOverlayStore } from '$lib/stores/floorPlanOverlay';
 	import type { FloorPlanZone, FloorPlanZoomMode, SvgShape, ViewBox } from '$lib/types';
 
@@ -272,7 +273,7 @@
 		<!-- Non-interactive without clip: plain image -->
 		<div class="plan-image-wrap">
 			{#if planImageSrc}
-				<img
+				<Picture
 					src={planImageSrc}
 					alt={plan.title}
 					class="plan-image"
@@ -381,7 +382,7 @@
 			{:else}
 				<!-- Fallback while dimensions load: show image only (use resolved URL) -->
 				{#if planImageSrc}
-					<img src={planImageSrc} alt={plan.title} class="plan-image" loading="lazy" />
+					<Picture src={planImageSrc} alt={plan.title} class="plan-image" loading="lazy" />
 				{/if}
 			{/if}
 			{#if zoomedZoneId && !maximized && plan.showBackButton !== false}
