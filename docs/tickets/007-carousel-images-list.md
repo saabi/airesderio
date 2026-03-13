@@ -202,19 +202,24 @@ Based on initial analysis, the following directories contain very large images t
 **Estimated total size before optimization**: ~150-200MB  
 **Estimated total size after optimization**: ~15-25MB (85-90% reduction)
 
-## Next Steps for Ticket #007
+## Implemented optimization (scripts)
 
-1. Install and configure `vite-imagetools`
-2. Create image utility functions for optimized image paths
-3. Update Hero Carousel (critical priority)
-4. Update Place Photos Carousel (critical priority - largest impact)
-5. Update Interior Carousel (high priority)
-6. Update Floor Plans Carousel (medium priority)
-7. Update Contact Section image (medium priority)
-8. Test and measure performance improvements
+Image optimization is implemented via re-runnable Node scripts using Sharp. When images are added or updated, run from `fe/`:
+
+| Command | Purpose |
+|---------|---------|
+| `npm run images:analyze` | Report dimensions and file sizes per category (no writes) |
+| `npm run images:optimize` | Resize/compress all categories in place and generate WebP siblings |
+| `npm run images:optimize:places` | Optimize only `fe/static/places/**` |
+
+- **Rules:** Per-category settings (max dimensions, JPEG/WebP quality, skip thresholds) are in `fe/scripts/image-rules.js`.
+- **Categories:** hero (1920×1080), interior (1920×1080), planos (2400 long side, higher quality), exteriores (1920 long side), places (1920×1080).
+- **Output:** Originals are overwritten in place; a `.webp` file is written next to each image for optional `<picture>` use.
+
+See [docs/IMAGE_OPTIMIZATION_USAGE.md](../../IMAGE_OPTIMIZATION_USAGE.md) for full details.
 
 ---
 
-**Last Updated**: 2025-01-XX  
+**Last Updated**: 2025-03  
 **Related**: Ticket #007 - Image Optimization
 
