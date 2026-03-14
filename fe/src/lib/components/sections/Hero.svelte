@@ -4,7 +4,6 @@
 	import Slide from '$lib/components/ui/Slide.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
-	import { verticalViewport } from '$lib/utils/viewport';
 	import { ANIMATION, animationDuration, animationOffset } from '$lib/constants/animation';
 
 	// ===== TYPES =====
@@ -69,13 +68,13 @@
 	let videoNotEnded = $state(true);
 
 	// ===== DERIVED =====
-	const activeItems = $derived($verticalViewport ? CAROUSEL_ITEMS_MOBILE : CAROUSEL_ITEMS);
+	/** Mobile carousel shows clamped index so switching from desktop (e.g. 20) doesn't overflow. */
+	const mobileIndex = $derived(Math.min(currentIndex, CAROUSEL_ITEMS_MOBILE.length - 1));
 
-	// Clamp index when active list changes length
+	// Clamp index when it exceeds desktop length (e.g. after navigating on mobile then rotating)
 	$effect(() => {
-		const len = activeItems.length;
-		if (currentIndex >= len) {
-			currentIndex = Math.max(0, len - 1);
+		if (currentIndex >= CAROUSEL_ITEMS.length) {
+			currentIndex = Math.max(0, CAROUSEL_ITEMS.length - 1);
 		}
 	});
 
@@ -91,7 +90,7 @@
 
 	function handleVideoEnd() {
 		videoNotEnded = false;
-		currentIndex = (currentIndex + 1) % activeItems.length;
+		currentIndex = (currentIndex + 1) % CAROUSEL_ITEMS.length;
 	}
 
 	// ===== INSTANCE CONSTANTS =====
@@ -113,37 +112,74 @@
 		class='hero-carousel scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<ImageCarousel
-			bind:currentIndex
-			onIndexChange={(i) => (currentIndex = i)}
-			slideCount={activeItems.length}
-			slideAriaLabel={(index) => activeItems[index].type === 'video' ? 'Video promocional Aires de Río' : activeItems[index].alt}
-			autoRotate={true}
-			interval={5000}
-			pauseOnHover={true}
-			pauseAutoRotate={pauseAutoRotate}
-			showNavigation={true}
-			navigationPosition="around-dots"
-			buttonVariant="overlay"
-			buttonSize="md"
-			showDots={true}
-			dotsVariant="default"
-			transitionType="fade-scale"
-			imageFit="cover"
-			ariaLabel='Carrusel de imágenes del edificio'
-		>
-			{#snippet slide(index)}
-				{@const item = activeItems[index]}
-				<Slide
-					type={item.type}
-					src={item.src}
-					alt={item.type === 'image' ? item.alt : undefined}
-					autoplay={item.type === 'video'}
-					onVideoEnd={item.type === 'video' ? handleVideoEnd : undefined}
-					isActive={index === currentIndex}
-				/>
-			{/snippet}
-		</ImageCarousel>
+		<!-- Desktop carousel: visible in landscape; hidden in portrait via CSS so browser picks correct set without JS. -->
+		<div class='hero-carousel-desktop'>
+			<ImageCarousel
+				bind:currentIndex
+				onIndexChange={(i) => (currentIndex = i)}
+				slideCount={CAROUSEL_ITEMS.length}
+				slideAriaLabel={(index) => CAROUSEL_ITEMS[index].type === 'video' ? 'Video promocional Aires de Río' : CAROUSEL_ITEMS[index].alt}
+				autoRotate={true}
+				interval={5000}
+				pauseOnHover={true}
+				pauseAutoRotate={pauseAutoRotate}
+				showNavigation={true}
+				navigationPosition="around-dots"
+				buttonVariant="overlay"
+				buttonSize="md"
+				showDots={true}
+				dotsVariant="default"
+				transitionType="fade-scale"
+				imageFit="cover"
+				ariaLabel='Carrusel de imágenes del edificio'
+			>
+				{#snippet slide(index)}
+					{@const item = CAROUSEL_ITEMS[index]}
+					<Slide
+						type={item.type}
+						src={item.src}
+						alt={item.type === 'image' ? item.alt : undefined}
+						autoplay={item.type === 'video'}
+						onVideoEnd={item.type === 'video' ? handleVideoEnd : undefined}
+						isActive={index === currentIndex}
+					/>
+				{/snippet}
+			</ImageCarousel>
+		</div>
+		<!-- Mobile carousel: visible only in portrait via CSS; avoids wrong JS viewport on load. -->
+		<div class='hero-carousel-mobile'>
+			<ImageCarousel
+				currentIndex={mobileIndex}
+				onIndexChange={(i) => (currentIndex = i)}
+				slideCount={CAROUSEL_ITEMS_MOBILE.length}
+				slideAriaLabel={(index) => CAROUSEL_ITEMS_MOBILE[index].type === 'video' ? 'Video promocional Aires de Río' : CAROUSEL_ITEMS_MOBILE[index].alt}
+				autoRotate={true}
+				interval={5000}
+				pauseOnHover={true}
+				pauseAutoRotate={pauseAutoRotate}
+				showNavigation={true}
+				navigationPosition="around-dots"
+				buttonVariant="overlay"
+				buttonSize="md"
+				showDots={true}
+				dotsVariant="default"
+				transitionType="fade-scale"
+				imageFit="cover"
+				ariaLabel='Carrusel de imágenes del edificio'
+			>
+				{#snippet slide(index)}
+					{@const item = CAROUSEL_ITEMS_MOBILE[index]}
+					<Slide
+						type={item.type}
+						src={item.src}
+						alt={item.type === 'image' ? item.alt : undefined}
+						autoplay={item.type === 'video'}
+						onVideoEnd={item.type === 'video' ? handleVideoEnd : undefined}
+						isActive={index === mobileIndex}
+					/>
+				{/snippet}
+			</ImageCarousel>
+		</div>
 	</div>
 	<!--
 		<svg class="corner-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -177,6 +213,30 @@
 		/* Layout */
 		width: 100%;
 		height: 100%;
+	}
+
+	/* Show desktop in landscape, mobile in portrait; browser applies media query so correct set shows without JS. */
+	.hero-carousel-desktop {
+		display: block;
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+	.hero-carousel-mobile {
+		display: none;
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+	@media (orientation: portrait) {
+		.hero-carousel-desktop {
+			display: none;
+		}
+		.hero-carousel-mobile {
+			display: block;
+		}
 	}
 
 	.hero::before {
