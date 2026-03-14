@@ -1,30 +1,29 @@
 import { browser } from '$app/environment';
 import { readable } from 'svelte/store';
 
-const ORIENTATION_PORTRAIT = '(orientation: portrait)';
-
 /**
- * Store that reports whether the viewport is in portrait/vertical orientation.
+ * Whether the viewport is taller than wide (portrait-like).
  * Use for selecting mobile-optimized image sets in carousels.
  * SSR: always false (assume desktop).
- * Listens to load and orientationchange so the initial value corrects on devices
- * that report orientation only after those events.
+ *
+ * Uses window.innerHeight > innerWidth instead of matchMedia('(orientation: portrait)')
+ * because on some mobile browsers (e.g. iPhone X+ Safari) the orientation media query
+ * can return inverted or wrong values on load; viewport dimensions are reliable.
  */
+function isVerticalViewport(): boolean {
+	return window.innerHeight > window.innerWidth;
+}
+
 function createVerticalViewportStore() {
 	if (!browser) {
 		return readable(false, () => {});
 	}
-	const mql = window.matchMedia(ORIENTATION_PORTRAIT);
-	return readable(mql.matches, (set) => {
-		const sync = () => set(mql.matches);
-		mql.addEventListener('change', sync);
-		// Re-sync after load and on orientationchange; some mobile browsers report
-		// wrong initial orientation until these fire.
-		window.addEventListener('load', sync);
+	return readable(isVerticalViewport(), (set) => {
+		const sync = () => set(isVerticalViewport());
+		window.addEventListener('resize', sync);
 		window.addEventListener('orientationchange', sync);
 		return () => {
-			mql.removeEventListener('change', sync);
-			window.removeEventListener('load', sync);
+			window.removeEventListener('resize', sync);
 			window.removeEventListener('orientationchange', sync);
 		};
 	});
