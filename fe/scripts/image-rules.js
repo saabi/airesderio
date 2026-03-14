@@ -67,7 +67,8 @@ export function expandFilesForRule(staticDir, rule) {
 export const IMAGE_RULES = [
 	{
 		name: 'hero',
-		glob: 'carrousel-hero/*.jpg',
+		glob: 'carrousel-hero',
+		extensions: ['.jpg', '.jpeg', '.png'],
 		maxWidth: 1920,
 		maxHeight: 1080,
 		maxLongSide: null,
@@ -87,7 +88,7 @@ export const IMAGE_RULES = [
 	},
 	{
 		name: 'planos',
-		glob: 'planos/*.jpg',
+		glob: 'planos/*.png',
 		maxWidth: null,
 		maxHeight: null,
 		maxLongSide: 2400,

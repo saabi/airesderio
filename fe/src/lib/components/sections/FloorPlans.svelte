@@ -42,7 +42,7 @@
 	// ===== STATIC CONSTANTS =====
 	const FLOOR_PLANS: FloorPlan[] = [
 		{
-			image: '/planos/depto-1hab-balcon.jpg',
+			image: '/planos/depto-1hab-balcon.png',
 			title: 'Departamento de 2 ambientes con balcón',
 			description: 'FRENTE',
 			clipShape: {
@@ -51,7 +51,7 @@
 			}
 		},
 		{
-			image: '/planos/depto-1hab-contrafrente.jpg',
+			image: '/planos/depto-1hab-contrafrente.png',
 			title: 'Departamento de 2 ambientes',
 			description: 'CONTRAFRENTE',
 			clipShape: {
@@ -60,7 +60,7 @@
 			}
 		},
 		{
-			image: '/planos/depto-2hab-1ofi.jpg',
+			image: '/planos/depto-2hab-1ofi.png',
 			title: 'Departamento de 4 ambientes',
 			description: 'CONTRAFRENTE',
 			clipShape: {

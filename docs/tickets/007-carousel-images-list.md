@@ -4,18 +4,18 @@ This document lists all images currently used in carousels throughout the applic
 
 ## 1. Hero Carousel (`Hero.svelte`)
 
-**Location**: `fe/static/carrousel-hero/`  
+**Location**: `fe/static/carrousel-hero/desktop/` (desktop) and `fe/static/carrousel-hero/mobile/` (mobile/vertical)  
 **Component**: `fe/src/lib/components/sections/Hero.svelte`  
 **Priority**: **HIGH** (Above-the-fold, first impression)
 
-| # | Filename | Full Path | Status |
-|---|----------|-----------|--------|
-| 1 | `1_DB_EXTERIOR_01 (2).jpg` | `/carrousel-hero/1_DB_EXTERIOR_01 (2).jpg` | ✅ Used |
-| 2 | `2_DB_EXTERIOR_01 (8).jpg` | `/carrousel-hero/2_DB_EXTERIOR_01 (8).jpg` | ✅ Used |
-| 3 | `3_DB_EXTERIOR_01 (1).jpg` | `/carrousel-hero/3_DB_EXTERIOR_01 (1).jpg` | ✅ Used |
+The hero uses separate media sets for desktop and mobile (viewport-based). Desktop images live under `carrousel-hero/desktop/` with naming `d-NN-*.jpg` or `d-NN-*.png`; mobile under `carrousel-hero/mobile/` with `m-NN-*.png`. Video `promo.webm` is in `desktop/` and referenced from both. Optimization runs recursively over `carrousel-hero` (all subdirs) and produces WebP siblings.
 
-**Total**: 3 images  
-**Optimization Priority**: **CRITICAL** - These are the first images users see. Should use WebP with JPG fallback, preload first image, responsive srcset.
+| Set | Count | Path prefix |
+|-----|-------|-------------|
+| Desktop | 1 video + 23 images | `/carrousel-hero/desktop/` |
+| Mobile | 1 video + 13 images | `/carrousel-hero/mobile/` |
+
+**Optimization Priority**: **CRITICAL** - First images users see. WebP siblings generated; `Slide`/`Picture` can use them for `<picture>`.
 
 ---
 
@@ -45,17 +45,16 @@ This document lists all images currently used in carousels throughout the applic
 **Component**: `fe/src/lib/components/sections/FloorPlans.svelte`  
 **Priority**: **MEDIUM** (Below-the-fold, informational content)
 
+Planos use **PNG** (transparency preserved). Optimization keeps PNG as source and generates WebP siblings with alpha. FloorPlans references `.png`; `Picture` uses WebP when available.
+
 | # | Filename | Full Path | Status |
 |---|----------|-----------|--------|
-| 1 | `1ra-planta-4-deptos.png` | `/planos/1ra-planta-4-deptos.png` | ✅ Used |
-| 2 | `1ra-planta-4-deptos-a.png` | `/planos/1ra-planta-4-deptos-a.png` | ✅ Used |
-| 3 | `2 OCTUBRE_MODELO 1ra PLANTA_4 DPTOS 1 DORM.jpg` | `/planos/2 OCTUBRE_MODELO 1ra PLANTA_4 DPTOS 1 DORM.jpg` | ✅ Used |
-| 4 | `2da-planta-3-deptos.png` | `/planos/2da-planta-3-deptos.png` | ✅ Used |
-| 5 | `2da-planta-3-deptos-a.png` | `/planos/2da-planta-3-deptos-a.png` | ✅ Used |
-| 6 | `2 OCTUBRE_MODELO 2da PLANTA_2 DPTOS 1 DORM_1 DEPTO DOBLE.jpg` | `/planos/2 OCTUBRE_MODELO 2da PLANTA_2 DPTOS 1 DORM_1 DEPTO DOBLE.jpg` | ✅ Used |
+| 1 | `depto-1hab-balcon.png` | `/planos/depto-1hab-balcon.png` | ✅ Used |
+| 2 | `depto-1hab-contrafrente.png` | `/planos/depto-1hab-contrafrente.png` | ✅ Used |
+| 3 | `depto-2hab-1ofi.png` | `/planos/depto-2hab-1ofi.png` | ✅ Used |
 
-**Total**: 6 images  
-**Optimization Priority**: **MEDIUM** - Should use WebP, lazy loading, responsive srcset. Lower quality acceptable (80%) since these are technical drawings.
+**Total**: 3 images  
+**Optimization Priority**: **MEDIUM** - PNG with transparency; WebP siblings with alpha. Lower quality acceptable for technical drawings.
 
 ---
 

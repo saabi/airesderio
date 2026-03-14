@@ -16,14 +16,48 @@
 
 	// ===== STATIC CONSTANTS =====
 	const CAROUSEL_ITEMS: CarouselItem[] = [
-		{ type: 'video', src: '/carrousel-hero/promo.webm' },
-		{ type: 'image', src: '/carrousel-hero/1-db-exterior-01-2.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 1' },
-		{ type: 'image', src: '/carrousel-hero/2-db-exterior-01-8.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 2' },
-		{ type: 'image', src: '/carrousel-hero/3-db-exterior-01-1.jpg', alt: 'Fachada del edificio Aires de Río - Imagen 3' }
+		{ type: 'video', src: '/carrousel-hero/desktop/promo.webm' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-2-frente-edificio.jpg', alt: 'Frente del edificio Aires de Río' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-2-z-bar-poblada.png', alt: 'Vista Z Bar Poblada' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-4-piscina.png', alt: 'Piscina' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-5-piscina.png', alt: 'Piscina' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-5a-piscina.png', alt: 'Piscina' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-6-piscina.png', alt: 'Piscina' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-7-patio-atras.png', alt: 'Patio trasero' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-8-lobby.png', alt: 'Lobby' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-9-pasillos.png', alt: 'Pasillos' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-10-puertas.png', alt: 'Puertas' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-11-cocina.png', alt: 'Cocina' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-12-cocina.png', alt: 'Cocina' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-13-cocina.png', alt: 'Cocina' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-14-living.png', alt: 'Living' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-15-cocina-living-comedor.png', alt: 'Cocina, living y comedor' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-16-habitacion-simple.png', alt: 'Habitación' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-17-vestidor-simple.png', alt: 'Vestidor' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-18-baño-simple.png', alt: 'Baño' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-19-habitacion.png', alt: 'Habitación' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-20-vestidor-iluminado.png', alt: 'Vestidor iluminado' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-21-baño-pituco.png', alt: 'Baño' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-22-banitori.png', alt: 'Bañador' },
+		{ type: 'image', src: '/carrousel-hero/desktop/d-23-living-4amb.png', alt: 'Living 4 ambientes' }
 	];
 
-	// Mobile/vertical: placeholder — duplicate desktop until vertical images are ready
-	const CAROUSEL_ITEMS_MOBILE: CarouselItem[] = [...CAROUSEL_ITEMS];
+	const CAROUSEL_ITEMS_MOBILE: CarouselItem[] = [
+		{ type: 'video', src: '/carrousel-hero/desktop/promo.webm' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-2-frente-edificio.png', alt: 'Frente del edificio Aires de Río' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-2-z-bar-poblada.png', alt: 'Vista Z Bar Poblada' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-3-piscina.png', alt: 'Piscina' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-4-piscina.png', alt: 'Piscina' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-6-piscina.png', alt: 'Piscina' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-7-patio-atras.png', alt: 'Patio trasero' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-8-lobby.png', alt: 'Lobby' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-9-cocina.png', alt: 'Cocina' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-10-cocina.png', alt: 'Cocina' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-11-livings.png', alt: 'Livings' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-12-banitori.png', alt: 'Bañador' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-13-lavadero.png', alt: 'Lavadero' },
+		{ type: 'image', src: '/carrousel-hero/mobile/m-14-plano-vestidores.png', alt: 'Plano vestidores' }
+	];
 </script>
 
 <script lang='ts'>

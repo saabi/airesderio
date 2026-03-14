@@ -14,7 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const ROOT = join(__dirname, '..');
-const SOURCE = join(ROOT, 'static', 'carrousel-hero', '1-db-exterior-01-2.jpg');
+const SOURCE = join(ROOT, 'static', 'carrousel-hero', 'desktop', 'd-2-frente-edificio.jpg');
 const OUT = join(ROOT, 'static', 'og-image.jpg');
 
 await sharp(SOURCE)

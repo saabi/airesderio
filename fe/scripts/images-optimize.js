@@ -111,10 +111,16 @@ async function processFile(filePath, rule) {
 
 	const webpPath = filePath.replace(/\.(jpe?g|png)$/i, '.webp');
 
+	const preserveAlpha = rule.name === 'planos' && filePath.toLowerCase().endsWith('.png');
+
 	if (canSkip) {
 		// Only generate WebP from current file
 		await sharp(filePath)
-			.webp({ quality: rule.webpQuality })
+			.webp(
+				preserveAlpha
+					? { quality: rule.webpQuality, alphaQuality: 100 }
+					: { quality: rule.webpQuality }
+			)
 			.toFile(webpPath);
 		console.log(`  ${filePath.replace(STATIC_DIR, '')} (unchanged) → .webp`);
 		return;
@@ -141,11 +147,15 @@ async function processFile(filePath, rule) {
 	const sizeAfter = statSync(filePath).size;
 
 	// If we saved as JPG for a PNG path we'd need to update references; plan keeps format.
-	// So interior/exteriores stay PNG with high compression.
+	// So interior/exteriores stay PNG with high compression. Planos: WebP with alpha.
 
-	// Write WebP sibling
+	// Write WebP sibling (planos PNG: preserve transparency via alphaQuality)
 	await sharp(filePath)
-		.webp({ quality: rule.webpQuality })
+		.webp(
+			preserveAlpha
+				? { quality: rule.webpQuality, alphaQuality: 100 }
+				: { quality: rule.webpQuality }
+		)
 		.toFile(webpPath);
 
 	console.log(
