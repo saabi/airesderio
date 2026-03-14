@@ -13,6 +13,14 @@
 
 <style>
 	.ficha-tecnica-route {
+		/* On screen: margin equal to header height so content doesn't sit under the header */
+		margin-top: var(--header-height);
 		padding-bottom: 3rem;
+	}
+
+	@media print {
+		.ficha-tecnica-route {
+			margin-top: 0;
+		}
 	}
 </style>

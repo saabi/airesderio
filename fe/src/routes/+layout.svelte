@@ -32,13 +32,19 @@
 </script>
 
 <!-- Skip to main content link for keyboard navigation -->
-<SkipLink />
+<div class="no-print">
+	<SkipLink />
+</div>
 
-<Header adminEmail={data?.adminEmail ?? null} />
+<div class="no-print">
+	<Header adminEmail={data?.adminEmail ?? null} />
+</div>
 
 {@render children()}
 
-<Footer />
+<div class="no-print">
+	<Footer />
+</div>
 
 {#if $pdfRequestModalStore}
 	<PdfRequestModal intent={$pdfRequestModalStore.intent} />

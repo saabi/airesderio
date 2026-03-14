@@ -483,3 +483,10 @@ textarea:focus-visible {
 	outline: 2px solid var(--color-accent-primary);
 	outline-offset: 2px;
 }
+
+/* Hide header, footer and skip link when printing */
+@media print {
+	.no-print {
+		display: none !important;
+	}
+}

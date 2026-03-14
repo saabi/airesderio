@@ -1,7 +1,86 @@
 <script lang="ts">
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
+	import DocListIcon from '$lib/components/dev/DocListIcon.svelte';
 
 	// Content converted from docs/proposals/PDFs/ficha-tecnica.MD for preview/PDF-style route.
+	// List items: icon key (matches a component below) or null for placeholder.
+	type DocListItem = { icon: string | null; html: string };
+
+	const SECTION_1_ITEMS: DocListItem[] = [
+		{ icon: 'ubicacion', html: 'Ubicado en el área donde todo ocurre: shopping, diversión, zonas verdes, deportes, eventos culturales, restaurantes y pubs.' },
+		{ icon: 'estacionamiento', html: 'Con la conveniencia de estar sobre una avenida céntrica y con doble estacionamiento.' },
+		{ icon: 'building', html: 'Aires de Rio ofrece veintiocho departamentos y un local comercial dedicado a cafetería para tu comodidad.' },
+		{ icon: 'ascensores', html: 'La circulación vertical estará servida por dos ascensores desde el subsuelo hasta la terraza.' },
+		{ icon: null, html: 'Construye la empresa <strong>HABITAT PRIME S.A.S.</strong> bajo la dirección técnica del Ing. Ricardo Mattera, de larga trayectoria en la provincia. El Estudio D+B de Antonella Doménico y Luciano Bertorello aportó belleza a su arquitectura en una elegante fusión de líneas curvas y rectas, confiriéndole un moderno estilo mediterráneo, ambientes serenos, ordenados y una sutil elegancia.' },
+		{ icon: 'ladrillos', html: 'En las paredes exteriores y los tabiques divisores interiores se utilizaron ladrillos cerámicos huecos de reconocida marca del medio, cuidando la aislación térmica y sonora.' },
+		{ icon: null, html: 'Las paredes interiores revocadas y pintadas con pintura látex premium interior de primera marca. La pared de ingreso a cada unidad estará tratada de forma especial para acordar con la paleta de colores y texturas del resto de los revestimientos.' },
+		{ icon: 'agua-sanitarias', html: 'Para las conexiones sanitarias se usaron materiales de las marca <strong>AWADUCT</strong> y <strong>TIGRE</strong>, ambas por su alta resistencia y calidad.' },
+		{ icon: 'energia', html: 'Un generador de última generación instalado por <strong>EDESE</strong> en el edificio asegura una provisión de electricidad estable.' },
+		{ icon: 'gas', html: 'Servicio de gas natural para la cocina.' },
+		{ icon: 'terraza-piscina', html: 'La terraza con piscina y deck húmedo es un espacio diseñado para el bienestar con zonas de encuentro que invitan al ocio. La iluminación toma un rol protagónico creando un ambiente íntimo y relajado, realzado por vistas inigualables hacia la ciudad y sus pulmones verdes.' }
+	];
+
+	const MEMORIA_ITEMS: DocListItem[] = [
+		{ icon: 'techos-altos', html: 'Techos altos, con una luz entre losas de 275 cm.' },
+		{ icon: null, html: 'Cielorrasos con gargantas y cenefas para instalaciones de luces ambientales, alojar servicios, ocultar los barrales de cortinas y para mayor comodidad térmica y acústica.' },
+		{ icon: 'energia', html: 'Gran cantidad de módulos tomacorriente y bocas en todos los ambientes.' },
+		{ icon: null, html: 'Caja octogonal en cielorraso para ventilador de techo en dormitorio y living.' },
+		{ icon: null, html: 'Dos unidades de preinstalación de A. Acondicionados en living y dormitorios con placa de sostén, drenajes, caños y enchufe.' },
+		{ icon: null, html: 'Bandeja de hierro para las unidades externas de A. Acondicionados en los patios internos.' },
+		{ icon: 'puerta', html: 'Puerta de ingreso de gran porte a cada departamento, de exquisito diseño, laminada en madera y con aplicaciones metálicas.' },
+		{ icon: null, html: 'Cerradura de seguridad doble perno Prive o similar calidad.' },
+		{ icon: 'carpinteria', html: 'Aberturas con carpintería de aluminio galvanizado <strong>ALUAR</strong> modelo A30New Anodizado Natural (Plata/Inox).' },
+		{ icon: 'puerta', html: 'Grandes puertas corredizas de doble panel de dormitorio y living a balcón.' },
+		{ icon: 'puerta', html: 'Los departamentos sobre contrafrente, que carecen de balcón, tienen también las mismas puertas corredizas de doble panel en dormitorio y living con baranda metálica de seguridad para apoyo.' },
+		{ icon: 'vestidor', html: 'Dormitorios con vestidor con tres metros lineales de placares equipados con cajones, estantes y espacio para perchas.' },
+		{ icon: 'cocina', html: 'Cocina integrada con mueble bajo mesada y alacenas en placa de Melamina base MDF blanca de primera marca.' },
+		{ icon: 'cocina', html: 'Counter top de la mesada con zócalo en granito natural Negro Brasil o Gris Mara.' },
+		{ icon: 'cocina', html: 'Desayunador en granito natural Negro Brasil o Gris Mara.' },
+		{ icon: null, html: 'Revestimiento cerámico simil madera en paredes de mesada en juego con la paleta de colores.' },
+		{ icon: 'cocina', html: 'Campana purificadora sobre las hornallas.' },
+		{ icon: 'horno', html: 'Cocina con horno de primera marca.' },
+		{ icon: null, html: 'Pileta de Acero inoxidable marca Johnson.' },
+		{ icon: 'banos', html: 'Grifería monocomando FV.' },
+		{ icon: 'banos', html: 'Antebaño con mueble vanitory de melamina base MDF en color roble natural con un cajón.' },
+		{ icon: 'banos', html: 'Extractores en los baños.' },
+		{ icon: 'banos', html: 'Counter top de vanitory en mármol o granito Negro Brasil.' },
+		{ icon: 'banos', html: 'Espejo de vanitory en antebaño.' },
+		{ icon: 'banos', html: 'Bacha Ferrum modelo Tori Cilíndrica en sobremesada de vanitory.' },
+		{ icon: 'banos', html: 'Grifería marca FV para lavatorios, bidet y cabina de ducha.' },
+		{ icon: 'banos', html: 'Inodoro y bidet modelo Bari de Ferrum.' },
+		{ icon: 'banos', html: 'Cabina de ducha con mampara fija de vidrio 5+5 laminado de piso a techo color cristal.' },
+		{ icon: 'lavasecarropas', html: 'Instalaciones para máquinas lavarropa y secarropa en cabina dedicada con puertas.' },
+		{ icon: 'piso', html: 'Pisos de living comedor, cocina, pasillos y dormitorios en porcelanato de 120x21cm Cerro Negro color incienso o similar calidad y color.' },
+		{ icon: null, html: 'Balcones con pisos de porcelanato.' },
+		{ icon: null, html: 'Zócalos de EPS antihumedad.' },
+		{ icon: 'piso', html: 'Pisos en los baños de porcelánico 60x60' },
+		{ icon: 'banos', html: 'Paredes de los baños en cerámicos 50x60 de piso a techo.' }
+	];
+
+	const LUXURY_ITEMS: DocListItem[] = [
+		{ icon: null, html: 'Aplicables a cualquiera de los planos que elijas.' },
+		{ icon: null, html: 'Gargantas y cenefas de los cielorrasos provistas con instalación de luces leds en todo el contorno en living comedor, cocina y dormitorios.' },
+		{ icon: 'cerradura-digital', html: 'Puerta de ingreso con cerradura inteligente digital biométrica con wifi.' },
+		{ icon: 'vestidor', html: 'Vestidor con puertas de vidrio ahumado de dos paños fijos y uno corredizo con marco de aluminio color bronce.' },
+		{ icon: null, html: 'Iluminación led en el interior de los placares con encendido/apagado táctil.' },
+		{ icon: 'cocina', html: 'Cocina integrada con mueble bajo mesada y alacenas en placa de Melamina base MDF en color Gris grafito o color madera en bajo mesada y combinado con blanco la alacena. Opción de puertas de la alacena semitransparentes en vidrio con marco de aluminio e iluminación interna.' },
+		{ icon: null, html: 'Iluminación led sobre mesada en zona de trabajo.' },
+		{ icon: 'cocina', html: 'Mesada de cocina con zócalo y desayunador de Pure Stone blanco (cuarzo natural color uniforme) más duradero que el granito natural.' },
+		{ icon: null, html: 'Revestimiento cerámico blanco en paredes de mesada.' },
+		{ icon: 'vestidor', html: 'Dormitorios amplios con vestidor con doble placard, con cuatro cajones y pantalonera con rieles y correderas metálicas y estantes.' },
+		{ icon: 'vestidor', html: 'Puertas del vestidor corredizas de aluminio con vidrios ahumados de tres paños.' },
+		{ icon: null, html: 'Revestimiento con panel de WPC en color madera en muro con curva del living.' },
+		{ icon: 'banos', html: 'Antebaño con mueble vanitory con un cajón en melamina base MDF color nogal, y cajón interno para maquillaje.' },
+		{ icon: 'banos', html: 'Counter top de vanitory en silestone tabaco o nébula.' },
+		{ icon: 'banos', html: 'Espejo de vanitory en antebaño con luces led encendido/apagado táctil.' },
+		{ icon: null, html: 'Artefacto lumínico suspendido sobre vanitory con bulbo led.' },
+		{ icon: 'banos', html: 'Bacha Ferrum modelo Tori Cilíndrica en sobremesada de vanitory.' },
+		{ icon: 'banos', html: 'Grifería marca FV para lavatorios, bidet y cabina de ducha.' },
+		{ icon: 'banos', html: 'Sanitarios Ferrum, modelo Bari.' },
+		{ icon: 'banos', html: 'Cabina de ducha con mampara de vidrio de un paño fijo y otro corredizo de cristal color ámbar 5+5 laminado.' },
+		{ icon: null, html: 'Artefactos de iluminación led insertos en cielorraso provistos funcionando con bulbos o tiras led en las cenefas.' },
+		{ icon: null, html: 'Aplique led bidireccional en balcón con bulbo led.' }
+	];
 </script>
 
 <article class="ficha-tecnica-doc">
@@ -21,18 +100,15 @@
 
 	<h2>es para vos</h2>
 
-	<ul>
-		<li>Ubicado en el área donde todo ocurre: shopping, diversión, zonas verdes, deportes, eventos culturales, restaurantes y pubs.</li>
-		<li>Con la conveniencia de estar sobre una avenida céntrica y con doble estacionamiento.</li>
-		<li>Aires de Rio ofrece veintiocho departamentos y un local comercial dedicado a cafetería para tu comodidad.</li>
-		<li>La circulación vertical estará servida por dos ascensores desde el subsuelo hasta la terraza.</li>
-		<li>Construye la empresa <strong>HABITAT PRIME S.A.S.</strong> bajo la dirección técnica del Ing. Ricardo Mattera, de larga trayectoria en la provincia. El Estudio D+B de Antonella Doménico y Luciano Bertorello aportó belleza a su arquitectura en una elegante fusión de líneas curvas y rectas, confiriéndole un moderno estilo mediterráneo, ambientes serenos, ordenados y una sutil elegancia.</li>
-		<li>En las paredes exteriores y los tabiques divisores interiores se utilizaron ladrillos cerámicos huecos de reconocida marca del medio, cuidando la aislación térmica y sonora.</li>
-		<li>Las paredes interiores revocadas y pintadas con pintura látex premium interior de primera marca. La pared de ingreso a cada unidad estará tratada de forma especial para acordar con la paleta de colores y texturas del resto de los revestimientos.</li>
-		<li>Para las conexiones sanitarias se usaron materiales de las marca <strong>AWADUCT</strong> y <strong>TIGRE</strong>, ambas por su alta resistencia y calidad.</li>
-		<li>Un generador de última generación instalado por <strong>EDESE</strong> en el edificio asegura una provisión de electricidad estable.</li>
-		<li>Servicio de gas natural para la cocina.</li>
-		<li>La terraza con piscina y deck húmedo es un espacio diseñado para el bienestar con zonas de encuentro que invitan al ocio. La iluminación toma un rol protagónico creando un ambiente íntimo y relajado, realzado por vistas inigualables hacia la ciudad y sus pulmones verdes.</li>
+	<ul class="doc-list" role="list">
+		{#each SECTION_1_ITEMS as item (item.html)}
+			<li class="doc-list-item">
+				<span class="doc-list-icon" aria-hidden="true">
+					<DocListIcon icon={item.icon} />
+				</span>
+				<span class="doc-list-content">{@html item.html}</span>
+			</li>
+		{/each}
 	</ul>
 
 	<hr />
@@ -43,59 +119,30 @@
 
 	<h3>MEMORIA DESCRIPTIVA</h3>
 
-	<ul>
-		<li>Techos altos, con una luz entre losas de 275 cm.</li>
-		<li>Cielorrasos con gargantas y cenefas para instalaciones de luces ambientales, alojar servicios, ocultar los barrales de cortinas y para mayor comodidad térmica y acústica.</li>
-		<li>Gran cantidad de módulos tomacorriente y bocas en todos los ambientes.</li>
-		<li>Caja octogonal en cielorraso para ventilador de techo en dormitorio y living.</li>
-		<li>Dos unidades de preinstalación de A. Acondicionados en living y dormitorios con placa de sostén, drenajes, caños y enchufe.</li>
-		<li>Bandeja de hierro para las unidades externas de A. Acondicionados en los patios internos.</li>
-		<li>Puerta de ingreso de gran porte a cada departamento, de exquisito diseño, laminada en madera y con aplicaciones metálicas.</li>
-		<li>Cerradura de seguridad doble perno Prive o similar calidad.</li>
-		<li>Aberturas con carpintería de aluminio galvanizado <strong>ALUAR</strong> modelo A30New Anodizado Natural (Plata/Inox).</li>
-		<li>Grandes puertas corredizas de doble panel de dormitorio y living a balcón.</li>
-		<li>Los departamentos sobre contrafrente, que carecen de balcón, tienen también las mismas puertas corredizas de doble panel en dormitorio y living con baranda metálica de seguridad para apoyo.</li>
-		<li>Dormitorios con vestidor con tres metros lineales de placares equipados con cajones, estantes y espacio para perchas.</li>
-		<li>Cocina integrada con mueble bajo mesada y alacenas en placa de Melamina base MDF blanca de primera marca.</li>
-		<li>Counter top de la mesada con zócalo en granito natural Negro Brasil o Gris Mara.</li>
-		<li>Desayunador en granito natural Negro Brasil o Gris Mara.</li>
-		<li>Revestimiento cerámico simil madera en paredes de mesada en juego con la paleta de colores.</li>
-		<li>Campana purificadora sobre las hornallas.</li>
-		<li>Cocina con horno de primera marca.</li>
-		<li>Pileta de Acero inoxidable marca Johnson.</li>
-		<li>Grifería monocomando FV.</li>
-		<li>Antebaño con mueble vanitory de melamina base MDF en color roble natural con un cajón.</li>
-		<li>Extractores en los baños.</li>
-		<li>Counter top de vanitory en mármol o granito Negro Brasil.</li>
-		<li>Espejo de vanitory en antebaño.</li>
-		<li>Bacha Ferrum modelo Tori Cilíndrica en sobremesada de vanitory.</li>
-		<li>Grifería marca FV para lavatorios, bidet y cabina de ducha.</li>
-		<li>Inodoro y bidet modelo Bari de Ferrum.</li>
-		<li>Cabina de ducha con mampara fija de vidrio 5+5 laminado de piso a techo color cristal.</li>
-		<li>Instalaciones para máquinas lavarropa y secarropa en cabina dedicada con puertas.</li>
-		<li>Pisos de living comedor, cocina, pasillos y dormitorios en porcelanato de 120x21cm Cerro Negro color incienso o similar calidad y color.</li>
-		<li>Balcones con pisos de porcelanato.</li>
-		<li>Zócalos de EPS antihumedad.</li>
-		<li>Pisos en los baños de porcelánico 60x60</li>
-		<li>Paredes de los baños en cerámicos 50x60 de piso a techo.</li>
+	<ul class="doc-list" role="list">
+		{#each MEMORIA_ITEMS as item (item.html)}
+			<li class="doc-list-item">
+				<span class="doc-list-icon" aria-hidden="true">
+					<DocListIcon icon={item.icon} />
+				</span>
+				<span class="doc-list-content">{@html item.html}</span>
+			</li>
+		{/each}
 	</ul>
 
 	<blockquote>
 		<p>Un estilo de vida urbano y vibrante</p>
 	</blockquote>
 
-	<ul>
-		<li>Ubicado en el área donde todo ocurre: shopping, diversión, zonas verdes, deportes, eventos culturales, restaurantes y pubs.</li>
-		<li>Con la conveniencia de estar sobre una avenida céntrica y con doble estacionamiento.</li>
-		<li>Aires de Rio ofrece veintiocho departamentos y un local comercial dedicado a cafetería para tu comodidad.</li>
-		<li>La circulación vertical estará servida por dos ascensores desde el subsuelo hasta la terraza.</li>
-		<li>Construye la empresa <strong>HABITAT PRIME S.A.S.</strong> bajo la dirección técnica del Ing. Ricardo Mattera, de larga trayectoria en la provincia. El Estudio D+B de Antonella Doménico y Luciano Bertorello aportó belleza a su arquitectura en una elegante fusión de líneas curvas y rectas, confiriéndole un moderno estilo mediterráneo, ambientes serenos, ordenados y una sutil elegancia.</li>
-		<li>En las paredes exteriores y los tabiques divisores interiores se utilizaron ladrillos cerámicos huecos de reconocida marca del medio, cuidando la aislación térmica y sonora.</li>
-		<li>Las paredes interiores revocadas y pintadas con pintura látex premium interior de primera marca. La pared de ingreso a cada unidad estará tratada de forma especial para acordar con la paleta de colores y texturas del resto de los revestimientos.</li>
-		<li>Para las conexiones sanitarias se usaron materiales de las marca <strong>AWADUCT</strong> y <strong>TIGRE</strong>, ambas por su alta resistencia y calidad.</li>
-		<li>Un generador de última generación instalado por <strong>EDESE</strong> en el edificio asegura una provisión de electricidad estable.</li>
-		<li>Servicio de gas natural para la cocina.</li>
-		<li>La terraza con piscina y deck húmedo es un espacio diseñado para el bienestar con zonas de encuentro que invitan al ocio. La iluminación toma un rol protagónico creando un ambiente íntimo y relajado, realzado por vistas inigualables hacia la ciudad y sus pulmones verdes.</li>
+	<ul class="doc-list" role="list">
+		{#each SECTION_1_ITEMS as item (item.html)}
+			<li class="doc-list-item">
+				<span class="doc-list-icon" aria-hidden="true">
+					<DocListIcon icon={item.icon} />
+				</span>
+				<span class="doc-list-content">{@html item.html}</span>
+			</li>
+		{/each}
 	</ul>
 
 	<hr />
@@ -109,29 +156,15 @@
 
 	<h3>ADICIONALES DE ESTA LÍNEA</h3>
 
-	<ul>
-		<li>Aplicables a cualquiera de los planos que elijas.</li>
-		<li>Gargantas y cenefas de los cielorrasos provistas con instalación de luces leds en todo el contorno en living comedor, cocina y dormitorios.</li>
-		<li>Puerta de ingreso con cerradura inteligente digital biométrica con wifi.</li>
-		<li>Vestidor con puertas de vidrio ahumado de dos paños fijos y uno corredizo con marco de aluminio color bronce.</li>
-		<li>Iluminación led en el interior de los placares con encendido/apagado táctil.</li>
-		<li>Cocina integrada con mueble bajo mesada y alacenas en placa de Melamina base MDF en color Gris grafito o color madera en bajo mesada y combinado con blanco la alacena. Opción de puertas de la alacena semitransparentes en vidrio con marco de aluminio e iluminación interna.</li>
-		<li>Iluminación led sobre mesada en zona de trabajo.</li>
-		<li>Mesada de cocina con zócalo y desayunador de Pure Stone blanco (cuarzo natural color uniforme) más duradero que el granito natural.</li>
-		<li>Revestimiento cerámico blanco en paredes de mesada.</li>
-		<li>Dormitorios amplios con vestidor con doble placard, con cuatro cajones y pantalonera con rieles y correderas metálicas y estantes.</li>
-		<li>Puertas del vestidor corredizas de aluminio con vidrios ahumados de tres paños.</li>
-		<li>Revestimiento con panel de WPC en color madera en muro con curva del living.</li>
-		<li>Antebaño con mueble vanitory con un cajón en melamina base MDF color nogal, y cajón interno para maquillaje.</li>
-		<li>Counter top de vanitory en silestone tabaco o nébula.</li>
-		<li>Espejo de vanitory en antebaño con luces led encendido/apagado táctil.</li>
-		<li>Artefacto lumínico suspendido sobre vanitory con bulbo led.</li>
-		<li>Bacha Ferrum modelo Tori Cilíndrica en sobremesada de vanitory.</li>
-		<li>Grifería marca FV para lavatorios, bidet y cabina de ducha.</li>
-		<li>Sanitarios Ferrum, modelo Bari.</li>
-		<li>Cabina de ducha con mampara de vidrio de un paño fijo y otro corredizo de cristal color ámbar 5+5 laminado.</li>
-		<li>Artefactos de iluminación led insertos en cielorraso provistos funcionando con bulbos o tiras led en las cenefas.</li>
-		<li>Aplique led bidireccional en balcón con bulbo led.</li>
+	<ul class="doc-list" role="list">
+		{#each LUXURY_ITEMS as item (item.html)}
+			<li class="doc-list-item">
+				<span class="doc-list-icon" aria-hidden="true">
+					<DocListIcon icon={item.icon} />
+				</span>
+				<span class="doc-list-content">{@html item.html}</span>
+			</li>
+		{/each}
 	</ul>
 
 	<p><strong>TODO LO QUE OFRECE LA LÍNEA HARMONY STYLE Y AÚN MUCHO MÁS EN CUALQUIERA DE LAS TIPOLOGÍAS QUE ELIJAS</strong></p>
@@ -176,13 +209,31 @@
 		color: var(--color-text-primary);
 	}
 
-	.ficha-tecnica-doc :global(ul) {
+	.doc-list {
+		list-style: none;
 		margin: 0.75rem 0 1rem;
-		padding-left: 1.5rem;
+		padding: 0;
 	}
 
-	.ficha-tecnica-doc :global(li) {
-		margin-bottom: 0.35rem;
+	.doc-list-item {
+		display: grid;
+		grid-template-columns: 2rem 1fr;
+		gap: 0.75rem;
+		align-items: start;
+		margin-bottom: 0.5rem;
+	}
+
+	.doc-list-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		min-height: 1.5em;
+		color: var(--color-contrast-low);
+	}
+
+	.doc-list-content {
+		min-width: 0;
 	}
 
 	.ficha-tecnica-doc :global(blockquote) {
