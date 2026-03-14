@@ -4,6 +4,7 @@
 	import Slide from '$lib/components/ui/Slide.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { verticalViewport } from '$lib/utils/viewport';
 	import { ANIMATION, animationDuration, animationOffset } from '$lib/constants/animation';
 
 	// ===== TYPES =====
@@ -90,7 +91,8 @@
 
 	function handleVideoEnd() {
 		videoNotEnded = false;
-		currentIndex = (currentIndex + 1) % CAROUSEL_ITEMS.length;
+		const len = $verticalViewport ? CAROUSEL_ITEMS_MOBILE.length : CAROUSEL_ITEMS.length;
+		currentIndex = (currentIndex + 1) % len;
 	}
 
 	// ===== INSTANCE CONSTANTS =====
@@ -112,14 +114,14 @@
 		class='hero-carousel scroll-animate'
 		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<!-- Desktop carousel: visible in landscape; hidden in portrait via CSS so browser picks correct set without JS. -->
+		<!-- Desktop carousel: visible in landscape via CSS. Only its timer runs in landscape so indices stay in 0..23. -->
 		<div class='hero-carousel-desktop'>
 			<ImageCarousel
 				bind:currentIndex
 				onIndexChange={(i) => (currentIndex = i)}
 				slideCount={CAROUSEL_ITEMS.length}
 				slideAriaLabel={(index) => CAROUSEL_ITEMS[index].type === 'video' ? 'Video promocional Aires de Río' : CAROUSEL_ITEMS[index].alt}
-				autoRotate={true}
+				autoRotate={!$verticalViewport}
 				interval={5000}
 				pauseOnHover={true}
 				pauseAutoRotate={pauseAutoRotate}
@@ -146,14 +148,14 @@
 				{/snippet}
 			</ImageCarousel>
 		</div>
-		<!-- Mobile carousel: visible only in portrait via CSS; avoids wrong JS viewport on load. -->
+		<!-- Mobile carousel: visible only in portrait via CSS. Only its timer runs in portrait so indices stay in 0..13. -->
 		<div class='hero-carousel-mobile'>
 			<ImageCarousel
 				currentIndex={mobileIndex}
 				onIndexChange={(i) => (currentIndex = i)}
 				slideCount={CAROUSEL_ITEMS_MOBILE.length}
 				slideAriaLabel={(index) => CAROUSEL_ITEMS_MOBILE[index].type === 'video' ? 'Video promocional Aires de Río' : CAROUSEL_ITEMS_MOBILE[index].alt}
-				autoRotate={true}
+				autoRotate={$verticalViewport}
 				interval={5000}
 				pauseOnHover={true}
 				pauseAutoRotate={pauseAutoRotate}
