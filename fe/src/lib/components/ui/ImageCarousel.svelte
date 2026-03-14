@@ -115,6 +115,8 @@
 	let carouselElement: HTMLDivElement | null = $state(null);
 	let isVisible = $state(false);
 	let intersectionObserver: IntersectionObserver | null = null;
+	/** True when pointer is over prev/next buttons; pauses auto-advance for better control. */
+	let navButtonsHovered = $state(false);
 
 	// ===== DERIVED =====
 	// Determine if component is controlled
@@ -126,9 +128,9 @@
 	});
 
 	// ===== EFFECTS =====
-	// Pause/resume auto-rotate when pauseAutoRotate changes (e.g. video slide)
+	// Pause/resume auto-rotate when pauseAutoRotate or navButtonsHovered changes
 	$effect(() => {
-		if (pauseAutoRotate) {
+		if (pauseAutoRotate || navButtonsHovered) {
 			stopCarousel();
 		} else if (autoRotate && slideCount > 1) {
 			startCarousel();
@@ -213,7 +215,7 @@
 	}
 
 	function startCarousel() {
-		if (!autoRotate || slideCount <= 1 || pauseAutoRotate) return;
+		if (!autoRotate || slideCount <= 1 || pauseAutoRotate || navButtonsHovered) return;
 		if (carouselInterval) {
 			clearInterval(carouselInterval);
 		}
@@ -288,7 +290,13 @@
 	{/if}
 
 	{#if showNavigation && slideCount > 1 && navigationPosition === 'above-image'}
-		<div class='carousel-navigation above-image'>
+		<div
+			class='carousel-navigation above-image'
+			role='group'
+			aria-label='Navegación del carrusel'
+			onmouseenter={() => (navButtonsHovered = true)}
+			onmouseleave={() => (navButtonsHovered = false)}
+		>
 			<CircularButton
 				variant={buttonVariant}
 				size={buttonSize}
@@ -345,7 +353,13 @@
 
 	{#if showNavigation && slideCount > 1}
 		{#if navigationPosition === 'around-dots'}
-			<div class='carousel-navigation around-dots'>
+			<div
+				class='carousel-navigation around-dots'
+				role='group'
+				aria-label='Navegación del carrusel'
+				onmouseenter={() => (navButtonsHovered = true)}
+				onmouseleave={() => (navButtonsHovered = false)}
+			>
 				<CircularButton
 					variant={buttonVariant}
 					size={buttonSize}
@@ -374,7 +388,13 @@
 				</CircularButton>
 			</div>
 		{:else if navigationPosition === 'below-image'}
-			<div class='carousel-navigation below-image'>
+			<div
+				class='carousel-navigation below-image'
+				role='group'
+				aria-label='Navegación del carrusel'
+				onmouseenter={() => (navButtonsHovered = true)}
+				onmouseleave={() => (navButtonsHovered = false)}
+			>
 				<CircularButton
 					variant={buttonVariant}
 					size={buttonSize}
@@ -404,24 +424,32 @@
 				</CircularButton>
 			</div>
 		{:else if navigationPosition === 'absolute-sides'}
-			<CircularButton
-				class='nav-button prev'
-				variant={buttonVariant}
-				size={buttonSize}
-				ariaLabel='Imagen anterior'
-				onClick={previousImage}
+			<div
+				class='carousel-navigation absolute-sides'
+				role='group'
+				aria-label='Navegación del carrusel'
+				onmouseenter={() => (navButtonsHovered = true)}
+				onmouseleave={() => (navButtonsHovered = false)}
 			>
-				<ArrowLeft />
-			</CircularButton>
-			<CircularButton
-				class='nav-button next'
-				variant={buttonVariant}
-				size={buttonSize}
-				ariaLabel='Siguiente imagen'
-				onClick={nextImage}
-			>
-				<ArrowRight />
-			</CircularButton>
+				<CircularButton
+					class='nav-button prev'
+					variant={buttonVariant}
+					size={buttonSize}
+					ariaLabel='Imagen anterior'
+					onClick={previousImage}
+				>
+					<ArrowLeft />
+				</CircularButton>
+				<CircularButton
+					class='nav-button next'
+					variant={buttonVariant}
+					size={buttonSize}
+					ariaLabel='Siguiente imagen'
+					onClick={nextImage}
+				>
+					<ArrowRight />
+				</CircularButton>
+			</div>
 		{/if}
 	{/if}
 
