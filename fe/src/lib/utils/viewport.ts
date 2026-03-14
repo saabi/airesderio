@@ -1,16 +1,22 @@
 import { browser } from '$app/environment';
 import { readable } from 'svelte/store';
 
+const DELAYED_SYNC_MS = 150;
+
 /**
  * Whether the viewport is taller than wide (portrait-like).
  * Use for selecting mobile-optimized image sets in carousels.
  * SSR: always false (assume desktop).
  *
- * Uses window.innerHeight > innerWidth instead of matchMedia('(orientation: portrait)')
- * because on some mobile browsers (e.g. iPhone X+ Safari) the orientation media query
- * can return inverted or wrong values on load; viewport dimensions are reliable.
+ * Prefers visualViewport when available (what's actually visible on mobile);
+ * falls back to innerWidth/innerHeight. Syncs on load, resize, orientationchange,
+ * visualViewport resize/scroll, and once after DELAYED_SYNC_MS to handle
+ * browsers that report wrong dimensions until after first paint.
  */
 function isVerticalViewport(): boolean {
+	if (browser && window.visualViewport && typeof window.visualViewport.width === 'number') {
+		return window.visualViewport.height > window.visualViewport.width;
+	}
 	return window.innerHeight > window.innerWidth;
 }
 
@@ -22,9 +28,21 @@ function createVerticalViewportStore() {
 		const sync = () => set(isVerticalViewport());
 		window.addEventListener('resize', sync);
 		window.addEventListener('orientationchange', sync);
+		window.addEventListener('load', sync);
+		if (window.visualViewport) {
+			window.visualViewport.addEventListener('resize', sync);
+			window.visualViewport.addEventListener('scroll', sync);
+		}
+		const delayedSync = setTimeout(sync, DELAYED_SYNC_MS);
 		return () => {
 			window.removeEventListener('resize', sync);
 			window.removeEventListener('orientationchange', sync);
+			window.removeEventListener('load', sync);
+			if (window.visualViewport) {
+				window.visualViewport.removeEventListener('resize', sync);
+				window.visualViewport.removeEventListener('scroll', sync);
+			}
+			clearTimeout(delayedSync);
 		};
 	});
 }

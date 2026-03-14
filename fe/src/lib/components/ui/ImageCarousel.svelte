@@ -117,6 +117,10 @@
 	let intersectionObserver: IntersectionObserver | null = null;
 	/** True when pointer is over prev/next buttons; pauses auto-advance for better control. */
 	let navButtonsHovered = $state(false);
+	/** Set in onMount: true when touch input is available (mobile). Used to resume auto-advance after 2× interval on nav click. */
+	let isTouchDevice = $state(false);
+	/** On touch: timeout that clears navButtonsHovered after 2× interval so auto-advance resumes. */
+	let pendingResumeTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	// ===== DERIVED =====
 	// Determine if component is controlled
@@ -139,6 +143,7 @@
 
 	// ===== LIFECYCLE =====
 	onMount(() => {
+		isTouchDevice = browser && ('ontouchstart' in window || (navigator.maxTouchPoints ?? 0) > 0);
 		if (autoRotate && !pauseAutoRotate) {
 			startCarousel();
 		}
@@ -149,6 +154,7 @@
 		}
 		return () => {
 			stopCarousel();
+			if (pendingResumeTimeout) clearTimeout(pendingResumeTimeout);
 			cleanupKeyboardNavigation();
 		};
 	});
@@ -204,6 +210,29 @@
 	function previousImage() {
 		const newIndex = (currentImageIndex - 1 + slideCount) % slideCount;
 		goToImage(newIndex);
+	}
+
+	/** Nav button click handler: on touch devices with autoRotate, resume auto-advance after 2× interval. */
+	function handlePrevClick() {
+		previousImage();
+		if (isTouchDevice && autoRotate && slideCount > 1) {
+			if (pendingResumeTimeout) clearTimeout(pendingResumeTimeout);
+			pendingResumeTimeout = setTimeout(() => {
+				navButtonsHovered = false;
+				pendingResumeTimeout = null;
+			}, 2 * interval);
+		}
+	}
+
+	function handleNextClick() {
+		nextImage();
+		if (isTouchDevice && autoRotate && slideCount > 1) {
+			if (pendingResumeTimeout) clearTimeout(pendingResumeTimeout);
+			pendingResumeTimeout = setTimeout(() => {
+				navButtonsHovered = false;
+				pendingResumeTimeout = null;
+			}, 2 * interval);
+		}
 	}
 
 	function goToImage(index: number) {
@@ -301,7 +330,7 @@
 				variant={buttonVariant}
 				size={buttonSize}
 				ariaLabel='Imagen anterior'
-				onClick={previousImage}
+				onClick={handlePrevClick}
 			>
 				<ArrowLeft />
 			</CircularButton>
@@ -320,7 +349,7 @@
 				variant={buttonVariant}
 				size={buttonSize}
 				ariaLabel='Siguiente imagen'
-				onClick={nextImage}
+				onClick={handleNextClick}
 			>
 				<ArrowRight />
 			</CircularButton>
@@ -364,7 +393,7 @@
 					variant={buttonVariant}
 					size={buttonSize}
 					ariaLabel='Imagen anterior'
-					onClick={previousImage}
+					onClick={handlePrevClick}
 				>
 					<ArrowLeft />
 				</CircularButton>
@@ -382,7 +411,7 @@
 					variant={buttonVariant}
 					size={buttonSize}
 					ariaLabel='Siguiente imagen'
-					onClick={nextImage}
+					onClick={handleNextClick}
 				>
 					<ArrowRight />
 				</CircularButton>
@@ -399,7 +428,7 @@
 					variant={buttonVariant}
 					size={buttonSize}
 					ariaLabel='Imagen anterior'
-					onClick={previousImage}
+					onClick={handlePrevClick}
 				>
 					<ArrowLeft />
 				</CircularButton>
@@ -418,7 +447,7 @@
 					variant={buttonVariant}
 					size={buttonSize}
 					ariaLabel='Siguiente imagen'
-					onClick={nextImage}
+					onClick={handleNextClick}
 				>
 					<ArrowRight />
 				</CircularButton>
@@ -436,7 +465,7 @@
 					variant={buttonVariant}
 					size={buttonSize}
 					ariaLabel='Imagen anterior'
-					onClick={previousImage}
+					onClick={handlePrevClick}
 				>
 					<ArrowLeft />
 				</CircularButton>
@@ -445,7 +474,7 @@
 					variant={buttonVariant}
 					size={buttonSize}
 					ariaLabel='Siguiente imagen'
-					onClick={nextImage}
+					onClick={handleNextClick}
 				>
 					<ArrowRight />
 				</CircularButton>
