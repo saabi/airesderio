@@ -60,8 +60,10 @@
 		/** When true, show a border around the carousel wrapper. */
 		showBorders?: boolean;
 
-		// Slots
+		// Slots (snippet props)
 		header?: Snippet;
+		/** Rendered between nav/dots and the slide area (e.g. caption above image, below nav). */
+		caption?: Snippet;
 		footer?: Snippet;
 	}
 </script>
@@ -95,6 +97,7 @@
 		containerClass = '',
 		showBorders = false,
 		header,
+		caption,
 		footer
 	}: Props = $props();
 
@@ -377,6 +380,12 @@
 		</div>
 	{/if}
 
+	{#if caption}
+		<div class='carousel-caption'>
+			{@render caption()}
+		</div>
+	{/if}
+
 	<div class='carousel-images'>
 		{#each Array(slideCount) as _, i}
 			<div
@@ -573,6 +582,11 @@
 		align-self: center;
 		margin: 0;
 		line-height: 0;
+	}
+
+	.carousel-caption {
+		flex-shrink: 0;
+		padding: 0 1rem 0.5rem;
 	}
 
 	.carousel-dots-above {

@@ -42,7 +42,7 @@
 	// ===== STATIC CONSTANTS =====
 	const FLOOR_PLANS: FloorPlan[] = [
 		{
-			image: '/planos/depto-1hab-balcon.png',
+			image: '/planos/1hab-frente.png',
 			title: 'Departamento de 2 ambientes con balcón',
 			description: 'FRENTE',
 			clipShape: {
@@ -51,7 +51,7 @@
 			}
 		},
 		{
-			image: '/planos/depto-1hab-contrafrente.png',
+			image: '/planos/1hab-contrafrente.png',
 			title: 'Departamento de 2 ambientes',
 			description: 'CONTRAFRENTE',
 			clipShape: {
@@ -60,7 +60,7 @@
 			}
 		},
 		{
-			image: '/planos/depto-2hab-1ofi.png',
+			image: '/planos/2hab-contrafrente.png',
 			title: 'Departamento de 4 ambientes',
 			description: 'CONTRAFRENTE',
 			clipShape: {
@@ -136,6 +136,12 @@
 					imageSizes="(min-width: 1024px) 1024px, 100vw"
 					ariaLabel="Galería de planos de distribución"
 				>
+					{#snippet caption()}
+						<figure class='floor-plan-info'>
+							<figcaption class='floor-plan-title'>{currentPlan.title}</figcaption>
+							<p class='floor-plan-description'>{currentPlan.description}</p>
+						</figure>
+					{/snippet}
 					{#snippet slide(index)}
 						<Slide
 							type="component"
@@ -146,10 +152,6 @@
 				</ImageCarousel>
 			{/key}
 		</div>
-		<figure class='floor-plan-info'>
-			<figcaption class='floor-plan-title'>{currentPlan.title}</figcaption>
-			<p class='floor-plan-description'>{currentPlan.description}</p>
-		</figure>
 		<div class='floor-plan-download-wrap'>
 			<button
 				type='button'
@@ -240,9 +242,9 @@
 
 
 	.floor-plan-info {
-		/* Layout */
+		/* Layout: horizontal padding provided by carousel-caption */
 		margin: 0;
-		padding: 0 1rem;
+		padding: 0;
 
 		/* Typography */
 		text-align: center;
