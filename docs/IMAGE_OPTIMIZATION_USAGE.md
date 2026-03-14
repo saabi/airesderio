@@ -11,7 +11,7 @@
 
 ## Where images are used
 
-- **Hero:** Carousel images from `fe/static/carrousel-hero/desktop/` (desktop) and `fe/static/carrousel-hero/mobile/` (mobile/vertical). Video `promo.webm` in `desktop/`. Optimization runs recursively over `carrousel-hero` (all subdirs).
+- **Hero:** Carousel images from `fe/static/carrousel-hero/desktop/` (desktop) and `fe/static/carrousel-hero/mobile/` (mobile/vertical). Video `promo.webm` in `desktop/`. Optimization runs recursively over `carrousel-hero` and **outputs JPG + WebP** (PNG sources are converted to JPG for smaller fallback size).
 - **Interior:** Carousel images from `fe/static/carrousel-interior/`.
 - **ContactSection:** Single image from `fe/static/exteriores/exterior_03.png`.
 - **PhotoCarousel (Location):** Place photos from `fe/static/places/{placeId}/` (paths from `places.json`).
@@ -32,4 +32,4 @@ When you add or replace images in the static directories, run these from `fe/`:
 - **Optimize places only:** `npm run images:optimize:places`  
   Same as above but only for `fe/static/places/**/*` (useful when only place photos changed).
 
-Category rules (max dimensions, quality, skip thresholds) are defined in `fe/scripts/image-rules.js`. Hero is recursive (`carrousel-hero` with subdirs desktop/mobile). Planos use PNG only (no JPG); optimization keeps PNG and writes WebP with alpha. Floor plans use 2400px long side; carousels and place photos are capped at 1920×1080 with moderate compression.
+Category rules (max dimensions, quality, skip thresholds) are defined in `fe/scripts/image-rules.js`. Hero is recursive (`carrousel-hero` with subdirs desktop/mobile) and uses `outputFormat: 'jpg'` so PNG sources are converted to JPG + WebP. Planos use PNG only (no JPG); optimization keeps PNG and writes WebP with alpha. Floor plans use 2400px long side; carousels and place photos are capped at 1920×1080 with moderate compression.

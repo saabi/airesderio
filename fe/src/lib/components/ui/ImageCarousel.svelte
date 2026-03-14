@@ -212,9 +212,18 @@
 		goToImage(newIndex);
 	}
 
+	/** Restart auto-advance timer so the next advance happens after a full interval. */
+	function restartCarouselTimer() {
+		if (autoRotate && slideCount > 1) {
+			stopCarousel();
+			startCarousel();
+		}
+	}
+
 	/** Nav button click handler: on touch devices with autoRotate, resume auto-advance after 2× interval. */
 	function handlePrevClick() {
 		previousImage();
+		restartCarouselTimer();
 		if (isTouchDevice && autoRotate && slideCount > 1) {
 			if (pendingResumeTimeout) clearTimeout(pendingResumeTimeout);
 			pendingResumeTimeout = setTimeout(() => {
@@ -226,6 +235,7 @@
 
 	function handleNextClick() {
 		nextImage();
+		restartCarouselTimer();
 		if (isTouchDevice && autoRotate && slideCount > 1) {
 			if (pendingResumeTimeout) clearTimeout(pendingResumeTimeout);
 			pendingResumeTimeout = setTimeout(() => {

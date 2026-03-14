@@ -12,6 +12,7 @@
  * @property {number} jpegQuality - Quality for JPEG output (e.g. 82-92)
  * @property {number} webpQuality - Quality for WebP sibling
  * @property {number|null} skipIfUnderBytes - If within dimensions and smaller than this, only emit WebP
+ * @property {'jpg'} [outputFormat] - If 'jpg', emit JPG fallback + WebP (convert PNG sources to JPG); omit to keep source format
  */
 
 import { readdirSync, statSync } from 'fs';
@@ -74,7 +75,8 @@ export const IMAGE_RULES = [
 		maxLongSide: null,
 		jpegQuality: 84,
 		webpQuality: 81,
-		skipIfUnderBytes: 250 * 1024
+		skipIfUnderBytes: 250 * 1024,
+		outputFormat: 'jpg'
 	},
 	{
 		name: 'interior',

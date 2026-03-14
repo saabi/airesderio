@@ -7,7 +7,7 @@
  */
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { statSync, renameSync } from 'fs';
+import { statSync, renameSync, unlinkSync } from 'fs';
 import sharp from 'sharp';
 import { IMAGE_RULES, expandFilesForRule } from './image-rules.js';
 
@@ -109,12 +109,52 @@ async function processFile(filePath, rule) {
 	const skipThreshold = rule.skipIfUnderBytes;
 	const canSkip = withinDimensions(meta, rule) && (skipThreshold == null || sizeBefore < skipThreshold);
 
-	const webpPath = filePath.replace(/\.(jpe?g|png)$/i, '.webp');
+	const outputJpg = rule.outputFormat === 'jpg';
+	const targetRasterPath = outputJpg
+		? filePath.replace(/\.(jpe?g|png)$/i, '.jpg')
+		: filePath;
+	const webpPath = targetRasterPath.replace(/\.(jpe?g|png)$/i, '.webp');
 
 	const preserveAlpha = rule.name === 'planos' && filePath.toLowerCase().endsWith('.png');
 
+	if (outputJpg) {
+		// Hero (and any rule with outputFormat 'jpg'): always emit JPG fallback + WebP; remove original PNG if present.
+		// When source is already .jpg, write to .tmp then rename so sharp never uses same file for input and output.
+		const jpgOutPath = filePath === targetRasterPath ? filePath + '.tmp' : targetRasterPath;
+		if (canSkip) {
+			await sharp(filePath)
+				.jpeg({ quality: rule.jpegQuality, mozjpeg: true })
+				.toFile(jpgOutPath);
+			if (jpgOutPath !== targetRasterPath) {
+				renameSync(jpgOutPath, targetRasterPath);
+			}
+			await sharp(targetRasterPath)
+				.webp({ quality: rule.webpQuality })
+				.toFile(webpPath);
+			if (filePath !== targetRasterPath) unlinkSync(filePath);
+			console.log(`  ${filePath.replace(STATIC_DIR, '')} (unchanged) → .jpg + .webp`);
+		} else {
+			const { w: targetW, h: targetH } = resizeTargetSync(meta, rule);
+			await sharp(filePath)
+				.resize(targetW, targetH, { fit: 'inside', withoutEnlargement: true })
+				.jpeg({ quality: rule.jpegQuality, mozjpeg: true })
+				.toFile(jpgOutPath);
+			if (jpgOutPath !== targetRasterPath) {
+				renameSync(jpgOutPath, targetRasterPath);
+			}
+			const sizeAfter = statSync(targetRasterPath).size;
+			await sharp(targetRasterPath)
+				.webp({ quality: rule.webpQuality })
+				.toFile(webpPath);
+			if (filePath !== targetRasterPath) unlinkSync(filePath);
+			console.log(
+				`  ${filePath.replace(STATIC_DIR, '')} ${targetW}×${targetH} ${formatBytes(sizeBefore)} → ${formatBytes(sizeAfter)} .jpg + .webp`
+			);
+		}
+		return;
+	}
+
 	if (canSkip) {
-		// Only generate WebP from current file
 		await sharp(filePath)
 			.webp(
 				preserveAlpha
@@ -127,12 +167,10 @@ async function processFile(filePath, rule) {
 	}
 
 	const { w: targetW, h: targetH } = resizeTargetSync(meta, rule);
-	const ext = filePath.toLowerCase().slice(-4);
 	const isPng = filePath.toLowerCase().endsWith('.png');
 
 	let pipeline = sharp(filePath).resize(targetW, targetH, { fit: 'inside', withoutEnlargement: true });
 
-	// Write optimized original (same path)
 	if (isPng) {
 		await pipeline
 			.png({ compressionLevel: 9, effort: 10 })
@@ -146,10 +184,6 @@ async function processFile(filePath, rule) {
 	renameSync(filePath + '.tmp', filePath);
 	const sizeAfter = statSync(filePath).size;
 
-	// If we saved as JPG for a PNG path we'd need to update references; plan keeps format.
-	// So interior/exteriores stay PNG with high compression. Planos: WebP with alpha.
-
-	// Write WebP sibling (planos PNG: preserve transparency via alphaQuality)
 	await sharp(filePath)
 		.webp(
 			preserveAlpha
