@@ -1246,6 +1246,40 @@
 						{/if}
 					</g>
 				</g>
+
+				<!-- Other zones: pins only (no shapes, no labels), clickable to select -->
+				<g id='places-other-pins' class='places-other-pins'>
+					{#each places.filter((p) => p.id !== currentPathId) as place}
+						<g
+							class='place-other-pin'
+							role='button'
+							tabindex='0'
+							aria-label={place.name}
+							onclick={() => selectPlace(place.id)}
+							onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), selectPlace(place.id))}
+						>
+							<g
+								class='pin-location-icon'
+								aria-hidden='true'
+							>
+								<circle
+									cx={denorm(place.pin.cx)}
+									cy={denorm(place.pin.cy)}
+									r={getPinRadius(place.pin.r) * 0.9}
+									fill="transparent"
+								/>
+								<g transform="translate({denorm(place.pin.cx)}, {denorm(place.pin.cy)}) scale({getPinRadius(place.pin.r) / 12}) translate(-12, {getPinInnerTranslateY(place.pin.r)})">
+									<path
+										fill="currentColor"
+										stroke="none"
+										d="M12 2.5C9.238 2.5 7 4.738 7 7.5c0 4.25 3.85 8.36 4.94 9.46.29.29.83.29 1.12 0C13.15 15.86 17 11.75 17 7.5 17 4.738 14.762 2.5 12 2.5z"
+									/>
+									<circle cx="12" cy="5.2" r="1.1" fill="white" />
+								</g>
+							</g>
+						</g>
+					{/each}
+				</g>
 			{/if}
 		{/if}
 
@@ -1572,6 +1606,15 @@
 	.place-home .pin-location-icon {
 		pointer-events: all;
 		cursor: pointer;
+	}
+
+	/* When a zone is selected, other zones show only pins (no shape/labels); pins are clickable to switch zone */
+	.places-other-pins .place-other-pin {
+		cursor: pointer;
+	}
+
+	.place-other-pin .pin-location-icon {
+		pointer-events: all;
 	}
 
 	.place-home {
