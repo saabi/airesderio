@@ -4,79 +4,103 @@
 
 ### 1. Navigation Links
 
-- [ ] Fix "Preventa" link - currently points to `#` (should link to a section or dedicated page)
-- [ ] Fix "Contacto" link - currently points to `#` (should link to `#contacto` or the contact section)
-- [ ] Fix "Home" link - currently points to `#` (should be `/` or `#`)
-- [ ] Verify section anchor IDs exist on page: `#ubicacion`, `#planos`, `#equipados`
+- [x] ~~Fix "Preventa" link~~ — Nav uses "Proyecto" linking to `/#proyecto` (no Preventa link)
+- [x] ~~Fix "Contacto" link~~ — Points to `/#contacto` (Header + Footer)
+- [x] ~~Fix "Home" link~~ — Points to `/` (Header + Footer)
+- [x] ~~Verify section anchor IDs~~ — `#ubicacion` (Location), `#planos` (FloorPlans), `#equipados` (Equipment) exist
 
 ### 2. Contact Form Implementation
 
-- [ ] Implement form submission handler (`handleSubmit` function is currently empty)
-- [ ] Add API endpoint or form submission service (e.g., Formspree, Netlify Forms, or custom backend)
-- [ ] Add success/error message display after form submission
-- [ ] Add client-side validation feedback
-- [ ] Update form action from `#` to actual endpoint
+- [x] ~~Implement form submission handler~~ — `ContactForm.svelte` has full `handleSubmit` (fetch `/api/contact`)
+- [x] ~~Add API endpoint or form submission service~~ — `/api/contact` with SMTP + Postgres (see git: 1eea14d, 3fb7588)
+- [x] ~~Add success/error message display~~ — `successMessage` / `errorMessage` in ContactForm
+- [x] ~~Add client-side validation feedback~~ — `reportValidity`, email regex, required fields
+- [x] ~~Update form action~~ — Form uses `action='#'` with JS submit (correct for SPA)
 
 ### 3. Logo/Visual Assets
 
-- [ ] Replace logo placeholder in `ContactSection.svelte` with actual logo component or image
+- [x] ~~Replace logo placeholder in ContactSection~~ — Uses `AiresDeRioLogo` component
+- [x] ~~Change Isotype color for better contrast~~
 - [ ] Verify all visual assets are production-ready
+- [ ] Right now, logo colors on light are coming from dark theme. Fix
 
 ### 4. Production Content Updates
 
-- [ ] Update footer text - currently says "Maqueta" (mockup/prototype) - should be updated for production
-- [ ] Update page title in `app.html` - currently "Ubicación - Habitat Prime SAS" should be "Aires de Río" or similar
+- [x] ~~Update footer text~~ — Footer says "© {year} Habitat Prime SAS · Aires de Río es una marca registrada" (no "Maqueta")
+- [x] ~~Update page title in app.html~~ — Title is "Aires de Río - Departamentos en Santiago del Estero"
+
+### 5. Fichas técnicas
+
+- [ ] Fichas técnicas (revisión general)
+- [ ] Ficha técnica Harmony incompleta
+- [ ] Ficha técnica Luxuri comprobar
+
+### 6. Equipamiento - Orden y carruseles
+
+- [ ] Cambiar orden de carruseles y listas de equipamiento: 1) lista base, 2) carrusel existente, 3) lista adicionales, 4) nuevo carrusel con imágenes de renders de los adicionales
+
+### 7. Mobile / Responsive
+
+- [ ] Map gallery popup (o elemento relacionado) ocupa demasiado ancho en móvil y rompe el layout — acotar ancho máx. o ajustar estilos en viewport pequeño
+
+### 8. Mapa (Location)
+
+- [ ] Isotype sobre mapa tiene poco contraste — dar borde verde (mismo de los botones) al círculo
+- [ ] Pines sobre mapa deben elegir la zona al tocar — mismo comportamiento que ya tienen las zonas
+- [ ] Botón de galería blanco sobre mapa: poco contraste — mismo aspecto que el isotipo (icono negro, círculo blanco, borde verde)
+
+### 9. Carrusel
+
+- [ ] Agregar gestos táctiles para navegar (deslizar izquierda/derecha)
 
 ## Medium Priority
 
-### 5. Code Cleanup - Debug Code
+### 10. Code Cleanup - Debug Code
 
-- [ ] Remove or conditionally disable `console.log` statements in `Location.svelte` (lines 161, 170, 177, 243, 318, 393, 414, 423)
-- [ ] Remove debug comments like "// Debug categories loading"
-- [ ] Clean up commented-out console.log in `updatePlacePhotos.js` (line 56)
-- [ ] Remove or conditionally disable dev color editor in production builds
+- [x] ~~Location.svelte console.log~~ — Only 2 logs, both wrapped in `import.meta.env.DEV` (lines ~125, ~134)
+- [x] ~~Debug comments~~ — No "Debug categories loading" in current Location.svelte
+- [x] ~~updatePlacePhotos.js~~ — Line 56 is `console.warn` (intentional); no commented console.log found
+- [ ] Remove or conditionally disable dev color editor in production builds (optional; dev-only UI)
 
-### 6. Security - API Keys
+### 11. Security - API Keys
 
-- [ ] Move hardcoded Google Maps API key in `Location.svelte` (line 9) to environment variable
-- [ ] Add `.env.example` file with required environment variables
-- [ ] Update documentation with environment variable setup instructions
+- [x] ~~Hardcoded API key in Location.svelte~~ — Location uses `Map.svelte` (SVG/SimpleMapBase), not Google Maps; no key in Location
+- [x] ~~.env.example~~ — Present with `VITE_GOOGLE_MAPS_API_KEY`, DB, SMTP, admin vars
+- [x] ~~Documentation~~ — README has env setup; `.env.example` is documented
 
-### 7. CSS FIXME Comments
+### 12. CSS FIXME Comments
 
-- [ ] Review and resolve FIXME comments in `static/global.css`:
-  - Line 110: `--colorBorderAux: #333; /* FIXME needed by a11y menu */`
-  - Lines 174-175: `--colorBorder` and `--colorBorderAux` FIXME comments
-- [ ] Verify a11y menu colors are properly implemented or remove if not needed
+- [x] ~~static/global.css FIXMEs~~ — File not present (likely refactored into `app.css`); no FIXMEs in `fe/src/app.css`
+- [ ] Verify a11y menu colors if a11y menu still uses custom border vars elsewhere
 
 ## Lower Priority
 
-### 8. SEO/Meta Tags
+### 13. SEO/Meta Tags
 
-- [ ] Add meta description tag
-- [ ] Add Open Graph tags for social media sharing
-- [ ] Add Twitter Card meta tags
-- [ ] Verify all meta tags are production-ready
+- [x] ~~Add meta description tag~~ — `+page.svelte` has `<meta name="description" content="...">` and keywords
+- [x] ~~Add Open Graph tags~~ — og:type, og:url, og:title, og:description, og:image, og:locale, og:site_name
+- [x] ~~Add Twitter Card meta tags~~ — twitter:card, url, title, description, image, image:alt
+- [ ] Verify all meta tags are production-ready (e.g. canonical, og-image.jpg exists)
 
-### 9. Testing
+### 14. Testing
 
 - [ ] Add unit tests for form validation
 - [ ] Add tests for navigation functionality
 - [ ] Add tests for key components (ContactForm, Location, etc.)
 - [ ] Set up CI/CD pipeline for automated testing
 
-### 10. Accessibility
+### 15. Accessibility
 
 - [ ] Review FIXME comments related to a11y menu colors
 - [ ] Audit all interactive elements for proper ARIA labels
 - [ ] Run accessibility audit (e.g., Lighthouse, axe)
 - [ ] Ensure keyboard navigation works properly
 
-### 11. Documentation
+### 16. Documentation
 
-- [ ] Document form submission endpoint/process
-- [ ] Document environment variables needed
-- [ ] Add deployment instructions if not already in README
+- [ ] Document form submission endpoint/process (API contract, SMTP/DB requirements)
+- [x] ~~Document environment variables~~ — `.env.example` + README "Set up environment variables"
+- [ ] Add deployment instructions if not already in README (README has build; root may have PM2/deploy)
 - [ ] Document any third-party service integrations
 
 ## Notes
@@ -84,3 +108,4 @@
 - Some items may be intentional (e.g., dev color editor, console.logs for debugging)
 - Review each item before marking as complete to ensure it aligns with project requirements
 - Consider creating separate issues/tickets for each task if using project management tools
+- **Last verified:** 2025-03-14 — Checked git log and code for nav, form, logo, footer, title, console.logs, API key/env, CSS FIXMEs, SEO meta. Many items were already done and are marked [x] above.
