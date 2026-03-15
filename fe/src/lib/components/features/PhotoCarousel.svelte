@@ -91,7 +91,8 @@
 							showDots={true}
 							dotsVariant="inverse"
 							dotsPosition="below-image"
-							transitionType="instant"
+							transitionType="fade"
+							transitionDuration={400}
 							imageFit="cover"
 							imageSizes="(min-width: 1024px) 90vw, 100vw"
 							ariaLabel="Galería de fotos"

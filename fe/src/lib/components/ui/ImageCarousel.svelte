@@ -11,7 +11,7 @@
 	// ===== TYPES =====
 	export type NavigationPosition = 'absolute-sides' | 'around-dots' | 'below-image' | 'above-image';
 	export type DotsPosition = 'below-image' | 'bottom-center' | 'above-image';
-	export type TransitionType = 'fade' | 'fade-scale' | 'instant';
+	export type TransitionType = 'fade' | 'fade-scale' | 'instant' | 'slide';
 	export type ImageFit = 'cover' | 'contain';
 
 	interface Props {
@@ -345,6 +345,7 @@
 	class:transition-fade={transitionType === 'fade'}
 	class:transition-fade-scale={transitionType === 'fade-scale'}
 	class:transition-instant={transitionType === 'instant'}
+	class:transition-slide={transitionType === 'slide'}
 	class:fit-cover={imageFit === 'cover'}
 	class:fit-contain={imageFit === 'contain'}
 	class:dots-below={navigationPosition === 'below-image' || (showDots && dotsPosition === 'below-image' && navigationPosition === 'absolute-sides')}
@@ -418,16 +419,33 @@
 	{/if}
 
 	<div class='carousel-images'>
-		{#each Array(slideCount) as _, i}
+		{#if transitionType === 'slide'}
 			<div
-				class='carousel-image'
-				class:active={i === currentImageIndex}
-				role='img'
-				aria-label={slideAriaLabel(i)}
+				class='carousel-track'
+				style='--slide-count: {slideCount}; --current-index: {currentImageIndex};'
 			>
-				{@render slide(i)}
+				{#each Array(slideCount) as _, i}
+					<div
+						class='carousel-image'
+						role='img'
+						aria-label={slideAriaLabel(i)}
+					>
+						{@render slide(i)}
+					</div>
+				{/each}
 			</div>
-		{/each}
+		{:else}
+			{#each Array(slideCount) as _, i}
+				<div
+					class='carousel-image'
+					class:active={i === currentImageIndex}
+					role='img'
+					aria-label={slideAriaLabel(i)}
+				>
+					{@render slide(i)}
+				</div>
+			{/each}
+		{/if}
 	</div>
 
 	{#if showNavigation && slideCount > 1}
@@ -704,6 +722,26 @@
 	.image-carousel.transition-instant .carousel-image.active {
 		/* Layout */
 		display: block;
+	}
+
+	/* Transition: slide (horizontal) */
+	.image-carousel.transition-slide .carousel-images {
+		overflow: hidden;
+	}
+
+	.image-carousel.transition-slide .carousel-track {
+		display: flex;
+		width: calc(100% * var(--slide-count));
+		height: 100%;
+		transform: translateX(calc(-100% * var(--current-index) / var(--slide-count)));
+		transition: transform var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.image-carousel.transition-slide .carousel-track .carousel-image {
+		position: relative;
+		flex: 0 0 calc(100% / var(--slide-count));
+		opacity: 1;
+		height: 100%;
 	}
 
 	/* Slide content (and legacy .carousel-image-content) fill the cell */
