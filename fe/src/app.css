@@ -484,6 +484,10 @@ textarea:focus-visible {
 	outline-offset: 2px;
 }
 
+/* Print: page margins and hide header/footer */
+@page {
+	margin: 4cm;
+}
 /* Hide header, footer and skip link when printing */
 @media print {
 	.no-print {

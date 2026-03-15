@@ -21,6 +21,8 @@
 	@media print {
 		.ficha-tecnica-route {
 			margin-top: 0;
+			/* No padding here: FichaTecnicaPreview's article has print padding so list items
+			   that break to a new page keep correct margins in every fragment. */
 		}
 	}
 </style>

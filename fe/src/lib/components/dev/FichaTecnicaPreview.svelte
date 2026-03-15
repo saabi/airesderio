@@ -8,10 +8,10 @@
 
 	const SECTION_1_ITEMS: DocListItem[] = [
 		{ icon: 'ubicacion', html: 'Ubicado en el área donde todo ocurre: shopping, diversión, zonas verdes, deportes, eventos culturales, restaurantes y pubs.' },
-		{ icon: 'estacionamiento', html: 'Con la conveniencia de estar sobre una avenida céntrica y con doble estacionamiento.' },
+		{ icon: 'estacionamiento', html: 'Con la conveniencia de estar sobre una avenida muy céntrica.' },
 		{ icon: 'building', html: 'Aires de Rio ofrece veintiocho departamentos y un local comercial dedicado a cafetería para tu comodidad.' },
 		{ icon: 'ascensores', html: 'La circulación vertical estará servida por dos ascensores desde el subsuelo hasta la terraza.' },
-		{ icon: null, html: 'Construye la empresa <strong>HABITAT PRIME S.A.S.</strong> bajo la dirección técnica del Ing. Ricardo Mattera, de larga trayectoria en la provincia. El Estudio D+B de Antonella Doménico y Luciano Bertorello aportó belleza a su arquitectura en una elegante fusión de líneas curvas y rectas, confiriéndole un moderno estilo mediterráneo, ambientes serenos, ordenados y una sutil elegancia.' },
+		{ icon: null, html: 'Construye la empresa <strong>HABITAT PRIME S.A.S.</strong> bajo la dirección técnica del Ing. Ricardo Mattera, de larga trayectoria en la provincia. El Estudio D+B de Antonella Doménico y Luciano Bertorello aportó diseño y belleza a su arquitectura en una elegante fusión de líneas curvas y rectas, confiriéndole un moderno estilo mediterráneo, ambientes serenos, ordenados y una sutil elegancia.' },
 		{ icon: 'ladrillos', html: 'En las paredes exteriores y los tabiques divisores interiores se utilizaron ladrillos cerámicos huecos de reconocida marca del medio, cuidando la aislación térmica y sonora.' },
 		{ icon: null, html: 'Las paredes interiores revocadas y pintadas con pintura látex premium interior de primera marca. La pared de ingreso a cada unidad estará tratada de forma especial para acordar con la paleta de colores y texturas del resto de los revestimientos.' },
 		{ icon: 'agua-sanitarias', html: 'Para las conexiones sanitarias se usaron materiales de las marca <strong>AWADUCT</strong> y <strong>TIGRE</strong>, ambas por su alta resistencia y calidad.' },
@@ -21,8 +21,7 @@
 	];
 
 	const MEMORIA_ITEMS: DocListItem[] = [
-		{ icon: 'techos-altos', html: 'Techos altos, con una luz entre losas de 275 cm.' },
-		{ icon: null, html: 'Cielorrasos con gargantas y cenefas para instalaciones de luces ambientales, alojar servicios, ocultar los barrales de cortinas y para mayor comodidad térmica y acústica.' },
+		{ icon: 'techos-altos', html: 'Techos altos, con una luz entre losas de 275 cm. A los mismos se adicionan cielorrasos con gargantas y cenefas para instalaciones de luces ambientales, alojar servicios, ocultar los barrales de cortinas y para mayor comodidad térmica y acústica.' },
 		{ icon: 'energia', html: 'Gran cantidad de módulos tomacorriente y bocas en todos los ambientes.' },
 		{ icon: null, html: 'Caja octogonal en cielorraso para ventilador de techo en dormitorio y living.' },
 		{ icon: null, html: 'Dos unidades de preinstalación de A. Acondicionados en living y dormitorios con placa de sostén, drenajes, caños y enchufe.' },
@@ -32,25 +31,21 @@
 		{ icon: 'carpinteria', html: 'Aberturas con carpintería de aluminio galvanizado <strong>ALUAR</strong> modelo A30New Anodizado Natural (Plata/Inox).' },
 		{ icon: 'puerta', html: 'Grandes puertas corredizas de doble panel de dormitorio y living a balcón.' },
 		{ icon: 'puerta', html: 'Los departamentos sobre contrafrente, que carecen de balcón, tienen también las mismas puertas corredizas de doble panel en dormitorio y living con baranda metálica de seguridad para apoyo.' },
-		{ icon: 'vestidor', html: 'Dormitorios con vestidor con tres metros lineales de placares equipados con cajones, estantes y espacio para perchas.' },
+		{ icon: 'vestidor', html: 'Dormitorios con vestidor con tres metros lineales de placares equipados con cajones, estantes, espacio para perchas y pantalonera.' },
 		{ icon: 'cocina', html: 'Cocina integrada con mueble bajo mesada y alacenas en placa de Melamina base MDF blanca de primera marca.' },
-		{ icon: 'cocina', html: 'Counter top de la mesada con zócalo en granito natural Negro Brasil o Gris Mara.' },
-		{ icon: 'cocina', html: 'Desayunador en granito natural Negro Brasil o Gris Mara.' },
-		{ icon: null, html: 'Revestimiento cerámico simil madera en paredes de mesada en juego con la paleta de colores.' },
+		{ icon: 'cocina', html: 'Encimera de bajo mesada y desallunador  en granito natural Negro Brasil, o Gris Mara.' },
 		{ icon: 'cocina', html: 'Campana purificadora sobre las hornallas.' },
 		{ icon: 'horno', html: 'Cocina con horno de primera marca.' },
-		{ icon: null, html: 'Pileta de Acero inoxidable marca Johnson.' },
-		{ icon: 'banos', html: 'Grifería monocomando FV.' },
-		{ icon: 'banos', html: 'Antebaño con mueble vanitory de melamina base MDF en color roble natural con un cajón.' },
+		{ icon: null, html: 'Pileta de Acero inoxidable marca Johnson con  grifería monocomando FV.' },
+		{ icon: 'banos', html: 'Antebaño con mueble vanitory de melamina base MDF con un cajón con encimera de marmol o granito.' },
 		{ icon: 'banos', html: 'Extractores en los baños.' },
-		{ icon: 'banos', html: 'Counter top de vanitory en mármol o granito Negro Brasil.' },
 		{ icon: 'banos', html: 'Espejo de vanitory en antebaño.' },
 		{ icon: 'banos', html: 'Bacha Ferrum modelo Tori Cilíndrica en sobremesada de vanitory.' },
 		{ icon: 'banos', html: 'Grifería marca FV para lavatorios, bidet y cabina de ducha.' },
 		{ icon: 'banos', html: 'Inodoro y bidet modelo Bari de Ferrum.' },
 		{ icon: 'banos', html: 'Cabina de ducha con mampara fija de vidrio 5+5 laminado de piso a techo color cristal.' },
 		{ icon: 'lavasecarropas', html: 'Instalaciones para máquinas lavarropa y secarropa en cabina dedicada con puertas.' },
-		{ icon: 'piso', html: 'Pisos de living comedor, cocina, pasillos y dormitorios en porcelanato de 120x21cm Cerro Negro color incienso o similar calidad y color.' },
+		{ icon: 'piso', html: 'Pisos de living comedor, cocina, pasillos y dormitorios en porcelanato de gran formato (120x21cm) marca Cerro Negro color incienso o similar calidad y color.' },
 		{ icon: null, html: 'Balcones con pisos de porcelanato.' },
 		{ icon: null, html: 'Zócalos de EPS antihumedad.' },
 		{ icon: 'piso', html: 'Pisos en los baños de porcelánico 60x60' },
@@ -90,7 +85,7 @@
 	<p class="doc-logotype">
 		<AiresDeRioLogo
 			class="doc-logo"
-			height="3rem"
+			height="6rem"
 			theme="light"
 			showIsotype={true}
 			showDepartamentos={true}
@@ -104,7 +99,7 @@
 		{#each SECTION_1_ITEMS as item (item.html)}
 			<li class="doc-list-item">
 				<span class="doc-list-icon" aria-hidden="true">
-					<DocListIcon icon={item.icon} />
+					<DocListIcon icon={item.icon} size="3em" />
 				</span>
 				<span class="doc-list-content">{@html item.html}</span>
 			</li>
@@ -123,22 +118,7 @@
 		{#each MEMORIA_ITEMS as item (item.html)}
 			<li class="doc-list-item">
 				<span class="doc-list-icon" aria-hidden="true">
-					<DocListIcon icon={item.icon} />
-				</span>
-				<span class="doc-list-content">{@html item.html}</span>
-			</li>
-		{/each}
-	</ul>
-
-	<blockquote>
-		<p>Un estilo de vida urbano y vibrante</p>
-	</blockquote>
-
-	<ul class="doc-list" role="list">
-		{#each SECTION_1_ITEMS as item (item.html)}
-			<li class="doc-list-item">
-				<span class="doc-list-icon" aria-hidden="true">
-					<DocListIcon icon={item.icon} />
+					<DocListIcon icon={item.icon} size="3em" />
 				</span>
 				<span class="doc-list-content">{@html item.html}</span>
 			</li>
@@ -146,8 +126,6 @@
 	</ul>
 
 	<hr />
-
-	<h2>Si buscas<br />es para vos.</h2>
 
 	<h1>DEPARTAMENTOS</h1>
 	<h2>LUXURY SERIES</h2>
@@ -160,7 +138,7 @@
 		{#each LUXURY_ITEMS as item (item.html)}
 			<li class="doc-list-item">
 				<span class="doc-list-icon" aria-hidden="true">
-					<DocListIcon icon={item.icon} />
+					<DocListIcon icon={item.icon} size="3em" />
 				</span>
 				<span class="doc-list-content">{@html item.html}</span>
 			</li>
@@ -179,6 +157,9 @@
 		font-size: 1rem;
 		line-height: 1.6;
 		color: var(--color-text-primary);
+		/* Widow/orphan control for print: keep at least 2 lines together at page top/bottom */
+		orphans: 2;
+		widows: 2;
 	}
 
 	.ficha-tecnica-doc :global(h1) {
@@ -187,6 +168,8 @@
 		font-weight: var(--font-weight-bold);
 		margin: 1.5rem 0 0.5rem;
 		color: var(--color-text-primary);
+		break-after: avoid;
+		break-before: avoid;
 	}
 
 	.ficha-tecnica-doc :global(h1:first-child) {
@@ -199,6 +182,8 @@
 		font-weight: var(--font-weight-bold);
 		margin: 1.25rem 0 0.5rem;
 		color: var(--color-accent-primary);
+		break-after: avoid;
+		break-before: avoid;
 	}
 
 	.ficha-tecnica-doc :global(h3) {
@@ -207,28 +192,39 @@
 		font-weight: var(--font-weight-bold);
 		margin: 1rem 0 0.5rem;
 		color: var(--color-text-primary);
+		break-after: avoid;
+		break-before: avoid;
 	}
 
 	.doc-list {
 		list-style: none;
-		margin: 0.75rem 0 1rem;
+		margin: 2.75rem 0 1rem;
 		padding: 0;
+		/* Keep list with preceding heading (avoid orphan heading at page top). */
+		break-before: avoid;
+	}
+
+	.doc-list-item:first-child {
+		margin-top: 0;
 	}
 
 	.doc-list-item {
 		display: grid;
-		grid-template-columns: 2rem 1fr;
+		grid-template-columns: 4rem 1fr;
 		gap: 0.75rem;
 		align-items: start;
-		margin-bottom: 0.5rem;
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+		/* Keep each list item together when possible (avoid single line on next page) */
+		break-inside: avoid;
 	}
 
 	.doc-list-icon {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 2rem;
-		min-height: 1.5em;
+		width: 4rem;
+		min-height: 3em;
 		color: var(--color-contrast-low);
 	}
 
@@ -242,6 +238,7 @@
 		border-left: 4px solid var(--color-accent-primary);
 		background: var(--color-bg-subtle);
 		font-style: italic;
+		break-inside: avoid;
 	}
 
 	.ficha-tecnica-doc :global(blockquote p) {
@@ -252,10 +249,13 @@
 		border: none;
 		border-top: 1px solid var(--color-border-default);
 		margin: 2rem 0;
+		break-after: avoid;
 	}
 
 	.ficha-tecnica-doc :global(p) {
 		margin: 0.5rem 0 1rem;
+		break-after: avoid;
+		break-before: avoid;
 	}
 
 	.doc-logotype {
@@ -264,5 +264,44 @@
 
 	.doc-logotype :global(.doc-logo) {
 		display: block;
+	}
+
+	@media print {
+		/* Padding on the article (the fragmenting block) so list items that start or continue
+		   on a new page stay inside the same padded box and margins are correct on every page. */
+		.ficha-tecnica-doc {
+			padding-left: 2cm;
+			padding-right: 2cm;
+			padding-top: 1cm;
+			padding-bottom: 1cm;
+			max-width: none;
+		}
+		/* Padding-top (not margin) on each list item so when one is first on a new page after a
+		   break, there is visible space above it; padding doesn't collapse across fragment boundaries. */
+		.doc-list-item {
+			padding-top: 0.5cm;
+			margin-top: 0;
+			margin-bottom: 0.25cm;
+		}
+
+		.doc-list-item:first-child {
+			padding-top: 0;
+		}
+	}
+
+	h1, h2, h3 {
+		margin-left: 1.8cm !important;
+	}
+	h1 {
+		font-size: 1.5cm !important;
+		font-weight: normal !important;
+	}
+	h2 {
+		font-size: 0.9cm !important;
+		font-weight: normal !important;
+	}
+	h3 {
+		font-size: 1cm !important;
+		font-weight: normal !important;
 	}
 </style>

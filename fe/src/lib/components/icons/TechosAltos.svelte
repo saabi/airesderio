@@ -1,17 +1,16 @@
-<!-- Two upward-pointing chevrons for "Techos altos" (high ceilings) -->
-<path
-	d="M8 16L12 8L16 16"
-	stroke="currentColor"
-	stroke-width="2"
-	stroke-linecap="round"
-	stroke-linejoin="round"
-	fill="none"
-/>
-<path
-	d="M4 20L8 12L12 20"
-	stroke="currentColor"
-	stroke-width="2"
-	stroke-linecap="round"
-	stroke-linejoin="round"
-	fill="none"
-/>
+<g id="techos-altos">
+	<path
+		class="fil0"
+		d="M12.405 14.187l11.595 -13.687 11.227 13.687 0.368 33.313 -22.822 0 -0.368 -33.313zm2.033 0.732l0.337 30.556 18.773 0 -0.337 -30.554 -9.236 -11.259 -9.537 11.257z"
+	/>
+	<polygon
+		class="fil0"
+		points="16.633,36.096 24.025,44.821 31.182,36.096 28.563,36.096 25.12,40.293 25.12,13.289 28.563,17.487 31.182,17.487 24.025,8.762 16.633,17.487 19.287,17.487 22.88,13.246 22.88,40.337 19.287,36.096"
+	/>
+</g>
+
+<style type="text/css">
+	.fil0 {
+		fill: var(--svg-fill-primary);
+	}
+</style>

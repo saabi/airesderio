@@ -70,8 +70,8 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 1.5em;
-		height: 1.5em;
+		width: 3em;
+		height: 3em;
 		border: 1px dashed var(--color-border-strong);
 		border-radius: 2px;
 		color: var(--color-text-tertiary);

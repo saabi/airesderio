@@ -10,14 +10,13 @@
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import Banos from '$lib/components/icons/Banos.svelte';
 	import Carpinteria from '$lib/components/icons/Carpinteria.svelte';
-	import CerraduraDigital from '$lib/components/icons/CerraduraDigital.svelte';
 	import Cocina from '$lib/components/icons/Cocina.svelte';
-	import Horno from '$lib/components/icons/Horno.svelte';
+	import MesadaGranito from '$lib/components/icons/MesadaGranito.svelte';
 	import Piso from '$lib/components/icons/Piso.svelte';
 	import Puerta from '$lib/components/icons/Puerta.svelte';
-	import Termotanque from '$lib/components/icons/Termotanque.svelte';
 	import Vestidor from '$lib/components/icons/Vestidor.svelte';
 	import TechosAltos from '$lib/components/icons/TechosAltos.svelte';
+	import Tilde from '$lib/components/icons/Tilde.svelte';
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
@@ -69,8 +68,8 @@
 			text: 'Cocinas completamente equipadas con modernos muebles bajo y sobre mesada de granito natural.'
 		},
 		{
-			icon: '🍽️',
-			component: Cocina,
+			icon: '🪵',
+			component: MesadaGranito,
 			text: 'Mesada y desayunador de granito natural'
 		},
 		{
@@ -80,22 +79,35 @@
 		}
 	];
 
+	// Adicionales Línea Luxury (desde ficha técnica) — un solo icono tilde
 	const lineaLuxury: EquipmentItem[] = [
-		{
-			icon: '🍳',
-			component: Horno,
-			text: 'Anafe y horno a gas empotrados de diseño moderno y alta funcionalidad.'
-		},
-		{
-			icon: '🌡️',
-			component: Termotanque,
-			text: 'Agua caliente asegurada mediante termotanques eléctricos individuales de alta recuperación.'
-		},
-		{
-			icon: '🔐',
-			component: CerraduraDigital,
-			text: 'Acceso smart con cerradura biométrica y WiFi para máxima seguridad y confort.'
-		}
+		// PUERTAS
+		{ icon: '∼', component: Tilde, text: 'Puerta de ingreso con cerradura inteligente digital biométrica con wifi.' },
+
+		// COCINA
+		{ icon: '∼', component: Tilde, text: 'Cocina integrada con bajo mesada y alacena de Melamina base MDF en gris grafito o madera. Opción de incluir dos puertas de vidrio con marco de aluminio e iluminación interna en alacena.' },
+		{ icon: '∼', component: Tilde, text: 'Encimera de cocina con zócalo y desayunador de Pure Stone blanco (cuarzo natural color uniforme) más duradero que el granito natural.' },
+		{ icon: '∼', component: Tilde, text: 'Iluminación led en zona de trabajo sobre mesada de la cocina.' },
+		{ icon: '∼', component: Tilde, text: 'Revestimiento cerámico blanco en paredes de mesada.' },
+
+		// LIVING
+		{ icon: '∼', component: Tilde, text: 'Gargantas y cenefas de los cielorrasos provistas con instalación de luces leds en living comedor, cocina y dormitorios.' },
+		{ icon: '∼', component: Tilde, text: 'Revestimiento con panel de WPC en color madera en pared curvada del living.' },
+
+		// DORMITORIO Y VESTIDOR
+		{ icon: '∼', component: Tilde, text: 'Vestidor con puertas de vidrio ahumado de dos paños fijos y uno corredizo con marco de aluminio color bronce.' },
+		{ icon: '∼', component: Tilde, text: 'Puertas del vestidor corredizas de aluminio con vidrios ahumados de tres paños.' },
+		{ icon: '∼', component: Tilde, text: 'Dormitorios amplios con vestidor con doble placard, con cuatro cajones y pantalonera con rieles, correderas metálicas y estantes.' },
+		{ icon: '∼', component: Tilde, text: 'Iluminación led en el interior de los placares con encendido/apagado táctil.' },
+
+		// BAÑO
+		{ icon: '∼', component: Tilde, text: 'Antebaño con mueble vanitory con un cajón en melamina base MDF color nogal, y cajón interno para maquillaje.' },
+		{ icon: '∼', component: Tilde, text: 'Encimera de vanitory en silestone tabaco, nébula o marmol a elección.' },
+		{ icon: '∼', component: Tilde, text: 'Espejo de vanitory en antebaño con luces led encendido/apagado táctil.' },
+		{ icon: '∼', component: Tilde, text: 'Artefacto lumínico suspendido sobre vanitory con bulbo led.' },
+		{ icon: '∼', component: Tilde, text: 'Bacha Ferrum modelo Tori Cilíndrica en sobremesada de vanitory.' },
+		{ icon: '∼', component: Tilde, text: 'Cabina de ducha con mampara de vidrio de un paño fijo y otro corredizo de cristal color ámbar 5+5 laminado.' },
+		{ icon: '∼', component: Tilde, text: 'Aplique led bidireccional en balcón con bulbo led.' }
 	];
 
 	const LUXURY_INTRO =
@@ -222,7 +234,11 @@
 			data-series="harmony"
 		>
 			<div class="equip-outline">
-				<ul class="equip-list" role="list">
+				<ul
+					class="equip-list"
+					role="list"
+					style="--equip-rows: {Math.ceil(lineaHarmony.length / 2)}"
+				>
 					{#each lineaHarmony as item, index (index)}
 						{@const harmonyAction = createItemObserver({ column: 'harmony', index })}
 						<li
@@ -245,9 +261,20 @@
 			</div>
 		</div>
 
-		<p class="equip-terminaciones-intro">
-			<strong>Además, se podrá elegir entre distintas opciones de terminaciones y niveles de equipamiento, para
-			adaptar la calidad de cada ambiente a tus necesidades.</strong>
+		<p
+			class="equip-terminaciones-intro"
+			style="margin-bottom: 0; padding-bottom: 0;"
+		>
+			<strong>
+				Además, podrás elegir entre otras opciones de terminaciones y equipamiento, para
+				que tu departamento se adapte por completo a tu estilo de vida y necesidades.
+			</strong>
+		</p>
+		<p
+			class="equip-terminaciones-intro"
+			style="margin-top: 0; padding-top: 0; text-transform: uppercase;"
+		>
+			Adicionales aplicables a cualquiera de los planos.
 		</p>
 
 		<!-- LINEA LUXURY -->
@@ -259,7 +286,11 @@
 			data-series="luxury"
 		>
 			<div class="equip-outline">
-				<ul class="equip-list" role="list">
+				<ul
+					class="equip-list"
+					role="list"
+					style="--equip-rows: {Math.ceil(lineaLuxury.length / 2)}"
+				>
 					{#each lineaLuxury as item, index (index)}
 						{@const luxuryAction = createItemObserver({ column: 'luxury', index })}
 						<li
@@ -360,6 +391,8 @@
 	.equip-list {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
+		grid-template-rows: repeat(var(--equip-rows, 10), auto);
+		grid-auto-flow: column;
 		gap: 0 2.5rem;
 		align-items: start;
 		list-style: none;
@@ -370,6 +403,8 @@
 	@media (max-width: 900px) {
 		.equip-list {
 			grid-template-columns: 1fr;
+			grid-template-rows: unset;
+			grid-auto-flow: row;
 		}
 	}
 
