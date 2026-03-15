@@ -30,7 +30,7 @@
 	const projectHighlights = [
 		{ label: 'Unidades disponibles', value: '2 y 4 ambientes' },
 		{ label: 'Entrega estimada', value: '2027' },
-		{ label: 'Amenities', value: 'Piscina · Terraza · Cafetería' }
+		{ label: 'Amenities', value: 'Piscina · Solarium · Cafetería' }
 	];
 </script>
 
@@ -44,8 +44,8 @@
 				<ul class='project-highlights'>
 					{#each projectHighlights as item (item.label)}
 						<li>
-							<strong>{item.value}</strong>
 							<small>{item.label}</small>
+							<strong>{item.value}</strong>
 						</li>
 					{/each}
 				</ul>
@@ -180,7 +180,7 @@
 	}
 
 	.project-highlights small {
-		color: var(--color-text-tertiary);
+		color: var(--color-text-secondary);
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
 	}
