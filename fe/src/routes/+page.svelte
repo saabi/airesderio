@@ -6,11 +6,13 @@
 	// Local components
 	import BuildingFeatures from '$lib/components/sections/BuildingFeatures.svelte';
 	import ContactSection from '$lib/components/sections/ContactSection.svelte';
-	import Equipment from '$lib/components/sections/Equipment.svelte';
+	import EquipmentHarmony from '$lib/components/sections/EquipmentHarmony.svelte';
+	import EquipmentLuxury from '$lib/components/sections/EquipmentLuxury.svelte';
 	import FloorPlans from '$lib/components/sections/FloorPlans.svelte';
 	import FloatingCTA from '$lib/components/ui/FloatingCTA.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
-	import Interior from '$lib/components/sections/Interior.svelte';
+	import CarouselHarmony from '$lib/components/sections/CarouselHarmony.svelte';
+	import CarouselLuxury from '$lib/components/sections/CarouselLuxury.svelte';
 	import Intro from '$lib/components/sections/Intro.svelte';
 	import Location from '$lib/components/sections/Location.svelte';
 
@@ -125,8 +127,10 @@
 	<Location jsonUrl="/lugares/lugares-direcciones.json" showPlaceMarkers={true} />
 	<div class="page-shell section">
 		<BuildingFeatures />
-		<Interior />
-		<Equipment />
+		<EquipmentHarmony />
+		<CarouselHarmony />
+		<EquipmentLuxury />
+		<CarouselLuxury />
 		<FloorPlans />
 	</div>
 	<ContactSection />

@@ -69,7 +69,8 @@ The application follows a **component-based architecture** with clear separation
    - `Intro.svelte`: Introduction section
    - `Location.svelte`: Interactive map with places of interest
    - `Interior.svelte`: Interior showcase
-   - `Equipment.svelte`: Building amenities display
+   - `EquipmentHarmony.svelte`: Equipamiento línea Harmony
+   - `EquipmentLuxury.svelte`: Equipamiento opcional línea Luxury
    - `FloorPlans.svelte`: Apartment floor plans
    - `ContactSection.svelte`: Contact information and form
    - `ContactForm.svelte`: Contact form component
