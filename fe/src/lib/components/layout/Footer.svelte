@@ -24,12 +24,12 @@
 /* 		{ label: 'Oficina Habitat Prime', value: 'Av. Rivadavia 1520 · Santiago del Estero' },
 		{ label: 'Teléfono', value: '+54 385 421 1111' },
  */		{ label: 'Email comercial', value: 'info@airesderio.com' },
-		{ label: 'Whatsapp ventas', value: '+54 9 385 555 0000' }
+		{ label: 'Whatsapp mensajes', value: '+54 9 385 6222266' }
 	];
 
 	const projectHighlights = [
-		{ label: 'Entrega estimada', value: '2027' },
 		{ label: 'Unidades disponibles', value: '2 y 4 ambientes' },
+		{ label: 'Entrega estimada', value: '2027' },
 		{ label: 'Amenities', value: 'Piscina · Terraza · Cafetería' }
 	];
 </script>
@@ -69,7 +69,7 @@
 			</section>
 
 			<section class='footer-column' aria-label='Información de contacto'>
-				<h3>Contacto</h3>
+				<h3>Ventas</h3>
 				<ul class='footer-contact'>
 					{#each contactInfo as item (item.label)}
 						<li>
@@ -115,7 +115,7 @@
 
 		/* Box/Visual */
 		border-top: 1px solid color-mix(in oklch, var(--ref-brand-deep) 40%, var(--ref-neutral-900) 60%);
-		background: linear-gradient(0, #8b5431 0%, #3f2215 100%);
+		background: linear-gradient(0, #6d5140 0%, #352923 100%);
 		box-shadow: 0 -12px 32px var(--shadow-soft);
 
 		/* Typography */
@@ -136,7 +136,7 @@
 		margin: 0 0 0.75rem;
 		font-size: 1rem;
 		letter-spacing: 0.08em;
-		color: var(--color-text-primary);
+		color: oklch(0.92 0.12 89.64);
 		text-transform: uppercase;
 	}
 
