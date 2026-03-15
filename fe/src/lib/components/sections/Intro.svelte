@@ -177,6 +177,7 @@
 		.kpis {
 			/* Layout */
 			padding-left: 0;
+			border-left: none;
 		}
 	}
 </style>
