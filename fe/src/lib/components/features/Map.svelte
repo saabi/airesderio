@@ -1194,7 +1194,7 @@
 							{/each}
 						{/if}
 
-						<!-- Pin circle (fused with gallery icon when place has photos) -->
+						<!-- Pin circle (fused with gallery icon when place has photos) — same look as isotype: white circle, green border, black icon -->
 						{#if onOpenGallery && (selectedPlace.photos?.length ?? 0) > 0}
 							{@const r = getPinRadius(selectedPlace.pin.r)}
 							{@const iconScale = r * 2 / 20}
@@ -1208,16 +1208,23 @@
 								onclick={(e) => (e.stopPropagation(), onOpenGallery())}
 								onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), e.stopPropagation(), onOpenGallery())}
 							>
+								<!-- Visible circle: white fill, green border (same as focal isotype) -->
+								<circle
+									class='pin-gallery-circle'
+									cx={pinCx}
+									cy={pinCy}
+									r={r * 0.85}
+								/>
 								<!-- Invisible hit target so the button is easy to click -->
 								<circle cx={pinCx} cy={pinCy} r={r * 0.85} fill="transparent" />
 								<g
 									class='pin-gallery-icon'
 									transform="translate({pinCx}, {pinCy}) scale({iconScale/1.5}) translate(-10, -10)"
 								>
-									<rect x="3" y="3" width="5" height="5" rx="1" stroke="white" stroke-width="2" fill="none" />
-									<rect x="12" y="3" width="5" height="5" rx="1" stroke="white" stroke-width="2" fill="none" />
-									<rect x="3" y="12" width="5" height="5" rx="1" stroke="white" stroke-width="2" fill="none" />
-									<rect x="12" y="12" width="5" height="5" rx="1" stroke="white" stroke-width="2" fill="none" />
+									<rect x="3" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
+									<rect x="12" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
+									<rect x="3" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
+									<rect x="12" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
 								</g>
 							</g>
 						{:else}
@@ -1463,8 +1470,17 @@
 		pointer-events: all;
 	}
 
+	/* Same look as focal isotype: white circle, green border */
+	.pin-gallery-circle {
+		fill: var(--map-paper);
+		stroke: var(--ref-cta-teal);
+		stroke-width: 2;
+		vector-effect: non-scaling-stroke;
+	}
+
 	.pin-gallery-icon {
-		/* Icon is white, centered on red pin circle */
+		/* Icon is black/dark (same as isotype) for contrast */
+		color: var(--map-isotype-ink);
 		pointer-events: none;
 	}
 
