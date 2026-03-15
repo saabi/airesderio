@@ -115,7 +115,7 @@
 >
 	<p class="equip-intro" style="margin-bottom: 0; padding-bottom: 0;">
 		<strong>
-			Ofrecemos además otras terminaciones y equipamientos, para
+			Ofrecemos además otras terminaciones y equipamientos para
 			que tu departamento se adapte por completo a tu estilo de vida y necesidades.
 		</strong>
 	</p>
