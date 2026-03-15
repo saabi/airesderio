@@ -85,7 +85,7 @@
 							autoRotate={false}
 							keyboardNavigation={true}
 							showNavigation={true}
-							navigationPosition="absolute-sides"
+							navigationPosition="below-image"
 							buttonVariant="overlay"
 							buttonSize="lg"
 							showDots={true}
