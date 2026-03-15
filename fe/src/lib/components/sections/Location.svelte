@@ -211,7 +211,7 @@
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				<p>
-					<AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> ofrece una ubicación de privilegio. Se emplaza sobre Avenida Rivadavia, a un
+					<AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> ofrece una ubicación de privilegio. Se emplaza en Avenida Rivadavia (E) 25, a un
 					paso de todo lo que esta ciudad ofrece para brindarte una vida placentera y cómoda.
 				</p>
 				<p>

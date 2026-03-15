@@ -5,13 +5,14 @@
 	import Title from '$lib/components/ui/Title.svelte';
 	import IconTextRow from '$lib/components/ui/IconTextRow.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
+	import AguaPiscina from '$lib/components/icons/AguaPiscina.svelte';
 	import Ascensores from '$lib/components/icons/Ascensores.svelte';
-	import AguaSanitarias from '$lib/components/icons/AguaSanitarias.svelte';
-	import EnergiaElectrica from '$lib/components/icons/EnergiaElectrica.svelte';
+	import ConexionesAgua from '$lib/components/icons/ConexionesAgua.svelte';
 	import Estacionamiento from '$lib/components/icons/Estacionamiento.svelte';
 	import GasNatural from '$lib/components/icons/GasNatural.svelte';
-	import LadrillosCeramicos from '$lib/components/icons/LadrillosCeramicos.svelte';
-	import TerrazaPiscina from '$lib/components/icons/TerrazaPiscina.svelte';
+	import EnergiaElectrica from '$lib/components/icons/EnergiaElectrica.svelte';
+	import InstalacionElectrica from '$lib/components/icons/InstalacionElectrica.svelte';
+	import MuroLadrillo from '$lib/components/icons/MuroLadrillo.svelte';
 	import Ubicacion from '$lib/components/icons/Ubicacion.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
@@ -24,28 +25,20 @@
 
 	type LeftBulletItem = {
 		text: string;
-		icon: 'location' | 'parking' | 'ascensores' | 'electric';
+		icon: 'location' | 'parking' | 'ascensores' | 'electric-installation' | 'electric-supply';
 	};
 
 	const leftBullets: LeftBulletItem[] = [
-		{
-			icon: 'location',
-			text: 'Ubicado en el área donde todo ocurre, shopping, diversión, zonas verdes, deportes, eventos culturales, restaurantes y pubs.'
-		},
-		{
-			icon: 'parking',
-			text: 'Sobre una avenida con doble estacionamiento.'
-		},
 		{
 			icon: 'ascensores',
 			text: 'Dos ascensores desde el subsuelo hasta la terraza.'
 		},
 		{
-			icon: 'electric',
+			icon: 'electric-installation',
 			text: 'Instalación eléctrica con materiales de primera calidad siguiendo normativas AEA 90364 e IRAM.'
 		},
 		{
-			icon: 'electric',
+			icon: 'electric-supply',
 			text: 'Suministro eléctrico confiable garantizado por transformador propio en el edificio.'
 		}
 	];
@@ -141,7 +134,11 @@
 										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
 											<Ascensores />
 										</SvgViewport>
-									{:else if item.icon === 'electric'}
+									{:else if item.icon === 'electric-installation'}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<InstalacionElectrica />
+										</SvgViewport>
+									{:else if item.icon === 'electric-supply'}
 										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
 											<EnergiaElectrica />
 										</SvgViewport>
@@ -178,15 +175,15 @@
 										</SvgViewport>
 									{:else if item.icon === 'water'}
 										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-											<AguaSanitarias />
+											<ConexionesAgua />
 										</SvgViewport>
 									{:else if item.icon === 'walls'}
 										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-											<LadrillosCeramicos />
+											<MuroLadrillo />
 										</SvgViewport>
 									{:else}
 										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-											<TerrazaPiscina />
+											<AguaPiscina />
 										</SvgViewport>
 									{/if}
 								{/snippet}

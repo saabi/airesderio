@@ -40,12 +40,12 @@
 		{
 			icon: '🚪',
 			component: Puerta,
-			text: 'Puertas de madera con diseño exclusivo que aportan calidez y moderna elegancia.'
+			text: 'Puertas de madera con diseño exclusivo que aportan calidez y moderna elegancia'
 		},
 		{
 			icon: '🖼️',
 			component: Carpinteria,
-			text: 'Carpintería de aluminio Aluar Línea A30 NEW de alta prestación.'
+			text: 'Carpintería de aluminio Aluar Línea A30 NEW de alta prestación'
 		},
 		{
 			icon: '🛁',
@@ -65,7 +65,7 @@
 		{
 			icon: '🍽️',
 			component: Cocina,
-			text: 'Cocinas completamente equipadas con modernos muebles bajo y sobre mesada de granito natural.'
+			text: 'Cocinas completamente equipadas con modernos muebles bajo y sobre mesada de granito natural con unidad de 4 hornallas y horno a gas.'
 		},
 		{
 			icon: '🪵',
