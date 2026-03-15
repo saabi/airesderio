@@ -276,7 +276,7 @@
 				ariaLabel='Mapa de ubicación del proyecto Aires de Río'
 				{mapData}
 				showDetailImage={false}
-				pinRadius={40}
+				pinRadius={70}
 				onOpenGallery={openGalleryForCurrentPlace}
 				onSelectionChange={(id) => (currentPlaceId = id)}
 			/>

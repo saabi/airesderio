@@ -184,8 +184,16 @@
 	const ISOTYPE_CENTER_Y = 94.152;
 	const ISOTYPE_HEIGHT = 34.385;
 
-	/** Scale factor for rendering the isotype at the focal point */
-	let focalIsotypeScale = $derived(denorm(0.016) / ISOTYPE_HEIGHT);
+	/** Scale factor for rendering the isotype at the focal point (constant screen size during zoom) */
+	const FOCAL_ISOTYPE_TARGET_PX = 40;
+	let focalIsotypeScale = $derived.by(() => {
+		if (containerSize.w <= 0 || containerSize.h <= 0 || $viewBoxHeight <= 0) {
+			return denorm(0.016) / ISOTYPE_HEIGHT;
+		}
+		const pixelsPerViewBox = containerSize.h / $viewBoxHeight;
+		const viewBoxHeightForTarget = FOCAL_ISOTYPE_TARGET_PX / pixelsPerViewBox;
+		return viewBoxHeightForTarget / ISOTYPE_HEIGHT;
+	});
 
 	// ===== STATE =====
 	let currentZoomedIndex = $state<number | null>(null);
@@ -274,6 +282,23 @@
 	// Reference to places group element (for bounding box calculation)
 	let placesGroup: SVGGElement | null = $state(null);
 
+	// Container size (for constant screen-size isotype during zoom)
+	let containerSize = $state({ w: 0, h: 0 });
+	$effect(() => {
+		const el = mapContainer;
+		if (!el) {
+			containerSize = { w: 0, h: 0 };
+			return;
+		}
+		const update = () => {
+			const r = el.getBoundingClientRect();
+			containerSize = { w: r.width, h: r.height };
+		};
+		update();
+		const ro = new ResizeObserver(update);
+		ro.observe(el);
+		return () => ro.disconnect();
+	});
 
 	// ===== DERIVED =====
 	let widthAttr = $derived(typeof width === 'number' ? `${width}` : width);
@@ -1080,18 +1105,25 @@
 						{/if}
 						<g
 							class='pin-location-icon'
-							transform="translate({denorm(place.pin.cx)}, {denorm(place.pin.cy)}) scale({getPinRadius(place.pin.r) / 12}) translate(-12, {getPinInnerTranslateY(place.pin.r)})"
 							aria-hidden='true'
 						>
-							<!-- Solid teardrop pin -->
-							<path
-								fill="currentColor"
-								stroke="none"
-								d="M12 2.5C9.238 2.5 7 4.738 7 7.5c0 4.25 3.85 8.36 4.94 9.46.29.29.83.29 1.12 0C13.15 15.86 17 11.75 17 7.5 17 4.738 14.762 2.5 12 2.5z"
+							<!-- Invisible hit area so tapping the pin selects the zone (same as tapping the zone shape) -->
+							<circle
+								cx={denorm(place.pin.cx)}
+								cy={denorm(place.pin.cy)}
+								r={getPinRadius(place.pin.r) * 0.9}
+								fill="transparent"
 							/>
-							<!-- Small circle accent near top of pin -->
-							<circle cx="12" cy="5.2" r="1.1" fill="white" />
-							<!-- Small house glyph inside pin -->
+							<g transform="translate({denorm(place.pin.cx)}, {denorm(place.pin.cy)}) scale({getPinRadius(place.pin.r) / 12}) translate(-12, {getPinInnerTranslateY(place.pin.r)})">
+								<!-- Solid teardrop pin -->
+								<path
+									fill="currentColor"
+									stroke="none"
+									d="M12 2.5C9.238 2.5 7 4.738 7 7.5c0 4.25 3.85 8.36 4.94 9.46.29.29.83.29 1.12 0C13.15 15.86 17 11.75 17 7.5 17 4.738 14.762 2.5 12 2.5z"
+								/>
+								<!-- Small circle accent near top of pin -->
+								<circle cx="12" cy="5.2" r="1.1" fill="white" />
+							</g>
 						</g>
 						<text
 							class='place-name-label'
@@ -1520,6 +1552,12 @@
 		pointer-events: none;
 	}
 
+	/* In home state, pins are clickable and select the zone (same as tapping the zone shape) */
+	.place-home .pin-location-icon {
+		pointer-events: all;
+		cursor: pointer;
+	}
+
 	.place-home {
 		cursor: pointer;
 	}
@@ -1574,9 +1612,11 @@
 		pointer-events: none;
 	}
 
-	/* Show focal pin circle (always visible) */
+	/* Show focal pin circle (always visible) — green border for contrast (same as CTA buttons) */
 	.focal-group .pin-circle {
 		/* Box/Visual */
 		fill-opacity: 1;
+		stroke: var(--ref-cta-teal);
+		stroke-width: 2;
 	}
 </style>

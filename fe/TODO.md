@@ -45,8 +45,9 @@
 
 ### 8. Mapa (Location)
 
-- [ ] Isotype sobre mapa tiene poco contraste — dar borde verde (mismo de los botones) al círculo
-- [ ] Pines sobre mapa deben elegir la zona al tocar — mismo comportamiento que ya tienen las zonas
+- [x] ~~Isotype sobre mapa tiene poco contraste — dar borde verde (mismo de los botones) al círculo~~
+- [x] ~~Isotype debe mantener el mismo tamaño final durante zoom.~~ 
+- [x] ~~Pines sobre mapa deben elegir la zona al tocar — mismo comportamiento que ya tienen las zonas~~
 - [ ] Botón de galería blanco sobre mapa: poco contraste — mismo aspecto que el isotipo (icono negro, círculo blanco, borde verde)
 
 ### 9. Carrusel
