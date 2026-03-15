@@ -7,6 +7,7 @@
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import AguaPiscina from '$lib/components/icons/AguaPiscina.svelte';
 	import Ascensores from '$lib/components/icons/Ascensores.svelte';
+	import CafeCup from '$lib/components/icons/CafeCup.svelte';
 	import ConexionesAgua from '$lib/components/icons/ConexionesAgua.svelte';
 	import Estacionamiento from '$lib/components/icons/Estacionamiento.svelte';
 	import GasNatural from '$lib/components/icons/GasNatural.svelte';
@@ -25,7 +26,7 @@
 
 	type LeftBulletItem = {
 		text: string;
-		icon: 'location' | 'parking' | 'ascensores' | 'electric-installation' | 'electric-supply';
+		icon: 'gas' | 'location' | 'parking' | 'ascensores' | 'electric-installation' | 'electric-supply';
 	};
 
 	const leftBullets: LeftBulletItem[] = [
@@ -40,19 +41,19 @@
 		{
 			icon: 'electric-supply',
 			text: 'Suministro eléctrico confiable garantizado por transformador propio en el edificio.'
+		},
+		{
+			icon: 'gas',
+			text: 'Conexión de gas natural.'
 		}
 	];
 
 	type ExtraInfraItem = {
 		text: string;
-		icon: 'gas' | 'water' | 'walls' | 'terrace';
+		icon: 'water' | 'walls' | 'terrace' | 'cafe';
 	};
 
 	const extraInfra: ExtraInfraItem[] = [
-		{
-			icon: 'gas',
-			text: 'Conexión de gas natural.'
-		},
 		{
 			icon: 'water',
 			text: 'Conexiones de agua y sanitarias con materiales marca AWADUCT y TIGRE.'
@@ -64,6 +65,10 @@
 		{
 			icon: 'terrace',
 			text: 'Terraza con piscina y deck húmedo.'
+		},
+		{
+			icon: 'cafe',
+			text: 'Cafetería en planta baja.'
 		}
 	];
 </script>
@@ -134,6 +139,10 @@
 										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
 											<Ascensores />
 										</SvgViewport>
+									{:else if item.icon === 'gas'}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<GasNatural />
+										</SvgViewport>
 									{:else if item.icon === 'electric-installation'}
 										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
 											<InstalacionElectrica />
@@ -169,17 +178,17 @@
 						>
 							<IconTextRow text={item.text}>
 								{#snippet icon()}
-									{#if item.icon === 'gas'}
-										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
-											<GasNatural />
-										</SvgViewport>
-									{:else if item.icon === 'water'}
+									{#if item.icon === 'water'}
 										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
 											<ConexionesAgua />
 										</SvgViewport>
 									{:else if item.icon === 'walls'}
 										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
 											<MuroLadrillo />
+										</SvgViewport>
+									{:else if item.icon === 'cafe'}
+										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
+											<CafeCup />
 										</SvgViewport>
 									{:else}
 										<SvgViewport viewBox="0 0 48 48" width="3rem" height="3rem">
