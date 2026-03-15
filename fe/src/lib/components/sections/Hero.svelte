@@ -122,7 +122,7 @@
 				slideCount={CAROUSEL_ITEMS.length}
 				slideAriaLabel={(index) => CAROUSEL_ITEMS[index].type === 'video' ? 'Video promocional Aires de Río' : CAROUSEL_ITEMS[index].alt}
 				autoRotate={!$verticalViewport}
-				interval={5000}
+				interval={3000}
 				pauseOnHover={true}
 				pauseAutoRotate={pauseAutoRotate}
 				showNavigation={true}
