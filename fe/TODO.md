@@ -52,7 +52,7 @@
 
 ### 9. Carrusel
 
-- [ ] Agregar gestos táctiles para navegar (deslizar izquierda/derecha)
+- [x] ~~Agregar gestos táctiles para navegar (deslizar izquierda/derecha)~~
 
 ## Medium Priority
 

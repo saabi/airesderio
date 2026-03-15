@@ -124,6 +124,9 @@
 	let isTouchDevice = $state(false);
 	/** On touch: timeout that clears navButtonsHovered after 2× interval so auto-advance resumes. */
 	let pendingResumeTimeout: ReturnType<typeof setTimeout> | null = null;
+	/** Touch start position for swipe gesture (left/right to navigate). */
+	let touchStartX = 0;
+	let touchStartY = 0;
 
 	// ===== DERIVED =====
 	// Determine if component is controlled
@@ -308,6 +311,32 @@
 			startCarousel();
 		}
 	}
+
+	/** Minimum horizontal distance (px) to count as a swipe. */
+	const SWIPE_THRESHOLD = 50;
+
+	function handleTouchStart(e: TouchEvent) {
+		if (e.touches.length === 1) {
+			touchStartX = e.touches[0].clientX;
+			touchStartY = e.touches[0].clientY;
+		}
+	}
+
+	function handleTouchEnd(e: TouchEvent) {
+		if (slideCount <= 1 || e.changedTouches.length !== 1) return;
+		const x = e.changedTouches[0].clientX;
+		const y = e.changedTouches[0].clientY;
+		const deltaX = x - touchStartX;
+		const deltaY = y - touchStartY;
+		if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
+		if (Math.abs(deltaY) >= Math.abs(deltaX)) return; // Prefer vertical scroll
+		if (deltaX > 0) {
+			previousImage();
+		} else {
+			nextImage();
+		}
+		restartCarouselTimer();
+	}
 </script>
 
 <div
@@ -325,6 +354,8 @@
 	aria-label={ariaLabel}
 	onmouseenter={handleMouseEnter}
 	onmouseleave={handleMouseLeave}
+	ontouchstart={handleTouchStart}
+	ontouchend={handleTouchEnd}
 	style='--transition-duration: {transitionDuration}ms;'
 >
 	{#if header}
@@ -526,6 +557,9 @@
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
+
+		/* Touch: allow vertical scroll, reserve horizontal for swipe navigation */
+		touch-action: pan-y;
 	}
 
 	.image-carousel.borders {
