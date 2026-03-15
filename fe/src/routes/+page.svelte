@@ -10,6 +10,7 @@
 	import EquipmentLuxury from '$lib/components/sections/EquipmentLuxury.svelte';
 	import FloorPlans from '$lib/components/sections/FloorPlans.svelte';
 	import FloatingCTA from '$lib/components/ui/FloatingCTA.svelte';
+	import FloatingWhatsApp from '$lib/components/ui/FloatingWhatsApp.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
 	import CarouselHarmony from '$lib/components/sections/CarouselHarmony.svelte';
 	import CarouselLuxury from '$lib/components/sections/CarouselLuxury.svelte';
@@ -120,6 +121,7 @@
 <main>
 	<Hero />
 	<FloatingCTA />
+	<FloatingWhatsApp />
 
 	<div class="page-shell section">
 		<Intro />

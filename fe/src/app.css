@@ -191,6 +191,7 @@
 	--floating-cta-right-padding: 1.5rem;
 	--floating-cta-top-padding: 1rem;
 	--floating-cta-fade-duration: 300ms;
+	--floating-whatsapp-bottom: 1.5rem;
 }
 
 :root[data-theme='dark'] {
@@ -355,10 +356,11 @@
 	}
 }
 
-/* Mobile overrides for Floating CTA */
+/* Mobile overrides for Floating CTA and WhatsApp */
 @media (max-width: 850px) {
 	:root {
 		--floating-cta-right-padding: 1rem;
+		--floating-whatsapp-bottom: 1rem;
 	}
 }
 
