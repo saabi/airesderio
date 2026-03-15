@@ -81,7 +81,7 @@
 		display: grid;
 		grid-template-columns: 1fr min-content;
 		gap: 4rem;
-		align-items: center;
+		align-items: start;
 		width: 100%;
 		max-width: 80rem;
 		padding: 0;
@@ -120,7 +120,8 @@
 		/* Layout */
 		display: grid;
 		gap: 0.625rem;
-		padding-left: 0;
+		padding-left: 1rem;
+		border-left: 7px solid var(--ref-brand-primary);
 
 		/* Typography */
 		color: var(--color-ink);
@@ -145,7 +146,7 @@
 		font-weight: 700;
 		line-height: 1;
 		letter-spacing: 0.02em;
-		color: #8B5431;
+		color: var(--ref-brand-primary);
 	}
 
 	.kpi--grey strong {
