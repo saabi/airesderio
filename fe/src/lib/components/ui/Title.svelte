@@ -6,6 +6,8 @@
 	interface Props {
 		eyebrow: string;
 		big: string;
+		/** Optional third line below the main title, rendered as small text. */
+		below?: string;
 		/** When true, renders with reduced visual importance (smaller, less bold). */
 		isSubtitle?: boolean;
 	}
@@ -13,12 +15,15 @@
 
 <script lang='ts'>
 	// ===== PROPS =====
-	let { eyebrow, big, isSubtitle = false }: Props = $props();
+	let { eyebrow, big, below, isSubtitle = false }: Props = $props();
 </script>
 
 <div class='title' class:subtitle={isSubtitle}>
 	<span class='eyebrow'>{eyebrow}</span>
 	<span class='big'>{big}</span>
+	{#if below}
+		<span class='below'>{below}</span>
+	{/if}
 </div>
 
 <style>
@@ -48,7 +53,7 @@
 	.title .big {
 		/* Layout */
 		display: block;
-		padding-bottom: 0.5rem;
+		
 
 		/* Typography */
 		font-family: var(--font-heading);
@@ -57,6 +62,19 @@
 		letter-spacing: var(--letter-spacing-wide);
 		color: var(--color-accent-primary);
 		text-transform: uppercase;
+	}
+
+	.title .below {
+		/* Layout */
+		display: block;
+
+		/* Typography */
+		font-family: var(--font-body);
+		font-size: 1em;
+		font-weight: var(--font-weight-medium);
+		color: var(--color-text-primary);
+		line-height: 1.35;
+		letter-spacing: 0.2em;
 	}
 
 	/* Responsive typography */
@@ -84,6 +102,11 @@
 		font-size: 1.25em;
 		font-weight: var(--font-weight-semibold);
 		color: var(--color-text-primary);
+	}
+
+	.title.subtitle .below {
+		font-size: 0.85em;
+		color: var(--svg-fill-primary);
 	}
 
 	@media (max-width: 640px) {

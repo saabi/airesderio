@@ -14,6 +14,12 @@
 		showDepartamentos?: boolean;
 		/** Vertical alignment when used inline. Default "baseline". */
 		verticalAlign?: 'baseline' | 'middle' | 'top' | 'bottom' | 'sub' | 'super' | 'text-top' | 'text-bottom';
+		/** Override isotype (bar icon) color. Default: theme-based (#999 light, #666 dark). */
+		isotypeColor?: string;
+		/** Override base logo ("Aires de Río" wordmark) color. Default: theme-based (black light, white dark). */
+		baseLogoColor?: string;
+		/** Override "DEPARTAMENTOS" subline color. Default: same as base logo. */
+		departamentosColor?: string;
 	}
 </script>
 
@@ -21,7 +27,31 @@
 	import { browser } from '$app/environment';
 
 	// ===== PROPS =====
-	let { class: className = '', loading = 'lazy', width, height, theme = 'light', showIsotype = true, fitViewBox = false, showDepartamentos = true, verticalAlign = 'baseline' }: Props = $props();
+	let {
+		class: className = '',
+		loading = 'lazy',
+		width,
+		height,
+		theme = 'light',
+		showIsotype = true,
+		fitViewBox = false,
+		showDepartamentos = true,
+		verticalAlign = 'baseline',
+		isotypeColor,
+		baseLogoColor,
+		departamentosColor
+	}: Props = $props();
+
+	// CSS custom properties for color overrides (only set when prop provided)
+	const logoStyle = $derived(
+		[
+			baseLogoColor != null && `--logo-base-fill: ${baseLogoColor}`,
+			departamentosColor != null && `--logo-departamentos-fill: ${departamentosColor}`,
+			isotypeColor != null && `--logo-isotype-fill: ${isotypeColor}`
+		]
+			.filter(Boolean)
+			.join('; ') || undefined
+	);
 
 	// ===== VIEWBOX =====
 	const DEFAULT_VIEW_BOX = '0 0 67.733332 17.4625';
@@ -50,7 +80,7 @@
 	viewBox={viewBox}
 	xmlns='http://www.w3.org/2000/svg'
 	aria-label='Aires de Río'
-	style='vertical-align: {verticalAlign};'
+	style='vertical-align: {verticalAlign};{logoStyle ? ` ${logoStyle}` : ''}'
 >
 	<g bind:this={contentEl} {...(fitViewBox ? {} : { transform: 'translate(-20.155689,-26.676647)' })}>
 		<g transform='matrix(0.50701009,0,0,0.50701009,-16.667242,-10.821569)'>
@@ -69,6 +99,7 @@
 				/>
 				{#if showDepartamentos}
 				<path
+					class='departamentos'
 					d='m 98.005017,104.24956 h 0.944611 q 1.121912,0 1.669122,0.59306 0.5472,0.59306 0.5472,1.35425 0,0.7673 -0.56555,1.3573 -0.56554,0.59 -1.644658,0.59 h -0.950725 z m 0.531917,0.51969 v 2.84912 h 0.03057 q 0.593056,0 0.892641,-0.052 0.299586,-0.055 0.568605,-0.23539 0.26901,-0.18036 0.42797,-0.47689 0.15897,-0.29958 0.15897,-0.65725 0,-0.44938 -0.25373,-0.81316 -0.25373,-0.36378 -0.608343,-0.48912 -0.351554,-0.12534 -0.947668,-0.12534 z m 8.382276,-0.51969 h 2.15823 v 0.53192 h -1.63243 v 0.97212 h 1.63243 v 0.52581 h -1.63243 v 1.33896 h 1.63243 v 0.5258 h -2.15823 z m 8.09185,0 h 0.78259 q 0.66337,0 1.06995,0.31182 0.40658,0.31181 0.40658,0.8101 0,0.50135 -0.43104,0.84067 -0.42797,0.33933 -1.30227,0.33016 v 1.60186 h -0.52581 z m 0.52581,0.46467 v 1.36342 q 0.59917,-0.006 0.88652,-0.16814 0.29042,-0.16508 0.29042,-0.5258 0,-0.27207 -0.22011,-0.47078 -0.21704,-0.1987 -0.95683,-0.1987 z m 9.11289,-0.61446 1.84031,4.0444 h -0.55637 l -0.45549,-0.99658 h -1.65384 l -0.44326,0.99658 h -0.55332 z m 0,1.21974 -0.62668,1.38482 h 1.25336 z m 7.59357,-1.06995 h 0.84373 q 0.62974,0 1.02409,0.31487 0.39741,0.31182 0.39741,0.80094 0,0.39129 -0.25679,0.69088 -0.25678,0.29958 -0.80093,0.42186 l 1.13415,1.66606 h -0.60835 l -1.08217,-1.60186 h -0.11922 v 1.60186 h -0.53192 z m 0.53192,0.47078 v 1.35731 q 1.17694,0.0244 1.17694,-0.68171 0,-0.24762 -0.13757,-0.40353 -0.13756,-0.15896 -0.36683,-0.21399 -0.22928,-0.0581 -0.67254,-0.0581 z m 7.45905,-0.47078 h 2.3814 v 0.53192 h -0.92932 v 3.36269 h -0.52581 v -3.36269 h -0.92627 z m 9.61425,-0.14979 1.84031,4.0444 h -0.55638 l -0.45549,-0.99658 h -1.65383 l -0.44327,0.99658 h -0.55331 z m 0,1.21974 -0.62669,1.38482 h 1.25337 z m 10.72392,-1.23197 1.06384,4.05663 h -0.51969 l -0.64503,-2.47922 -1.10968,2.62902 -1.11275,-2.64736 -0.65114,2.49756 h -0.51969 l 1.06384,-4.05663 1.21974,2.90415 z m 6.7529,0.16202 h 2.15823 v 0.53192 h -1.63243 v 0.97212 h 1.63243 v 0.52581 h -1.63243 v 1.33896 h 1.63243 v 0.5258 h -2.15823 z m 7.93595,-0.1559 2.87968,2.96222 v -2.80632 h 0.53192 v 4.07498 l -2.87969,-2.94695 v 2.76658 h -0.53191 z m 9.14957,0.1559 h 2.3814 v 0.53192 h -0.92932 v 3.36269 h -0.52581 v -3.36269 h -0.92627 z m 8.00016,1.92285 q 0,-0.84373 0.63585,-1.44595 0.63586,-0.60223 1.5285,-0.60223 0.87124,0 1.50098,0.60834 0.62974,0.60528 0.62974,1.43984 0,0.88347 -0.62362,1.49487 -0.62057,0.60834 -1.52544,0.60834 -0.89265,0 -1.51933,-0.61445 -0.62668,-0.61446 -0.62668,-1.48876 z m 3.72953,0.0245 q 0,-0.64503 -0.46466,-1.08523 -0.46467,-0.44327 -1.14332,-0.44327 -0.64502,0 -1.10663,0.44938 -0.45855,0.44938 -0.45855,1.07912 0,0.63891 0.47078,1.08217 0.47383,0.44021 1.1586,0.44021 0.62974,0 1.08523,-0.44938 0.45855,-0.45243 0.45855,-1.073 z m 8.81942,-1.51627 -0.43104,0.34544 q -0.17119,-0.1773 -0.31181,-0.2629 -0.13756,-0.0887 -0.40047,-0.0887 -0.28735,0 -0.46772,0.13145 -0.1773,0.12839 -0.1773,0.33321 0,0.1773 0.15591,0.31487 0.1559,0.13451 0.53191,0.29653 0.37601,0.15896 0.58389,0.29958 0.21093,0.13757 0.34544,0.3057 0.13451,0.16814 0.1987,0.35461 0.0673,0.18648 0.0673,0.39436 0,0.48606 -0.35462,0.82844 -0.35155,0.34238 -0.8529,0.34238 -0.48911,0 -0.86512,-0.26595 -0.37296,-0.26902 -0.57472,-0.80399 l 0.53192,-0.1498 q 0.29041,0.65726 0.88958,0.65726 0.29042,0 0.48301,-0.17425 0.19259,-0.17425 0.19259,-0.44021 0,-0.15896 -0.10088,-0.31793 -0.10088,-0.16202 -0.25068,-0.26595 -0.14979,-0.10394 -0.47994,-0.23539 -0.3271,-0.13451 -0.50441,-0.24456 -0.17425,-0.11311 -0.30264,-0.26596 -0.12839,-0.15591 -0.18953,-0.30876 -0.0581,-0.15285 -0.0581,-0.32709 0,-0.41881 0.33627,-0.71228 0.33627,-0.29653 0.81622,-0.29653 0.31793,0 0.64502,0.13756 0.3271,0.13757 0.54415,0.41881 z'
 					aria-label='DEPARTAMENTOS'
 				/>
@@ -94,19 +125,25 @@
 <style type='text/css'>
 	.text {
 		stroke: none;
-		fill: black;
+		fill: var(--logo-base-fill, black);
+	}
+	.departamentos {
+		fill: var(--logo-departamentos-fill, var(--logo-base-fill, inherit));
 	}
 	.isotype {
-		fill: #999999;
+		fill: var(--logo-isotype-fill, #BBBBBB);
 		stroke: none;
 	}
 
 	/* Dark theme */
 	svg[data-theme='dark'] .text {
-		fill: white;
+		fill: var(--logo-base-fill, white);
+	}
+	svg[data-theme='dark'] .departamentos {
+		fill: var(--logo-departamentos-fill, var(--logo-base-fill, inherit));
 	}
 	svg[data-theme='dark'] .isotype {
-		fill: #666666;
+		fill: var(--logo-isotype-fill, #bbb);
 	}
 
 	/* Inline variant — keeps normal text line height when used in paragraphs */
