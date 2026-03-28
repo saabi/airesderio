@@ -112,12 +112,6 @@
 
 				<div class='photo-info'>
 					<p>{currentIndex + 1} de {activePhotos.length} fotos</p>
-					{#if place.descripcion}
-						<p class='photo-description'>{place.descripcion}</p>
-					{/if}
-					{#if place.thingstodo}
-						<p class='photo-thingstodo'>{place.thingstodo}</p>
-					{/if}
 				</div>
 			</div>
 		</div>
@@ -266,22 +260,6 @@
 		/* Typography */
 		font-size: 0.875rem;
 		color: var(--color-muted);
-	}
-
-	.photo-description {
-		/* Typography */
-		font-style: italic;
-		color: var(--color-neutral-500) !important;
-	}
-
-	.photo-thingstodo {
-		/* Layout */
-		margin-top: 1rem;
-
-		/* Typography */
-		font-size: 0.875rem;
-		line-height: 1.5;
-		color: var(--color-text-on-light);
 	}
 
 	/* Mobile responsiveness */

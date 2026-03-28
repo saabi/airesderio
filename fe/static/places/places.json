@@ -273,44 +273,6 @@
 				]
 			}
 		},
-		"avenida-rivadavia": {
-			"nombre": "Avenida Rivadavia",
-			"descripcion": "Avenida principal donde se encuentra Aires de Río",
-			"thingstodo": "La Avenida Rivadavia es la arteria principal donde se encuentra Aires de Río, conectando el edificio con el centro de la ciudad y todos sus servicios.",
-			"photos": [],
-			"svg": {
-				"pin": {
-					"cx": 127.81216,
-					"cy": 409.99713,
-					"r": 2.1235924
-				},
-				"elements": [
-					{
-						"type": "path",
-						"d": "m 24.897591,411.24854 255.074059,0.15718 -0.0162,-3.42918 -254.964559,0.5098 z"
-					}
-				]
-			}
-		},
-		"avenida-alvear": {
-			"nombre": "Avenida Alvear",
-			"descripcion": "Avenida importante de la ciudad",
-			"thingstodo": "La Avenida Alvear es una vía importante que facilita el acceso a diferentes zonas de la ciudad y sus servicios.",
-			"photos": [],
-			"svg": {
-				"pin": {
-					"cx": 550.01088,
-					"cy": 376.09967,
-					"r": 2.1235924
-				},
-				"elements": [
-					{
-						"type": "path",
-						"d": "m 22.425831,379.89559 115.009979,-0.25748 0.33773,-6.9685 -116.316209,-0.49127 z"
-					}
-				]
-			}
-		},
 		"tribunales": {
 			"nombre": "Tribunales",
 			"descripcion": "Palacio de Justicia",
@@ -329,46 +291,6 @@
 						"y": 352.06348,
 						"width": 13.820243,
 						"height": 19.05287
-					}
-				]
-			}
-		},
-		"estadio-unico": {
-			"nombre": "Estadio Único",
-			"descripcion": "Estadio principal de la ciudad",
-			"thingstodo": "El Estadio Único es el principal recinto deportivo de Santiago del Estero, donde se realizan eventos deportivos, conciertos y grandes espectáculos.",
-			"photos": [],
-			"svg": {
-				"pin": {
-					"cx": 231.18658,
-					"cy": 32.347748,
-					"r": 2.1235924
-				},
-				"elements": [
-					{
-						"type": "circle",
-						"cx": 229.02405,
-						"cy": 33.241516,
-						"r": 22.39249
-					}
-				]
-			}
-		},
-		"registro-civil": {
-			"nombre": "Registro Civil",
-			"descripcion": "Oficina del Registro Civil",
-			"thingstodo": "El Registro Civil es donde los residentes pueden realizar trámites relacionados con documentos de identidad, nacimientos, matrimonios y otros actos civiles.",
-			"photos": [],
-			"svg": {
-				"pin": {
-					"cx": 16.490738,
-					"cy": 390.43738,
-					"r": 2.1235924
-				},
-				"elements": [
-					{
-						"type": "path",
-						"d": "m 10.587451,381.52695 h 9.3792 l 2.65449,19.11233 h -9.20223 z"
 					}
 				]
 			}

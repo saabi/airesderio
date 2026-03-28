@@ -25,24 +25,36 @@
 
 	// ===== STATIC CONSTANTS =====
 	const lineaLuxury: EquipmentItem[] = [
-		{ icon: '∼', component: Tilde, text: 'Puerta de ingreso con cerradura inteligente digital biométrica con wifi.' },
-		{ icon: '∼', component: Tilde, text: 'Cocina integrada con bajo mesada y alacena de Melamina base MDF en gris grafito o madera. Opción de incluir dos puertas de vidrio con marco de aluminio e iluminación interna en alacena.' },
-		{ icon: '∼', component: Tilde, text: 'Encimera de cocina con zócalo y desayunador de Pure Stone blanco (cuarzo natural color uniforme) más duradero que el granito natural.' },
-		{ icon: '∼', component: Tilde, text: 'Anafe y horno a gas independientes empotrables.' },
-		{ icon: '∼', component: Tilde, text: 'Iluminación led en zona de trabajo sobre mesada de la cocina.' },
-		{ icon: '∼', component: Tilde, text: 'Revestimiento cerámico blanco en paredes de mesada.' },
-		{ icon: '∼', component: Tilde, text: 'Gargantas y cenefas de los cielorrasos provistas con instalación de luces leds en living comedor, cocina y dormitorios.' },
-		{ icon: '∼', component: Tilde, text: 'Revestimiento con panel de WPC en color madera en pared curvada del living.' },
-		{ icon: '∼', component: Tilde, text: 'Vestidor con puertas de vidrio ahumado de dos paños fijos y uno corredizo con marco de aluminio.' },
-		{ icon: '∼', component: Tilde, text: 'Dormitorios amplios con vestidor con doble placard, con cuatro cajones y pantalonera con rieles, correderas metálicas y estantes.' },
-		{ icon: '∼', component: Tilde, text: 'Iluminación led en el interior de los placares con encendido/apagado táctil.' },
-		{ icon: '∼', component: Tilde, text: 'Antebaño con mueble vanitory con un cajón en melamina base MDF color nogal, y cajón interno para maquillaje.' },
-		{ icon: '∼', component: Tilde, text: 'Encimera de vanitory en silestone tabaco, nébula o marmol a elección.' },
-		{ icon: '∼', component: Tilde, text: 'Espejo de vanitory en antebaño con luces led encendido/apagado táctil.' },
-		{ icon: '∼', component: Tilde, text: 'Artefacto lumínico suspendido sobre vanitory con bulbo led.' },
-		{ icon: '∼', component: Tilde, text: 'Bacha Ferrum modelo Tori Cilíndrica en sobremesada de vanitory.' },
-		{ icon: '∼', component: Tilde, text: 'Cabina de ducha con mampara de vidrio de un paño fijo y otro corredizo en cristal color ámbar 5+5 laminado.' },
-		{ icon: '∼', component: Tilde, text: 'Aplique led bidireccional en balcón con bulbo led.' }
+		{
+			icon: '∼',
+			component: Tilde,
+			text: 'Preinstalación para lavarropas y secarropas en espacio dedicado.'
+		},
+		{
+			icon: '∼',
+			component: Tilde,
+			text: 'Diseño lumínico led integral que brinda una experiencia envolvente en la cocina, comedor, living, dormitorios y prebaño. Provisión de iluminación dentro de los placares, en la zona de trabajo de la mesada de cocina y en vanitory con encendido táctil.'
+		},
+		{
+			icon: '∼',
+			component: Tilde,
+			text: 'Puerta de ingreso con cerradura digital biométrica inteligente, que permite acceso remoto desde tu celular mediante conexión WiFi.'
+		},
+		{
+			icon: '∼',
+			component: Tilde,
+			text: 'Encimera de cocina, zócalo y desayunador en Pure Stone blanco (cuarzo natural de color uniforme), más resistente y duradero que el granito natural.'
+		},
+		{
+			icon: '∼',
+			component: Tilde,
+			text: 'Horno y anafe a gas empotrados de manera independiente.'
+		},
+		{
+			icon: '∼',
+			component: Tilde,
+			text: 'Revestimiento en tecnología símil madera que aporta calidez y un toque exclusivo a las terminaciones del ambiente.'
+		}
 	];
 </script>
 
@@ -113,13 +125,6 @@
 	use:sectionObserver
 	data-section-active={$sectionVisible}
 >
-	<p class="equip-intro" style="margin-bottom: 0; padding-bottom: 0;">
-		<strong>
-			Ofrecemos además otras terminaciones y equipamientos para
-			que tu departamento se adapte por completo a tu estilo de vida y necesidades.
-		</strong>
-	</p>
-
 	<div
 		id="equipados-luxury-heading"
 		use:createTitleObserver
@@ -129,6 +134,12 @@
 	>
 		<Title eyebrow="" big="Equipamiento opcional" below="Luxury Style" />
 	</div>
+
+	<p class="equip-intro">
+		<strong>
+			Adicionalmente, ofrecemos terminaciones y equipamientos que permiten adaptar tu departamento completamente a tu estilo de vida y necesidades. Descubrí un espacio pensado para evolucionar con vos, donde podés personalizar tus ambientes con tecnología de vanguardia y un diseño interior sofisticado. Departamentos completamente equipados, listos para habitar y disfrutar.
+		</strong>
+	</p>
 
 	<div class="equip-column">
 		<div class="equip-outline">

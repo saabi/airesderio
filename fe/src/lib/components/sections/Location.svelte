@@ -211,16 +211,13 @@
 				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				<p>
-					<AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> ofrece una ubicación de privilegio. Se emplaza en Avenida Rivadavia (E) 25, a un
-					paso de todo lo que esta ciudad ofrece para brindarte una vida placentera y cómoda.
+					<AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> se encuentra en Avenida Rivadavia 25 Este, con fácil acceso tanto al centro de Santiago del
+					Estero como a la Ciudad de la Banda a través del Puente Nuevo. Rodeado de modernos desarrollos como la nueva terminal de ómnibus y el fórum, está también a pasos de la Avenida Roca, eje gastronómico y de bares, y del Parque
+					Aguirre, el principal pulmón verde de la ciudad. Además, Plaza Vea, con supermercado y shopping a sólo una cuadra, suma practicidad a tu día a día.
 				</p>
 				<p>
-					Ubicado en un área de modernos y elegantes desarrollos edilicios, centro de convenciones, de
-					parques y hermosas zonas verdes.
-				</p>
-				<p>
-					Plaza Vea, único centro de compras dentro del área urbana, te ofrece supermercado y shopping
-					de cercanía a sólo una cuadra.
+					Vivir en <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> significa disfrutar de un punto estratégico pensado para combinar vida social,
+					profesional, ocio y comodidad.
 				</p>
 			</div>
 			<div class='map-navigation'>

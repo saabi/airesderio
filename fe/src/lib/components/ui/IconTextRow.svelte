@@ -29,13 +29,13 @@
 		display: grid;
 		grid-template-columns: 3rem 1fr;
 		gap: 1.25rem;
-		align-items: center;
+		align-items: start;
 		padding: 0.85rem 0;
 	}
 
 	.icon-text-row__icon {
 		display: flex;
-		align-items: center;
+		align-items: start;
 		justify-content: center;
 		min-width: 0;
 		color: var(--color-contrast-low);

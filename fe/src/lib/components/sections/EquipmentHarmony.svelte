@@ -8,12 +8,10 @@
 	import Banos from '$lib/components/icons/Banos.svelte';
 	import Carpinteria from '$lib/components/icons/Carpinteria.svelte';
 	import Cocina from '$lib/components/icons/Cocina.svelte';
-	import MesadaGranito from '$lib/components/icons/MesadaGranito.svelte';
+	import Lavasecarropas from '$lib/components/icons/Lavasecarropas.svelte';
 	import Piso from '$lib/components/icons/Piso.svelte';
-	import Puerta from '$lib/components/icons/Puerta.svelte';
 	import Vestidor from '$lib/components/icons/Vestidor.svelte';
 	import TechosAltos from '$lib/components/icons/TechosAltos.svelte';
-	import HornoCampana from '$lib/components/icons/HornoCampana.svelte';
 	import TomasCorriente from '$lib/components/icons/TomasCorriente.svelte';
 	import UnidadesAire from '$lib/components/icons/UnidadesAire.svelte';
 
@@ -35,59 +33,49 @@
 	// ===== STATIC CONSTANTS =====
 	const lineaHarmony: EquipmentItem[] = [
 		{
-			icon: '🚪',
-			component: Puerta,
-			text: 'Puertas de madera con diseño exclusivo que aportan calidez y moderna elegancia, con cerradura de seguridad doble perno Prive o similar calidad.'
-		},
-		{
 			icon: '⬆️',
 			component: TechosAltos,
-			text: 'Techos altos, con luz entre losas de 275 cm. Cielorrasos con gargantas y cenefas para instalaciones de luces ambientales, alojar servicios, ocultar los barrales de cortinas y para mayor comodidad térmica y acústica.'
+			text: 'Ambientes con techos altos y cielorrasos diseñados con espacios integrados para iluminación, instalaciones y cortinas, que además contribuyen al confort térmico y acústico.'
 		},
 		{
 			icon: '🖼️',
 			component: Carpinteria,
-			text: 'Carpintería de aluminio Aluar Línea A30 NEW de alta prestación. Grandes puertas corredizas de doble panel de dormitorio y living a balcón.'
+			text: 'Carpintería de aluminio Aluar Línea A30 NEW de alta prestación. Grandes puertas corredizas de doble hoja que conectan el dormitorio y el living con el balcón.'
 		},
 		{
 			icon: '🍽️',
 			component: Cocina,
-			text: 'Cocinas completamente equipadas con modernos muebles bajo y sobre mesada de granito natural.'
-		},
-		{
-			icon: '🍽️',
-			component: HornoCampana,
-			text: 'Cocina con horno de primera marca y campana purificadora sobre las hornallas.'
-		},
-		{
-			icon: '🪵',
-			component: MesadaGranito,
-			text: 'Mesada y desayunador de granito natural con pileta de acero inoxidable marca Johnson con grifería monocomando FV.'
+			text: 'Cocinas totalmente equipadas, con mobiliario moderno bajo y sobre mesada. Incluyen horno con hornallas integradas y campana purificadora. Mesadas y desayunador en granito natural, pileta de acero inoxidable marca Johnson y grifería monocomando FV.'
 		},
 		{
 			icon: '👔',
 			component: Vestidor,
-			text: 'Dormitorios con vestidor con tres metros lineales de placares equipados con cajones, estantes, espacio para perchas y pantalonera.'
+			text: 'Dormitorios con vestidor con tres metros lineales de placares, equipados con cajones, estantes, espacio para perchas y pantalonera.'
 		},
 		{
 			icon: '🛁',
 			component: Banos,
-			text: 'Baños de diseño con grifería de primera calidad, vanitory, espejo, mampara de vidrio y extractor.'
+			text: 'Baños de diseño contemporáneo, equipados con grifería de primera calidad, vanitory, espejo, mampara de vidrio y sistema de extracción.'
 		},
 		{
 			icon: '🌀',
 			component: UnidadesAire,
-			text: 'Dos unidades de preinstalación de A. Acondicionados en living y dormitorios con placa de sostén, drenajes, caños y enchufe. Bandeja de hierro para las unidades externas de A. Acondicionados en los patios internos. Equipos no incluidos.'
+			text: 'Preinstalación de aire acondicionado en living y dormitorios, con soporte, desagües, cañerías y toma eléctrica. Incluye bandejas de hierro para las unidades exteriores en patios internos. Equipos no incluidos.'
+		},
+		{
+			icon: '🧺',
+			component: Lavasecarropas,
+			text: 'Preinstalación para lavarropas y secarropas en espacio dedicado.'
 		},
 		{
 			icon: '🔌',
 			component: TomasCorriente,
-			text: 'Gran cantidad de módulos tomacorriente y bocas en todos los ambientes. Caja octogonal en cielorraso para ventilador de techo en dormitorio y living.'
+			text: 'Amplia cantidad de tomacorrientes y bocas de conexión en todos los ambientes. Incluye caja octogonal en cielorraso para la instalación de ventilador de techo en dormitorios y living.'
 		},
 		{
 			icon: '⬜',
 			component: Piso,
-			text: 'Pisos de porcelanato de gran formato en los ambientes principales con zócalos de EPS antihumedad.'
+			text: 'Pisos de porcelanato de gran formato en los ambientes principales, con zócalos de EPS resistentes a la humedad.'
 		}
 	];
 </script>
@@ -165,7 +153,7 @@
 		data-item-active={titleVisible || undefined}
 		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="" big="EQUIPAMIENTO" below="Harmony Style" />
+		<Title eyebrow="" big="EQUIPAMIENTO" below="e interiores" />
 	</div>
 
 	<div class="equip-column">

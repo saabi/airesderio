@@ -301,47 +301,6 @@
       }
     },
     {
-      "id": "avenida-rivadavia",
-      "name": "Avenida Rivadavia",
-      "description": "Avenida principal donde se encuentra Aires de Río",
-      "details": "La Avenida Rivadavia es la arteria principal donde se encuentra Aires de Río, conectando el edificio con el centro de la ciudad y todos sus servicios.",
-      "photos": [
-        "5-mvimg-20251015-124749.jpg",
-        "avenida-rivadavia-0-img-20240820-wa0016.jpg",
-        "avenida-rivadavia-1-mvimg-20251015-124721.jpg",
-        "avenida-rivadavia-2-con-perimetro-04.jpg",
-        "avenida-rivadavia-3-con-perimetro-03.jpg",
-        "avenida-rivadavia-4-mvimg-20251015-122805.jpg",
-        "avenida-rivadavia-5-mvimg-20251015-124455.jpg",
-        "avenida-rivadavia-6-con-perimetro-01.jpg"
-      ],
-      "shape": {
-        "type": "path",
-        "d": "m 0.053711,0.887172 0.550262,0.000339 -0.000035,-0.007398 -0.550026,0.0011 z"
-      },
-      "pin": {
-        "cx": 0.27572465864414447,
-        "cy": 0.8844723280971774,
-        "r": 0.004581150882586598
-      }
-    },
-    {
-      "id": "avenida-alvear",
-      "name": "Avenida Alvear",
-      "description": "Avenida importante de la ciudad",
-      "details": "La Avenida Alvear es una vía importante que facilita el acceso a diferentes zonas de la ciudad y sus servicios.",
-      "photos": [],
-      "shape": {
-        "type": "path",
-        "d": "m 0.048378,0.819535 0.248107,-0.000555 0.000729,-0.015033 -0.250925,-0.00106 z"
-      },
-      "pin": {
-        "cx": 0.2339096897383103,
-        "cy": 0.8113465348439881,
-        "r": 0.004581150882586598
-      }
-    },
-    {
       "id": "tribunales",
       "name": "Tribunales",
       "description": "Palacio de Justicia",
@@ -361,43 +320,6 @@
       "pin": {
         "cx": 0.18020102384644693,
         "cy": 0.7808995267349595,
-        "r": 0.004581150882586598
-      }
-    },
-    {
-      "id": "estadio-unico",
-      "name": "Estadio Único",
-      "description": "Estadio principal de la ciudad",
-      "details": "El Estadio Único es el principal recinto deportivo de Santiago del Estero, donde se realizan eventos deportivos, conciertos y grandes espectáculos.",
-      "photos": [
-        "1-estadio-tren-desarrollo-01-de-turismo.jpg",
-        "estadio-01-de-wikipedia.jpeg"
-      ],
-      "shape": {
-        "type": "circle",
-        "cx": 0.4940654942968609,
-        "cy": 0.07171074842889648,
-        "r": 0.048306527809579454
-      },
-      "pin": {
-        "cx": 0.4987306438887129,
-        "cy": 0.06978265428897225,
-        "r": 0.004581150882586598
-      }
-    },
-    {
-      "id": "registro-civil",
-      "name": "Registro Civil",
-      "description": "Oficina del Registro Civil",
-      "details": "El Registro Civil es donde los residentes pueden realizar trámites relacionados con documentos de identidad, nacimientos, matrimonios y otros actos civiles.",
-      "photos": [],
-      "shape": {
-        "type": "path",
-        "d": "m 0.02284,0.823055 h 0.020233 l 0.005726,0.04123 h -0.019852 z"
-      },
-      "pin": {
-        "cx": 0.035574886660549525,
-        "cy": 0.84227677024169,
         "r": 0.004581150882586598
       }
     },

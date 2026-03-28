@@ -37,7 +37,7 @@
 		url: siteUrl,
 		address: {
 			'@type': 'PostalAddress',
-			streetAddress: 'Avenida Rivadavia',
+			streetAddress: 'Avenida Rivadavia 25 Este',
 			addressLocality: 'Santiago del Estero',
 			addressRegion: 'Santiago del Estero',
 			addressCountry: 'AR'
