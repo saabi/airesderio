@@ -274,6 +274,7 @@
 				{mapData}
 				showDetailImage={false}
 				pinRadius={70}
+				zoomMargin={0.11}
 				onOpenGallery={openGalleryForCurrentPlace}
 				onSelectionChange={(id) => (currentPlaceId = id)}
 			/>

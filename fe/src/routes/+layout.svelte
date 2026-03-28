@@ -6,6 +6,7 @@
 	import Header from '$lib/components/layout/Header.svelte';
 	import SkipLink from '$lib/components/ui/SkipLink.svelte';
 	import PdfRequestModal from '$lib/components/forms/PdfRequestModal.svelte';
+	import FormToast from '$lib/components/ui/FormToast.svelte';
 </script>
 
 <script lang='ts'>
@@ -49,3 +50,5 @@
 {#if $pdfRequestModalStore}
 	<PdfRequestModal intent={$pdfRequestModalStore.intent} />
 {/if}
+
+<FormToast />

@@ -39,6 +39,9 @@ const PDF_LABELS: Record<string, string> = {
 	planos: 'Planos'
 };
 
+const EMAIL_SIGNATURE_LINE =
+	'Aires de Río - Departamentos de uno y dos habitaciones en Santiago del Estero';
+
 function emailWrapper(body: string): string {
 	return `
 <!DOCTYPE html>
@@ -60,7 +63,7 @@ function emailWrapper(body: string): string {
 	</tr>
 	<tr>
 		<td style="background:#f9f9f9; padding:20px 32px; text-align:center; border-top:1px solid #eee;">
-			<p style="margin:0; font-size:13px; color:#888;">Aires de Río · Departamentos en Santiago del Estero</p>
+			<p style="margin:0; font-size:13px; color:#888;">${EMAIL_SIGNATURE_LINE}</p>
 			<p style="margin:4px 0 0; font-size:12px; color:#aaa;"><a href="${getSiteUrl()}" style="color:#888; text-decoration:none;">${getSiteUrl()}</a></p>
 		</td>
 	</tr>
@@ -133,15 +136,12 @@ export async function sendPdfDownloadLink(params: SendPdfLinkParams): Promise<vo
 				</a>
 			</td></tr>
 		</table>
-		<p style="margin:0 0 8px; font-size:14px; color:#666; line-height:1.5;">
-			Este enlace es válido por 24 horas y puede usarse una sola vez.
-		</p>
 		<p style="margin:16px 0 0; font-size:14px; color:#666; line-height:1.5;">
 			Si tenés alguna consulta, no dudes en responder este correo o contactarnos a través de nuestro sitio web.
 		</p>
 		<p style="margin:24px 0 0; font-size:15px; color:#333;">
 			¡Saludos!<br>
-			<strong>Equipo Aires de Río</strong>
+			<strong>${EMAIL_SIGNATURE_LINE}</strong>
 		</p>
 	`;
 
@@ -182,7 +182,7 @@ export async function sendDirectContactThankYou(params: SendDirectContactThankYo
 		</table>
 		<p style="margin:24px 0 0; font-size:15px; color:#333;">
 			¡Saludos!<br>
-			<strong>Equipo Aires de Río</strong>
+			<strong>${EMAIL_SIGNATURE_LINE}</strong>
 		</p>
 	`;
 

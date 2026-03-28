@@ -20,7 +20,7 @@
       "cy": 0.8927197451286698
     }
   },
-  "defaultRadius": 0.3,
+  "defaultRadius": 0.33,
   "places": [
     {
       "id": "terminal",
@@ -30,9 +30,7 @@
       "photos": [
         "exterior.png",
         "interior.png",
-        "frente-00.jpg",
-        "interior-00.jpg",
-        "interior-01.jpg"
+        "frente-00.jpg"
       ],
       "shape": {
         "type": "path",
@@ -82,11 +80,9 @@
       "description": "Sede del gobierno provincial, edificio histórico",
       "details": "La Casa de Gobierno es un símbolo histórico y arquitectónico de Santiago del Estero. Además de ser la sede del poder ejecutivo provincial, es un punto de interés turístico y cultural. Los residentes pueden realizar trámites gubernamentales, participar en eventos oficiales, y disfrutar de la arquitectura histórica del edificio. Su proximidad a Aires de Río facilita el acceso a servicios públicos y trámites administrativos.",
       "photos": [
-        "aerea.JPG",
-        "casayparque3.JPG",
+        "casa-de-gobierno-03-de-tripadvisor.jpg",
         "casayplaza.png",
-        "nocturna.jpg",
-        "casa-de-gobierno-03-de-tripadvisor.jpg"
+        "aerea.JPG"
       ],
       "shape": {
         "type": "rect",
@@ -134,13 +130,7 @@
         "guardavidas.png",
         "juegos.png",
         "recital.png",
-        "recital1.png",
-        "1-esta-va-parque-juegos-cpn-chicos-03.jpg",
-        "268685947285205858548696.jpg",
-        "2-esta-va-parque-de-noche-con-gente-01.jpg",
-        "4-parque-de-noche-con-gente-02.jpg",
-        "parqueaguirre02.jpg",
-        "3-parque-deporte-con-gente-01.jpg"
+        "268685947285205858548696.jpg"
       ],
       "shape": {
         "type": "path",
@@ -208,9 +198,7 @@
       "photos": [
         "1-img-20260102-203947.jpg",
         "2-img-20260102-200139.jpg",
-        "3-img-20260102-202801.jpg",
-        "4-img-20260102-201308.jpg",
-        "5-img-20260102-202539-1.jpg"
+        "3-img-20260102-202801.jpg"
       ],
       "shape": [
         {
@@ -234,11 +222,8 @@
       "description": "Mercado local",
       "details": "El mercado local ofrece productos frescos y artesanales, siendo un punto de encuentro para la comunidad y un lugar ideal para hacer compras diarias.",
       "photos": [
-        "img-20260102-200257.jpg",
         "img-20260102-202204.jpg",
         "interior-00.jpg",
-        "interior-01.jpg",
-        "interior-02.jpg",
         "interior-03.jpg",
         "interior-04.jpg"
       ],
@@ -278,8 +263,8 @@
     {
       "id": "plaza-libertad",
       "name": "Plaza Libertad",
-      "description": "Plaza pública en el centro de la ciudad",
-      "details": "La Plaza Libertad es un espacio público central donde los residentes pueden disfrutar de actividades al aire libre, eventos comunitarios y momentos de esparcimiento.",
+      "description": "Plaza histórica en el centro de Santiago del Estero",
+      "details": "La Plaza Libertad es el corazón cívico del centro: espacio para pasear, encuentros y actividades al aire libre, cerca de Aires de Río.",
       "photos": [
         "img-20260102-200824.jpg",
         "img-20260102-201052.jpg",

@@ -2,8 +2,8 @@
 	// ===== IMPORTS =====
 	import Input from '$lib/components/forms/Input.svelte';
 	import PhoneNumberInput from '$lib/components/forms/PhoneNumberInput.svelte';
-	import Select from '$lib/components/forms/Select.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
+	import { formToastStore } from '$lib/stores/formToast';
 
 	// ===== TYPES =====
 	interface Props {
@@ -12,7 +12,6 @@
 
 	// ===== STATIC CONSTANTS =====
 	const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
-	const SUCCESS_MESSAGE_TIMEOUT = 5000;
 </script>
 
 <script lang='ts'>
@@ -22,7 +21,6 @@
 	// ===== STATE =====
 	let formElement: HTMLFormElement | null = $state(null);
 	let isLoading = $state(false);
-	let successMessage = $state<string | null>(null);
 	let errorMessage = $state<string | null>(null);
 
 	// ===== EVENT HANDLERS =====
@@ -31,8 +29,6 @@
 
 		if (!formElement) return;
 
-		// Reset messages
-		successMessage = null;
 		errorMessage = null;
 
 		// Client-side validation
@@ -78,27 +74,23 @@
 			const result = await response.json();
 
 			if (!response.ok) {
-				errorMessage =
+				const err =
 					result.error || 'Error al enviar el formulario. Por favor, intenta de nuevo.';
+				formToastStore.show(err, 'error');
 				return;
 			}
 
-			// Success
-			successMessage =
+			const msg =
 				result.message ||
 				'Formulario enviado correctamente. Nos pondremos en contacto contigo pronto.';
-
-			// Reset form
+			formToastStore.show(msg, 'success');
 			formElement.reset();
-
-			// Clear success message after timeout
-			setTimeout(() => {
-				successMessage = null;
-			}, SUCCESS_MESSAGE_TIMEOUT);
 		} catch (error) {
 			console.error('Form submission error:', error);
-			errorMessage =
-				'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.';
+			formToastStore.show(
+				'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.',
+				'error'
+			);
 		} finally {
 			isLoading = false;
 		}
@@ -115,12 +107,6 @@
 		aria-hidden='true'
 		style='position: absolute; left: -9999px;'
 	/>
-
-	{#if successMessage}
-		<div class='form-message form-message--success' role='alert'>
-			{successMessage}
-		</div>
-	{/if}
 
 	{#if errorMessage}
 		<div class='form-message form-message--error' role='alert'>
@@ -291,15 +277,6 @@
 
 		/* Typography */
 		font-size: 0.9em;
-	}
-
-	.form-message--success {
-		/* Box/Visual */
-		background-color: var(--color-success-bg, #d4edda);
-		border: 1px solid var(--color-success-border, #c3e6cb);
-
-		/* Typography */
-		color: var(--color-success-text, #155724);
 	}
 
 	.form-message--error {

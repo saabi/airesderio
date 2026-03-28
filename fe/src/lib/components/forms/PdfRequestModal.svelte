@@ -13,13 +13,13 @@
 
 <script lang='ts'>
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
+	import { formToastStore } from '$lib/stores/formToast';
 
 	let { intent }: { intent: PdfIntent } = $props();
 
 	// ===== STATE =====
 	let formElement: HTMLFormElement | null = $state(null);
 	let isLoading = $state(false);
-	let successMessage = $state<string | null>(null);
 	let errorMessage = $state<string | null>(null);
 
 	// ===== HANDLERS =====
@@ -39,7 +39,6 @@
 		event.preventDefault();
 		if (!formElement) return;
 
-		successMessage = null;
 		errorMessage = null;
 
 		if (!formElement.checkValidity()) {
@@ -84,16 +83,18 @@
 				return;
 			}
 
-			successMessage = result.message || 'Revisá tu correo electrónico para descargar el archivo.';
+			const msg =
+				result.message ||
+				'Formulario enviado correctamente. Revisá tu correo electrónico para descargar el archivo.';
+			formToastStore.show(msg, 'success');
 			formElement.reset();
-
-			setTimeout(() => {
-				handleClose();
-			}, 5000);
+			pdfRequestModalStore.close();
 		} catch (error) {
 			console.error('Form submission error:', error);
-			errorMessage =
-				'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.';
+			formToastStore.show(
+				'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.',
+				'error'
+			);
 		} finally {
 			isLoading = false;
 		}
@@ -125,9 +126,6 @@
 				style='position: absolute; left: -9999px;'
 			/>
 
-			{#if successMessage}
-				<div class='form-message form-message--success' role='alert'>{successMessage}</div>
-			{/if}
 			{#if errorMessage}
 				<div class='form-message form-message--error' role='alert'>{errorMessage}</div>
 			{/if}
@@ -320,12 +318,6 @@
 		margin-bottom: 1rem;
 		border-radius: 0.25rem;
 		font-size: 0.9em;
-	}
-
-	.form-message--success {
-		background-color: var(--color-success-bg, #d4edda);
-		border: 1px solid var(--color-success-border, #c3e6cb);
-		color: var(--color-success-text, #155724);
 	}
 
 	.form-message--error {

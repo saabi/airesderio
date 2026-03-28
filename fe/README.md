@@ -163,6 +163,27 @@ fe/
 - **Contact Form** - Lead generation for potential buyers
 - **SEO Optimized** - Static site generation for better performance
 
+## Database migrations
+
+After pulling schema changes, apply Drizzle migrations (requires `DATABASE_URL`):
+
+```bash
+npm run db:migrate
+```
+
+## Email retry queue (production)
+
+If SMTP fails after a lead is saved, jobs are stored in `email_outbound_jobs` and must be processed periodically.
+
+1. Set `CRON_SECRET` in `.env` (use a long random string).
+2. On the server, add a cron entry every 5 minutes, for example:
+
+```bash
+*/5 * * * * curl -sS -X POST -H "Authorization: Bearer YOUR_CRON_SECRET" https://your-domain/api/internal/retry-email-queue
+```
+
+Replace the URL and secret with your production values.
+
 ## Deployment
 
 The site is configured for Node.js deployment using `@sveltejs/adapter-node`. The application runs as a Node.js server with PM2 on a Linode VM running Debian, with Nginx as a reverse proxy. This enables full API route support (including the contact form).

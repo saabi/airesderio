@@ -3,12 +3,16 @@
  *
  * Stores leads in PostgreSQL, sends notification via SMTP (DreamHost),
  * and returns PDF access tokens when intent is a PDF type.
+ * On SMTP failure after persistence, enqueues retry jobs and still returns success.
  */
 import { json, type RequestHandler } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
 import { getDb } from '$lib/server/db/index.js';
 import { leads, pdfAccessTokens } from '$lib/server/db/schema.js';
 import { sendContactNotification, sendPdfDownloadLink, sendDirectContactThankYou } from '$lib/server/email.js';
+import {
+	enqueueOutboundEmailJob,
+	type OutboundJobKind
+} from '$lib/server/emailRetryQueue.js';
 import { randomBytes } from 'crypto';
 
 const VALID_PDF_INTENTS = ['ficha-tecnica', 'planos'] as const;
@@ -44,6 +48,21 @@ function generateToken(): string {
 
 function isPdfIntent(intent: string): intent is (typeof VALID_PDF_INTENTS)[number] {
 	return VALID_PDF_INTENTS.includes(intent as (typeof VALID_PDF_INTENTS)[number]);
+}
+
+async function safeEnqueue(
+	db: ReturnType<typeof getDb>,
+	leadId: string,
+	jobKind: OutboundJobKind,
+	payload: Record<string, unknown>,
+	logError: unknown
+) {
+	console.error(`Enqueue ${jobKind} for lead ${leadId}:`, logError);
+	try {
+		await enqueueOutboundEmailJob(db, leadId, jobKind, payload);
+	} catch (queueErr) {
+		console.error('Failed to enqueue outbound email job:', queueErr);
+	}
 }
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -125,7 +144,18 @@ export const POST: RequestHandler = async ({ request }) => {
 				leadMessage: message ?? undefined,
 				intent
 			});
+		} catch (emailErr) {
+			console.error('SMTP error (team notification):', emailErr);
+			await safeEnqueue(db, lead.id, 'team_notification', {
+				intent,
+				leadName: fullName,
+				leadEmail: email,
+				leadPhone: phone ?? undefined,
+				leadMessage: message ?? undefined
+			}, emailErr);
+		}
 
+		try {
 			if (isPdfIntent(intent) && tokens[intent]) {
 				await sendPdfDownloadLink({
 					leadName: firstName,
@@ -140,12 +170,19 @@ export const POST: RequestHandler = async ({ request }) => {
 				});
 			}
 		} catch (emailErr) {
-			console.error('SMTP error:', emailErr);
-			if (!env.SMTP_HOST || import.meta.env.PROD) {
-				return json(
-					{ error: 'Error al enviar el formulario. Por favor, intenta de nuevo más tarde.' },
-					{ status: 500 }
-				);
+			console.error('SMTP error (lead email):', emailErr);
+			if (isPdfIntent(intent) && tokens[intent]) {
+				await safeEnqueue(db, lead.id, 'lead_pdf', {
+					leadName: firstName,
+					leadEmail: email,
+					pdfType: intent,
+					token: tokens[intent]
+				}, emailErr);
+			} else if (intent === 'direct-contact') {
+				await safeEnqueue(db, lead.id, 'lead_thankyou', {
+					leadName: firstName,
+					leadEmail: email
+				}, emailErr);
 			}
 		}
 
