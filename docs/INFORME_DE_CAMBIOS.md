@@ -1,6 +1,64 @@
 # Informe de cambios
 
-## Cambios desde el 4 de marzo
+*Actualizado: 28 de marzo de 2026.*
+
+## Cambios del 4 al 28 de marzo de 2026
+
+### Copy y ubicación (propuesta 18 de marzo)
+
+- **Texto de la sección Ubicación:** Alineado con la propuesta del 18 de marzo (Rivadavia, Puente Nuevo, terminal, fórum, Roca, Parque Aguirre, Plaza Vea, párrafo de “punto estratégico”).
+- **Mapa:** Eliminados los pins de Estadio Único, Avenida Rivadavia, Avenida Alvear y Registro Civil del dataset de lugares.
+- **Radio visible del mapa:** `defaultRadius` en `map.json` subido a **0,33** y `zoomMargin` **0,11** en `Location.svelte` para mostrar ~10 % más de contexto alrededor de la zona activa (complementa el acercamiento sin habilitar aún pan/zoom libre).
+- **Galerías en `map.json`:** Curación parcial según criterios de la reunión (p. ej. terminal, parque Aguirre, peatonales, mercado, casa de gobierno); **Plaza Libertad** con nombre y textos acordes (título “Plaza Libertad”, no genérico).
+- **Equipamiento e interiores:** Bloque **Harmony** sin subtítulo “Harmony Style”; títulos **EQUIPAMIENTO** / **e interiores** y lista de bullets según copy aprobado; **Luxury** como “Equipamiento opcional” / “Luxury Style” y párrafo introductorio largo; íconos alineados a la **primera línea** del texto (`IconTextRow`).
+- **Galería modal:** La galería muestra fotos y contador; no se muestran bloques largos de descripción en el modal (los campos `description`/`details` siguen en JSON por si se reutilizan).
+
+### Formularios, email y cola de reintentos (propuesta `mas-cambios` §5)
+
+- **Feedback fijo:** Store global de toasts (`formToast`) y componente `FormToast` en el layout; formulario de contacto y modal de PDF muestran éxito/error sin mensaje que desaparezca al instante; éxito en PDF cierra el modal y dispara toast.
+- **Plantillas de email:** Eliminada la línea del PDF sobre validez 24 h / un solo uso; firma unificada: *Aires de Río - Departamentos de uno y dos habitaciones en Santiago del Estero*.
+- **Reintentos SMTP:** Tabla `email_outbound_jobs`, encolado en fallo de envío tras persistir el lead (respuesta **200** al usuario), endpoint interno `POST /api/internal/retry-email-queue` protegido con `Authorization: Bearer` + `CRON_SECRET`; documentación en `fe/README.md` y `fe/.env.example`.
+
+### Base de datos
+
+- Migraciones Drizzle para jobs de email; cadena de migraciones y meta actualizadas (incl. variante idempotente **0004** coherente con el snapshot de Drizzle).
+
+---
+
+## Pendientes frente a las propuestas (marzo 2026)
+
+Referencias: [Cambios de copy sitio web - 18_Marzo.md](proposals/Cambios%20de%20copy%20sitio%20web%20-%2018_Marzo.md), [mas-cambios.md](proposals/mas-cambios.md) (reunión 17 mar 2026).
+
+### Brechas respecto al copy del **18 de marzo**
+
+| Tema | Estado |
+|------|--------|
+| Navegación **“Equipamiento e Interiores”** (header/footer en lugar de solo “Equipamiento”) | Pendiente |
+| Misma nomenclatura **“Planos y Distribución”** vs actual **“Planos”** | Pendiente (también en §3 de mas-cambios) |
+| Header usa **“Interior”**; footer **“Interiores”** — unificar si se busca consistencia total con la propuesta | Revisión menor |
+| Título de sección: copy propone **“E INTERIORES”**; implementado **“e interiores”** en `Title` | Detalle de mayúsculas |
+| Galería: sigue mostrando el **nombre del lugar** en el encabezado del modal (coherente con UX; si se quisiera solo fotos sin título, habría que acotarlo explícitamente) | Opcional |
+
+### Pendientes principales de **mas-cambios.md** (aún no cubiertos o solo parcialmente)
+
+- **§1 Imágenes y video:** compresión/lazy load, caché, objetivo de carga en móvil bajo 3 s; estrategia de video (foto estática 3 s antes del autoplay, etc.).
+- **§2 Modo oscuro:** artefactos visuales, menú y contraste; revisión de paleta (cian como acento, etc.).
+- **§3 Navegación:** enlaces footer/header alineados a títulos de sección (incl. “Equipamiento e Interiores”, “Planos y Distribución”).
+- **§4 Mapa:** **pan y zoom** libres (arrastre, rueda / gestos); algoritmo de **etiquetas siempre arriba del pin** (salvo excepción Aires de Río); **ícono de galería pequeño** dentro de la caja de etiqueta (hoy la galería va por pin/botones de navegación).
+- **§5 Formularios:** texto explícito tipo “Revisa tu correo…” en toast (si se exige literal de la propuesta); **cron en producción** que llame al endpoint de reintentos con `CRON_SECRET`; intervalo de reintento documentado vs “cada 5 minutos” de la reunión.
+- **§6 Scroll y responsive:** scroll suave a anclas sin saltos bruscos; más ancho útil en móvil; formulario que no desplace el centrado ni genere scroll horizontal; **umbrales de animación al scroll** más tempranos.
+- **§7 Galerías por lugar:** curación pendiente o incompleta en varios puntos (Plaza Vea, Tribunales, Rivadavia, Bicentenario, Roca, etc.); reemplazos de calidad donde se pidió.
+- **§8 Interiores:** texto puente sobre **dos diseños a elegir**; diferenciación visual Luxury (marca de agua triquetra); verificación foto por estilo; **§8.5:** en la reunión el párrafo largo de terminaciones debía ir **después** de “Equipamiento opcional” y “Looks Freestyle” y **antes** del botón de ficha — hoy el párrafo está **antes** de la lista Luxury y no hay bloque explícito “Looks Freestyle” en el sitio; conviene cerrar estructura vs. copy.
+- **§9 Texto ubicación (mas-cambios):** redacción alternativa más larga sobre convenciones / Parque Aguirre / Puente / Plaza Vea — el sitio ya tiene el texto del 18 mar; conviene cruzar con §9 si se quiere unificar criterios.
+
+### Operación
+
+- Configurar **`CRON_SECRET`** y tarea programada en el servidor que ejecute el reintento de cola de emails.
+- Ejecutar **`npm run db:migrate`** en cada entorno tras desplegar.
+
+---
+
+## Cambios hasta el 4 de marzo (informe anterior)
 
 ### Backend: SMTP, Base de datos y gestión de leads
 
@@ -56,7 +114,7 @@
 
 ---
 
-*Próximo informe: continuar desde `06e327f`*
+*Próximo informe: continuar desde `dc001b5`*
 
 
 ---
