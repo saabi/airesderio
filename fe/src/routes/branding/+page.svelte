@@ -68,21 +68,6 @@
 		</article>
 
 		<article class="branding-card">
-			<h2>Primary logotype (large)</h2>
-			<p>Enlarged SVG for exporting a high–resolution image.</p>
-			<div class="branding-logo branding-logo--large" id="branding-logo-primary-large">
-				<AiresDeRioLogo theme="light" showIsotype={true} showDepartamentos={true} height="140" />
-			</div>
-			<LogoExportButton
-				targetSelector="#branding-logo-primary-large svg"
-				filename="airesderio-logotype-primary-large-5000w.png"
-				enableSizeControls={true}
-				label="Export PNG (primary logotype large)"
-				class="branding-export-button"
-			/>
-		</article>
-
-		<article class="branding-card">
 			<h2>Header logo (dark theme)</h2>
 			<p>Variant used in the site header on dark background.</p>
 			<div class="branding-logo branding-logo--dark" id="branding-logo-header-dark">
@@ -204,10 +189,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-	}
-
-	.branding-logo--large {
-		padding: 2.5rem;
 	}
 
 	.branding-logo--dark {
