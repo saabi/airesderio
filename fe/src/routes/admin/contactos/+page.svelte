@@ -1,15 +1,17 @@
 <script lang="ts">
-	let leads = $state<Array<{
-		id: string;
-		firstName: string;
-		lastName: string;
-		email: string;
-		phone: string | null;
-		message: string | null;
-		intent: string;
-		emailVerifiedAt: string | null;
-		createdAt: string;
-	}>>([]);
+	let leads = $state<
+		Array<{
+			id: string;
+			firstName: string;
+			lastName: string;
+			email: string;
+			phone: string | null;
+			message: string | null;
+			intent: string;
+			downloadCount: number;
+			createdAt: string;
+		}>
+	>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
@@ -67,6 +69,7 @@
 					<th>Teléfono</th>
 					<th>Intención</th>
 					<th>Email verificado</th>
+					<th>Descargas PDF</th>
 					<th>Mensaje</th>
 				</tr>
 			</thead>
@@ -79,7 +82,8 @@
 						<td><a href="mailto:{lead.email}">{lead.email}</a></td>
 						<td>{lead.phone ?? '—'}</td>
 						<td>{lead.intent}</td>
-						<td>{lead.emailVerifiedAt ? 'Sí' : 'No'}</td>
+						<td>{lead.downloadCount > 0 ? 'Sí' : 'No'}</td>
+						<td>{lead.downloadCount}</td>
 						<td class="message-cell">{lead.message ?? '—'}</td>
 					</tr>
 				{/each}

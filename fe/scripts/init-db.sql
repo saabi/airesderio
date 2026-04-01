@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS leads (
   message TEXT,
   intent VARCHAR(50) NOT NULL,
   ip_address VARCHAR(45),
-  email_verified_at TIMESTAMPTZ,
+  download_count INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -23,5 +23,5 @@ CREATE TABLE IF NOT EXISTS pdf_access_tokens (
 );
 
 CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email);
-CREATE INDEX IF NOT EXISTS idx_leads_email_verified ON leads(email_verified_at);
+CREATE INDEX IF NOT EXISTS idx_leads_download_count ON leads(download_count);
 CREATE INDEX IF NOT EXISTS idx_pdf_tokens_token ON pdf_access_tokens(token);

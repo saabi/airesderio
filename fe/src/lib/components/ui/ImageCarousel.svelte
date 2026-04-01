@@ -147,6 +147,16 @@
 		}
 	});
 
+	// Restart auto-rotate timer whenever the visible slide changes (including controlled usage)
+	let lastIndex = $state(currentImageIndex);
+	$effect(() => {
+		if (!autoRotate || slideCount <= 1) return;
+		if (currentImageIndex !== lastIndex) {
+			lastIndex = currentImageIndex;
+			restartCarouselTimer();
+		}
+	});
+
 	// ===== LIFECYCLE =====
 	onMount(() => {
 		isTouchDevice = browser && ('ontouchstart' in window || (navigator.maxTouchPoints ?? 0) > 0);
@@ -182,6 +192,16 @@
 						// Consider visible if at least 50% of the carousel is in viewport
 						// This threshold prevents multiple carousels from responding simultaneously
 						isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+
+						// When carousel leaves the viewport, pause any playing videos inside it
+						if (!isVisible && carouselElement) {
+							const videos = carouselElement.querySelectorAll('video');
+							videos.forEach((video) => {
+								if (!video.paused) {
+									video.pause();
+								}
+							});
+						}
 					}
 				},
 				{

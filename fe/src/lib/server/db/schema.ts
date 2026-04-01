@@ -11,12 +11,12 @@ export const leads = pgTable(
 		message: text('message'),
 		intent: varchar('intent', { length: 50 }).notNull(),
 		ipAddress: varchar('ip_address', { length: 45 }),
-		emailVerifiedAt: timestamp('email_verified_at', { withTimezone: true }),
+		// Per-email download counter for PDFs (also used as a proxy for verification)
+		downloadCount: integer('download_count').notNull().default(0),
 		createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 	},
 	(table) => ({
-		emailIdx: index('idx_leads_email').on(table.email),
-		emailVerifiedIdx: index('idx_leads_email_verified').on(table.emailVerifiedAt)
+		emailIdx: index('idx_leads_email').on(table.email)
 	})
 );
 
