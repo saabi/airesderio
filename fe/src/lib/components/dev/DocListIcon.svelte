@@ -19,6 +19,8 @@ import Horno from '$lib/components/icons/Horno.svelte';
 import Banos from '$lib/components/icons/Banos.svelte';
 import Piso from '$lib/components/icons/Piso.svelte';
 import Lavasecarropas from '$lib/components/icons/Lavasecarropas.svelte';
+import UnidadesAire from '$lib/components/icons/UnidadesAire.svelte';
+import TomasCorriente from '$lib/components/icons/TomasCorriente.svelte';
 import Tilde from '$lib/components/icons/Tilde.svelte';
 
 	let { icon = null, viewBox = '0 0 48 48', size = '1.5em' }: { icon: string | null; viewBox?: string; size?: string } = $props();
@@ -62,6 +64,10 @@ import Tilde from '$lib/components/icons/Tilde.svelte';
 	<SvgViewport {viewBox} width={size} height={size}><Piso /></SvgViewport>
 {:else if icon === 'lavasecarropas'}
 	<SvgViewport {viewBox} width={size} height={size}><Lavasecarropas /></SvgViewport>
+{:else if icon === 'unidades-aire'}
+	<SvgViewport {viewBox} width={size} height={size}><UnidadesAire /></SvgViewport>
+{:else if icon === 'tomas-corriente'}
+	<SvgViewport {viewBox} width={size} height={size}><TomasCorriente /></SvgViewport>
 {:else if icon === 'tilde'}
 	<SvgViewport {viewBox} width={size} height={size}><Tilde /></SvgViewport>
 {:else}

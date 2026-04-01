@@ -20,36 +20,43 @@
 		{ icon: 'terraza-piscina', html: 'La terraza con piscina y deck húmedo es un espacio diseñado para el bienestar con zonas de encuentro que invitan al ocio. La iluminación toma un rol protagónico creando un ambiente íntimo y relajado, realzado por vistas inigualables hacia la ciudad y sus pulmones verdes.' }
 	];
 
-	const MEMORIA_ITEMS: DocListItem[] = [
-		{ icon: 'techos-altos', html: 'Techos altos, con una luz entre losas de 275 cm. A los mismos se adicionan cielorrasos con gargantas y cenefas para instalaciones de luces ambientales, alojar servicios, ocultar los barrales de cortinas y para mayor comodidad térmica y acústica.' },
-		{ icon: 'energia', html: 'Gran cantidad de módulos tomacorriente y bocas en todos los ambientes.' },
-		{ icon: null, html: 'Caja octogonal en cielorraso para ventilador de techo en dormitorio y living.' },
-		{ icon: null, html: 'Dos unidades de preinstalación de A. Acondicionados en living y dormitorios con placa de sostén, drenajes, caños y enchufe.' },
-		{ icon: null, html: 'Bandeja de hierro para las unidades externas de A. Acondicionados en los patios internos.' },
-		{ icon: 'puerta', html: 'Puerta de ingreso de gran porte a cada departamento, de exquisito diseño, laminada en madera y con aplicaciones metálicas.' },
-		{ icon: null, html: 'Cerradura de seguridad doble perno Prive o similar calidad.' },
-		{ icon: 'carpinteria', html: 'Aberturas con carpintería de aluminio galvanizado <strong>ALUAR</strong> modelo A30New Anodizado Natural (Plata/Inox).' },
-		{ icon: 'puerta', html: 'Grandes puertas corredizas de doble panel de dormitorio y living a balcón.' },
-		{ icon: 'puerta', html: 'Los departamentos sobre contrafrente, que carecen de balcón, tienen también las mismas puertas corredizas de doble panel en dormitorio y living con baranda metálica de seguridad para apoyo.' },
-		{ icon: 'vestidor', html: 'Dormitorios con vestidor con tres metros lineales de placares equipados con cajones, estantes, espacio para perchas y pantalonera.' },
-		{ icon: 'cocina', html: 'Cocina integrada con mueble bajo mesada y alacenas en placa de Melamina base MDF blanca de primera marca.' },
-		{ icon: 'cocina', html: 'Encimera de bajo mesada y desallunador  en granito natural Negro Brasil, o Gris Mara.' },
-		{ icon: 'cocina', html: 'Campana purificadora sobre las hornallas.' },
-		{ icon: 'horno', html: 'Cocina con horno de primera marca.' },
-		{ icon: null, html: 'Pileta de Acero inoxidable marca Johnson con  grifería monocomando FV.' },
-		{ icon: 'banos', html: 'Antebaño con mueble vanitory de melamina base MDF con un cajón con encimera de marmol o granito.' },
-		{ icon: 'banos', html: 'Extractores en los baños.' },
-		{ icon: 'banos', html: 'Espejo de vanitory en antebaño.' },
-		{ icon: 'banos', html: 'Bacha Ferrum modelo Tori Cilíndrica en sobremesada de vanitory.' },
-		{ icon: 'banos', html: 'Grifería marca FV para lavatorios, bidet y cabina de ducha.' },
-		{ icon: 'banos', html: 'Inodoro y bidet modelo Bari de Ferrum.' },
-		{ icon: 'banos', html: 'Cabina de ducha con mampara fija de vidrio 5+5 laminado de piso a techo color cristal.' },
-		{ icon: 'lavasecarropas', html: 'Instalaciones para máquinas lavarropa y secarropa en cabina dedicada con puertas.' },
-		{ icon: 'piso', html: 'Pisos de living comedor, cocina, pasillos y dormitorios en porcelanato de gran formato (120x21cm) marca Cerro Negro color incienso o similar calidad y color.' },
-		{ icon: null, html: 'Balcones con pisos de porcelanato.' },
-		{ icon: null, html: 'Zócalos de EPS antihumedad.' },
-		{ icon: 'piso', html: 'Pisos en los baños de porcelánico 60x60' },
-		{ icon: 'banos', html: 'Paredes de los baños en cerámicos 50x60 de piso a techo.' }
+const MEMORIA_ITEMS: DocListItem[] = [
+		{
+			icon: 'techos-altos',
+			html: 'Ambientes con techos altos y cielorrasos diseñados con espacios integrados para iluminación, instalaciones y cortinas, que además contribuyen al confort térmico y acústico.'
+		},
+		{
+			icon: 'carpinteria',
+			html: 'Carpintería de aluminio Aluar Línea A30 NEW de alta prestación. Grandes puertas corredizas de doble hoja que conectan el dormitorio y el living con el balcón.'
+		},
+		{
+			icon: 'cocina',
+			html: 'Cocinas totalmente equipadas, con mobiliario moderno bajo y sobre mesada. Incluyen horno con hornallas integradas y campana purificadora. Mesadas y desayunador en granito natural, pileta de acero inoxidable marca Johnson y grifería monocomando FV.'
+		},
+		{
+			icon: 'vestidor',
+			html: 'Dormitorios con vestidor con tres metros lineales de placares, equipados con cajones, estantes, espacio para perchas y pantalonera.'
+		},
+		{
+			icon: 'banos',
+			html: 'Baños de diseño contemporáneo, equipados con grifería de primera calidad, vanitory, espejo, mampara de vidrio y sistema de extracción.'
+		},
+		{
+			icon: 'unidades-aire',
+			html: 'Preinstalación de aire acondicionado en living y dormitorios, con soporte, desagües, cañerías y toma eléctrica. Incluye bandejas de hierro para las unidades exteriores en patios internos. Equipos no incluidos.'
+		},
+		{
+			icon: 'lavasecarropas',
+			html: 'Preinstalación para lavarropas y secarropas en espacio dedicado.'
+		},
+		{
+			icon: 'tomas-corriente',
+			html: 'Amplia cantidad de tomacorrientes y bocas de conexión en todos los ambientes. Incluye caja octogonal en cielorraso para la instalación de ventilador de techo en dormitorios y living.'
+		},
+		{
+			icon: 'piso',
+			html: 'Pisos de porcelanato de gran formato en los ambientes principales, con zócalos de EPS resistentes a la humedad.'
+		}
 	];
 
 const LUXURY_ITEMS: DocListItem[] = [
