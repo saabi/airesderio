@@ -7,17 +7,50 @@
 	type DocListItem = { icon: string | null; html: string };
 
 	const SECTION_1_ITEMS: DocListItem[] = [
-		{ icon: 'ubicacion', html: 'Ubicado en el área donde todo ocurre: shopping, diversión, zonas verdes, deportes, eventos culturales, restaurantes y pubs.' },
-		{ icon: 'estacionamiento', html: 'Con la conveniencia de estar sobre una avenida muy céntrica.' },
-		{ icon: 'building', html: 'Aires de Rio ofrece veintiocho departamentos y un local comercial dedicado a cafetería para tu comodidad.' },
-		{ icon: 'ascensores', html: 'La circulación vertical estará servida por dos ascensores desde el subsuelo hasta la terraza.' },
-		{ icon: null, html: 'Construye la empresa <strong>HABITAT PRIME S.A.S.</strong> bajo la dirección técnica del Ing. Ricardo Mattera, de larga trayectoria en la provincia. El Estudio D+B de Antonella Doménico y Luciano Bertorello aportó diseño y belleza a su arquitectura en una elegante fusión de líneas curvas y rectas, confiriéndole un moderno estilo mediterráneo, ambientes serenos, ordenados y una sutil elegancia.' },
-		{ icon: 'ladrillos', html: 'En las paredes exteriores y los tabiques divisores interiores se utilizaron ladrillos cerámicos huecos de reconocida marca del medio, cuidando la aislación térmica y sonora.' },
-		{ icon: null, html: 'Las paredes interiores revocadas y pintadas con pintura látex premium interior de primera marca. La pared de ingreso a cada unidad estará tratada de forma especial para acordar con la paleta de colores y texturas del resto de los revestimientos.' },
-		{ icon: 'agua-sanitarias', html: 'Para las conexiones sanitarias se usaron materiales de las marca <strong>AWADUCT</strong> y <strong>TIGRE</strong>, ambas por su alta resistencia y calidad.' },
-		{ icon: 'energia', html: 'Un generador de última generación instalado por <strong>EDESE</strong> en el edificio asegura una provisión de electricidad estable.' },
-		{ icon: 'gas', html: 'Servicio de gas natural para la cocina.' },
-		{ icon: 'terraza-piscina', html: 'La terraza con piscina y deck húmedo es un espacio diseñado para el bienestar con zonas de encuentro que invitan al ocio. La iluminación toma un rol protagónico creando un ambiente íntimo y relajado, realzado por vistas inigualables hacia la ciudad y sus pulmones verdes.' }
+		{
+			icon: 'ubicacion',
+			html: 'Ubicado en el área donde todo ocurre: shopping, diversión, zonas verdes, deportes, eventos culturales, restaurantes y pubs.'
+		},
+		{
+			icon: 'estacionamiento',
+			html: 'Con la conveniencia de estar sobre una avenida muy céntrica.'
+		},
+		{
+			icon: 'building',
+			html: 'Aires de Rio ofrece veintiocho departamentos y un local comercial dedicado a cafetería para tu comodidad.'
+		},
+		{
+			icon: 'ascensores',
+			html: 'Dos ascensores desde el subsuelo hasta la terraza.'
+		},
+		{
+			icon: null,
+			html: 'Construye la empresa <strong>HABITAT PRIME S.A.S.</strong> bajo la dirección técnica del Ing. Ricardo Mattera, de larga trayectoria en la provincia. El Estudio D+B de Antonella Doménico y Luciano Bertorello aportó diseño y belleza a su arquitectura en una elegante fusión de líneas curvas y rectas, confiriéndole un moderno estilo mediterráneo, ambientes serenos, ordenados y una sutil elegancia.'
+		},
+		{
+			icon: 'ladrillos',
+			html: 'Muros con ladrillos cerámicos huecos de reconocida marca del medio.'
+		},
+		{
+			icon: null,
+			html: 'Las paredes interiores revocadas y pintadas con pintura látex premium interior de primera marca. La pared de ingreso a cada unidad estará tratada de forma especial para acordar con la paleta de colores y texturas del resto de los revestimientos.'
+		},
+		{
+			icon: 'agua-sanitarias',
+			html: 'Conexiones de agua y sanitarias con materiales marca <strong>AWADUCT</strong> y <strong>TIGRE</strong>.'
+		},
+		{
+			icon: 'energia',
+			html: 'Un generador de última generación instalado por <strong>EDESE</strong> en el edificio asegura una provisión de electricidad estable.'
+		},
+		{
+			icon: 'gas',
+			html: 'Conexión de gas natural.'
+		},
+		{
+			icon: 'terraza-piscina',
+			html: 'Terraza con piscina y deck húmedo.'
+		}
 	];
 
 const MEMORIA_ITEMS: DocListItem[] = [
