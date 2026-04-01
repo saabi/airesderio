@@ -2,6 +2,7 @@
 	// ===== TYPES =====
 	interface Props {
 		class?: string;
+		id?: string;
 		loading?: 'eager' | 'lazy';
 		width?: string;
 		height?: string;
@@ -30,6 +31,7 @@
 
 	// ===== PROPS =====
 	let {
+		id,
 		class: className = '',
 		loading = 'lazy',
 		width,
@@ -79,6 +81,7 @@
 </script>
 
 <svg
+	id={id}
 	class={className}
 	data-theme={theme}
 	width={width ?? (height == null ? '256' : undefined)}
