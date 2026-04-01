@@ -49,7 +49,8 @@
 			</label>
 			<LogoExportButton
 				targetSelector="#branding-logo-primary svg"
-				filename="airesderio-logotype-primary-4000w.png"
+				filename="airesderio-logotype-primary"
+				variantTheme={primaryDark ? 'dark' : 'light'}
 				enableSizeControls={true}
 				label="Export PNG (primary logotype)"
 				class="branding-export-button"
@@ -76,7 +77,8 @@
 			</label>
 			<LogoExportButton
 				targetSelector="#branding-logo-primary-notagline svg"
-				filename="airesderio-logotype-primary-notagline-4000w.png"
+				filename="airesderio-logotype-primary-notagline"
+				variantTheme={primaryNoTaglineDark ? 'dark' : 'light'}
 				enableSizeControls={true}
 				label="Export PNG (logotype without tagline)"
 				class="branding-export-button"
@@ -103,7 +105,8 @@
 			</label>
 			<LogoExportButton
 				targetSelector="#branding-logo-isotype svg"
-				filename="airesderio-isotype-2000w.png"
+				filename="airesderio-isotype"
+				variantTheme={isotypeDark ? 'dark' : 'light'}
 				enableSizeControls={true}
 				label="Export PNG (isotype)"
 				class="branding-export-button"
@@ -132,7 +135,8 @@
 			</label>
 			<LogoExportButton
 				targetSelector="#branding-logo-inline-text svg"
-				filename="airesderio-logotype-inline-3000w.png"
+				filename="airesderio-logotype-inline"
+				variantTheme={inlineDark ? 'dark' : 'light'}
 				enableSizeControls={true}
 				label="Export PNG (inline logo)"
 				class="branding-export-button"

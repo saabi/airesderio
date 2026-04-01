@@ -9,8 +9,16 @@
 		targetSelector?: string;
 		/** Optional callback for direct SVG element access when ids are not convenient */
 		getElement?: () => SVGSVGElement | null;
-		/** Download file name, e.g. "airesderio-primary-4000w.png" */
+		/** Base download file name when filenameBase is not provided, e.g. "airesderio-primary". */
 		filename: string;
+		/**
+		 * Optional base used to build the final filename as
+		 * "<base>-<theme>-<height>px.png". If omitted, the base is derived
+		 * from `filename` (without a ".png" suffix).
+		 */
+		filenameBase?: string;
+		/** Optional theme label to include in the generated filename (e.g. "light" or "dark"). */
+		variantTheme?: 'light' | 'dark';
 		/** Target PNG width in pixels (height derived from aspect ratio). Default 4000 when size controls are disabled. */
 		width?: number;
 		/** Visible label and accessible name for the button. Default "Export PNG". */
@@ -39,6 +47,8 @@
 		targetSelector,
 		getElement,
 		filename,
+		filenameBase,
+		variantTheme,
 		width = 4000,
 		label = 'Export PNG',
 		class: className = '',
@@ -193,6 +203,12 @@
 				targetHeight = Math.round(targetWidth / measuredAspect || targetWidth);
 			}
 
+			const base =
+				filenameBase ??
+				(filename.toLowerCase().endsWith('.png') ? filename.slice(0, -4) : filename);
+			const themeLabel = variantTheme ?? 'light';
+			const finalFilename = `${base}-${themeLabel}-${targetHeight}px.png`;
+
 			const canvas = document.createElement('canvas');
 			canvas.width = targetWidth;
 			canvas.height = targetHeight;
@@ -210,15 +226,21 @@
 
 			const link = document.createElement('a');
 			link.href = pngUrl;
-			link.download = filename;
+			link.download = finalFilename;
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
 
-			dispatch('exportsuccess', { filename });
+			dispatch('exportsuccess', { filename: finalFilename });
 		} catch (error) {
 			console.error('Error exporting PNG from SVG', error);
-			dispatch('exporterror', { filename, error });
+			const base =
+				filenameBase ??
+				(filename.toLowerCase().endsWith('.png') ? filename.slice(0, -4) : filename);
+			const themeLabel = variantTheme ?? 'light';
+			const heightLabel = heightPx ?? defaultHeight ?? width;
+			const errorFilename = `${base}-${themeLabel}-${heightLabel}px.png`;
+			dispatch('exporterror', { filename: errorFilename, error });
 		} finally {
 			isExporting = false;
 		}
