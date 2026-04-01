@@ -6,20 +6,78 @@
 		width?: string;
 		height?: string;
 		theme?: 'dark' | 'light';
+		/** When true, show the isotype (symbol) portion of the logo. */
+		showIsotype?: boolean;
+		/** When true, show the wordmark portion of the logo. */
+		showWordmark?: boolean;
 	}
 </script>
 
 <script lang='ts'>
 	// ===== PROPS =====
-	let { class: className = '', loading = 'lazy', width, height, theme = 'light' }: Props = $props();
+	let {
+		class: className = '',
+		loading = 'lazy',
+		width,
+		height,
+		theme = 'light',
+		showIsotype = true,
+		showWordmark = true
+	}: Props = $props();
+
+	// ===== DOM REFS =====
+	let svgEl: SVGSVGElement | null = $state(null);
+	let wordmarkGroupEl: SVGGElement | null = $state(null);
+	let isotypeGroupEl: SVGGElement | null = $state(null);
+
+	// ===== VIEWBOX STATE =====
+	const FULL_VIEW_BOX = '0 0 8181.86 1521.28';
+	let viewBox = $state(FULL_VIEW_BOX);
+
+	$effect(() => {
+		if (!svgEl) return;
+
+		const groups: SVGGElement[] = [];
+		if (showWordmark && wordmarkGroupEl) groups.push(wordmarkGroupEl);
+		if (showIsotype && isotypeGroupEl) groups.push(isotypeGroupEl);
+
+		if (!groups.length) {
+			viewBox = FULL_VIEW_BOX;
+			return;
+		}
+
+		let minX = Infinity;
+		let minY = Infinity;
+		let maxX = -Infinity;
+		let maxY = -Infinity;
+
+		for (const g of groups) {
+			const bbox = g.getBBox();
+			if (!Number.isFinite(bbox.x) || !Number.isFinite(bbox.y)) continue;
+			minX = Math.min(minX, bbox.x);
+			minY = Math.min(minY, bbox.y);
+			maxX = Math.max(maxX, bbox.x + bbox.width);
+			maxY = Math.max(maxY, bbox.y + bbox.height);
+		}
+
+		if (!isFinite(minX) || !isFinite(minY) || !isFinite(maxX) || !isFinite(maxY)) {
+			viewBox = FULL_VIEW_BOX;
+			return;
+		}
+
+		const width = Math.max(maxX - minX, 1);
+		const heightBox = Math.max(maxY - minY, 1);
+		viewBox = `${minX} ${minY} ${width} ${heightBox}`;
+	});
 </script>
 
 <svg
 	class={className}
 	data-theme={theme}
+	bind:this={svgEl}
 	width={width || '100%'}
 	height={height || '100%'}
-	viewBox='0 0 8181.86 1521.28'
+	viewBox={viewBox}
 	xmlns='http://www.w3.org/2000/svg'
 	xmlns:xlink='http://www.w3.org/1999/xlink'
 	aria-label='Habitat Prime SAS'
@@ -51,7 +109,8 @@
 		</linearGradient>
 	</defs>
 	<g id='Layer_x0020_1'>
-		<g id='_2003221643744'>
+		{#if showWordmark}
+		<g id='_2003221643744' bind:this={wordmarkGroupEl}>
 			<polygon
 				class='habitat-logo-fil0'
 				points='2106.33,1518.29 2106.33,994.8 2175.79,994.8 2175.79,1210.49 2446.3,1210.49 2446.3,994.8 2515.76,994.8 2515.76,1518.29 2446.3,1518.29 2446.3,1271.9 2175.79,1271.9 2175.79,1518.29 '
@@ -126,7 +185,9 @@
 				d='M8009.24 1448.61l41.82 -4.15c2.52,13.99 7.56,24.22 15.22,30.8 7.66,6.57 18,9.84 31,9.84 13.74,0 24.12,-2.92 31.09,-8.75 6.97,-5.83 10.48,-12.66 10.48,-20.47 0,-5.04 -1.49,-9.29 -4.4,-12.85 -2.92,-3.51 -8.06,-6.58 -15.37,-9.15 -4.99,-1.78 -16.37,-4.84 -34.16,-9.29 -22.89,-5.73 -38.95,-12.75 -48.2,-21.11 -13,-11.72 -19.48,-26 -19.48,-42.86 0,-10.83 3.07,-21.01 9.14,-30.45 6.13,-9.44 14.93,-16.61 26.45,-21.55 11.52,-4.95 25.36,-7.42 41.67,-7.42 26.55,0 46.57,5.88 59.96,17.69 13.45,11.82 20.47,27.54 21.16,47.26l-43.01 1.48c-1.82,-10.97 -5.73,-18.83 -11.72,-23.63 -5.98,-4.8 -14.98,-7.22 -26.94,-7.22 -12.36,0 -22.05,2.57 -29.02,7.71 -4.5,3.31 -6.77,7.71 -6.77,13.24 0,5.04 2.13,9.34 6.38,12.91 5.39,4.6 18.49,9.34 39.3,14.28 20.82,4.9 36.19,10.04 46.13,15.28 9.98,5.29 17.79,12.46 23.43,21.6 5.63,9.14 8.45,20.42 8.45,33.81 0,12.16 -3.36,23.58 -10.13,34.21 -6.77,10.63 -16.31,18.54 -28.67,23.68 -12.36,5.19 -27.79,7.76 -46.22,7.76 -26.84,0 -47.46,-6.18 -61.84,-18.58 -14.39,-12.36 -22.94,-30.41 -25.76,-54.08z'
 			/>
 		</g>
-		<g id='_2003221646576'>
+		{/if}
+		{#if showIsotype}
+		<g id='_2003221646576' bind:this={isotypeGroupEl}>
 			<path
 				class='habitat-logo-fil1'
 				d='M941.81 359.88l312.37 0 0 1161.4 -312.37 0 0 -1161.4zm-941.81 0l312.37 0 0 1161.4 -312.37 0 0 -1161.4z'
@@ -136,12 +197,13 @@
 				d='M1360.88 0.1c274.27,4.33 495.28,227.96 495.28,503.26 0,278 -225.36,503.36 -503.36,503.36 -3.82,0 -7.62,-0.04 -11.42,-0.13l-0.15 0.25 -475.01 0 0 0.05 -2.86 -0.05 -11.37 0c-275.28,2.73 -497.61,226.7 -497.61,502.63 0,3.95 0.06,7.89 0.15,11.82l-313.22 0c6.73,-446.79 361.98,-809.04 805.97,-826.99l0.36 -0.72 31.4 0c0.92,-0.01 1.84,-0.04 2.76,-0.04 2.51,0 5.02,0.02 7.53,0.04l394.18 0 82.73 0.3c98.01,0.36 174.95,-88.38 174.95,-187.91 0,-104.04 -124.12,-188.37 -188.38,-188.37l-69.3 0 -312.38 0 -86.27 0 -884.85 0 0 -317.58 1352.8 0 8.08 0 0 0.1z'
 			/>
 		</g>
+		{/if}
 	</g>
 </svg>
 
 <style type='text/css'>
 	.habitat-logo-fil0 {
-		fill: white;
+		fill: #0f172a;
 		fill-rule: nonzero;
 	}
 	.habitat-logo-fil2 {
@@ -161,7 +223,7 @@
 	}
 	.habitat-logo-stop2 {
 		stop-opacity: 1;
-		stop-color: white;
+		stop-color: #0f172a;
 	}
 	.habitat-logo-stop3 {
 		stop-opacity: 1;
@@ -176,11 +238,11 @@
 		stop-color: #826600;
 	}
 
-	/* Dark theme */
+	/* Dark theme: invert to light so it stays visible on dark backgrounds */
 	svg[data-theme='dark'] .habitat-logo-fil0 {
-		fill: #1a1a1a;
+		fill: #f9fafb;
 	}
 	svg[data-theme='dark'] .habitat-logo-stop2 {
-		stop-color: #1a1a1a;
+		stop-color: #f9fafb;
 	}
 </style>

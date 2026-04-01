@@ -1,13 +1,15 @@
 <script lang="ts">
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
+	import HabitatPrimeLogo from '$lib/components/ui/HabitatPrimeLogo.svelte';
 	import LogoExportButton from '$lib/components/ui/LogoExportButton.svelte';
 
 	let primaryDark = $state(false);
 	let primaryNoTaglineDark = $state(false);
 	let isotypeDark = $state(false);
-	let headerDark = $state(true);
 	let inlineDark = $state(false);
-	let mapDark = $state(true);
+	let habitatFullDark = $state(false);
+	let habitatWordmarkDark = $state(false);
+	let habitatIsotypeDark = $state(false);
 </script>
 
 <svelte:head>
@@ -143,6 +145,90 @@
 			/>
 		</article>
 
+		<article class="branding-card">
+			<h2>Habitat Prime logotype</h2>
+			<p>Full developer logo including isotype and wordmark.</p>
+			<div
+				class={`branding-logo ${habitatFullDark ? 'branding-logo--dark' : ''}`}
+				id="branding-logo-habitat-full"
+			>
+				<HabitatPrimeLogo
+					theme={habitatFullDark ? 'dark' : 'light'}
+					showIsotype={true}
+					showWordmark={true}
+					width="14rem"
+				/>
+			</div>
+			<label class="branding-theme-toggle">
+				<input type="checkbox" bind:checked={habitatFullDark} />
+				<span>{habitatFullDark ? 'Dark preview' : 'Light preview'}</span>
+			</label>
+			<LogoExportButton
+				targetSelector="#branding-logo-habitat-full svg"
+				filename="habitatprime-logotype-full"
+				variantTheme={habitatFullDark ? 'dark' : 'light'}
+				enableSizeControls={true}
+				label="Export PNG (Habitat Prime logotype)"
+				class="branding-export-button"
+			/>
+		</article>
+
+		<article class="branding-card">
+			<h2>Habitat Prime wordmark</h2>
+			<p>Wordmark only, without the isotype.</p>
+			<div
+				class={`branding-logo ${habitatWordmarkDark ? 'branding-logo--dark' : ''}`}
+				id="branding-logo-habitat-wordmark"
+			>
+				<HabitatPrimeLogo
+					theme={habitatWordmarkDark ? 'dark' : 'light'}
+					showIsotype={false}
+					showWordmark={true}
+					width="14rem"
+				/>
+			</div>
+			<label class="branding-theme-toggle">
+				<input type="checkbox" bind:checked={habitatWordmarkDark} />
+				<span>{habitatWordmarkDark ? 'Dark preview' : 'Light preview'}</span>
+			</label>
+			<LogoExportButton
+				targetSelector="#branding-logo-habitat-wordmark svg"
+				filename="habitatprime-logotype-wordmark"
+				variantTheme={habitatWordmarkDark ? 'dark' : 'light'}
+				enableSizeControls={true}
+				label="Export PNG (Habitat Prime wordmark)"
+				class="branding-export-button"
+			/>
+		</article>
+
+		<article class="branding-card">
+			<h2>Habitat Prime isotype</h2>
+			<p>Isotype only, without the wordmark.</p>
+			<div
+				class={`branding-logo ${habitatIsotypeDark ? 'branding-logo--dark' : ''}`}
+				id="branding-logo-habitat-isotype"
+			>
+				<HabitatPrimeLogo
+					theme={habitatIsotypeDark ? 'dark' : 'light'}
+					showIsotype={true}
+					showWordmark={false}
+					width="10rem"
+				/>
+			</div>
+			<label class="branding-theme-toggle">
+				<input type="checkbox" bind:checked={habitatIsotypeDark} />
+				<span>{habitatIsotypeDark ? 'Dark preview' : 'Light preview'}</span>
+			</label>
+			<LogoExportButton
+				targetSelector="#branding-logo-habitat-isotype svg"
+				filename="habitatprime-isotype"
+				variantTheme={habitatIsotypeDark ? 'dark' : 'light'}
+				enableSizeControls={true}
+				label="Export PNG (Habitat Prime isotype)"
+				class="branding-export-button"
+			/>
+		</article>
+
 	</section>
 </main>
 
@@ -209,6 +295,12 @@
 
 	.branding-logo--inline {
 		justify-content: flex-start;
+	}
+
+	/* Improve Habitat wordmark visibility on light background within branding page */
+	#branding-logo-habitat-full svg[data-theme='light'] .habitat-logo-fil0,
+	#branding-logo-habitat-wordmark svg[data-theme='light'] .habitat-logo-fil0 {
+		fill: #0f172a;
 	}
 
 	.branding-theme-toggle {

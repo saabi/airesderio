@@ -39,7 +39,7 @@
 		<div class='footer-grid'>
 			<section class='footer-column footer-brand' aria-label='Resumen corporativo'>
 				<div class='footer-logo'>
-					<HabitatPrimeLogo theme={$theme} width='8rem' />
+					<HabitatPrimeLogo theme='dark' width='8rem' />
 				</div>
 				<ul class='project-highlights'>
 					{#each projectHighlights as item (item.label)}
