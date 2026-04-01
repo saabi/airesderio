@@ -1,6 +1,13 @@
 <script lang="ts">
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import LogoExportButton from '$lib/components/ui/LogoExportButton.svelte';
+
+	let primaryDark = $state(false);
+	let primaryNoTaglineDark = $state(false);
+	let isotypeDark = $state(false);
+	let headerDark = $state(true);
+	let inlineDark = $state(false);
+	let mapDark = $state(true);
 </script>
 
 <svelte:head>
@@ -25,9 +32,21 @@
 		<article class="branding-card">
 			<h2>Primary logotype</h2>
 			<p>Full logo including tagline &quot;DEPARTAMENTOS&quot;.</p>
-			<div class="branding-logo branding-logo--light" id="branding-logo-primary">
-				<AiresDeRioLogo theme="light" showIsotype={true} showDepartamentos={true} height="80" />
+			<div
+				class={`branding-logo ${primaryDark ? 'branding-logo--dark' : ''}`}
+				id="branding-logo-primary"
+			>
+				<AiresDeRioLogo
+					theme={primaryDark ? 'dark' : 'light'}
+					showIsotype={true}
+					showDepartamentos={true}
+					height="80"
+				/>
 			</div>
+			<label class="branding-theme-toggle">
+				<input type="checkbox" bind:checked={primaryDark} />
+				<span>{primaryDark ? 'Dark preview' : 'Light preview'}</span>
+			</label>
 			<LogoExportButton
 				targetSelector="#branding-logo-primary svg"
 				filename="airesderio-logotype-primary-4000w.png"
@@ -40,9 +59,21 @@
 		<article class="branding-card">
 			<h2>Logotype without tagline</h2>
 			<p>Wordmark without the &quot;DEPARTAMENTOS&quot; line.</p>
-			<div class="branding-logo branding-logo--light" id="branding-logo-primary-notagline">
-				<AiresDeRioLogo theme="light" showIsotype={true} showDepartamentos={false} height="80" />
+			<div
+				class={`branding-logo ${primaryNoTaglineDark ? 'branding-logo--dark' : ''}`}
+				id="branding-logo-primary-notagline"
+			>
+				<AiresDeRioLogo
+					theme={primaryNoTaglineDark ? 'dark' : 'light'}
+					showIsotype={true}
+					showDepartamentos={false}
+					height="80"
+				/>
 			</div>
+			<label class="branding-theme-toggle">
+				<input type="checkbox" bind:checked={primaryNoTaglineDark} />
+				<span>{primaryNoTaglineDark ? 'Dark preview' : 'Light preview'}</span>
+			</label>
 			<LogoExportButton
 				targetSelector="#branding-logo-primary-notagline svg"
 				filename="airesderio-logotype-primary-notagline-4000w.png"
@@ -55,9 +86,21 @@
 		<article class="branding-card">
 			<h2>Isotype</h2>
 			<p>Symbol only, without any text.</p>
-			<div class="branding-logo branding-logo--isotype" id="branding-logo-isotype">
-				<AiresDeRioLogo theme="light" isotypeOnly={true} fitViewBox={true} height="80" />
+			<div
+				class={`branding-logo branding-logo--isotype ${isotypeDark ? 'branding-logo--dark' : ''}`}
+				id="branding-logo-isotype"
+			>
+				<AiresDeRioLogo
+					theme={isotypeDark ? 'dark' : 'light'}
+					isotypeOnly={true}
+					fitViewBox={true}
+					height="80"
+				/>
 			</div>
+			<label class="branding-theme-toggle">
+				<input type="checkbox" bind:checked={isotypeDark} />
+				<span>{isotypeDark ? 'Dark preview' : 'Light preview'}</span>
+			</label>
 			<LogoExportButton
 				targetSelector="#branding-logo-isotype svg"
 				filename="airesderio-isotype-2000w.png"
@@ -68,39 +111,25 @@
 		</article>
 
 		<article class="branding-card">
-			<h2>Header logo (dark theme)</h2>
-			<p>Variant used in the site header on dark background.</p>
-			<div class="branding-logo branding-logo--dark" id="branding-logo-header-dark">
-				<AiresDeRioLogo
-					class="branding-logo-header"
-					theme="dark"
-					showIsotype={true}
-					showDepartamentos={true}
-					height="80"
-				/>
-			</div>
-			<LogoExportButton
-				targetSelector="#branding-logo-header-dark svg"
-				filename="airesderio-logotype-header-dark-4000w.png"
-				enableSizeControls={true}
-				label="Export PNG (header logo dark)"
-				class="branding-export-button branding-export-button--on-dark"
-			/>
-		</article>
-
-		<article class="branding-card">
 			<h2>Inline logo (text only)</h2>
 			<p>Inline wordmark without isotype or tagline (used in Intro/Location paragraphs).</p>
-			<div class="branding-logo branding-logo--light branding-logo--inline" id="branding-logo-inline-text">
+			<div
+				class={`branding-logo branding-logo--inline ${inlineDark ? 'branding-logo--dark' : ''}`}
+				id="branding-logo-inline-text"
+			>
 				<AiresDeRioLogo
 					class="logo-inline"
-					theme="light"
+					theme={inlineDark ? 'dark' : 'light'}
 					showIsotype={false}
 					showDepartamentos={false}
 					fitViewBox={true}
 					height="48"
 				/>
 			</div>
+			<label class="branding-theme-toggle">
+				<input type="checkbox" bind:checked={inlineDark} />
+				<span>{inlineDark ? 'Dark preview' : 'Light preview'}</span>
+			</label>
 			<LogoExportButton
 				targetSelector="#branding-logo-inline-text svg"
 				filename="airesderio-logotype-inline-3000w.png"
@@ -110,27 +139,6 @@
 			/>
 		</article>
 
-		<article class="branding-card">
-			<h2>Map focal label logo</h2>
-			<p>Compact inline logo used in the map focal label.</p>
-			<div class="branding-logo branding-logo--chip" id="branding-logo-map-focal">
-				<AiresDeRioLogo
-					class="pin-label-logo"
-					theme="dark"
-					showIsotype={false}
-					showDepartamentos={false}
-					fitViewBox={true}
-					height="40"
-				/>
-			</div>
-			<LogoExportButton
-				targetSelector="#branding-logo-map-focal svg"
-				filename="airesderio-logotype-map-focal-2000w.png"
-				enableSizeControls={true}
-				label="Export PNG (map focal logo)"
-				class="branding-export-button branding-export-button--on-dark"
-			/>
-		</article>
 	</section>
 </main>
 
@@ -195,13 +203,21 @@
 		background: radial-gradient(circle at top left, #1f2933, #020617);
 	}
 
-	.branding-logo--chip {
-		background: #020617;
-		padding-inline: 2.25rem;
-	}
-
 	.branding-logo--inline {
 		justify-content: flex-start;
+	}
+
+	.branding-theme-toggle {
+		margin-top: 0.25rem;
+		font-size: 0.8rem;
+		color: var(--muted-foreground, #64748b);
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+	}
+
+	.branding-theme-toggle input[type='checkbox'] {
+		accent-color: var(--ref-brand-primary, #0f172a);
 	}
 
 	.branding-export-button {
@@ -240,19 +256,6 @@
 		opacity: 0.6;
 		cursor: default;
 		box-shadow: none;
-	}
-
-	.branding-export-button--on-dark .export-button {
-		background: rgba(15, 23, 42, 0.6);
-		color: #e5e7eb;
-		border-color: rgba(148, 163, 184, 0.8);
-	}
-
-	.branding-export-button--on-dark .export-button:hover:enabled {
-		background: #e5e7eb;
-		color: #020617;
-		border-color: rgba(148, 163, 184, 1);
-		box-shadow: 0 8px 24px rgba(15, 23, 42, 0.45);
 	}
 
 	@media (min-width: 768px) {
