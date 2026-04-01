@@ -52,29 +52,25 @@
 		{ icon: 'banos', html: 'Paredes de los baños en cerámicos 50x60 de piso a techo.' }
 	];
 
-	const LUXURY_ITEMS: DocListItem[] = [
-		{ icon: null, html: 'Aplicables a cualquiera de los planos que elijas.' },
-		{ icon: null, html: 'Gargantas y cenefas de los cielorrasos provistas con instalación de luces leds en todo el contorno en living comedor, cocina y dormitorios.' },
-		{ icon: 'cerradura-digital', html: 'Puerta de ingreso con cerradura inteligente digital biométrica con wifi.' },
-		{ icon: 'vestidor', html: 'Vestidor con puertas de vidrio ahumado de dos paños fijos y uno corredizo con marco de aluminio color bronce.' },
-		{ icon: null, html: 'Iluminación led en el interior de los placares con encendido/apagado táctil.' },
-		{ icon: 'cocina', html: 'Cocina integrada con mueble bajo mesada y alacenas en placa de Melamina base MDF en color Gris grafito o color madera en bajo mesada y combinado con blanco la alacena. Opción de puertas de la alacena semitransparentes en vidrio con marco de aluminio e iluminación interna.' },
-		{ icon: null, html: 'Iluminación led sobre mesada en zona de trabajo.' },
-		{ icon: 'cocina', html: 'Mesada de cocina con zócalo y desayunador de Pure Stone blanco (cuarzo natural color uniforme) más duradero que el granito natural.' },
-		{ icon: null, html: 'Revestimiento cerámico blanco en paredes de mesada.' },
-		{ icon: 'vestidor', html: 'Dormitorios amplios con vestidor con doble placard, con cuatro cajones y pantalonera con rieles y correderas metálicas y estantes.' },
-		{ icon: 'vestidor', html: 'Puertas del vestidor corredizas de aluminio con vidrios ahumados de tres paños.' },
-		{ icon: null, html: 'Revestimiento con panel de WPC en color madera en muro con curva del living.' },
-		{ icon: 'banos', html: 'Antebaño con mueble vanitory con un cajón en melamina base MDF color nogal, y cajón interno para maquillaje.' },
-		{ icon: 'banos', html: 'Counter top de vanitory en silestone tabaco o nébula.' },
-		{ icon: 'banos', html: 'Espejo de vanitory en antebaño con luces led encendido/apagado táctil.' },
-		{ icon: null, html: 'Artefacto lumínico suspendido sobre vanitory con bulbo led.' },
-		{ icon: 'banos', html: 'Bacha Ferrum modelo Tori Cilíndrica en sobremesada de vanitory.' },
-		{ icon: 'banos', html: 'Grifería marca FV para lavatorios, bidet y cabina de ducha.' },
-		{ icon: 'banos', html: 'Sanitarios Ferrum, modelo Bari.' },
-		{ icon: 'banos', html: 'Cabina de ducha con mampara de vidrio de un paño fijo y otro corredizo de cristal color ámbar 5+5 laminado.' },
-		{ icon: null, html: 'Artefactos de iluminación led insertos en cielorraso provistos funcionando con bulbos o tiras led en las cenefas.' },
-		{ icon: null, html: 'Aplique led bidireccional en balcón con bulbo led.' }
+const LUXURY_ITEMS: DocListItem[] = [
+		{ icon: 'tilde', html: 'Puerta de ingreso con cerradura inteligente digital biométrica con wifi.' },
+		{ icon: 'tilde', html: 'Cocina integrada con bajo mesada y alacena de Melamina base MDF en gris grafito o madera. Opción de incluir dos puertas de vidrio con marco de aluminio e iluminación interna en alacena.' },
+		{ icon: 'tilde', html: 'Encimera de cocina con zócalo y desayunador de Pure Stone blanco (cuarzo natural color uniforme) más duradero que el granito natural.' },
+		{ icon: 'tilde', html: 'Anafe y horno a gas independientes empotrables.' },
+		{ icon: 'tilde', html: 'Iluminación led en zona de trabajo sobre mesada de la cocina.' },
+		{ icon: 'tilde', html: 'Revestimiento cerámico blanco en paredes de mesada.' },
+		{ icon: 'tilde', html: 'Gargantas y cenefas de los cielorrasos provistas con instalación de luces leds en living comedor, cocina y dormitorios.' },
+		{ icon: 'tilde', html: 'Revestimiento con panel de WPC en color madera en pared curvada del living.' },
+		{ icon: 'tilde', html: 'Vestidor con puertas de vidrio ahumado de dos paños fijos y uno corredizo con marco de aluminio.' },
+		{ icon: 'tilde', html: 'Dormitorios amplios con vestidor con doble placard, con cuatro cajones y pantalonera con rieles, correderas metálicas y estantes.' },
+		{ icon: 'tilde', html: 'Iluminación led en el interior de los placares con encendido/apagado táctil.' },
+		{ icon: 'tilde', html: 'Antebaño con mueble vanitory con un cajón en melamina base MDF color nogal, y cajón interno para maquillaje.' },
+		{ icon: 'tilde', html: 'Encimera de vanitory en silestone tabaco, nébula o marmol a elección.' },
+		{ icon: 'tilde', html: 'Espejo de vanitory en antebaño con luces led encendido/apagado táctil.' },
+		{ icon: 'tilde', html: 'Artefacto lumínico suspendido sobre vanitory con bulbo led.' },
+		{ icon: 'tilde', html: 'Bacha Ferrum modelo Tori Cilíndrica en sobremesada de vanitory.' },
+		{ icon: 'tilde', html: 'Cabina de ducha con mampara de vidrio de un paño fijo y otro corredizo en cristal color ámbar 5+5 laminado.' },
+		{ icon: 'tilde', html: 'Aplique led bidireccional en balcón con bulbo led.' }
 	];
 </script>
 

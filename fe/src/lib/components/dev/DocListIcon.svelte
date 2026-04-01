@@ -1,24 +1,25 @@
 <script lang="ts">
-	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
-	import Ubicacion from '$lib/components/icons/Ubicacion.svelte';
-	import Estacionamiento from '$lib/components/icons/Estacionamiento.svelte';
-	import Building from '$lib/components/icons/Building.svelte';
-	import Ascensores from '$lib/components/icons/Ascensores.svelte';
-	import LadrillosCeramicos from '$lib/components/icons/LadrillosCeramicos.svelte';
-	import AguaSanitarias from '$lib/components/icons/AguaSanitarias.svelte';
-	import EnergiaElectrica from '$lib/components/icons/EnergiaElectrica.svelte';
-	import GasNatural from '$lib/components/icons/GasNatural.svelte';
-	import TerrazaPiscina from '$lib/components/icons/TerrazaPiscina.svelte';
-	import TechosAltos from '$lib/components/icons/TechosAltos.svelte';
-	import Carpinteria from '$lib/components/icons/Carpinteria.svelte';
-	import Puerta from '$lib/components/icons/Puerta.svelte';
-	import CerraduraDigital from '$lib/components/icons/CerraduraDigital.svelte';
-	import Vestidor from '$lib/components/icons/Vestidor.svelte';
-	import Cocina from '$lib/components/icons/Cocina.svelte';
-	import Horno from '$lib/components/icons/Horno.svelte';
-	import Banos from '$lib/components/icons/Banos.svelte';
-	import Piso from '$lib/components/icons/Piso.svelte';
-	import Lavasecarropas from '$lib/components/icons/Lavasecarropas.svelte';
+import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
+import Ubicacion from '$lib/components/icons/Ubicacion.svelte';
+import Estacionamiento from '$lib/components/icons/Estacionamiento.svelte';
+import Building from '$lib/components/icons/Building.svelte';
+import Ascensores from '$lib/components/icons/Ascensores.svelte';
+import LadrillosCeramicos from '$lib/components/icons/LadrillosCeramicos.svelte';
+import AguaSanitarias from '$lib/components/icons/AguaSanitarias.svelte';
+import EnergiaElectrica from '$lib/components/icons/EnergiaElectrica.svelte';
+import GasNatural from '$lib/components/icons/GasNatural.svelte';
+import TerrazaPiscina from '$lib/components/icons/TerrazaPiscina.svelte';
+import TechosAltos from '$lib/components/icons/TechosAltos.svelte';
+import Carpinteria from '$lib/components/icons/Carpinteria.svelte';
+import Puerta from '$lib/components/icons/Puerta.svelte';
+import CerraduraDigital from '$lib/components/icons/CerraduraDigital.svelte';
+import Vestidor from '$lib/components/icons/Vestidor.svelte';
+import Cocina from '$lib/components/icons/Cocina.svelte';
+import Horno from '$lib/components/icons/Horno.svelte';
+import Banos from '$lib/components/icons/Banos.svelte';
+import Piso from '$lib/components/icons/Piso.svelte';
+import Lavasecarropas from '$lib/components/icons/Lavasecarropas.svelte';
+import Tilde from '$lib/components/icons/Tilde.svelte';
 
 	let { icon = null, viewBox = '0 0 48 48', size = '1.5em' }: { icon: string | null; viewBox?: string; size?: string } = $props();
 </script>
@@ -61,6 +62,8 @@
 	<SvgViewport {viewBox} width={size} height={size}><Piso /></SvgViewport>
 {:else if icon === 'lavasecarropas'}
 	<SvgViewport {viewBox} width={size} height={size}><Lavasecarropas /></SvgViewport>
+{:else if icon === 'tilde'}
+	<SvgViewport {viewBox} width={size} height={size}><Tilde /></SvgViewport>
 {:else}
 	<span class="doc-list-placeholder" title="Sin icono asignado" aria-hidden="true">—</span>
 {/if}
