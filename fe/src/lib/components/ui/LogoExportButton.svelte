@@ -261,7 +261,6 @@
 	.export-button {
 		padding: 0.375rem 0.9rem;
 		border-radius: 999px;
-		border: none;
 		background: transparent;
 		font: inherit;
 		cursor: pointer;
