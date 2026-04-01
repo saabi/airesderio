@@ -8,7 +8,7 @@
 			phone: string | null;
 			message: string | null;
 			intent: string;
-			downloadCount: number;
+			downloadCount: number | null;
 			createdAt: string;
 		}>
 	>([]);
@@ -42,6 +42,10 @@
 			hour: '2-digit',
 			minute: '2-digit'
 		});
+	}
+
+	function downloadsFor(lead: { downloadCount: number | null }) {
+		return lead.downloadCount ?? 0;
 	}
 </script>
 
@@ -82,8 +86,8 @@
 						<td><a href="mailto:{lead.email}">{lead.email}</a></td>
 						<td>{lead.phone ?? '—'}</td>
 						<td>{lead.intent}</td>
-						<td>{lead.downloadCount > 0 ? 'Sí' : 'No'}</td>
-						<td>{lead.downloadCount}</td>
+						<td>{downloadsFor(lead) > 0 ? 'Sí' : 'No'}</td>
+						<td>{downloadsFor(lead)}</td>
 						<td class="message-cell">{lead.message ?? '—'}</td>
 					</tr>
 				{/each}
