@@ -5,7 +5,7 @@
 	import Title from '$lib/components/ui/Title.svelte';
 	import IconTextRow from '$lib/components/ui/IconTextRow.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
-	import Tilde from '$lib/components/icons/Tilde.svelte';
+	import LuxuryTilde from '$lib/components/icons/LuxuryTilde.svelte';
 
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
@@ -27,32 +27,32 @@
 	const lineaLuxury: EquipmentItem[] = [
 		{
 			icon: '∼',
-			component: Tilde,
+			component: LuxuryTilde,
 			text: 'Preinstalación para lavarropas y secarropas en espacio dedicado.'
 		},
 		{
 			icon: '∼',
-			component: Tilde,
+			component: LuxuryTilde,
 			text: 'Diseño lumínico led integral que brinda una experiencia envolvente en la cocina, comedor, living, dormitorios y prebaño. Provisión de iluminación dentro de los placares, en la zona de trabajo de la mesada de cocina y en vanitory con encendido táctil.'
 		},
 		{
 			icon: '∼',
-			component: Tilde,
+			component: LuxuryTilde,
 			text: 'Puerta de ingreso con cerradura digital biométrica inteligente, que permite acceso remoto desde tu celular mediante conexión WiFi.'
 		},
 		{
 			icon: '∼',
-			component: Tilde,
+			component: LuxuryTilde,
 			text: 'Encimera de cocina, zócalo y desayunador en Pure Stone blanco (cuarzo natural de color uniforme), más resistente y duradero que el granito natural.'
 		},
 		{
 			icon: '∼',
-			component: Tilde,
+			component: LuxuryTilde,
 			text: 'Horno y anafe a gas empotrados de manera independiente.'
 		},
 		{
 			icon: '∼',
-			component: Tilde,
+			component: LuxuryTilde,
 			text: 'Revestimiento en tecnología símil madera que aporta calidez y un toque exclusivo a las terminaciones del ambiente.'
 		}
 	];

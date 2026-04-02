@@ -21,7 +21,8 @@ import Piso from '$lib/components/icons/Piso.svelte';
 import Lavasecarropas from '$lib/components/icons/Lavasecarropas.svelte';
 import UnidadesAire from '$lib/components/icons/UnidadesAire.svelte';
 import TomasCorriente from '$lib/components/icons/TomasCorriente.svelte';
-import Tilde from '$lib/components/icons/Tilde.svelte';
+import LuxuryTilde from '$lib/components/icons/LuxuryTilde.svelte';
+import HarmonyTilde from '$lib/components/icons/HarmonyTilde.svelte';
 
 	let { icon = null, viewBox = '0 0 48 48', size = '1.5em' }: { icon: string | null; viewBox?: string; size?: string } = $props();
 </script>
@@ -68,8 +69,10 @@ import Tilde from '$lib/components/icons/Tilde.svelte';
 	<SvgViewport {viewBox} width={size} height={size}><UnidadesAire /></SvgViewport>
 {:else if icon === 'tomas-corriente'}
 	<SvgViewport {viewBox} width={size} height={size}><TomasCorriente /></SvgViewport>
+{:else if icon === 'harmony'}
+	<SvgViewport viewBox="0 0 512 512" width={size} height={size}><HarmonyTilde /></SvgViewport>
 {:else if icon === 'tilde'}
-	<SvgViewport {viewBox} width={size} height={size}><Tilde /></SvgViewport>
+	<SvgViewport {viewBox} width={size} height={size}><LuxuryTilde /></SvgViewport>
 {:else}
 	<span class="doc-list-placeholder" title="Sin icono asignado" aria-hidden="true">—</span>
 {/if}
