@@ -43,6 +43,13 @@
       "when": 1775067152589,
       "tag": "0005_download_count",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1775154000000,
+      "tag": "0006_fix_download_count_type",
+      "breakpoints": true
     }
   ]
 }

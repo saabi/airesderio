@@ -21,14 +21,14 @@
 
 	// ===== STATE =====
 	let formElement: HTMLFormElement | null = $state(null);
-	let isLoading = $state(false);
 	let errorMessage = $state<string | null>(null);
+
+	const optimisticPdfSuccessMessage =
+		'Formulario enviado correctamente. Revisá tu correo electrónico para descargar el archivo.';
 
 	// ===== HANDLERS =====
 	function handleClose() {
-		if (!isLoading) {
-			pdfRequestModalStore.close();
-		}
+		pdfRequestModalStore.close();
 	}
 
 	function handleBackdropClick(e: MouseEvent) {
@@ -37,7 +37,7 @@
 		}
 	}
 
-	async function handleSubmit(event: Event) {
+	function handleSubmit(event: Event) {
 		event.preventDefault();
 		if (!formElement) return;
 
@@ -49,7 +49,7 @@
 		}
 
 		const formData = new FormData(formElement);
-		const data = {
+		const payload = {
 			nombre: formData.get('nombre') as string,
 			apellido: formData.get('apellido') as string,
 			correo: formData.get('correo') as string,
@@ -59,47 +59,46 @@
 			website: (formData.get('website') as string) || ''
 		};
 
-		if (!data.nombre || !data.apellido || !data.correo) {
+		if (!payload.nombre || !payload.apellido || !payload.correo) {
 			errorMessage = 'Por favor completa todos los campos requeridos.';
 			return;
 		}
 
-		if (!EMAIL_REGEX.test(data.correo)) {
+		if (!EMAIL_REGEX.test(payload.correo)) {
 			errorMessage = 'Por favor ingresa un correo electrónico válido.';
 			return;
 		}
 
-		isLoading = true;
+		formElement.reset();
+		formToastStore.show(optimisticPdfSuccessMessage, 'success');
+		pdfRequestModalStore.close();
 
-		try {
-			const response = await fetch('/api/contact', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(data)
+		void fetch('/api/contact', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload)
+		})
+			.then(async (response) => {
+				let result: { error?: string } = {};
+				try {
+					result = await response.json();
+				} catch {
+					/* non-JSON body */
+				}
+				if (!response.ok) {
+					formToastStore.show(
+						result.error || 'Error al enviar el formulario. Por favor, intenta de nuevo.',
+						'error'
+					);
+				}
+			})
+			.catch((error) => {
+				console.error('Form submission error:', error);
+				formToastStore.show(
+					'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.',
+					'error'
+				);
 			});
-
-			const result = await response.json();
-
-			if (!response.ok) {
-				errorMessage = result.error || 'Error al enviar el formulario. Por favor, intenta de nuevo.';
-				return;
-			}
-
-			const msg =
-				result.message ||
-				'Formulario enviado correctamente. Revisá tu correo electrónico para descargar el archivo.';
-			formToastStore.show(msg, 'success');
-			formElement.reset();
-			pdfRequestModalStore.close();
-		} catch (error) {
-			console.error('Form submission error:', error);
-			formToastStore.show(
-				'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.',
-				'error'
-			);
-		} finally {
-			isLoading = false;
-		}
 	}
 </script>
 
@@ -141,7 +140,6 @@
 						name='nombre'
 						required
 						ariaLabel='Nombre'
-						disabled={isLoading}
 					/>
 				</div>
 				<div class='form-group'>
@@ -152,7 +150,6 @@
 						name='apellido'
 						required
 						ariaLabel='Apellido'
-						disabled={isLoading}
 					/>
 				</div>
 			</div>
@@ -164,7 +161,6 @@
 					name='correo'
 					required
 					ariaLabel='Correo electrónico'
-					disabled={isLoading}
 				/>
 			</div>
 			<PhoneNumberInput id='pdf-telefono' name='telefono' label='Contacto de WhatsApp' />
@@ -175,17 +171,10 @@
 					name='mensaje'
 					rows={3}
 					ariaLabel='Mensaje'
-					disabled={isLoading}
 				/>
 			</div>
 			<div class='form-group'>
-				<button type='submit' class='btn-cta-primary' disabled={isLoading} aria-label='Solicitar'>
-					{#if isLoading}
-						<span class='button-loading'>Enviando...</span>
-					{:else}
-						SOLICITAR
-					{/if}
-				</button>
+				<button type='submit' class='btn-cta-primary' aria-label='Solicitar'>SOLICITAR</button>
 			</div>
 		</form>
 	</div>
@@ -294,25 +283,6 @@
 	.form-group button:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
-	}
-
-	.button-loading::after {
-		display: inline-block;
-		width: 1rem;
-		height: 1rem;
-		margin-left: 0.5rem;
-		border: 2px solid currentColor;
-		border-top-color: transparent;
-		border-radius: 50%;
-		content: '';
-		animation: spin 0.6s linear infinite;
-		vertical-align: middle;
-	}
-
-	@keyframes spin {
-		to {
-			transform: rotate(360deg);
-		}
 	}
 
 	.form-message {

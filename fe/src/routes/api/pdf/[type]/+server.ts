@@ -71,11 +71,11 @@ export const GET: import('@sveltejs/kit').RequestHandler = async ({ params, url 
 		await db.update(pdfAccessTokens).set({ usedAt: now }).where(eq(pdfAccessTokens.id, row.id));
 	}
 
-	// Update lead: increment per-email download counter
+	// Update lead: increment per-email download counter (use column ref so PG resolves type correctly)
 	await db
 		.update(leads)
 		.set({
-			downloadCount: sql`"download_count" + 1`
+			downloadCount: sql`${leads.downloadCount} + 1`
 		})
 		.where(eq(leads.id, row.leadId));
 
