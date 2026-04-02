@@ -15,6 +15,10 @@
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
+	let purgePassword = $state('');
+	let purgeLoading = $state(false);
+	let purgeError = $state<string | null>(null);
+
 	async function loadLeads() {
 		loading = true;
 		error = null;
@@ -46,6 +50,41 @@
 
 	function downloadsFor(lead: { downloadCount: number | null }) {
 		return lead.downloadCount ?? 0;
+	}
+
+	async function clearContactData() {
+		purgeError = null;
+		if (
+			!confirm(
+				'¿Eliminar todos los contactos, tokens de PDF y trabajos de correo pendientes? No se puede deshacer.'
+			)
+		) {
+			return;
+		}
+		if (!purgePassword) {
+			purgeError = 'Ingresá la contraseña de administrador.';
+			return;
+		}
+		purgeLoading = true;
+		try {
+			const res = await fetch('/api/admin/leads/clear', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ password: purgePassword })
+			});
+			const data = await res.json().catch(() => ({}));
+			if (!res.ok) {
+				purgeError =
+					typeof data.error === 'string' ? data.error : 'No se pudo vaciar la base de datos.';
+				return;
+			}
+			purgePassword = '';
+			leads = [];
+		} catch {
+			purgeError = 'Error de red al vaciar los datos.';
+		} finally {
+			purgeLoading = false;
+		}
 	}
 </script>
 
@@ -95,6 +134,38 @@
 		</table>
 	</div>
 {/if}
+
+<section class="danger-zone" aria-labelledby="danger-zone-title">
+	<h2 id="danger-zone-title">Zona de peligro</h2>
+	<p class="danger-zone-desc">
+		Elimina todos los registros de contactos, enlaces de descarga de PDF y cola de correos asociados a
+		leads. No afecta otras tablas ni el esquema.
+	</p>
+	<div class="danger-zone-row">
+		<label class="sr-only" for="purge-password">Contraseña de administrador</label>
+		<input
+			id="purge-password"
+			class="danger-password"
+			type="password"
+			name="purge-password"
+			autocomplete="current-password"
+			placeholder="Contraseña de administrador"
+			bind:value={purgePassword}
+			disabled={purgeLoading}
+		/>
+		<button
+			type="button"
+			class="danger-button"
+			disabled={purgeLoading}
+			onclick={clearContactData}
+		>
+			{purgeLoading ? 'Procesando…' : 'Vaciar datos de contactos'}
+		</button>
+	</div>
+	{#if purgeError}
+		<p class="danger-error" role="alert">{purgeError}</p>
+	{/if}
+</section>
 
 <style>
 	h1 {
@@ -148,5 +219,84 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	.danger-zone {
+		margin-top: 2.5rem;
+		padding: 1.25rem;
+		max-width: 36rem;
+		border: 1px solid var(--color-error-border, #f5c6cb);
+		border-radius: 0.5rem;
+		background: var(--color-error-bg, #fdf2f2);
+	}
+
+	.danger-zone h2 {
+		margin: 0 0 0.5rem;
+		font-size: 1rem;
+		font-weight: 600;
+		color: var(--color-error-text, #721c24);
+	}
+
+	.danger-zone-desc {
+		margin: 0 0 1rem;
+		font-size: 0.875rem;
+		line-height: 1.45;
+		color: var(--color-text-secondary);
+	}
+
+	.danger-zone-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
+	.danger-password {
+		flex: 1 1 12rem;
+		min-width: 0;
+		padding: 0.5rem 0.65rem;
+		border: 1px solid var(--color-border-default);
+		border-radius: 0.35rem;
+		font: inherit;
+		background: var(--color-bg-canvas);
+		color: var(--color-text-primary);
+	}
+
+	.danger-button {
+		padding: 0.5rem 0.85rem;
+		font: inherit;
+		font-weight: 600;
+		color: #fff;
+		background: #b91c1c;
+		border: none;
+		border-radius: 0.35rem;
+		cursor: pointer;
+	}
+
+	.danger-button:hover:not(:disabled) {
+		background: #991b1b;
+	}
+
+	.danger-button:disabled {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+
+	.danger-error {
+		margin: 0.75rem 0 0;
+		font-size: 0.875rem;
+		color: var(--color-error-text, #721c24);
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
 	}
 </style>
