@@ -11,7 +11,12 @@ import { eq, and, sql } from 'drizzle-orm';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
-const VALID_PDF_TYPES = ['ficha-tecnica', 'planos'] as const;
+const VALID_PDF_TYPES = [
+	'ficha-tecnica',
+	'ficha-tecnica-harmony',
+	'ficha-tecnica-luxury',
+	'planos'
+] as const;
 const STATIC_PDF_DIR = 'static/pdf';
 
 function isPdfType(type: string): type is (typeof VALID_PDF_TYPES)[number] {

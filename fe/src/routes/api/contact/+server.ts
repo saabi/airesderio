@@ -15,7 +15,12 @@ import {
 } from '$lib/server/emailRetryQueue.js';
 import { randomBytes } from 'crypto';
 
-const VALID_PDF_INTENTS = ['ficha-tecnica', 'planos'] as const;
+const VALID_PDF_INTENTS = [
+	'ficha-tecnica',
+	'ficha-tecnica-harmony',
+	'ficha-tecnica-luxury',
+	'planos'
+] as const;
 const TOKEN_EXPIRY_HOURS = 24;
 
 const submissions = new Map<string, number[]>();

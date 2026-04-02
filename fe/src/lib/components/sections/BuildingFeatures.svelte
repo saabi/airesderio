@@ -16,7 +16,6 @@
 	import MuroLadrillo from '$lib/components/icons/MuroLadrillo.svelte';
 	import Ubicacion from '$lib/components/icons/Ubicacion.svelte';
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
-	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 	import {
 		ANIMATION,
 		animationDelay,
@@ -200,17 +199,6 @@
 						</li>
 					{/each}
 				</ul>
-				<div class="bf-cta-wrap">
-					<button
-						type="button"
-						class="bf-cta btn-cta-primary"
-						onclick={() => pdfRequestModalStore.open('ficha-tecnica')}
-						aria-label="Ver más detalles técnicos del edificio"
-					>
-						SOLICITAR FICHA TÉCNICA
-					</button>
-				</div>
-	
 			</div>
 		</div>
 	</div>
@@ -246,18 +234,6 @@
 		.bf-header {
 			grid-template-columns: 1fr;
 			margin-bottom: 1.5rem;
-		}
-	}
-
-	.bf-cta-wrap {
-		display: flex;
-		justify-content: flex-end;
-		align-items: flex-start;
-	}
-
-	@media (max-width: 900px) {
-		.bf-cta-wrap {
-			justify-content: stretch;
 		}
 	}
 
@@ -333,40 +309,6 @@
 		gap: 1.25rem;
 	}
 
-	.bf-cta {
-		display: block;
-		white-space: normal;
-		max-width: 18rem;
-		padding: 0.75rem 1rem;
-		font-size: 0.8rem;
-		font-weight: 600;
-		letter-spacing: 0.04em;
-		text-transform: uppercase;
-		text-align: center;
-		color: var(--color-text-on-accent);
-		background: var(--ref-cta-teal);
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-		font-family: inherit;
-		transition: opacity 0.2s, transform 0.15s;
-	}
-
-	@media (max-width: 900px) {
-		.bf-cta {
-			max-width: none;
-		}
-	}
-
-	.bf-cta:hover {
-		opacity: 0.92;
-	}
-
-	.bf-cta:focus-visible {
-		outline: 2px solid var(--ref-cta-teal);
-		outline-offset: 2px;
-	}
-
 	.bf-extra {
 		list-style: none;
 		padding: 0;
@@ -375,9 +317,5 @@
 
 	:global([data-theme='dark']) .bf-frame {
 		background: var(--color-bg-elevated);
-	}
-
-	:global([data-theme='dark']) .bf-cta {
-		color: var(--color-text-on-accent);
 	}
 </style>

@@ -1,4 +1,4 @@
-<!-- Geometry from docs/proposals/icons/items-harmony.svg (CorelDRAW); stroke scaled for 512×512 viewBox -->
+<!-- Geometry from docs/proposals/icons/items-harmony.svg (CorelDRAW); 2px hairline at render size -->
 <g id="harmony-tilde">
 	<path
 		class="harmony-stroke"
@@ -22,7 +22,8 @@
 	.harmony-stroke {
 		fill: none;
 		stroke: var(--svg-fill-primary);
-		stroke-width: 8;
+		stroke-width: 1px;
+		vector-effect: non-scaling-stroke;
 		stroke-miterlimit: 2.61313;
 	}
 </style>

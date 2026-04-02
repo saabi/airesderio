@@ -109,7 +109,7 @@
 		display: grid;
 		grid-template-columns: 4rem 1fr;
 		gap: 0.75rem;
-		align-items: start;
+		align-items: center;
 		margin-top: 1rem;
 		margin-bottom: 1rem;
 		break-inside: avoid;

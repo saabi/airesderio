@@ -36,6 +36,8 @@ function getSiteUrl(): string {
 
 const PDF_LABELS: Record<string, string> = {
 	'ficha-tecnica': 'Ficha Técnica',
+	'ficha-tecnica-harmony': 'Ficha Técnica',
+	'ficha-tecnica-luxury': 'Ficha Técnica — Luxury Style',
 	planos: 'Planos'
 };
 

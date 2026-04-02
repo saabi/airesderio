@@ -1,6 +1,10 @@
 import { writable, derived } from 'svelte/store';
 
-export type PdfIntent = 'ficha-tecnica' | 'planos';
+export type PdfIntent =
+	| 'ficha-tecnica'
+	| 'ficha-tecnica-harmony'
+	| 'ficha-tecnica-luxury'
+	| 'planos';
 
 export type PdfRequestModalState = {
 	intent: PdfIntent;

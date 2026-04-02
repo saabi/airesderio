@@ -16,6 +16,7 @@
 	import UnidadesAire from '$lib/components/icons/UnidadesAire.svelte';
 
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 	import {
 		ANIMATION,
 		animationDelay,
@@ -182,6 +183,16 @@
 					</li>
 				{/each}
 			</ul>
+			<div class="equip-ficha-wrap">
+				<button
+					type="button"
+					class="equip-ficha btn-cta-primary"
+					onclick={() => pdfRequestModalStore.open('ficha-tecnica-harmony')}
+					aria-label="Descargar ficha técnica"
+				>
+					SOLICITAR FICHA TÉCNICA
+				</button>
+			</div>
 		</div>
 	</div>
 </section>
@@ -218,6 +229,34 @@
 		list-style: none;
 		padding: 0;
 		margin: 0 0 1.25rem;
+	}
+
+	.equip-ficha-wrap {
+		text-align: center;
+		margin-top: 0.5rem;
+	}
+
+	.equip-ficha {
+		display: inline-block;
+		padding: 0.6rem 1.25rem;
+		font-size: 1rem;
+		font-weight: 500;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+		color: var(--color-text-on-accent);
+		background: var(--ref-cta-teal);
+		border: 1px solid var(--ref-cta-teal-hover);
+		border-radius: 4px;
+		text-decoration: none;
+		cursor: pointer;
+		font-family: inherit;
+		transition: background 0.2s, color 0.2s, opacity 0.2s;
+	}
+
+	.equip-ficha:hover {
+		opacity: 0.9;
+		background: var(--ref-cta-teal-hover);
+		color: var(--color-text-on-accent);
 	}
 
 	@media (max-width: 900px) {

@@ -7,6 +7,8 @@
 	const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 	const INTENT_LABELS: Record<PdfIntent, string> = {
 		'ficha-tecnica': 'Ficha técnica',
+		'ficha-tecnica-harmony': 'Ficha técnica',
+		'ficha-tecnica-luxury': 'Ficha técnica — Luxury Style',
 		planos: 'Planos'
 	};
 </script>
