@@ -105,15 +105,86 @@
 		return `${svgOpenTag}${inner}</svg>`;
 	}
 
+	/** Shapes that accept fill/stroke; must match between source and clone trees. */
+	const GRAPHICS_TAGS = new Set([
+		'path',
+		'rect',
+		'circle',
+		'ellipse',
+		'line',
+		'polyline',
+		'polygon',
+		'text',
+		'tspan'
+	]);
+
+	/**
+	 * `url()` paints from getComputedStyle may include the document origin; standalone SVG blobs only resolve `url(#id)`.
+	 */
+	function normalizeUrlPaint(cssValue: string): string {
+		const trimmed = cssValue.trim();
+		const m = trimmed.match(/^url\(\s*["']?([^)"']+)["']?\s*\)$/i);
+		if (!m) return trimmed;
+		const inner = m[1].trim();
+		const hashIdx = inner.lastIndexOf('#');
+		if (hashIdx === -1) return trimmed;
+		const id = inner.slice(hashIdx);
+		return `url(${id})`;
+	}
+
+	/**
+	 * Logos rely on Svelte-scoped CSS; serialized SVG has no stylesheet. Copy resolved paints from the live DOM.
+	 */
+	function syncInlineComputedPaints(source: Element, dest: Element): void {
+		const tag = source.tagName.toLowerCase();
+
+		if (GRAPHICS_TAGS.has(tag)) {
+			const cs = getComputedStyle(source);
+			const fill = cs.fill;
+			if (fill && fill !== 'none') {
+				const transparent =
+					fill === 'rgba(0, 0, 0, 0)' || fill === 'transparent' || fill === '#00000000';
+				if (!transparent) dest.setAttribute('fill', normalizeUrlPaint(fill));
+			}
+			const stroke = cs.stroke;
+			if (stroke && stroke !== 'none') {
+				dest.setAttribute('stroke', normalizeUrlPaint(stroke));
+				const sw = cs.strokeWidth;
+				if (sw && sw !== '0px' && sw !== '0') dest.setAttribute('stroke-width', sw);
+			}
+			const fillRule = cs.fillRule;
+			if (fillRule && fillRule !== 'nonzero') dest.setAttribute('fill-rule', fillRule);
+		}
+
+		if (tag === 'stop') {
+			const cs = getComputedStyle(source);
+			dest.setAttribute('stop-color', cs.stopColor);
+			const so = cs.stopOpacity;
+			if (so && so !== '1' && so !== '') dest.setAttribute('stop-opacity', so);
+		}
+
+		const srcKids = source.children;
+		const dstKids = dest.children;
+		for (let i = 0; i < srcKids.length; i++) {
+			if (dstKids[i]) syncInlineComputedPaints(srcKids[i], dstKids[i]);
+		}
+	}
+
+	function buildExportSvgMarkup(svg: SVGSVGElement): string {
+		const clone = svg.cloneNode(true) as SVGSVGElement;
+		syncInlineComputedPaints(svg, clone);
+		const serializer = new XMLSerializer();
+		const raw = serializer.serializeToString(clone);
+		return ensureSvgMarkup(clone, raw);
+	}
+
 	async function measureAspect() {
 		if (!browser) return;
 		const svgEl = resolveTargetSvg();
 		if (!svgEl) return;
 
 		try {
-			const serializer = new XMLSerializer();
-			const raw = serializer.serializeToString(svgEl);
-			const markup = ensureSvgMarkup(svgEl, raw);
+			const markup = buildExportSvgMarkup(svgEl);
 
 			const blob = new Blob([markup], { type: 'image/svg+xml;charset=utf-8' });
 			const url = URL.createObjectURL(blob);
@@ -169,9 +240,7 @@
 		isExporting = true;
 
 		try {
-			const serializer = new XMLSerializer();
-			const raw = serializer.serializeToString(svgEl);
-			const markup = ensureSvgMarkup(svgEl, raw);
+			const markup = buildExportSvgMarkup(svgEl);
 
 			const blob = new Blob([markup], { type: 'image/svg+xml;charset=utf-8' });
 			const url = URL.createObjectURL(blob);
