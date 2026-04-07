@@ -20,11 +20,28 @@
 		{ label: 'Contacto', href: '/#contacto' },
 	];
 
-	const contactInfo = [
+	type ContactItem = {
+		label: string;
+		value: string;
+		href?: string;
+		/** Open in new tab (e.g. WhatsApp web/app) */
+		external?: boolean;
+	};
+
+	const contactInfo: ContactItem[] = [
 /* 		{ label: 'Oficina Habitat Prime', value: 'Av. Rivadavia 1520 · Santiago del Estero' },
 		{ label: 'Teléfono', value: '+54 385 421 1111' },
- */		{ label: 'Email comercial', value: 'info@airesderio.com' },
-		{ label: 'Whatsapp mensajes', value: '+54 9 385 6222266' }
+ */		{
+			label: 'Email comercial',
+			value: 'info@airesderio.com',
+			href: 'mailto:info@airesderio.com',
+		},
+		{
+			label: 'Whatsapp mensajes',
+			value: '+54 9 385 6222266',
+			href: 'https://wa.me/5493856222266',
+			external: true,
+		},
 	];
 
 	const projectHighlights = [
@@ -74,7 +91,18 @@
 					{#each contactInfo as item (item.label)}
 						<li>
 							<span>{item.label}</span>
-							<strong>{item.value}</strong>
+							{#if item.href}
+								<a
+									class='footer-contact-link'
+									href={item.href}
+									rel={item.external ? 'noopener noreferrer' : undefined}
+									target={item.external ? '_blank' : undefined}
+								>
+									{item.value}
+								</a>
+							{:else}
+								<strong>{item.value}</strong>
+							{/if}
 						</li>
 					{/each}
 					<li class='footer-contact-btn-wrap'>
@@ -215,10 +243,27 @@
 		letter-spacing: 0.08em;
 	}
 
-	.footer-contact strong {
+	.footer-contact strong,
+	.footer-contact-link {
 		display: block;
 		font-size: 1rem;
 		color: var(--color-text-inverse);
+	}
+
+	.footer-contact-link {
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-semibold);
+		text-decoration: none;
+	}
+
+	.footer-contact-link:hover {
+		color: var(--color-accent-primary);
+	}
+
+	.footer-contact-link:focus-visible {
+		outline: 2px solid var(--color-accent-primary);
+		outline-offset: 2px;
+		border-radius: 2px;
 	}
 
 	.footer-contact-btn-wrap {
