@@ -20,11 +20,9 @@ const MAP_JSON_PATH = path.join(REPO_ROOT, 'fe', 'static', 'places', 'map.json')
 
 const FOLDER_TO_PLACE_ID = {
 	'AV. ALVEAR-FORUM': 'forum',
-	'AV. RIVADAVIA': 'avenida-rivadavia',
 	'CALLE ROCA': 'avenida-roca',
 	'CASA DE GOBIERNO': 'casa-de-gobierno',
 	'CCB-CENTRO': 'ccb',
-	'ESTADIO UNICO': 'estadio-unico',
 	'MERCADO ARMONIA': 'mercado',
 	'PARQUE AGUIRRE': 'parque-aguirre',
 	'PEATONALES': 'peatonales',

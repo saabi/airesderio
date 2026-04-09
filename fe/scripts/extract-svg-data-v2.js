@@ -48,8 +48,7 @@ const placesGroupContent = mapContent.substring(placesStart, placesEnd);
 const placeIds = [
   'terminal', 'forum', 'casa-de-gobierno', 'plaza-vea', 'parque-aguirre',
   'avenida-roca', 'peatonales', 'mercado',
-  'teatro-25-de-mayo', 'plaza-libertad', 'avenida-rivadavia',
-  'avenida-alvear', 'tribunales', 'estadio-unico', 'registro-civil', 'ccb'
+  'teatro-25-de-mayo', 'plaza-libertad', 'tribunales', 'ccb'
 ];
 
 placeIds.forEach(placeId => {

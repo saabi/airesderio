@@ -26,7 +26,6 @@
 		/** Vertical/mobile image; falls back to image when absent */
 		imageMobile?: string;
 		title: string;
-		description: string;
 		interactive?: boolean;
 		zones?: import('$lib/types').FloorPlanZone[];
 		highlightOnHover?: boolean;
@@ -44,7 +43,6 @@
 		{
 			image: '/planos/1hab-frente.png',
 			title: 'Departamento de 2 ambientes con balcón',
-			description: 'FRENTE',
 			clipShape: {
 				type: 'path',
 				d: 'M30.5 561.5l1575.141 0.575 -1.141 220.425 213 -2 0.09 184.684c1.743,14.108 7.443,23.575 20,25l145.91 1.316 -1 558 -1741 4 0 -5 -211 1 0 -988z'
@@ -53,7 +51,6 @@
 		{
 			image: '/planos/1hab-contrafrente.png',
 			title: 'Departamento de 2 ambientes',
-			description: 'CONTRAFRENTE',
 			clipShape: {
 				type: 'polygon',
 				points: '139.5,563.5 1877.5,559.5 1877.379,1549.742 516.5,1549.5 516.5,1334.426 279.5,1334.5 279.527,1116.5 139.5,1116.5'
@@ -62,7 +59,6 @@
 		{
 			image: '/planos/2hab-contrafrente.png',
 			title: 'Departamento de 4 ambientes',
-			description: 'CONTRAFRENTE',
 			clipShape: {
 				type: 'polygon',
 				points: '151.5,95.5 152.475,653.306 292.5,653.5 292.5,1462.5 152.5,1463.5 152.5,2006.5 1246.5,2006.5 1247.5,2026.5 1278.5,2026.5 1278.5,2023.5 1889.5,2024.5 1889.5,94.5'
@@ -139,7 +135,6 @@
 					{#snippet caption()}
 						<figure class='floor-plan-info'>
 							<figcaption class='floor-plan-title'>{currentPlan.title}</figcaption>
-							<p class='floor-plan-description'>{currentPlan.description}</p>
 						</figure>
 					{/snippet}
 					{#snippet slide(index)}
@@ -259,15 +254,6 @@
 		margin-bottom: 0.5rem;
 	}
 
-	.floor-plan-description {
-		/* Typography */
-		font-family: var(--font-body);
-		font-size: 0.95rem;
-		color: var(--color-text-secondary);
-		line-height: var(--line-height-normal);
-		margin: 0;
-	}
-
 	.floor-plan-download-wrap {
 		display: flex;
 		justify-content: center;
@@ -370,8 +356,5 @@
 			font-size: 1rem;
 		}
 
-		.floor-plan-description {
-			font-size: 0.875rem;
-		}
 	}
 </style>
