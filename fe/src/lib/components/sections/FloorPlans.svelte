@@ -250,7 +250,7 @@
 		font-family: var(--font-heading);
 		font-size: 1.1rem;
 		font-weight: var(--font-weight-bold);
-		color: var(--color-accent-primary);
+		color: var(--color-title-emphasis);
 		margin-bottom: 0.5rem;
 	}
 

@@ -83,7 +83,9 @@
 
 	/* === Functional tokens === */
 	/* Clean, slightly warm off-white background (milk/cream) */
-	--color-bg-canvas: var(--ref-cream);
+	--color-bg-canvas: var(--ref-white);
+	/* Alternating full-width section bands (home) */
+	--section-alt-bg: #f7fafc;
 	--color-bg-surface: var(--ref-neutral-150);
 	--color-bg-elevated: color-mix(in oklch, var(--ref-white) 95%, var(--ref-neutral-200) 5%);
 	--color-bg-muted: var(--ref-neutral-200);
@@ -110,11 +112,11 @@
 	--color-icon-primary: var(--color-text-primary);
 	--color-icon-inverse: var(--color-text-inverse);
 	--color-contrast-low: black;
-	/* SVG icon colors */
-	--svg-fill-primary: var(--ref-gold-dark);
+	/* SVG icon colors (section list icons: BuildingFeatures, Equipment, IconTextRow) */
+	--svg-fill-primary: #022b3a;
 	--svg-fill-secondary: var(--ref-gold);
 	--svg-fill-contrast: var(--ref-white);
-	--svg-stroke-primary: var(--ref-gold);
+	--svg-stroke-primary: #022b3a;
 	--svg-stroke-contrast: var(--ref-gold-dark);
 
 	/* === Typography === */
@@ -148,6 +150,8 @@
 	--color-accent-strong: var(--ref-brand-deep);
 	/* Darker accent color for text on light backgrounds */
 	--color-accent-primary-text: var(--ref-brand-primary-text);
+	/* Section / Title main line (uppercase emphasis) — matches map unselected pin */
+	--color-title-emphasis: #b63f3c;
 
 	--color-success: var(--ref-green-500);
 	--color-success-strong: var(--ref-green-600);
@@ -206,6 +210,8 @@
 
 	/* Deep charcoal grey background instead of pure black - more sophisticated */
 	--color-bg-canvas: oklch(0.12 0 0deg); /* #1A1A1A equivalent - deep charcoal */
+	/* Alternating section bands: slightly lifted from canvas */
+	--section-alt-bg: oklch(0.16 0.01 250deg);
 	--color-bg-surface: oklch(0.15 0 0deg);
 	--color-bg-elevated: oklch(0.18 0 0deg);
 	--color-bg-muted: oklch(0.2 0 0deg);
@@ -244,11 +250,11 @@
 	--color-icon-primary: var(--color-text-primary);
 	--color-icon-inverse: var(--ref-neutral-980);
 
-	/* SVG icon colors - use brighter accent for visibility on dark background */
-	--svg-fill-primary: var(--color-accent-primary);
+	/* Section item icons: same brand fill as light (with light surfaces in content areas) */
+	--svg-fill-primary: #022b3a;
 	--svg-fill-secondary: var(--color-accent-secondary);
 	--svg-fill-contrast: oklch(0.9 0 0deg);
-	--svg-stroke-primary: var(--color-accent-primary);
+	--svg-stroke-primary: #022b3a;
 	--svg-stroke-contrast: oklch(0.9 0 0deg);
 
 	/* Brighter copper/terracotta accent that glows against dark background */
@@ -257,6 +263,8 @@
 	--color-accent-hover: oklch(0.7 0.13 35deg);
 	--color-accent-border: oklch(0.6 0.1 35deg);
 	--color-accent-strong: oklch(0.75 0.12 35deg);
+
+	--color-title-emphasis: #b63f3c;
 
 	--color-success: color-mix(in oklch, var(--ref-green-500) 70%, var(--ref-white) 30%);
 	--color-success-strong: color-mix(in oklch, var(--ref-green-600) 70%, var(--ref-white) 30%);
@@ -329,6 +337,16 @@
 .section--band {
 	/* Slightly larger vertical padding for full-width bands */
 	padding-block: 3rem;
+}
+
+/* Full-width background stripe behind constrained `.page-shell` content */
+.section-band {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.section-band--alt {
+	background: var(--section-alt-bg);
 }
 
 .scroll-animate {

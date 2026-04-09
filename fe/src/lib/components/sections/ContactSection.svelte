@@ -105,7 +105,7 @@
 		font-size: 1.5em;
 		font-weight: 600;
 		letter-spacing: 0.1em;
-		color: var(--color-accent-primary);
+		color: var(--color-title-emphasis);
 		justify-self: start;
 	}
 

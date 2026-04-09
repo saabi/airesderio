@@ -38,7 +38,7 @@
 		align-items: start;
 		justify-content: center;
 		min-width: 0;
-		color: var(--color-contrast-low);
+		color: var(--svg-fill-primary);
 	}
 
 	.icon-text-row__text {

@@ -228,7 +228,7 @@
 		margin: 0 0 0.5rem;
 		font-size: 1.25rem;
 		font-weight: 600;
-		color: var(--color-accent-primary);
+		color: var(--color-title-emphasis);
 	}
 
 	.modal-content p {
