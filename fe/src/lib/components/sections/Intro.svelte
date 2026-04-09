@@ -65,7 +65,7 @@
 			>Características principales del proyecto</VisuallyHidden
 		>
 		<dl>
-			<dt class='kpi kpi--grey'><strong>2 y 4 Ambientes</strong><small>1 dormitorio<br>2 dormitorios + estudio</small></dt>
+			<dt class='kpi'><strong>2 y 4 Ambientes</strong><small>1 dormitorio<br>2 dormitorios + estudio</small></dt>
 			<VisuallyHidden tag='dd'>Tipos de unidades disponibles</VisuallyHidden>
 			<dt class='kpi'><strong>PISCINA</strong><small>Con solarium húmedo en terraza</small></dt>
 			<VisuallyHidden tag='dd'>Amenities en terraza con piscina y solarium húmedo</VisuallyHidden>
@@ -99,7 +99,7 @@
 		background: color-mix(in oklch, var(--ref-cream) 92%, var(--ref-neutral-200) 8%);
 		border-radius: 0.625rem;
 		/* Minimalistic, elegant + fun: thin copper accent with soft inner highlight */
-		border: 1px solid color-mix(in oklch, var(--ref-brand-primary) 55%, var(--ref-cream) 45%);
+		border: 1px solid #4497b9;
 		box-shadow:
 			inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
 			0 0 0 1px color-mix(in oklch, var(--ref-brand-primary) 25%, transparent 75%);
@@ -121,7 +121,7 @@
 		display: grid;
 		gap: 0.625rem;
 		padding-left: 1rem;
-		border-left: 7px solid var(--ref-brand-primary);
+		border-left: 7px solid black;
 
 		/* Typography */
 		color: var(--color-ink);
@@ -146,7 +146,7 @@
 		font-weight: 700;
 		line-height: 1;
 		letter-spacing: 0.02em;
-		color: var(--ref-brand-primary);
+		color: #4497b9;
 	}
 
 	.kpi--grey strong {

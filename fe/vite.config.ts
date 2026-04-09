@@ -33,9 +33,9 @@ export default defineConfig({
 		}
 	},
 	preview: {
-		allowedHosts: ['ferreyrapons.com', 'ad5e-181-116-253-82.ngrok-free.app']
+		allowedHosts: ['ferreyrapons.com', 'itself-arch-raising-flights.trycloudflare.com']
 	},
 	server: {
-		allowedHosts: ['ferreyrapons.com', 'ad5e-181-116-253-82.ngrok-free.app']
+		allowedHosts: ['ferreyrapons.com', 'itself-arch-raising-flights.trycloudflare.com']
 	}
 });

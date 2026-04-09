@@ -350,6 +350,7 @@
 
 	.desktop-nav a:hover {
 		/* Box/Visual */
+		color: var(--header-nav-text-hover);
 		border-color: var(--header-active-underline);
 	}
 

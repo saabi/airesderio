@@ -7,6 +7,7 @@
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
 	import CarouselDots from '$lib/components/ui/CarouselDots.svelte';
+	import type { DotSize } from '$lib/components/ui/CarouselDots.svelte';
 
 	// ===== TYPES =====
 	export type NavigationPosition = 'absolute-sides' | 'around-dots' | 'below-image' | 'above-image';
@@ -41,6 +42,7 @@
 		showDots?: boolean;
 		dotsVariant?: 'default' | 'accent' | 'inverse';
 		dotsPosition?: DotsPosition;
+		dotsSize?: DotSize;
 
 		// Transitions
 		transitionType?: TransitionType;
@@ -87,6 +89,7 @@
 		showDots = true,
 		dotsVariant = 'default',
 		dotsPosition = 'bottom-center',
+		dotsSize = 'medium',
 		transitionType = 'fade-scale',
 		transitionDuration = 800,
 		imageFit = 'cover',
@@ -408,6 +411,7 @@
 					variant={dotsVariant}
 					showTransform={true}
 					containerClass='container'
+					size={dotsSize}
 				/>
 			{/if}
 			<CircularButton

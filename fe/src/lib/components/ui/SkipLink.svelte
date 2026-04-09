@@ -19,7 +19,7 @@
 	.skip-link {
 		/* Layout */
 		position: absolute;
-		top: -40px;
+		top: -50px;
 		left: 0;
 		padding: 0.5rem 1rem;
 
