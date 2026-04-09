@@ -64,7 +64,7 @@ export async function processDueEmailOutboundJobs(
 					await sendPdfDownloadLink({
 						leadName: payload.leadName ?? '',
 						leadEmail: payload.leadEmail ?? '',
-						pdfType: payload.pdfType ?? 'ficha-tecnica',
+						pdfType: payload.pdfType ?? 'departamentos',
 						token: payload.token ?? ''
 					});
 					break;

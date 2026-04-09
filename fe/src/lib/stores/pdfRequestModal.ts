@@ -1,10 +1,7 @@
 import { writable, derived } from 'svelte/store';
 
-export type PdfIntent =
-	| 'ficha-tecnica'
-	| 'ficha-tecnica-harmony'
-	| 'ficha-tecnica-luxury'
-	| 'planos';
+/** Single PDF for all request CTAs: `static/pdf/AiresDeRioDepartamentos.pdf` */
+export type PdfIntent = 'departamentos';
 
 export type PdfRequestModalState = {
 	intent: PdfIntent;

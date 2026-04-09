@@ -151,10 +151,10 @@
 			<button
 				type='button'
 				class='floor-plan-download btn-cta-primary'
-				onclick={() => pdfRequestModalStore.open('planos')}
-				aria-label='Solicitar planos'
+				onclick={() => pdfRequestModalStore.open('departamentos')}
+				aria-label='Solicitar ficha técnica'
 			>
-				SOLICITAR PLANOS
+				SOLICITAR FICHA TÉCNICA
 			</button>
 		</div>
 	</div>

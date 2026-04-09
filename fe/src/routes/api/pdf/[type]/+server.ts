@@ -11,13 +11,18 @@ import { eq, and, sql } from 'drizzle-orm';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
+/** Current slug; legacy values kept so old email links still validate until tokens expire. */
 const VALID_PDF_TYPES = [
+	'departamentos',
 	'ficha-tecnica',
 	'ficha-tecnica-harmony',
 	'ficha-tecnica-luxury',
 	'planos'
 ] as const;
+
 const STATIC_PDF_DIR = 'static/pdf';
+/** Single PDF served for every valid type (see VALID_PDF_TYPES). */
+const UNIFIED_PDF_FILENAME = 'AiresDeRioDepartamentos.pdf';
 
 function isPdfType(type: string): type is (typeof VALID_PDF_TYPES)[number] {
 	return VALID_PDF_TYPES.includes(type as (typeof VALID_PDF_TYPES)[number]);
@@ -55,8 +60,7 @@ export const GET: import('@sveltejs/kit').RequestHandler = async ({ params, url 
 		throw error(410, 'El enlace de descarga ha expirado.');
 	}
 
-	const filename = `${type}.pdf`;
-	const filePath = join(process.cwd(), STATIC_PDF_DIR, filename);
+	const filePath = join(process.cwd(), STATIC_PDF_DIR, UNIFIED_PDF_FILENAME);
 
 	let buffer: Buffer;
 	try {
@@ -82,7 +86,7 @@ export const GET: import('@sveltejs/kit').RequestHandler = async ({ params, url 
 	return new Response(new Uint8Array(buffer), {
 		headers: {
 			'Content-Type': 'application/pdf',
-			'Content-Disposition': `attachment; filename="${filename}"`,
+			'Content-Disposition': `attachment; filename="${UNIFIED_PDF_FILENAME}"`,
 			'Content-Length': String(buffer.length)
 		}
 	});

@@ -35,10 +35,12 @@ function getSiteUrl(): string {
 }
 
 const PDF_LABELS: Record<string, string> = {
-	'ficha-tecnica': 'Ficha Técnica',
-	'ficha-tecnica-harmony': 'Ficha Técnica',
-	'ficha-tecnica-luxury': 'Ficha Técnica — Luxury Style',
-	planos: 'Planos'
+	departamentos: 'documentación del proyecto',
+	// Legacy pdf_type values (retry queue / old tokens)
+	'ficha-tecnica': 'documentación del proyecto',
+	'ficha-tecnica-harmony': 'documentación del proyecto',
+	'ficha-tecnica-luxury': 'documentación del proyecto',
+	planos: 'documentación del proyecto'
 };
 
 const EMAIL_SIGNATURE_LINE =
@@ -125,16 +127,16 @@ export async function sendPdfDownloadLink(params: SendPdfLinkParams): Promise<vo
 	const label = PDF_LABELS[pdfType] || pdfType;
 	const downloadUrl = `${getSiteUrl()}/api/pdf/${encodeURIComponent(pdfType)}?token=${encodeURIComponent(token)}`;
 
-	const subject = `Tu ${label} de Aires de Río`;
+	const subject = 'Tu PDF de Aires de Río — Departamentos';
 	const body = `
 		<h2 style="margin:0 0 8px; font-size:20px; color:#1a1a2e;">¡Hola ${leadName}!</h2>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
-			Gracias por tu interés en <strong>Aires de Río</strong>. Hacé clic en el botón para descargar la <strong>${label}</strong> del proyecto.
+			Gracias por tu interés en <strong>Aires de Río</strong>. Hacé clic en el botón para descargar <strong>${label}</strong>.
 		</p>
 		<table cellpadding="0" cellspacing="0" style="margin:24px 0;">
 			<tr><td align="center" style="background:#1a1a2e; border-radius:6px;">
 				<a href="${downloadUrl}" style="display:inline-block; padding:14px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
-					Descargar ${label}
+					Descargar PDF
 				</a>
 			</td></tr>
 		</table>

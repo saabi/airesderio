@@ -5,12 +5,6 @@
 	import type { PdfIntent } from '$lib/stores/pdfRequestModal';
 
 	const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
-	const INTENT_LABELS: Record<PdfIntent, string> = {
-		'ficha-tecnica': 'Ficha técnica',
-		'ficha-tecnica-harmony': 'Ficha técnica',
-		'ficha-tecnica-luxury': 'Ficha técnica — Luxury Style',
-		planos: 'Planos'
-	};
 </script>
 
 <script lang='ts'>
@@ -114,8 +108,8 @@
 >
 	<div class='modal-content'>
 		<button type='button' class='modal-close' aria-label='Cerrar' onclick={handleClose}>×</button>
-		<h2 id='pdf-modal-title'>Solicitar {INTENT_LABELS[intent]}</h2>
-		<p id='pdf-modal-desc'>Completá tus datos y te enviaremos la {INTENT_LABELS[intent].toLowerCase()} a tu correo.</p>
+		<h2 id='pdf-modal-title'>Solicitar Ficha Técnica</h2>
+		<p id='pdf-modal-desc'>Completá tus datos y te enviaremos el PDF del proyecto a tu correo.</p>
 
 		<form bind:this={formElement} action='#' method='POST' onsubmit={handleSubmit} novalidate>
 			<input
@@ -174,7 +168,9 @@
 				/>
 			</div>
 			<div class='form-group'>
-				<button type='submit' class='btn-cta-primary' aria-label='Solicitar'>SOLICITAR</button>
+				<button type='submit' class='btn-cta-primary' aria-label='Solicitar ficha técnica'>
+					SOLICITAR FICHA TÉCNICA
+				</button>
 			</div>
 		</form>
 	</div>

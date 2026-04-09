@@ -97,7 +97,7 @@
 						<button
 							type='button'
 							class='footer-contact-btn btn-cta-primary'
-							onclick={() => pdfRequestModalStore.open('ficha-tecnica')}
+							onclick={() => pdfRequestModalStore.open('departamentos')}
 							aria-label='Solicitar ficha técnica'
 						>
 							SOLICITAR FICHA TÉCNICA

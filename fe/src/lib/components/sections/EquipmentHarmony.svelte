@@ -187,7 +187,7 @@
 				<button
 					type="button"
 					class="equip-ficha btn-cta-primary"
-					onclick={() => pdfRequestModalStore.open('ficha-tecnica-harmony')}
+					onclick={() => pdfRequestModalStore.open('departamentos')}
 					aria-label="Descargar ficha técnica"
 				>
 					SOLICITAR FICHA TÉCNICA
