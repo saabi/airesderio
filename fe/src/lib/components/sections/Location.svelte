@@ -333,7 +333,6 @@
 
 		/* Box/Visual */
 		/* Light, semi-transparent cream overlay with dark text for light theme */
-		background: color-mix(in oklch, var(--ref-cream) 90%, transparent);
 		backdrop-filter: blur(8px);
 
 		/* Typography */

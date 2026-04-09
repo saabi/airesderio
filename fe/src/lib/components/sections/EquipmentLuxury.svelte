@@ -205,7 +205,6 @@
 	.equip-outline {
 		position: relative;
 		padding: 1.5rem 1.25rem 1.25rem;
-		background: var(--color-bg-canvas);
 	}
 
 	.equip-list {

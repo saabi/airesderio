@@ -213,12 +213,6 @@
 	.bf-frame {
 		border-radius: 6px;
 		padding: 2rem;
-		/* Marble-style band over cream background */
-		background: linear-gradient(
-			180deg,
-			color-mix(in oklch, var(--ref-cream) 92%, var(--ref-neutral-200) 8%) 0%,
-			color-mix(in oklch, var(--ref-cream) 88%, var(--ref-neutral-250) 12%) 100%
-		);
 		border: 1px solid var(--color-border-subtle);
 	}
 

@@ -127,18 +127,29 @@
 		<Intro />
 	</div>
 	<Location jsonUrl="/lugares/lugares-direcciones.json" showPlaceMarkers={true} />
-	<div class="page-shell section">
-		<div class="section-band section-band--alt">
+	<div class="section-band section-band--alt">
+		<div class="page-shell section">
 			<BuildingFeatures />
 		</div>
+	</div>
+	<div class="page-shell section">
 		<EquipmentHarmony />
-		<div class="section-band section-band--alt">
+	</div>
+	<div class="section-band section-band--alt">
+		<div class="page-shell section">
 			<CarouselHarmony />
 		</div>
+	</div>
+	<div class="page-shell section">
+
 		<EquipmentLuxury />
-		<div class="section-band section-band--alt">
+	</div>
+	<div class="section-band section-band--alt">
+		<div class="page-shell section">
 			<CarouselLuxury />
 		</div>
+	</div>
+	<div class="page-shell section">
 		<FloorPlans />
 	</div>
 	<ContactSection />

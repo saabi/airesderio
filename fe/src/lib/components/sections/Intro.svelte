@@ -96,7 +96,6 @@
 		margin: 2rem auto;
 
 		/* Box/Visual */
-		background: color-mix(in oklch, var(--ref-cream) 92%, var(--ref-neutral-200) 8%);
 		border-radius: 0.625rem;
 		/* Minimalistic, elegant + fun: thin copper accent with soft inner highlight */
 		border: 1px solid #4497b9;
