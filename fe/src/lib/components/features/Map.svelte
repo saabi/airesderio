@@ -44,6 +44,16 @@
 	function normalizeShapes(shape: SvgShape | SvgShape[]): SvgShape[] {
 		return Array.isArray(shape) ? shape : [shape];
 	}
+
+	/** Outer pin from docs/proposals/icons/map-pin.svg (48→24). Solid; selected + gallery. */
+	const MAP_PIN_OUTER_PATH =
+		'M12 0.11c-4.705,0 -8.53,3.825 -8.53,8.53 0,3.115 0.79,4.29 6.92,13.455l0.965 1.45c0.145,0.215 0.385,0.345 0.645,0.345 0.26,0 0.5,-0.13 0.645,-0.345l0.805 -1.205c6.275,-9.385 7.08,-10.59 7.08,-13.7 0,-4.705 -3.825,-8.53 -8.53,-8.53z';
+	/** Hole subpath (unselected only); combined with MAP_PIN_OUTER_PATH + fill-rule evenodd. */
+	const MAP_PIN_INNER_HOLE_PATH =
+		'm3.875 8.53l0 0.1 -0.005 0.1 -0.005 0.095 -0.01 0.1 -0.01 0.095 -0.015 0.1 -0.015 0.095 -0.015 0.095 -0.02 0.095 -0.025 0.09 -0.025 0.095 -0.03 0.09 -0.025 0.09 -0.035 0.09 -0.035 0.09 -0.035 0.085 -0.035 0.09 -0.04 0.085 -0.045 0.085 -0.04 0.08 -0.05 0.08 -0.045 0.085 -0.05 0.075 -0.05 0.08 -0.055 0.08 -0.055 0.075 -0.055 0.07 -0.06 0.075 -0.06 0.07 -0.06 0.07 -0.065 0.07 -0.065 0.065 -0.065 0.065 -0.07 0.065 -0.07 0.06 -0.07 0.06 -0.075 0.06 -0.07 0.055 -0.075 0.055 -0.08 0.055 -0.075 0.05 -0.08 0.05 -0.08 0.045 -0.085 0.05 -0.08 0.04 -0.085 0.045 -0.085 0.04 -0.09 0.035 -0.085 0.035 -0.09 0.035 -0.09 0.03 -0.09 0.03 -0.09 0.03 -0.095 0.025 -0.09 0.025 -0.095 0.02 -0.095 0.015 -0.095 0.015 -0.095 0.015 -0.1 0.01 -0.1 0.01 -0.095 0.005 -0.1 0.005 -0.1 0c-2.14,0 -3.88,-1.74 -3.88,-3.875 0,-2.14 1.74,-3.88 3.88,-3.88l0.1 0.005 0.1 0 0.095 0.01 0.1 0.005 0.1 0.015 0.095 0.01 0.095 0.02 0.095 0.015 0.095 0.02 0.09 0.025 0.095 0.025 0.09 0.025 0.09 0.03 0.09 0.035 0.09 0.03 0.085 0.035 0.09 0.04 0.085 0.04 0.085 0.04 0.08 0.045 0 0 0.085 0.045 0.08 0.05 0.08 0.05 0.075 0.05 0.08 0.055 0 0 0.075 0.055 0.07 0.055 0 0 0.075 0.06 0.07 0.06 0 0 0.07 0.06 0.07 0.065 0.065 0.065 0.065 0.065 0.065 0.07 0.06 0.07 0.06 0.07 0.06 0.07 0.055 0.075 0.055 0.075 0.055 0.08 0 0 0.05 0.075 0 0 0.05 0.08 0 0 0.045 0.08 0 0 0.05 0.085 0.04 0.08 0.045 0.085 0.04 0.085 0.035 0.085 0.035 0.09 0.035 0.085 0.035 0.09 0.025 0.095 0.03 0.09 0.025 0.09 0 0 0.025 0.095 0.02 0.095 0 0 0.015 0.095 0.015 0.095 0 0 0.015 0.095 0 0 0.01 0.1 0 0 0.01 0.095 0 0 0.005 0.1 0 0 0.005 0.1 0 0 0 0.1z';
+	const MAP_PIN_UNSELECTED_PATH = MAP_PIN_OUTER_PATH + MAP_PIN_INNER_HOLE_PATH;
+	const MAP_PIN_UNSELECTED_FILL = '#b63f3c';
+	const MAP_PIN_SELECTED_FILL = '#022b3a';
 </script>
 
 <script lang='ts'>
@@ -1115,15 +1125,9 @@
 								r={getPinRadius(place.pin.r) * 0.9}
 								fill="transparent"
 							/>
-							<g transform="translate({denorm(place.pin.cx)}, {denorm(place.pin.cy)}) scale({getPinRadius(place.pin.r) / 12}) translate(-12, {getPinInnerTranslateY(place.pin.r)})">
-								<!-- Solid teardrop pin -->
-								<path
-									fill="currentColor"
-									stroke="none"
-									d="M12 2.5C9.238 2.5 7 4.738 7 7.5c0 4.25 3.85 8.36 4.94 9.46.29.29.83.29 1.12 0C13.15 15.86 17 11.75 17 7.5 17 4.738 14.762 2.5 12 2.5z"
-								/>
-								<!-- Small circle accent near top of pin -->
-								<circle cx="12" cy="5.2" r="1.1" fill="white" />
+							<g transform="translate({denorm(place.pin.cx)}, {denorm(place.pin.cy)}) scale({getPinRadius(place.pin.r) / 22}) translate(-12, {getPinInnerTranslateY(place.pin.r)})">
+								<!-- Teardrop pin with center hole (even-odd) -->
+								<path fill={MAP_PIN_UNSELECTED_FILL} fill-rule="evenodd" stroke="none" d={MAP_PIN_UNSELECTED_PATH} />
 							</g>
 						</g>
 						<text
@@ -1195,11 +1199,12 @@
 							{/each}
 						{/if}
 
-						<!-- Pin circle (fused with gallery icon when place has photos) — same look as isotype: white circle, green border, black icon -->
+						<!-- Map pin + gallery icon (place has photos): same outer shape as markers, camera on the head -->
 						{#if onOpenGallery && (selectedPlace.photos?.length ?? 0) > 0}
 							{@const r = getPinRadius(selectedPlace.pin.r)}
-							{@const iconScale = r * 2 / 20}
-							{@const galleryIconScale = (iconScale / 1.5) * (20 / 48)}
+							{@const pinScale = r / 16}
+							{@const ty = getPinInnerTranslateY(selectedPlace.pin.r)}
+							{@const galleryOnPinScale = 13 / 48}
 							{@const pinCx = denorm(selectedPlace.pin.cx)}
 							{@const pinCy = denorm(selectedPlace.pin.cy)}
 							<g
@@ -1207,21 +1212,20 @@
 								role='button'
 								tabindex='0'
 								aria-label='Abrir galería de fotos'
+								transform="translate({pinCx}, {pinCy}) scale({pinScale}) translate(-12, {ty})"
 								onclick={(e) => (e.stopPropagation(), onOpenGallery())}
 								onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), e.stopPropagation(), onOpenGallery())}
 							>
-								<!-- Visible circle: white fill, green border (same as focal isotype) -->
-								<circle
-									class='pin-gallery-circle'
-									cx={pinCx}
-									cy={pinCy}
-									r={r * 0.85}
+								<path
+									class='pin-gallery-pin'
+									fill={MAP_PIN_SELECTED_FILL}
+									stroke="none"
+									d={MAP_PIN_OUTER_PATH}
 								/>
-								<!-- Invisible hit target so the button is easy to click -->
-								<circle cx={pinCx} cy={pinCy} r={r * 0.85} fill="transparent" />
 								<g
 									class='pin-gallery-icon'
-									transform="translate({pinCx}, {pinCy}) scale({galleryIconScale}) translate(-24, -24)"
+									transform="translate(12, 8) scale({galleryOnPinScale}) translate(-24, -24)"
+									aria-hidden='true'
 								>
 									<Gallery embed />
 								</g>
@@ -1235,11 +1239,7 @@
 								transform="translate({pinCx}, {pinCy}) scale({r / 12}) translate(-12, {getPinInnerTranslateY(selectedPlace.pin.r)})"
 								aria-hidden='true'
 							>
-								<path
-									fill="currentColor"
-									stroke="none"
-									d="M12 2.5C9.238 2.5 7 4.738 7 7.5c0 4.25 3.85 8.36 4.94 9.46.29.29.83.29 1.12 0C13.15 15.86 17 11.75 17 7.5 17 4.738 14.762 2.5 12 2.5z"
-								/>
+								<path fill={MAP_PIN_SELECTED_FILL} stroke="none" d={MAP_PIN_OUTER_PATH} />
 
 							</g>
 						{/if}
@@ -1267,13 +1267,8 @@
 									r={getPinRadius(place.pin.r) * 0.9}
 									fill="transparent"
 								/>
-								<g transform="translate({denorm(place.pin.cx)}, {denorm(place.pin.cy)}) scale({getPinRadius(place.pin.r) / 12}) translate(-12, {getPinInnerTranslateY(place.pin.r)})">
-									<path
-										fill="currentColor"
-										stroke="none"
-										d="M12 2.5C9.238 2.5 7 4.738 7 7.5c0 4.25 3.85 8.36 4.94 9.46.29.29.83.29 1.12 0C13.15 15.86 17 11.75 17 7.5 17 4.738 14.762 2.5 12 2.5z"
-									/>
-									<circle cx="12" cy="5.2" r="1.1" fill="white" />
+								<g transform="translate({denorm(place.pin.cx)}, {denorm(place.pin.cy)}) scale({getPinRadius(place.pin.r) / 22}) translate(-12, {getPinInnerTranslateY(place.pin.r)})">
+									<path fill={MAP_PIN_UNSELECTED_FILL} fill-rule="evenodd" stroke="none" d={MAP_PIN_UNSELECTED_PATH} />
 								</g>
 							</g>
 						</g>
@@ -1503,17 +1498,14 @@
 		pointer-events: all;
 	}
 
-	/* Same look as focal isotype: white circle, green border */
-	.pin-gallery-circle {
-		fill: var(--map-paper);
-		stroke: var(--ref-cta-teal);
-		stroke-width: 2;
-		vector-effect: non-scaling-stroke;
+	/* Fill/stroke come from path attributes (MAP_PIN_SELECTED_FILL) */
+	.pin-gallery-pin {
+		pointer-events: none;
 	}
 
 	.pin-gallery-icon {
-		/* Icon is black/dark (same as isotype) for contrast */
-		color: var(--map-isotype-ink);
+		/* Camera on dark pin head — white for contrast */
+		color: #fff;
 		pointer-events: none;
 	}
 
@@ -1614,6 +1606,19 @@
 
 	.place-other-pin .pin-location-icon {
 		pointer-events: all;
+	}
+
+	/* Unselected pin: hover matches selected pin fill (MAP_PIN_SELECTED_FILL) */
+	.place-home .pin-location-icon path,
+	.place-other-pin .pin-location-icon path {
+		transition: fill 0.15s ease;
+	}
+
+	.place-home:hover .pin-location-icon path,
+	.place-home:focus-visible .pin-location-icon path,
+	.place-other-pin:hover .pin-location-icon path,
+	.place-other-pin:focus-visible .pin-location-icon path {
+		fill: #022b3a;
 	}
 
 	.place-home {
