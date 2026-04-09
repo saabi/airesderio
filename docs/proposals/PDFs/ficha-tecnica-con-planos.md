@@ -1,0 +1,66 @@
+- FICHA TECNICA PARA LOS DEPARTAMENTOS  HARMONY
+  - Ubicación del edificio: Av. Rivadavia (E) 25.
+  - La circulación vertical desde el subsuelo a la terraza estará servida por dos ascensores sistema MR, ultra silenciosos con modernas y elegantes terminaciones y capacidades de software para eficientizar su uso.
+  - En las paredes exteriores y los tabiques divisores interiores se utilizaron ladrillos cerámicos huecos.
+  - Paredes interiores revocadas y pintadas con pintura  látex premium interior de primera marca. 
+  - Algunos de los muros interiores serán revestidos con materiales especiales y de vanguardia siguiendo los lineamientos estéticos del interiorismo definido en el proyecto.
+  - Conexiones sanitarias y de gas realizadas con materiales AWADUCT y TIGRE de alta resistencia y calidad.
+  - El edificio cuenta con un generador de última generación instalado por EDESE lo que asegura una provisión de electricidad estable.
+  - Terraza con piscina, deck húmedo y área social.
+  - El desarrollo ofrece un espacio comercial dedicado a cafetería en la Planta Baja.
+  - Los departamentos tienen una puerta de ingreso de exclusivo diseño con cerradura de seguridad doble perno marca Privé o de similar calidad.
+  - Las unidades cuentan con techos altos, con 275cm de luz entre losas.
+  - Adicionalmente todos los ambientes tienen cielorraso con elegantes cenefas y gargantas para permitir instalaciones ocultas de luces led de tarea, de acento y decorativas. Este recurso también permite ocultar los barrales de las cortinas y las instalaciones de ductos dando a los ambientes un acabado prolijo y elegante.
+  - Carpintería de aluminio ALUAR Línea A30-NEW de alta prestación.
+  - Pisos de porcelanato de gran tamaño en cocinas, living y dormitorios con zócalos EPS antihumedad.
+  - Dormitorios y living con grandes puertas-ventanas de piso a techo y de doble hoja al exterior. El resto de los ambientes con ventanas al exterior, permitiendo excelente iluminación natural durante el día.
+  - Vestidores con tres metros lineales de placares equipados con dos cajones, estantes, espacio para perchas y pantalonera extraíble con rieles.
+  - Cocinas completamente equipadas con modernos muebles bajo mesada y alacena con melamina base MDF.
+  - Mesada y desayunador con encimeras de granito natural.
+  - Las paredes sobre mesadas de la cocina, en el área de trabajo son cubiertas íntegramente con cerámicos de primera marca y zócalo de granito natural.
+  - Pileta de acero inoxidable marca Johnson con grifería mono comando FV. 
+  - Cocina a gas de cuatro hornallas de eficiencia energética Clase A con horno integrado, respaldo de vidrio y reja de fundición.
+  - Campana purificadora con luz.
+  - Sector de lavado de ropa con preinstalaciones integrales: provisión de agua, desagües de alto caudal y ducto de ventilación al exterior, para la instalación inmediata de torre de lavado y secado si se prefiere.
+  - Prebaños y baños con Sanitarios Ferrum y grifería FV. con vanitory con cajonera de diseño a medida y espejo separado.
+  - Extractor y mampara de vidrio 5+5 laminado en la ducha.
+  - Termotanque eléctrico SAIAR (fabricado por Rheem).
+  - Unidades de preinstalación de aires acondicionados en living y dormitorios, con placa de sostén, drenajes, caños de descarga y acceso a toma de corriente eléctrica dedicado.
+  - Bandeja de hierro para las unidades externas de los aires acondicionados en los patios internos a los efectos de liberar espacios en el área de balcones.
+  - Balcones con portamaceteros con drenaje dedicado.
+  - Proyecto de distribución eléctrica muy desarrollado con gran cantidad de módulos de electricidad de maniobra en todos los ambientes donde son requeridos para usos habituales (puntos, tomas de 10A y de 20A, cajas de distribución, etc.) con su correspondiente tablero eléctrico en cada unidad habitacional.
+
+- FICHA TECNICA - DEPARTAMENTOS  LUXURY STYLE
+  - Ubicación del edificio: Av. Rivadavia (E) 25.
+  - La circulación vertical desde el subsuelo a la terraza estará servida por dos ascensores sistema MR, ultra silenciosos con modernas y elegantes terminaciones y capacidades de software para eficientizar su uso.
+  - En las paredes exteriores y los tabiques divisores interiores se utilizaron ladrillos cerámicos huecos.
+  - Paredes interiores revocadas y pintadas con pintura látex premium interior de primera marca. 
+  - Algunos de los muros interiores serán revestidos con materiales especiales y de vanguardia siguiendo los lineamientos estéticos del interiorismo definido en el proyecto.
+  - Conexiones sanitarias y de gas realizadas con materiales AWADUCT y TIGRE de alta resistencia y calidad.
+  - El edificio cuenta con un generador de última generación instalado por EDESE lo que asegura una provisión de electricidad estable.
+  - Terraza con piscina, deck húmedo y zona de estar.
+  - La iluminación del edificio es el resultado de un estudio lumínico avanzado, garantizando una transición armónica entre las áreas comunes y el interior de las viviendas.
+  - El desarrollo ofrece un espacio comercial dedicado a cafetería en la Planta Baja.
+  - Los departamentos tienen una puerta de ingreso de exclusivo diseño con cerradura inteligente digital biométrica con wifi..
+  - Las unidades cuentan con techos altos, con 275cm de luz entre losas.
+  - Adicionalmente todos los ambientes tienen cielorraso con elegantes cenefas y gargantas para permitir instalaciones ocultas de luces led de tarea, de acento y decorativas. Este recurso también permite ocultar los barrales de las cortinas y las instalaciones de ductos dando a los ambientes un acabado prolijo y elegante.
+  - Esta opción incluye la entrega del sistema de iluminación integral completamente operativo. Esto significa que las gargantas de luz indirecta, como las luces de trabajo en las mesadas de la cocina, las luces indirectas y de efecto en pre baños, las luces interiores de los placares, alacenas y aplique de efecto en el balcón se entregan todas instaladas y funcionando. 
+  - Carpintería de aluminio ALUAR Línea A30-NEW de alta prestación.
+  - Pisos de porcelanato de gran tamaño en cocinas, living y dormitorios con zócalos EPS antihumedad.
+  - Dormitorios y living con grandes puertas-ventanas de piso a techo y de doble hoja. El resto de los ambientes con ventanas al exterior, permitiendo excelente iluminación natural durante el día.
+  - Vestidores con tres metros lineales de placares equipados con cuatro cajones, estantes, espacio para perchas y pantalonera extraíble con rieles.
+  - Esta opción incluye ingreso a vestidor con dos paños fijos en vidrio color ámbar y un paño corredizo con marcos de aluminio en el tono.
+  - Cocinas completamente equipadas con modernos muebles bajo mesada y alacena con melamina base MDF color gris grafito o símil madera, opción con puertas de alacena transparentes con vidrio color gris o ámbar, con iluminación led interior y sistema de encendido y apagado táctil.
+  - Mesada y desayunador con encimeras de cuarzo natural de color uniforme mas duradero que el granito natural.
+  - Las paredes sobre mesadas de la cocina, en el área de trabajo son cubiertas íntegramente con cerámicos de primera marca y con zócalo de cuarzo en juego. 
+  - Pileta de acero inoxidable marca Johnson con grifería mono comando FV. 
+  - Cocina con anafe y horno empotrados a gas (unidades separadas) de primera marca.
+  - Campana purificadora con luz.
+  - Sector de lavado de ropa con preinstalaciones integrales: provisión de agua, desagües de alto caudal y ducto de ventilación al exterior, optimizado para la instalación inmediata de torre de lavado y secado.
+  - Prebaños y baños con Sanitarios Ferrum y grifería FV. con vanitory con doble cajonera de diseño a medida y espejo separado con iluminación led de encendido y apagado táctil.
+  - Artefacto lumínico led colgante sobre vanitory.
+  - Extractor y mampara de doble hoja, de vidrio color ámbar 5+5 laminado en la ducha.
+  - Termotanque eléctrico SAIAR (fabricado por Rheem).
+  - Unidades de preinstalación de aires acondicionados en living y dormitorios con placa de sostén, drenajes, caños de descarga y acceso a toma de corriente eléctrica dedicado.
+  - Bandeja de hierro para las unidades externas de los aires acondicionados en los patios internos a los efectos de liberar espacios en el área de balcones. 
+  - Proyecto de distribución eléctrica muy desarrollado con gran cantidad de módulos de electricidad de maniobra en todos los ambientes donde son requeridos para usos habituales (puntos, tomas de 10A y de 20A, cajas de distribución, etc.) con su correspondiente tablero eléctrico en cada unidad habitacional.
