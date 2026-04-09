@@ -281,26 +281,34 @@
 		max-width: var(--max);
 		margin: 0 auto;
 		font-size: 1.4rem;
-	}
-
-	.ubi {
-		/* Layout */
-		margin: 1.625rem 0;
+		box-sizing: border-box;
+		/* Title + map block fit below fixed header (full viewport minus header) */
+		height: calc(100vh - var(--header-height));
+		height: calc(100svh - var(--header-height));
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
 	}
 
 	.title-block {
 		margin: 0 1.75rem;
+		flex-shrink: 0;
+		padding-top: 0.5rem;
+		padding-bottom: 0.35rem;
 	}
 
 	.location-block {
 		/* Layout */
 		display: grid;
 		grid-template-columns: 0.5fr 1fr;
+		grid-template-rows: minmax(0, 1fr);
 		grid-template-areas: "text map";
 		gap: 0;
 		overflow: hidden;
 		position: relative;
-		height: calc(100vh - var(--header-height));
+		flex: 1;
+		min-height: 0;
 
 		/* Box/Visual */
 		border: 1px solid var(--color-border-strong);
@@ -310,7 +318,7 @@
 	.location-text-column {
 		/* Layout */
 		grid-area: text;
-		display: grid;
+		display: flex;
 		flex-direction: column;
 		min-height: 0;
 		overflow: hidden;
@@ -383,8 +391,8 @@
 	.map-navigation {
 		/* Layout */
 		flex-shrink: 0;
-		margin-top: 1.5rem;
-		padding: 0 1.75rem 1.75rem;
+		margin-top: 0.75rem;
+		padding: 0 1.75rem 1rem;
 	}
 
 	.navigation-row {
@@ -411,7 +419,7 @@
 
 	:global(.location-map) {
 		/* Layout */
-		min-height: 25rem;
+		min-height: 0;
 		overflow: hidden;
 
 		/* Box/Visual */
@@ -432,40 +440,34 @@
 
 	@media (max-width: 850px) {
 		.location-block {
-			/* Layout: allow scroll so map stays visible when text is tall */
 			grid-template-columns: 1fr;
 			grid-template-areas:
-				"text"
-				"nav"
+				"stack"
 				"map";
-			grid-template-rows: auto auto minmax(40vh, 1fr);
-			min-height: calc(100vh - var(--header-height));
-			height: auto;
-			overflow: auto;
+			/* Text+nav stack and map share remaining height below title */
+			grid-template-rows: minmax(0, 1fr) minmax(0, 1.1fr);
+			flex: 1;
+			min-height: 0;
+			overflow: hidden;
 		}
 
 		.location-text-column {
-			/* Span text and nav rows; height fits content (no scroll) */
-			grid-row: 1 / 3;
-			grid-column: 1;
-			max-height: none;
-			overflow: visible;
+			grid-area: stack;
+			min-height: 0;
+			overflow: hidden;
 		}
 
 		.location-text {
-			/* Layout: fit content so helper is always visible */
 			max-width: 100%;
-			padding: 1.5rem;
-			padding-bottom: 0;
-			flex: none;
+			padding: 1rem 1.5rem 0;
+			flex: 1;
 			min-height: 0;
-			overflow: visible;
+			overflow: auto;
 		}
 
 		.map-navigation {
-			/* Layout */
 			align-self: stretch;
-			padding: 1rem 1.5rem;
+			padding: 0.75rem 1.5rem 1rem;
 			margin-top: 0;
 			background: color-mix(in oklch, var(--ref-cream) 90%, transparent);
 			backdrop-filter: blur(8px);
@@ -477,15 +479,13 @@
 		}
 
 		.map-container {
-			/* Layout: guaranteed space so map and nav are always visible */
 			grid-area: map;
 			grid-template-columns: 1fr;
 			height: 100%;
-			min-height: 40vh;
+			min-height: 0;
 		}
 
 		:global(.location-map) {
-			/* Layout */
 			min-height: 0;
 			height: 100%;
 		}
