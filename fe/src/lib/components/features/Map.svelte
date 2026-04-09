@@ -49,6 +49,7 @@
 <script lang='ts'>
 	// ===== IMPORTS =====
 	import { tick } from 'svelte';
+	import Gallery from '$lib/components/icons/Gallery.svelte';
 	
 	// ===== PROPS =====
 	let {
@@ -1198,6 +1199,7 @@
 						{#if onOpenGallery && (selectedPlace.photos?.length ?? 0) > 0}
 							{@const r = getPinRadius(selectedPlace.pin.r)}
 							{@const iconScale = r * 2 / 20}
+							{@const galleryIconScale = (iconScale / 1.5) * (20 / 48)}
 							{@const pinCx = denorm(selectedPlace.pin.cx)}
 							{@const pinCy = denorm(selectedPlace.pin.cy)}
 							<g
@@ -1219,12 +1221,9 @@
 								<circle cx={pinCx} cy={pinCy} r={r * 0.85} fill="transparent" />
 								<g
 									class='pin-gallery-icon'
-									transform="translate({pinCx}, {pinCy}) scale({iconScale/1.5}) translate(-10, -10)"
+									transform="translate({pinCx}, {pinCy}) scale({galleryIconScale}) translate(-24, -24)"
 								>
-									<rect x="3" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
-									<rect x="12" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
-									<rect x="3" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
-									<rect x="12" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="2" fill="none" />
+									<Gallery embed />
 								</g>
 							</g>
 						{:else}

@@ -10,10 +10,6 @@
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 	import ArrowRight from '$lib/components/icons/ArrowRight.svelte';
 	import Isotype from '$lib/components/icons/Isotype.svelte';
-	import Gallery from '$lib/components/icons/Gallery.svelte';
-	import Ubicacion from '$lib/components/icons/Ubicacion.svelte';
-	import Pointer from '$lib/components/icons/Pointer.svelte';
-	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import type { MapData, PlaceData, PlaceMetadata } from '$lib/types';
 
 	// ===== TYPES =====
@@ -58,14 +54,6 @@
 	let placesById = $derived.by((): Record<string, PlaceData> => {
 		if (!mapData) return {};
 		return Object.fromEntries(mapData.places.map((p) => [p.id, p]));
-	});
-
-	// Gallery button is enabled only when current place has photos
-	let currentPlaceHasPhotos = $derived.by(() => {
-		const id = currentPlaceId;
-		if (!id || !mapData) return false;
-		const place = mapData.places.find((p) => p.id === id);
-		return !!(place?.photos && place.photos.length > 0);
 	});
 
 	// ===== INSTANCE CONSTANTS =====
@@ -231,26 +219,15 @@
 				>
 					<ArrowLeft />
 				</CircularButton>
-				<div class='navigation-center'>
-					<CircularButton
-						variant="accent"
-						size="xxl"
-						ariaLabel="Volver al estado inicial"
-						onClick={() => mapComponent?.reset()}
-						disabled={!hasPlaceSelected}
-					>
-						<Isotype />
-					</CircularButton>
-					<CircularButton
-						variant="accent"
-						size="xxl"
-						ariaLabel="Abrir galería de fotos"
-						onClick={openGalleryForCurrentPlace}
-						disabled={!hasPlaceSelected || !currentPlaceHasPhotos}
-					>
-						<Gallery />
-					</CircularButton>
-				</div>
+				<CircularButton
+					variant="accent"
+					size="xxl"
+					ariaLabel="Volver al estado inicial"
+					onClick={() => mapComponent?.reset()}
+					disabled={!hasPlaceSelected}
+				>
+					<Isotype />
+				</CircularButton>
 				<CircularButton
 					variant="accent"
 					size="xxl"
@@ -417,14 +394,6 @@
 		justify-content: center;
 		gap: 0.75rem;
 	}
-
-	.navigation-center {
-		/* Layout */
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
 
 	.map-container {
 		/* Positioning */
