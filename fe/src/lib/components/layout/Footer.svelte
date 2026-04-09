@@ -3,7 +3,6 @@
 	import HabitatPrimeLogo from '$lib/components/ui/HabitatPrimeLogo.svelte';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import { siteNavLinks } from '$lib/data/site-nav-links';
-	import { theme } from '$lib/stores/theme';
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 </script>
 
@@ -40,7 +39,7 @@
 	const projectHighlights = [
 		{ label: 'Unidades disponibles', value: '2 y 4 ambientes' },
 		{ label: 'Entrega estimada', value: '2027' },
-		{ label: 'Amenities', value: 'Piscina · Solarium · Cafetería' }
+		{ label: 'Amenities', value: 'Piscina - Solarium - Cafetería' }
 	];
 </script>
 
@@ -48,17 +47,17 @@
 	<div class='footer-wrap'>
 		<div class='footer-grid'>
 			<section class='footer-column footer-brand' aria-label='Resumen corporativo'>
-				<div class='footer-logo'>
-					<HabitatPrimeLogo theme='dark' width='8rem' />
-				</div>
 				<ul class='project-highlights'>
 					{#each projectHighlights as item (item.label)}
 						<li>
-							<small>{item.label}</small>
-							<strong>{item.value}</strong>
+							<span class='highlight-label'>{item.label}</span>
+							<strong class='highlight-value'>{item.value}</strong>
 						</li>
 					{/each}
 				</ul>
+				<div class='footer-logo'>
+					<HabitatPrimeLogo theme='dark' width='12rem' />
+				</div>
 			</section>
 
 			<section class='footer-column' aria-label='Navegación de secciones'>
@@ -109,7 +108,7 @@
 		</div>
 
 		<div class='footer-bottom'>
-			<p>© {year} Habitat Prime SAS · <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> es una marca registrada.</p>
+			<p>© {year} Habitat Prime SAS · <AiresDeRioLogo class='logo-inline' height='1em' theme='dark' showIsotype={false} fitViewBox={true} showDepartamentos={false} /> es una marca registrada.</p>
 		</div>
 	</div>
 </footer>
@@ -160,46 +159,56 @@
 	.footer-brand {
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
+		gap: 1.5rem;
+		padding: 1.25rem 1rem;
+		border-radius: 0.5rem;
+		background: #0a2a35;
 	}
 
 	.footer-logo {
-		width: fit-content;
-		padding: 0.5rem 0.875rem;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100%;
+		box-sizing: border-box;
+		padding: 0.65rem 1rem;
 		border-radius: 0.5rem;
-		background: var(--color-bg-interactive);
-		box-shadow: 0 6px 16px color-mix(in oklch, var(--color-bg-interactive) 45%, transparent);
+		background: #b84c44;
+	}
+
+	.footer-logo :global(svg) {
+		display: block;
+		height: auto;
+		max-width: 100%;
 	}
 
 	.project-highlights {
-		display: grid;
-		gap: 1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1.15rem;
 		margin: 0;
 		padding: 0;
 		list-style: none;
-		flex-wrap: wrap;
 	}
 
 	.project-highlights li {
 		display: flex;
 		flex-direction: column;
-		background: color-mix(in oklch, var(--ref-cream) 85%, var(--ref-brand-deep) 15%);
-		border: 1px solid color-mix(in oklch, var(--ref-gold) 40%, transparent);
-		border-radius: 0.5rem;
-		padding: 0.75rem 1rem;
-		min-width: 10rem;
-		width: 50%;
+		gap: 0.2rem;
 	}
 
-	.project-highlights strong {
-		font-size: 1.05rem;
-		color: var(--color-text-primary);
-	}
-
-	.project-highlights small {
-		color: var(--color-text-secondary);
+	.highlight-label {
+		font-size: 0.75rem;
+		font-weight: var(--font-weight-semibold);
+		letter-spacing: 0.1em;
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
+		color: #f06c5e;
+	}
+
+	.highlight-value {
+		font-size: 1.05rem;
+		font-weight: var(--font-weight-bold);
+		color: #ffffff;
 	}
 
 	.footer-links,
@@ -226,10 +235,11 @@
 
 	.footer-contact span {
 		display: block;
-		font-size: 0.85rem;
-		color: color-mix(in oklch, var(--ref-cream) 80%, var(--ref-gold-dark) 20%);
+		font-size: 0.75rem;
+		font-weight: var(--font-weight-semibold);
+		color: #f06c5e;
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
+		letter-spacing: 0.1em;
 	}
 
 	.footer-contact strong,
