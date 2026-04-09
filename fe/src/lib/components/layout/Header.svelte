@@ -3,15 +3,9 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
-	import { theme, type Theme } from '$lib/stores/theme';
+	import { siteNavLinks } from '$lib/data/site-nav-links';
+	import { theme } from '$lib/stores/theme';
 	import { menuStore } from '$lib/stores/menu';
-
-	// ===== TYPES =====
-	type NavLink = {
-		href: string;
-		text: string;
-		id: string;
-	};
 
 	interface Props {
 		adminEmail?: string | null;
@@ -20,15 +14,7 @@
 	// ===== STATIC CONSTANTS =====
 	const isDevMode = import.meta.env.DEV;
 
-	const navLinks: NavLink[] = [
-		{ href: '/', text: 'Home', id: 'top' },
-		{ href: '/#proyecto', text: 'Proyecto', id: 'proyecto' },
-		{ href: '/#ubicacion', text: 'Ubicación', id: 'ubicacion' },
-		{ href: '/#interior', text: 'Interior', id: 'interior' },
-		{ href: '/#equipados', text: 'Equipamiento', id: 'equipados' },
-		{ href: '/#planos', text: 'Planos', id: 'planos' },
-		{ href: '/#contacto', text: 'Contacto', id: 'contacto' }
-	];
+	const navLinks = siteNavLinks;
 </script>
 
 <script lang='ts'>
@@ -167,7 +153,7 @@
 							onclick={(e) => handleNavClick(e, link.href)}
 							class:active={activeLinkId === link.id}
 						>
-							{link.text}
+							{link.label}
 						</a>
 					</li>
 				{/each}

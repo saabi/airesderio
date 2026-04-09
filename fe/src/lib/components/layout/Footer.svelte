@@ -2,6 +2,7 @@
 	// ===== IMPORTS =====
 	import HabitatPrimeLogo from '$lib/components/ui/HabitatPrimeLogo.svelte';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
+	import { siteNavLinks } from '$lib/data/site-nav-links';
 	import { theme } from '$lib/stores/theme';
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 </script>
@@ -10,15 +11,7 @@
 	// ===== DATA =====
 	const year = new Date().getFullYear();
 
-	const navigationLinks = [
-		{ label: 'Home', href: '/' },
-		{ label: 'Proyecto', href: '/#proyecto' },
-		{ label: 'Ubicación', href: '/#ubicacion' },
-		{ label: 'Interiores', href: '/#interior' },
-		{ label: 'Equipamiento', href: '/#equipados' },
-		{ label: 'Planos', href: '/#planos' },
-		{ label: 'Contacto', href: '/#contacto' },
-	];
+	const navigationLinks = siteNavLinks;
 
 	type ContactItem = {
 		label: string;
@@ -71,13 +64,9 @@
 			<section class='footer-column' aria-label='Navegación de secciones'>
 				<h3>Navegación</h3>
 				<ul class='footer-links'>
-					{#each navigationLinks as link (link.href)}
+					{#each navigationLinks as link (link.id)}
 						<li>
-							<a
-								href={link.href}
-								rel={undefined}
-								target={undefined}
-							>
+							<a href={link.href} rel={undefined} target={undefined}>
 								{link.label}
 							</a>
 						</li>
@@ -143,7 +132,7 @@
 
 		/* Box/Visual */
 		border-top: 1px solid color-mix(in oklch, var(--ref-brand-deep) 40%, var(--ref-neutral-900) 60%);
-		background: linear-gradient(0, #6d5140 0%, #352923 100%);
+		background-color: #022b3a;
 		box-shadow: 0 -12px 32px var(--shadow-soft);
 
 		/* Typography */
@@ -164,7 +153,7 @@
 		margin: 0 0 0.75rem;
 		font-size: 1rem;
 		letter-spacing: 0.08em;
-		color: oklch(0.92 0.12 89.64);
+		color: #b0e3ce;
 		text-transform: uppercase;
 	}
 
