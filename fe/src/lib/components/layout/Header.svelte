@@ -4,7 +4,6 @@
 	import { browser } from '$app/environment';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import { siteNavLinks } from '$lib/data/site-nav-links';
-	import { theme } from '$lib/stores/theme';
 	import { menuStore } from '$lib/stores/menu';
 
 	interface Props {
@@ -28,9 +27,6 @@
 	>(null);
 	let activeLinkId = $state<string>('top');
 	let HEADER_HEIGHT = $state(80); // Will be set from CSS variable on mount
-
-	// ===== DERIVED =====
-	let currentTheme = $derived($theme);
 
 	// ===== LIFECYCLE =====
 	onMount(() => {
@@ -63,10 +59,6 @@
 	// ===== FUNCTIONS =====
 	function toggleMenu() {
 		menuStore.toggle();
-	}
-
-	function toggleTheme() {
-		theme.toggle();
 	}
 
 	function handleNavClick(event: MouseEvent, href: string) {
@@ -181,51 +173,6 @@
 					🎨
 				</button>
 			{/if}
-			<button
-				id='theme-toggle'
-				class='theme-toggle'
-				aria-label={currentTheme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
-				title={currentTheme === 'light' ? 'Modo oscuro' : 'Modo claro'}
-				onclick={toggleTheme}
-			>
-				{#if currentTheme === 'light'}
-					<svg
-						xmlns='http://www.w3.org/2000/svg'
-						width='20'
-						height='20'
-						viewBox='0 0 24 24'
-						fill='none'
-						stroke='currentColor'
-						stroke-width='2'
-						stroke-linecap='round'
-						stroke-linejoin='round'
-					>
-						<path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'></path>
-					</svg>
-				{:else}
-					<svg
-						xmlns='http://www.w3.org/2000/svg'
-						width='20'
-						height='20'
-						viewBox='0 0 24 24'
-						fill='none'
-						stroke='currentColor'
-						stroke-width='2'
-						stroke-linecap='round'
-						stroke-linejoin='round'
-					>
-						<circle cx='12' cy='12' r='5'></circle>
-						<line x1='12' y1='1' x2='12' y2='3'></line>
-						<line x1='12' y1='21' x2='12' y2='23'></line>
-						<line x1='4.22' y1='4.22' x2='5.64' y2='5.64'></line>
-						<line x1='18.36' y1='18.36' x2='19.78' y2='19.78'></line>
-						<line x1='1' y1='12' x2='3' y2='12'></line>
-						<line x1='21' y1='12' x2='23' y2='12'></line>
-						<line x1='4.22' y1='19.78' x2='5.64' y2='18.36'></line>
-						<line x1='18.36' y1='5.64' x2='19.78' y2='4.22'></line>
-					</svg>
-				{/if}
-			</button>
 			<button
 				id='nav-toggle'
 				class='nav-toggle'
@@ -426,68 +373,6 @@
 
 		/* Effects & Motion */
 		transform: translateY(-1px);
-	}
-
-	.theme-toggle {
-		/* Positioning */
-		z-index: 1001;
-
-		/* Layout */
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0.5rem;
-
-		/* Box/Visual */
-		background: none;
-		border: none;
-		border-radius: 0.375rem;
-
-		/* Typography */
-		color: var(--header-text);
-
-		/* Misc/Overrides */
-		cursor: pointer;
-
-		/* Effects & Motion */
-		transition:
-			background-color 0.2s,
-			color 0.2s;
-	}
-
-	.theme-toggle:hover {
-		/* Box/Visual */
-		background-color: rgba(255, 255, 255, 0.15);
-	}
-
-	:global(:root[data-theme='dark']) .theme-toggle {
-		/* Typography */
-		color: var(--header-text);
-	}
-
-	:global(:root[data-theme='dark']) .theme-toggle:hover {
-		/* Box/Visual */
-		background-color: rgba(255, 255, 255, 0.15);
-	}
-
-	.theme-toggle:focus-visible {
-		/* Box/Visual */
-		outline: 2px solid var(--color-accent-secondary);
-		outline-offset: 2px;
-	}
-
-	.theme-toggle svg {
-		/* Layout */
-		width: 1.25rem;
-		height: 1.25rem;
-
-		/* Effects & Motion */
-		transition: transform 0.2s;
-	}
-
-	.theme-toggle:hover svg {
-		/* Effects & Motion */
-		transform: scale(1.1);
 	}
 
 	.nav-toggle {
