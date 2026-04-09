@@ -60,16 +60,22 @@
 	--ref-gold: #eaa43b;
 	--ref-gold-dark: #6b4000;
 
-	/* Muted greenish-teal CTA (Contáctanos, Solicitar ficha técnica) - from proposal */
+	/* Muted greenish-teal (map highlights, etc.) */
 	--ref-cta-teal: #548487;
 	--ref-cta-teal-hover: #4a7679;
 
+	/* Pill nav (Location CircularButton accent) + primary CTAs (PDF, contact, planos) */
+	--nav-button-fill: #4497b9;
+	--nav-button-hover-fill: #b0e3ce;
+	--nav-button-border: #000;
+
 	/* Header/nav from proposal (dark blue-gray bar, white text) */
-	--header-bg: #4A606A;
+	--header-bg: #022b3a;
 	--header-text: #FFFFFF;
 	--header-text-muted: rgba(255, 255, 255, 0.85);
 	--header-border: rgba(255, 255, 255, 0.2);
 	--header-nav-text: #FFFFFF;
+	--header-nav-text-hover: #b0e3ce;
 	--header-active-underline: #FFFFFF;
 
 	--ref-neutral-950: color-mix(in oklch, var(--ref-black) 85%, var(--ref-white) 15%);
@@ -453,21 +459,31 @@ a:hover {
 	}
 }
 
-/* Primary CTA buttons: greenish-teal (Contáctanos, ENVIAR, Solicitar planos, Solicitar ficha técnica) */
+/* Primary CTAs: same fill / hover / border as Location map nav (CircularButton accent) */
 .btn-cta-primary,
 button.btn-cta-primary,
 a.btn-cta-primary {
-	background: var(--ref-cta-teal) !important;
+	background: var(--nav-button-fill) !important;
 	color: var(--color-text-on-accent) !important;
+	border: 2px solid var(--nav-button-border) !important;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease,
+		border-color 0.2s ease;
 }
 .btn-cta-primary:hover:not(:disabled),
 a.btn-cta-primary:hover {
-	background: var(--ref-cta-teal-hover) !important;
+	background: var(--nav-button-hover-fill) !important;
+	color: var(--nav-button-border) !important;
 }
 .btn-cta-primary:focus-visible,
 a.btn-cta-primary:focus-visible {
-	outline: 2px solid var(--ref-cta-teal) !important;
+	outline: 2px solid var(--nav-button-fill) !important;
 	outline-offset: 2px;
+}
+.btn-cta-primary:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
 }
 
 /* Focus indicators for keyboard navigation */

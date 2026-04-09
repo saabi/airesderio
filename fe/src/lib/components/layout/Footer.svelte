@@ -279,22 +279,9 @@
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
 		text-align: center;
-		color: var(--color-text-on-accent);
-		background: var(--ref-cta-teal);
-		border: none;
 		border-radius: 4px;
 		cursor: pointer;
 		font-family: inherit;
-		transition: opacity 0.2s;
-	}
-
-	.footer-contact-btn:hover {
-		opacity: 0.92;
-	}
-
-	.footer-contact-btn:focus-visible {
-		outline: 2px solid var(--ref-cta-teal);
-		outline-offset: 2px;
 	}
 
 	.footer-bottom {

@@ -159,10 +159,8 @@
 		justify-content: center;
 		padding: 0.875rem 2rem;
 
-		/* Box/Visual */
-		border: none;
+		/* Box/Visual — fill/hover/border: global .btn-cta-primary */
 		border-radius: 0.375rem;
-		background: var(--ref-cta-teal);
 		box-shadow:
 			0 0.75rem 0.75rem var(--shadow-soft),
 			0 0.5rem 0.25rem var(--shadow-subtle);
@@ -172,7 +170,6 @@
 		font-size: 1rem;
 		font-weight: var(--font-weight-semibold);
 		text-decoration: none;
-		color: var(--color-text-on-accent);
 		text-align: center;
 
 		/* Misc/Overrides */
@@ -182,29 +179,20 @@
 		/* Effects & Motion */
 		transition:
 			background-color 0.2s ease,
+			color 0.2s ease,
+			border-color 0.2s ease,
 			transform 0.2s ease,
 			box-shadow 0.2s ease,
 			opacity var(--floating-cta-fade-duration, 300ms) ease;
 	}
 
 	.floating-cta:hover {
-		/* Box/Visual */
-		background: var(--ref-cta-teal-hover);
 		box-shadow: 0 0.25rem 0.5rem var(--shadow-soft);
-
-		/* Effects & Motion */
 		transform: translateY(-1px);
 	}
 
 	.floating-cta:active {
-		/* Effects & Motion */
 		transform: translateY(0);
-	}
-
-	.floating-cta:focus-visible {
-		/* Box/Visual */
-		outline: 2px solid var(--ref-cta-teal);
-		outline-offset: 2px;
 	}
 
 	@media (max-width: 850px) {

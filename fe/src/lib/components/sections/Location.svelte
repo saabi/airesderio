@@ -393,6 +393,28 @@
 		flex-shrink: 0;
 		margin-top: 0.75rem;
 		padding: 0 1.75rem 1rem;
+
+		/* Accent nav buttons — tokens shared with .btn-cta-primary (app.css) */
+		--location-nav-accent: var(--nav-button-fill);
+		--color-accent-primary: var(--location-nav-accent);
+		--color-accent-strong: color-mix(in srgb, var(--location-nav-accent) 82%, #000);
+	}
+
+	.map-navigation :global(.circular-button.accent) {
+		border: 2px solid var(--nav-button-border);
+	}
+
+	/* Override CircularButton disabled styles */
+	.map-navigation :global(.circular-button.accent:disabled) {
+		background: #fff !important;
+		border: 2px solid var(--nav-button-border) !important;
+		color: var(--nav-button-border) !important;
+	}
+
+	.map-navigation :global(.circular-button.accent:hover:not(:disabled)) {
+		background: var(--nav-button-hover-fill);
+		border: 2px solid var(--nav-button-border);
+		color: var(--nav-button-border);
 	}
 
 	.navigation-row {

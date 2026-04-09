@@ -232,20 +232,10 @@
 		font-weight: 500;
 		letter-spacing: 0.02em;
 		text-transform: uppercase;
-		color: var(--color-text-on-accent);
-		background: var(--ref-cta-teal);
-		border: 1px solid var(--ref-cta-teal-hover);
 		border-radius: 4px;
 		text-decoration: none;
 		cursor: pointer;
 		font-family: inherit;
-		transition: background 0.2s, color 0.2s, opacity 0.2s;
-	}
-
-	.equip-ficha:hover {
-		opacity: 0.9;
-		background: var(--ref-cta-teal-hover);
-		color: var(--color-text-on-accent);
 	}
 
 	@media (max-width: 900px) {

@@ -259,25 +259,14 @@
 		color: var(--color-text-primary);
 	}
 
+	/* Colors: global .btn-cta-primary (matches Location nav) */
 	.form-group button {
 		width: 100%;
 		padding: 0.75rem;
-		border: none;
 		border-radius: 0.25rem;
-		background: var(--ref-cta-teal);
 		font-family: var(--font-body);
 		font-weight: var(--font-weight-semibold);
-		color: var(--color-text-on-accent);
 		cursor: pointer;
-	}
-
-	.form-group button:hover:not(:disabled) {
-		background: var(--ref-cta-teal-hover);
-	}
-
-	.form-group button:focus-visible {
-		outline: 2px solid var(--ref-cta-teal);
-		outline-offset: 2px;
 	}
 
 	.form-group button:disabled {
