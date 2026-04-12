@@ -169,9 +169,10 @@
 			</ul>
 			<div class="equip-ficha-wrap">
 				<button
+					id="cta-ficha-luxury"
 					type="button"
 					class="equip-ficha btn-cta-primary"
-					onclick={() => pdfRequestModalStore.open('departamentos')}
+					onclick={() => pdfRequestModalStore.open('departamentos', 'luxury')}
 					aria-label="Descargar ficha técnica"
 				>
 					SOLICITAR FICHA TÉCNICA

@@ -156,7 +156,14 @@
 		/>
 	</div>
 	<div class='form-group'>
-		<button type='submit' class='btn-cta-primary' aria-label='Enviar formulario de contacto'>ENVIAR</button>
+		<button
+			id='submit-contact'
+			type='submit'
+			class='btn-cta-primary'
+			aria-label='Enviar formulario de contacto'
+		>
+			ENVIAR
+		</button>
 	</div>
 </form>
 

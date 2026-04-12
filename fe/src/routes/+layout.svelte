@@ -48,7 +48,7 @@
 </div>
 
 {#if $pdfRequestModalStore}
-	<PdfRequestModal intent={$pdfRequestModalStore.intent} />
+	<PdfRequestModal intent={$pdfRequestModalStore.intent} source={$pdfRequestModalStore.source} />
 {/if}
 
 <FormToast />

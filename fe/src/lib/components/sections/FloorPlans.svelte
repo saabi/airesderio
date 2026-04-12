@@ -149,9 +149,10 @@
 		</div>
 		<div class='floor-plan-download-wrap'>
 			<button
+				id='cta-planos'
 				type='button'
 				class='floor-plan-download btn-cta-primary'
-				onclick={() => pdfRequestModalStore.open('departamentos')}
+				onclick={() => pdfRequestModalStore.open('departamentos', 'planos')}
 				aria-label='Solicitar ficha técnica'
 			>
 				SOLICITAR FICHA TÉCNICA

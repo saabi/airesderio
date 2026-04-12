@@ -2,7 +2,7 @@
 	import Input from '$lib/components/forms/Input.svelte';
 	import PhoneNumberInput from '$lib/components/forms/PhoneNumberInput.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
-	import type { PdfIntent } from '$lib/stores/pdfRequestModal';
+	import type { PdfIntent, PdfRequestSource } from '$lib/stores/pdfRequestModal';
 
 	const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 </script>
@@ -11,7 +11,15 @@
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 	import { formToastStore } from '$lib/stores/formToast';
 
-	let { intent }: { intent: PdfIntent } = $props();
+	let { intent, source }: { intent: PdfIntent; source: PdfRequestSource } = $props();
+
+	const submitButtonId = $derived(
+		source === 'luxury'
+			? 'submit-ficha-luxury'
+			: source === 'planos'
+				? 'submit-planos'
+				: 'submit-ficha-basica'
+	);
 
 	// ===== STATE =====
 	let formElement: HTMLFormElement | null = $state(null);
@@ -168,7 +176,12 @@
 				/>
 			</div>
 			<div class='form-group'>
-				<button type='submit' class='btn-cta-primary' aria-label='Solicitar ficha técnica'>
+				<button
+					id={submitButtonId}
+					type='submit'
+					class='btn-cta-primary'
+					aria-label='Solicitar ficha técnica'
+				>
 					SOLICITAR FICHA TÉCNICA
 				</button>
 			</div>

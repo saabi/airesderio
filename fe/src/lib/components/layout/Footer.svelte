@@ -95,9 +95,10 @@
 					{/each}
 					<li class='footer-contact-btn-wrap'>
 						<button
+							id='cta-ficha-footer'
 							type='button'
 							class='footer-contact-btn btn-cta-primary'
-							onclick={() => pdfRequestModalStore.open('departamentos')}
+							onclick={() => pdfRequestModalStore.open('departamentos', 'footer')}
 							aria-label='Solicitar ficha técnica'
 						>
 							SOLICITAR FICHA TÉCNICA

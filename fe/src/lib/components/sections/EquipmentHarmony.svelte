@@ -185,9 +185,10 @@
 			</ul>
 			<div class="equip-ficha-wrap">
 				<button
+					id="cta-ficha-basica"
 					type="button"
 					class="equip-ficha btn-cta-primary"
-					onclick={() => pdfRequestModalStore.open('departamentos')}
+					onclick={() => pdfRequestModalStore.open('departamentos', 'harmony')}
 					aria-label="Descargar ficha técnica"
 				>
 					SOLICITAR FICHA TÉCNICA

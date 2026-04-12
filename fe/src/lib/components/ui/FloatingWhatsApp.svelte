@@ -91,6 +91,7 @@
 
 {#if showButton || opacity > 0}
 	<a
+		id='cta-whatsapp'
 		href={whatsappUrl}
 		target='_blank'
 		rel='noopener noreferrer'

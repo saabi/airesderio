@@ -4,6 +4,7 @@
 
 {#if $formToastStore}
 	<div
+		id={$formToastStore.variant === 'success' ? 'form-success-message' : undefined}
 		class='form-toast'
 		class:form-toast--success={$formToastStore.variant === 'success'}
 		class:form-toast--error={$formToastStore.variant === 'error'}

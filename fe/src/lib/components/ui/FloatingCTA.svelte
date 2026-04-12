@@ -135,6 +135,7 @@
 
 {#if showCTA || opacity > 0}
 	<a
+		id='cta-contact'
 		href={ctaUrl}
 		class='floating-cta btn-cta-primary'
 		style={`transform: translateY(${transformY}px); opacity: ${opacity}; transition-duration: ${fadeDuration}ms;`}
