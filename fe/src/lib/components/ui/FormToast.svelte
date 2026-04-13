@@ -26,9 +26,9 @@
 <style>
 	.form-toast {
 		position: fixed;
-		bottom: 1.25rem;
+		top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
 		z-index: 12000;
 		display: flex;
 		align-items: flex-start;
