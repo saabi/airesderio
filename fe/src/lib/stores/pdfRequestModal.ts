@@ -1,6 +1,6 @@
 import { writable, derived } from 'svelte/store';
 
-/** Single PDF for all request CTAs: `static/pdf/AiresDeRioDepartamentos.pdf` */
+/** Single PDF for all request CTAs: `static/pdf/Aires de Río - Ficha técnica.pdf` */
 export type PdfIntent = 'departamentos';
 
 /** Which CTA opened the modal (used for analytics IDs on the submit button). */

@@ -15,7 +15,7 @@ import {
 } from '$lib/server/emailRetryQueue.js';
 import { randomBytes } from 'crypto';
 
-/** All PDF CTAs use one file: `static/pdf/AiresDeRioDepartamentos.pdf` */
+/** All PDF CTAs use one file: `static/pdf/Aires de Río - Ficha técnica.pdf` */
 const VALID_PDF_INTENTS = ['departamentos'] as const;
 const TOKEN_EXPIRY_HOURS = 24;
 

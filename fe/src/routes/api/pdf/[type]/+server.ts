@@ -22,7 +22,9 @@ const VALID_PDF_TYPES = [
 
 const STATIC_PDF_DIR = 'static/pdf';
 /** Single PDF served for every valid type (see VALID_PDF_TYPES). */
-const UNIFIED_PDF_FILENAME = 'AiresDeRioDepartamentos.pdf';
+const UNIFIED_PDF_FILENAME = 'Aires de Río - Ficha técnica.pdf';
+/** ASCII-only fallback for Content-Disposition `filename` (RFC 5987 uses filename* for UTF-8). */
+const UNIFIED_PDF_FILENAME_ASCII_FALLBACK = 'Aires-de-Rio-Ficha-tecnica.pdf';
 
 function isPdfType(type: string): type is (typeof VALID_PDF_TYPES)[number] {
 	return VALID_PDF_TYPES.includes(type as (typeof VALID_PDF_TYPES)[number]);
@@ -83,10 +85,12 @@ export const GET: import('@sveltejs/kit').RequestHandler = async ({ params, url 
 		})
 		.where(eq(leads.id, row.leadId));
 
+	const disposition = `attachment; filename="${UNIFIED_PDF_FILENAME_ASCII_FALLBACK}"; filename*=UTF-8''${encodeURIComponent(UNIFIED_PDF_FILENAME)}`;
+
 	return new Response(new Uint8Array(buffer), {
 		headers: {
 			'Content-Type': 'application/pdf',
-			'Content-Disposition': `attachment; filename="${UNIFIED_PDF_FILENAME}"`,
+			'Content-Disposition': disposition,
 			'Content-Length': String(buffer.length)
 		}
 	});
