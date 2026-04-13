@@ -132,7 +132,7 @@
 		data-item-active={titleVisible || undefined}
 		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="" big="Equipamiento opcional" below="Luxury Style" />
+		<Title eyebrow="" big="Equipamiento opcional" bigSize="small" below="Luxury Style" />
 	</div>
 
 	<p class="equip-intro">

@@ -6,6 +6,8 @@
 	interface Props {
 		eyebrow: string;
 		big: string;
+		/** Size variant for the main title line. */
+		bigSize?: 'small' | 'big' | 'large';
 		/** Optional third line below the main title, rendered as small text. */
 		below?: string;
 		/** When true, renders with reduced visual importance (smaller, less bold). */
@@ -15,12 +17,12 @@
 
 <script lang='ts'>
 	// ===== PROPS =====
-	let { eyebrow, big, below, isSubtitle = false }: Props = $props();
+	let { eyebrow, big, bigSize = 'big', below, isSubtitle = false }: Props = $props();
 </script>
 
 <div class='title' class:subtitle={isSubtitle}>
 	<span class='eyebrow'>{eyebrow}</span>
-	<span class='big'>{big}</span>
+	<span class={['big', `big-${bigSize}`]}>{big}</span>
 	{#if below}
 		<span class='below'>{below}</span>
 	{/if}
@@ -64,9 +66,19 @@
 		text-transform: uppercase;
 	}
 
+	.title .big.big-small {
+		font-size: 1.2em;
+		line-height: 1;
+	}
+
+	.title .big.big-large {
+		font-size: 1.9em;
+	}
+
 	.title .below {
 		/* Layout */
 		display: block;
+		margin-top: 0em;
 
 		/* Typography */
 		font-family: var(--font-body);
@@ -77,6 +89,14 @@
 		letter-spacing: 0.2em;
 	}
 
+	/* Smaller big line also scales/tightens the below line */
+	.title .big.big-small + .below {
+		font-size: 0.75em;
+		margin-top: 0;
+		letter-spacing: 0.16em;
+		line-height: 1;
+	}
+
 	/* Responsive typography */
 	@media (max-width: 640px) {
 		.title {
@@ -85,6 +105,14 @@
 
 		.title .big {
 			font-size: 1.4em;
+		}
+
+		.title .big.big-small {
+			font-size: 1.15em;
+		}
+
+		.title .big.big-large {
+			font-size: 1.6em;
 		}
 	}
 
@@ -104,9 +132,23 @@
 		color: var(--color-text-primary);
 	}
 
+	.title.subtitle .big.big-small {
+		font-size: 1.05em;
+	}
+
+	.title.subtitle .big.big-large {
+		font-size: 1.45em;
+	}
+
 	.title.subtitle .below {
 		font-size: 0.85em;
 		color: var(--svg-fill-primary);
+	}
+
+	.title.subtitle .big.big-small + .below {
+		font-size: 0.72em;
+		margin-top: 0;
+		letter-spacing: 0.14em;
 	}
 
 	@media (max-width: 640px) {
@@ -116,6 +158,14 @@
 
 		.title.subtitle .big {
 			font-size: 1.2em;
+		}
+
+		.title.subtitle .big.big-small {
+			font-size: 1em;
+		}
+
+		.title.subtitle .big.big-large {
+			font-size: 1.35em;
 		}
 	}
 </style>

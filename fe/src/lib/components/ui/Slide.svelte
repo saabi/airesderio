@@ -18,6 +18,7 @@
 		// Image
 		src?: string | unknown; // URL string for image/video
 		alt?: string;
+		useAutoAlternateSrc?: boolean;
 		// Video
 		poster?: string;
 		muted?: boolean;
@@ -41,6 +42,7 @@
 		type,
 		src,
 		alt = '',
+		useAutoAlternateSrc = true,
 		poster,
 		muted = true,
 		playsInline = true,
@@ -80,6 +82,7 @@
 			<Picture
 				src={imageSrc}
 				alt={alt}
+				useAutoAlternateSrc={useAutoAlternateSrc}
 				class="carousel-image-content"
 				loading="lazy"
 			/>

@@ -4,8 +4,6 @@
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 	import Slide from '$lib/components/ui/Slide.svelte';
-	import InteractiveFloorPlan from '$lib/components/features/InteractiveFloorPlan.svelte';
-	import { floorPlanOverlayStore } from '$lib/stores/floorPlanOverlay';
 
 	// Local utilities
 	import { createSectionObserver } from '$lib/utils/sectionVisibility';
@@ -18,58 +16,40 @@
 		animationOffset
 	} from '$lib/constants/animation';
 
-	import type { ClipShape } from '$lib/components/features/InteractiveFloorPlan.svelte';
-
 	// ===== TYPES =====
 	interface FloorPlan {
-		image: string | any; // Enhanced image type
+		image: string;
 		/** Vertical/mobile image; falls back to image when absent */
 		imageMobile?: string;
 		title: string;
-		interactive?: boolean;
-		zones?: import('$lib/types').FloorPlanZone[];
-		highlightOnHover?: boolean;
-		zoomMode?: import('$lib/types').FloorPlanZoomMode;
-		zoomToViewport?: boolean;
-		showBackButton?: boolean;
-		highResImage?: string | unknown;
-		rotateOnMobile?: boolean;
-		aspectRatio?: number;
-		clipShape?: ClipShape;
 	}
 
 	// ===== STATIC CONSTANTS =====
 	const FLOOR_PLANS: FloorPlan[] = [
 		{
 			image: '/planos/1hab-frente.png',
-			title: 'Departamento de 2 ambientes con balcón',
-			clipShape: {
-				type: 'path',
-				d: 'M30.5 561.5l1575.141 0.575 -1.141 220.425 213 -2 0.09 184.684c1.743,14.108 7.443,23.575 20,25l145.91 1.316 -1 558 -1741 4 0 -5 -211 1 0 -988z'
-			}
+			title: 'Departamento de 2 ambientes con balcón'
 		},
 		{
 			image: '/planos/1hab-contrafrente.png',
-			title: 'Departamento de 2 ambientes',
-			clipShape: {
-				type: 'polygon',
-				points: '139.5,563.5 1877.5,559.5 1877.379,1549.742 516.5,1549.5 516.5,1334.426 279.5,1334.5 279.527,1116.5 139.5,1116.5'
-			}
+			title: 'Departamento de 2 ambientes'
 		},
 		{
 			image: '/planos/2hab-contrafrente.png',
-			title: 'Departamento de 4 ambientes',
-			clipShape: {
-				type: 'polygon',
-				points: '151.5,95.5 152.475,653.306 292.5,653.5 292.5,1462.5 152.5,1463.5 152.5,2006.5 1246.5,2006.5 1247.5,2026.5 1278.5,2026.5 1278.5,2023.5 1889.5,2024.5 1889.5,94.5'
-			}
+			title: 'Departamento de 4 ambientes'
 		}
 	];
 </script>
 
 <script lang='ts'>
+	const DEFAULT_SLIDE_ASPECT = '4 / 3';
+
 	// ===== STATE =====
 	let currentPlanIndex = $state(0);
+	/** CSS `aspect-ratio` value for the active slide image (e.g. `1877 / 1549`). */
+	let planAspectRatio = $state<string>(DEFAULT_SLIDE_ASPECT);
+
+	const aspectBySrc = new Map<string, string>();
 
 	// ===== DERIVED =====
 	const activePlans = $derived.by(() =>
@@ -87,6 +67,34 @@
 			threshold: ANIMATION.threshold.section
 		}
 	);
+
+	// ===== EFFECTS =====
+	$effect(() => {
+		const src = activePlans[currentPlanIndex]?.image;
+		if (!src) return;
+
+		const cached = aspectBySrc.get(src);
+		if (cached) {
+			planAspectRatio = cached;
+			return;
+		}
+
+		planAspectRatio = DEFAULT_SLIDE_ASPECT;
+
+		const img = new Image();
+		const srcAtRequest = src;
+		img.onload = () => {
+			if (activePlans[currentPlanIndex]?.image !== srcAtRequest) return;
+			if (!img.naturalWidth || !img.naturalHeight) return;
+			const ratio = `${img.naturalWidth} / ${img.naturalHeight}`;
+			aspectBySrc.set(srcAtRequest, ratio);
+			planAspectRatio = ratio;
+		};
+		img.onerror = () => {
+			/* keep DEFAULT_SLIDE_ASPECT */
+		};
+		img.src = src;
+	});
 
 	// ===== FUNCTIONS =====
 	function handleIndexChange(index: number) {
@@ -111,9 +119,10 @@
 		class='floor-plans-container scroll-animate'
 		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<div class='carousel-wrapper'>
+		<div class='carousel-wrapper' style:--floor-plan-slide-aspect={planAspectRatio}>
 			{#key $verticalViewport}
 				<ImageCarousel
+					class='floor-plans-carousel'
 					slideCount={activePlans.length}
 					slideAriaLabel={(index) => `Plano ${index + 1}: ${activePlans[index].title}`}
 					bind:currentIndex={currentPlanIndex}
@@ -138,11 +147,7 @@
 						</figure>
 					{/snippet}
 					{#snippet slide(index)}
-						<Slide
-							type="component"
-							component={InteractiveFloorPlan as import('svelte').Component}
-							props={{ plan: activePlans[index], isActive: currentPlanIndex === index }}
-						/>
+						<Slide type="image" src={activePlans[index].image} alt={activePlans[index].title} useAutoAlternateSrc={false} />
 					{/snippet}
 				</ImageCarousel>
 			{/key}
@@ -159,49 +164,6 @@
 			</button>
 		</div>
 	</div>
-	{#if $floorPlanOverlayStore}
-		{@const overlay = $floorPlanOverlayStore}
-		<div
-			class='floor-plan-viewport-overlay'
-			role='dialog'
-			aria-modal='true'
-			aria-label={overlay.title}
-		>
-			<button
-				type='button'
-				class='floor-plan-viewport-overlay-backdrop'
-				aria-label='Cerrar'
-				onclick={() => floorPlanOverlayStore.set(null)}
-			></button>
-			<div class='floor-plan-viewport-overlay-content'>
-				<svg
-					class='floor-plan-viewport-overlay-svg'
-					viewBox={overlay.viewBoxAttr}
-					preserveAspectRatio='xMidYMid meet'
-					aria-hidden='true'
-				>
-					<image
-						href={overlay.currentImageSrc}
-						x='0'
-						y='0'
-						width={overlay.imageDimensions.width}
-						height={overlay.imageDimensions.height}
-						preserveAspectRatio='none'
-					/>
-				</svg>
-			</div>
-			{#if overlay.showBackButton !== false}
-				<button
-					type='button'
-					class='floor-plan-viewport-overlay-close'
-					aria-label='Volver al plano completo'
-					onclick={() => floorPlanOverlayStore.set(null)}
-				>
-					Volver
-				</button>
-			{/if}
-		</div>
-	{/if}
 </section>
 
 <style>
@@ -224,13 +186,27 @@
 
 		/* Layout */
 		width: 100%;
-		height: 80vh;
 		overflow: hidden;
 
 		/* Box/Visual */
-		border: 1px solid var(--color-border-default);
+/* 		border: 1px solid var(--color-border-default);
 		border-radius: 0.5rem;
-		background: var(--color-bg-canvas);
+ */		background: var(--color-bg-canvas);
+	}
+
+	/* Size slide viewport from intrinsic image ratio (this carousel instance only). */
+	.carousel-wrapper :global(.image-carousel.floor-plans-carousel.has-above .carousel-images) {
+		flex: 0 0 auto;
+		width: 100%;
+		aspect-ratio: var(--floor-plan-slide-aspect);
+		min-height: 0;
+		transition: aspect-ratio 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.carousel-wrapper :global(.image-carousel.floor-plans-carousel.has-above .carousel-images) {
+			transition: none;
+		}
 	}
 
 	/* ImageCarousel handles image and navigation styles */
@@ -274,71 +250,12 @@
 		font-family: inherit;
 	}
 
-	/* Viewport overlay: fixed below the page header, full width and remaining height */
-	.floor-plan-viewport-overlay {
-		position: fixed;
-		top: var(--header-height);
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 1000;
-		background: rgba(0, 0, 0, 0.6);
-	}
-
-	.floor-plan-viewport-overlay-backdrop {
-		position: absolute;
-		inset: 0;
-		cursor: pointer;
-		border: none;
-		background: transparent;
-	}
-
-	.floor-plan-viewport-overlay-content {
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-	}
-
-	.floor-plan-viewport-overlay-svg {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		display: block;
-	}
-
-	.floor-plan-viewport-overlay-close {
-		position: absolute;
-		bottom: 1.5rem;
-		left: 50%;
-		transform: translateX(-50%);
-		z-index: 1001;
-		pointer-events: auto;
-		padding: 0.5rem 1rem;
-		font-size: 0.9rem;
-		border-radius: 0.5rem;
-		background: var(--color-bg-canvas);
-		color: var(--color-text-primary);
-		border: 1px solid var(--color-border-strong);
-		cursor: pointer;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-	}
-
-	.floor-plan-viewport-overlay-close:hover {
-		background: var(--color-bg-contrast);
-	}
-
 	/* Mobile responsiveness */
 	@media (max-width: 640px) {
 		.floor-plans-container {
 			gap: 1rem;
 			margin-top: 1.5rem;
 		}
-
-		.carousel-wrapper {
-			height: 60vh;
-		}
-
 
 		.floor-plan-title {
 			font-size: 1rem;

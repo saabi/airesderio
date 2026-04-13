@@ -7,6 +7,8 @@
 		loading,
 		decoding,
 		sizes,
+		/** Disable automatic alternate format lookup derived from src (e.g. .webp). */
+		useAutoAlternateSrc = true,
 		/** Override derived WebP URL; set to empty string to disable WebP and render plain img */
 		webpSrc
 	}: {
@@ -16,6 +18,7 @@
 		loading?: 'lazy' | 'eager';
 		decoding?: 'async' | 'sync' | 'auto';
 		sizes?: string;
+		useAutoAlternateSrc?: boolean;
 		webpSrc?: string | null;
 	} = $props();
 
@@ -24,6 +27,9 @@
 	const effectiveWebpSrc = $derived.by(() => {
 		if (webpSrc !== undefined && webpSrc !== null) {
 			return webpSrc || null;
+		}
+		if (!useAutoAlternateSrc) {
+			return null;
 		}
 		if (typeof src !== 'string' || !/\.(jpe?g|png)$/i.test(src)) {
 			return null;

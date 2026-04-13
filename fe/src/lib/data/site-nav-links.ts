@@ -10,7 +10,7 @@ export type SiteNavLink = {
 export const siteNavLinks: SiteNavLink[] = [
 	{ id: 'top', href: '/', label: 'Inicio' },
 	{ id: 'ubicacion', href: '/#ubicacion', label: 'Ubicación' },
-	{ id: 'interior', href: '/#interior', label: 'Interiores' },
+	{ id: 'interior', href: '/#equipados', label: 'Interiores' },
 	{ id: 'planos', href: '/#planos', label: 'Planos' },
 	{ id: 'contacto', href: '/#contacto', label: 'Contacto' }
 ];

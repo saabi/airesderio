@@ -134,18 +134,11 @@
 	</div>
 	<div class="page-shell section">
 		<EquipmentHarmony />
+		<CarouselHarmony />
 	</div>
 	<div class="section-band section-band--alt">
 		<div class="page-shell section">
-			<CarouselHarmony />
-		</div>
-	</div>
-	<div class="page-shell section">
-
-		<EquipmentLuxury />
-	</div>
-	<div class="section-band section-band--alt">
-		<div class="page-shell section">
+			<EquipmentLuxury />
 			<CarouselLuxury />
 		</div>
 	</div>
