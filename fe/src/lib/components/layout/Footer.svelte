@@ -112,7 +112,17 @@
 			<p class='footer-copyright'>
 				© {year} Habitat Prime SAS · <AiresDeRioLogo class='logo-inline' height='1em' theme='dark' showIsotype={false} fitViewBox={true} showDepartamentos={false} /> es una marca registrada.
 			</p>
-			<p class='footer-credits'>Sitio web — Sebastian Ferreyra Pons</p>
+			<p class='footer-credits'>
+				Sitio web —
+				<a
+					class='footer-credits-link'
+					href='https://ferreyrapons.com'
+					rel='noopener noreferrer'
+					target='_blank'
+				>
+					Sebastian Ferreyra Pons
+				</a>
+			</p>
 		</div>
 	</div>
 </footer>
@@ -308,6 +318,25 @@
 	.footer-credits {
 		font-size: 0.85rem;
 		color: color-mix(in oklch, var(--color-text-tertiary) 88%, var(--ref-cream) 12%);
+	}
+
+	.footer-credits-link {
+		color: inherit;
+		font-weight: var(--font-weight-semibold);
+		text-decoration: underline;
+		text-decoration-color: color-mix(in oklch, var(--color-text-tertiary) 55%, transparent);
+		text-underline-offset: 0.15em;
+	}
+
+	.footer-credits-link:hover {
+		color: var(--color-accent-primary);
+		text-decoration-color: var(--color-accent-primary);
+	}
+
+	.footer-credits-link:focus-visible {
+		outline: 2px solid var(--color-accent-primary);
+		outline-offset: 2px;
+		border-radius: 2px;
 	}
 
 	@media (max-width: 1000px) {
