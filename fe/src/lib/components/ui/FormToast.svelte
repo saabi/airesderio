@@ -36,22 +36,20 @@
 		max-width: min(36rem, calc(100vw - 2rem));
 		padding: 1rem 1rem 1rem 1.25rem;
 		border-radius: 0.5rem;
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
 		font-family: var(--font-body);
 		font-size: 0.95rem;
 		line-height: 1.45;
+		background: #022b3a;
+		color: #fff;
 	}
 
 	.form-toast--success {
-		background: var(--color-bg-canvas, #fff);
-		border: 1px solid var(--color-success-border, #c3e6cb);
-		color: var(--color-text-primary);
+		border: 1px solid rgba(255, 255, 255, 0.18);
 	}
 
 	.form-toast--error {
-		background: var(--color-bg-canvas, #fff);
-		border: 1px solid var(--color-error-border, #f5c6cb);
-		color: var(--color-text-primary);
+		border: 1px solid rgba(255, 255, 255, 0.18);
 	}
 
 	.form-toast__text {
@@ -70,16 +68,16 @@
 		font-size: 1.5rem;
 		line-height: 1;
 		cursor: pointer;
-		color: var(--color-text-secondary);
+		color: rgba(255, 255, 255, 0.9);
 		border-radius: 0.25rem;
 	}
 
 	.form-toast__dismiss:hover {
-		color: var(--color-text-primary);
+		color: #fff;
 	}
 
 	.form-toast__dismiss:focus-visible {
-		outline: 2px solid var(--color-accent-primary);
+		outline: 2px solid #fff;
 		outline-offset: 2px;
 	}
 </style>

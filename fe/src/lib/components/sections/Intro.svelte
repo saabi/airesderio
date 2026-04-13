@@ -65,7 +65,7 @@
 			>Características principales del proyecto</VisuallyHidden
 		>
 		<dl>
-			<dt class='kpi'><strong>2 y 4 Ambientes</strong><small>1 dormitorio<br>2 dormitorios + estudio</small></dt>
+			<dt class='kpi'><strong>2 Y 4 AMBIENTES</strong><small>1 dormitorio<br>2 dormitorios + estudio</small></dt>
 			<VisuallyHidden tag='dd'>Tipos de unidades disponibles</VisuallyHidden>
 			<dt class='kpi'><strong>PISCINA</strong><small>Con solarium húmedo en terraza</small></dt>
 			<VisuallyHidden tag='dd'>Amenities en terraza con piscina y solarium húmedo</VisuallyHidden>

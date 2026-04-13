@@ -25,6 +25,8 @@
 		onSelectionChange?: (placeId: string | null) => void;
 		/** When true, base map is grayscale except inside place/focal zones (default true). */
 		desaturateOutsideZones?: boolean;
+		/** When false, zone polygon overlays (home / selected / focal) are hidden; pins and labels stay visible. */
+		showZoneShapes?: boolean;
 	}
 
 	export interface MapComponent {
@@ -74,7 +76,8 @@
 		pinRadius,
 		onOpenGallery,
 		onSelectionChange,
-		desaturateOutsideZones = false
+		desaturateOutsideZones = false,
+		showZoneShapes = true
 	}: Props = $props();
 
 	// Unique ids for filter and clipPath (defs)
@@ -495,6 +498,41 @@
 		return pinRadius * scale;
 	}
 
+	function unionDomRects(boxes: DOMRect[]): DOMRect | null {
+		if (boxes.length === 0) return null;
+		const minX = Math.min(...boxes.map((b) => b.x));
+		const minY = Math.min(...boxes.map((b) => b.y));
+		const maxX = Math.max(...boxes.map((b) => b.x + b.width));
+		const maxY = Math.max(...boxes.map((b) => b.y + b.height));
+		return new DOMRect(minX, minY, maxX - minX, maxY - minY);
+	}
+
+	/** Bbox around the place pin only (excludes zone polygons and labels). */
+	function getPlacePinOnlyBbox(pathId: string): DOMRect | null {
+		const place = places.find((p) => p.id === pathId);
+		if (!place) return null;
+		const r = getPinRadius(place.pin.r);
+		const cx = denorm(place.pin.cx);
+		const cy = denorm(place.pin.cy);
+		return new DOMRect(cx - r, cy - r, r * 2, r * 2);
+	}
+
+	/** Focal bbox without zone rectangles: pin circle + isotype only. */
+	function getFocalBboxWithoutZoneShapes(): DOMRect | null {
+		if (!focalGroup) return null;
+		const parts: DOMRect[] = [];
+		for (const selector of ['.pin-circle', '.focal-isotype'] as const) {
+			const el = focalGroup.querySelector(selector);
+			if (!el) continue;
+			try {
+				parts.push((el as SVGGraphicsElement).getBBox());
+			} catch {
+				/* ignore */
+			}
+		}
+		return unionDomRects(parts);
+	}
+
 	/**
 	 * Converts SVG viewBox coordinates to parent offset coordinates
 	 */
@@ -711,27 +749,33 @@
 	async function zoomToBoundingBox(pathId: string) {
 		// Wait for DOM to update so elements are rendered
 		await tick();
-		
-		// Get the place group element
+
 		let placeBbox: DOMRect | null = null;
-		if (placesGroup && svgElement) {
-			const placeGroup = placesGroup.querySelector(`#${CSS.escape(pathId)}`) as SVGGElement | null;
-			if (placeGroup) {
-				try {
-					placeBbox = placeGroup.getBBox();
-				} catch (error) {
-					console.warn('Could not get bounding box for place:', pathId, error);
+		if (showZoneShapes) {
+			if (placesGroup && svgElement) {
+				const placeGroup = placesGroup.querySelector(`#${CSS.escape(pathId)}`) as SVGGElement | null;
+				if (placeGroup) {
+					try {
+						placeBbox = placeGroup.getBBox();
+					} catch (error) {
+						console.warn('Could not get bounding box for place:', pathId, error);
+					}
 				}
 			}
+		} else {
+			placeBbox = getPlacePinOnlyBbox(pathId);
 		}
-		
-		// Get the focal group bounding box
+
 		let focalBbox: DOMRect | null = null;
 		if (includeFocal && focalGroup) {
-			try {
-				focalBbox = focalGroup.getBBox();
-			} catch (error) {
-				console.warn('Could not get bounding box for focal:', error);
+			if (showZoneShapes) {
+				try {
+					focalBbox = focalGroup.getBBox();
+				} catch (error) {
+					console.warn('Could not get bounding box for focal:', error);
+				}
+			} else {
+				focalBbox = getFocalBboxWithoutZoneShapes();
 			}
 		}
 		
@@ -919,7 +963,11 @@
 	export { next, prev, reset, currentPathId, selectedGroupName, pinCoordinates };
 </script>
 
-<div class='map-viewport' bind:this={mapContainer}>
+<div
+	class='map-viewport'
+	class:map-viewport--hide-zone-shapes={!showZoneShapes}
+	bind:this={mapContainer}
+>
 	<svg
 		bind:this={svgElement}
 		width={widthAttr}
@@ -1585,6 +1633,26 @@
 		stroke-width: 1.1;
 		cursor: pointer;
 		animation: zoneFadeDefault 420ms ease both;
+	}
+
+	.map-viewport--hide-zone-shapes .place-path-home {
+		fill: transparent !important;
+		stroke: none !important;
+		animation: none;
+		pointer-events: fill;
+	}
+
+	.map-viewport--hide-zone-shapes .group-active .place-path {
+		fill: transparent !important;
+		stroke: none !important;
+		animation: none;
+		pointer-events: fill;
+	}
+
+	.map-viewport--hide-zone-shapes .focal-path {
+		fill: transparent !important;
+		stroke: none !important;
+		pointer-events: fill;
 	}
 
 	/* Location pin icon inside place pins (not focal) */

@@ -254,6 +254,7 @@
 				zoomMargin={0.11}
 				onOpenGallery={openGalleryForCurrentPlace}
 				onSelectionChange={(id) => (currentPlaceId = id)}
+				showZoneShapes={false}
 			/>
 		{:else}
 			<div class='location-map-loading'>Cargando mapa...</div>
