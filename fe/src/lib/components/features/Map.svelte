@@ -27,6 +27,8 @@
 		desaturateOutsideZones?: boolean;
 		/** When false, zone polygon overlays (home / selected / focal) are hidden; pins and labels stay visible. */
 		showZoneShapes?: boolean;
+		/** When true, draw the union content bbox used for zoom (debug). */
+		showBoundingBox?: boolean;
 	}
 
 	export interface MapComponent {
@@ -77,7 +79,8 @@
 		onOpenGallery,
 		onSelectionChange,
 		desaturateOutsideZones = false,
-		showZoneShapes = true
+		showZoneShapes = true,
+		showBoundingBox = false
 	}: Props = $props();
 
 	// Unique ids for filter and clipPath (defs)
@@ -296,6 +299,14 @@
 	// Reference to places group element (for bounding box calculation)
 	let placesGroup: SVGGElement | null = $state(null);
 
+	/** Union of place + focal bboxes used for zoom (content, before margin). Shown when showBoundingBox. */
+	let lastZoomContentBbox = $state<{
+		x: number;
+		y: number;
+		width: number;
+		height: number;
+	} | null>(null);
+
 	// Container size (for constant screen-size isotype during zoom)
 	let containerSize = $state({ w: 0, h: 0 });
 	$effect(() => {
@@ -498,39 +509,28 @@
 		return pinRadius * scale;
 	}
 
-	function unionDomRects(boxes: DOMRect[]): DOMRect | null {
-		if (boxes.length === 0) return null;
-		const minX = Math.min(...boxes.map((b) => b.x));
-		const minY = Math.min(...boxes.map((b) => b.y));
-		const maxX = Math.max(...boxes.map((b) => b.x + b.width));
-		const maxY = Math.max(...boxes.map((b) => b.y + b.height));
-		return new DOMRect(minX, minY, maxX - minX, maxY - minY);
-	}
-
-	/** Bbox around the place pin only (excludes zone polygons and labels). */
-	function getPlacePinOnlyBbox(pathId: string): DOMRect | null {
-		const place = places.find((p) => p.id === pathId);
-		if (!place) return null;
-		const r = getPinRadius(place.pin.r);
-		const cx = denorm(place.pin.cx);
-		const cy = denorm(place.pin.cy);
-		return new DOMRect(cx - r, cy - r, r * 2, r * 2);
-	}
-
-	/** Focal bbox without zone rectangles: pin circle + isotype only. */
-	function getFocalBboxWithoutZoneShapes(): DOMRect | null {
-		if (!focalGroup) return null;
-		const parts: DOMRect[] = [];
-		for (const selector of ['.pin-circle', '.focal-isotype'] as const) {
-			const el = focalGroup.querySelector(selector);
-			if (!el) continue;
-			try {
-				parts.push((el as SVGGraphicsElement).getBBox());
-			} catch {
-				/* ignore */
+	/**
+	 * Same coordinate space as {@link SVGGElement.getBBox} on `root`, but zone outline
+	 * elements are temporarily `display:none` so they do not contribute (pins, labels,
+	 * focal isotype, etc. stay included).
+	 */
+	function getBBoxExcludingZoneShapes(root: SVGGElement, zoneShapeSelector: string): DOMRect | null {
+		const nodes = root.querySelectorAll(zoneShapeSelector);
+		const restore: { el: Element; display: string | null }[] = [];
+		for (const el of nodes) {
+			restore.push({ el, display: el.getAttribute('display') });
+			el.setAttribute('display', 'none');
+		}
+		try {
+			return root.getBBox();
+		} catch {
+			return null;
+		} finally {
+			for (const { el, display } of restore) {
+				if (display === null) el.removeAttribute('display');
+				else el.setAttribute('display', display);
 			}
 		}
-		return unionDomRects(parts);
 	}
 
 	/**
@@ -751,31 +751,27 @@
 		await tick();
 
 		let placeBbox: DOMRect | null = null;
-		if (showZoneShapes) {
-			if (placesGroup && svgElement) {
-				const placeGroup = placesGroup.querySelector(`#${CSS.escape(pathId)}`) as SVGGElement | null;
-				if (placeGroup) {
-					try {
-						placeBbox = placeGroup.getBBox();
-					} catch (error) {
-						console.warn('Could not get bounding box for place:', pathId, error);
-					}
+		if (placesGroup && svgElement) {
+			const placeGroup = placesGroup.querySelector(`#${CSS.escape(pathId)}`) as SVGGElement | null;
+			if (placeGroup) {
+				try {
+					placeBbox = showZoneShapes
+						? placeGroup.getBBox()
+						: getBBoxExcludingZoneShapes(placeGroup, '.place-path');
+				} catch (error) {
+					console.warn('Could not get bounding box for place:', pathId, error);
 				}
 			}
-		} else {
-			placeBbox = getPlacePinOnlyBbox(pathId);
 		}
 
 		let focalBbox: DOMRect | null = null;
 		if (includeFocal && focalGroup) {
-			if (showZoneShapes) {
-				try {
-					focalBbox = focalGroup.getBBox();
-				} catch (error) {
-					console.warn('Could not get bounding box for focal:', error);
-				}
-			} else {
-				focalBbox = getFocalBboxWithoutZoneShapes();
+			try {
+				focalBbox = showZoneShapes
+					? focalGroup.getBBox()
+					: getBBoxExcludingZoneShapes(focalGroup, '.focal-path');
+			} catch (error) {
+				console.warn('Could not get bounding box for focal:', error);
 			}
 		}
 		
@@ -795,13 +791,23 @@
 		} else {
 			// Fallback: use pin coordinates
 			const place = places.find((p) => p.id === pathId);
-			if (!place) return;
+			if (!place) {
+				lastZoomContentBbox = null;
+				return;
+			}
 			const pinCx = denorm(place.pin.cx);
 			const pinCy = denorm(place.pin.cy);
 			const pinR = denorm(place.pin.r);
 			bbox = new DOMRect(pinCx - pinR, pinCy - pinR, pinR * 2, pinR * 2);
 		}
-		
+
+		lastZoomContentBbox = {
+			x: bbox.x,
+			y: bbox.y,
+			width: bbox.width,
+			height: bbox.height
+		};
+
 		// Calculate margin as percentage of content size
 		const marginX = bbox.width * zoomMargin;
 		const marginY = bbox.height * zoomMargin;
@@ -946,6 +952,7 @@
 
 	function reset() {
 		currentZoomedIndex = null;
+		lastZoomContentBbox = null;
 		viewBoxX.set(defaultViewBox.x);
 		viewBoxY.set(defaultViewBox.y);
 		viewBoxWidth.set(defaultViewBox.width);
@@ -1361,6 +1368,23 @@
 				<path d="m 72.62761,90.860919 c 0,7.331697 5.943515,13.275211 13.275212,13.275211 h 8.724469 v 4.20861 h -8.724469 c -7.331697,0 -13.275212,-5.94352 -13.275212,-13.275213 z"/>
 			</g>
 			</g>
+		{/if}
+
+		{#if showBoundingBox && lastZoomContentBbox}
+			<rect
+				class='map-zoom-content-bbox'
+				x={lastZoomContentBbox.x}
+				y={lastZoomContentBbox.y}
+				width={lastZoomContentBbox.width}
+				height={lastZoomContentBbox.height}
+				fill='none'
+				stroke='#d946ef'
+				stroke-width='3'
+				stroke-dasharray='10 6'
+				vector-effect='non-scaling-stroke'
+				pointer-events='none'
+				aria-hidden='true'
+			/>
 		{/if}
 	</svg>
 
