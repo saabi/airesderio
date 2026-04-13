@@ -109,7 +109,10 @@
 		</div>
 
 		<div class='footer-bottom'>
-			<p>© {year} Habitat Prime SAS · <AiresDeRioLogo class='logo-inline' height='1em' theme='dark' showIsotype={false} fitViewBox={true} showDepartamentos={false} /> es una marca registrada.</p>
+			<p class='footer-copyright'>
+				© {year} Habitat Prime SAS · <AiresDeRioLogo class='logo-inline' height='1em' theme='dark' showIsotype={false} fitViewBox={true} showDepartamentos={false} /> es una marca registrada.
+			</p>
+			<p class='footer-credits'>Sitio web — Sebastian Ferreyra Pons</p>
 		</div>
 	</div>
 </footer>
@@ -295,6 +298,16 @@
 		color: var(--color-text-tertiary);
 		gap: 1rem;
 		flex-wrap: wrap;
+	}
+
+	.footer-bottom .footer-copyright,
+	.footer-bottom .footer-credits {
+		margin: 0;
+	}
+
+	.footer-credits {
+		font-size: 0.85rem;
+		color: color-mix(in oklch, var(--color-text-tertiary) 88%, var(--ref-cream) 12%);
 	}
 
 	@media (max-width: 1000px) {
