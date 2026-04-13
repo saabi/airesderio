@@ -1564,15 +1564,11 @@
 		animation: zoneFadeSelected 260ms ease both;
 	}
 
+	/* Pin path must participate in hit-testing: transparent .place-path below uses pointer-events:fill when zone shapes are hidden. */
 	.pin-gallery-button {
 		/* Box/Visual */
 		cursor: pointer;
 		pointer-events: all;
-	}
-
-	/* Fill/stroke come from path attributes (MAP_PIN_SELECTED_FILL) */
-	.pin-gallery-pin {
-		pointer-events: none;
 	}
 
 	.pin-gallery-icon {
