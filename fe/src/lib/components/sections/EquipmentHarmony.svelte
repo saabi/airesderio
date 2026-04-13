@@ -39,11 +39,6 @@
 			text: 'Ambientes con techos altos y cielorrasos diseñados con espacios integrados para iluminación, instalaciones y cortinas, que además contribuyen al confort térmico y acústico.'
 		},
 		{
-			icon: '🖼️',
-			component: Carpinteria,
-			text: 'Carpintería de aluminio Aluar Línea A30 NEW de alta prestación. Grandes puertas corredizas de doble hoja que conectan el dormitorio y el living con el balcón.'
-		},
-		{
 			icon: '🍽️',
 			component: Cocina,
 			text: 'Cocinas totalmente equipadas, con mobiliario moderno bajo y sobre mesada. Incluyen horno con hornallas integradas y campana purificadora. Mesadas y desayunador en granito natural, pileta de acero inoxidable marca Johnson y grifería monocomando FV.'
@@ -59,11 +54,6 @@
 			text: 'Baños de diseño contemporáneo, equipados con grifería de primera calidad, vanitory, espejo, mampara de vidrio y sistema de extracción.'
 		},
 		{
-			icon: '🌀',
-			component: UnidadesAire,
-			text: 'Preinstalación de aire acondicionado en living y dormitorios, con soporte, desagües, cañerías y toma eléctrica. Incluye bandejas de hierro para las unidades exteriores en patios internos. Equipos no incluidos.'
-		},
-		{
 			icon: '🧺',
 			component: Lavasecarropas,
 			text: 'Preinstalación para lavarropas y secarropas en espacio dedicado.'
@@ -72,6 +62,16 @@
 			icon: '🔌',
 			component: TomasCorriente,
 			text: 'Amplia cantidad de tomacorrientes y bocas de conexión en todos los ambientes. Incluye caja octogonal en cielorraso para la instalación de ventilador de techo en dormitorios y living.'
+		},
+		{
+			icon: '🌀',
+			component: UnidadesAire,
+			text: 'Preinstalación de aire acondicionado en living y dormitorios, con soporte, desagües, cañerías y toma eléctrica. Incluye bandejas de hierro para las unidades exteriores en patios internos. Equipos no incluidos.'
+		},
+		{
+			icon: '🖼️',
+			component: Carpinteria,
+			text: 'Carpintería de aluminio Aluar Línea A30 NEW de alta prestación. Grandes puertas corredizas de doble hoja que conectan el dormitorio y el living con el balcón.'
 		},
 		{
 			icon: '⬜',

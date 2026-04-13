@@ -54,16 +54,16 @@
 
 	const extraInfra: ExtraInfraItem[] = [
 		{
+			icon: 'terrace',
+			text: 'Terraza con piscina y deck húmedo.'
+		},
+		{
 			icon: 'water',
 			text: 'Conexiones de agua y sanitarias con materiales marca AWADUCT y TIGRE.'
 		},
 		{
 			icon: 'walls',
 			text: 'Muros con ladrillos cerámicos huecos de reconocida marca del medio.'
-		},
-		{
-			icon: 'terrace',
-			text: 'Terraza con piscina y deck húmedo.'
 		},
 		{
 			icon: 'cafe',
@@ -213,7 +213,7 @@
 	.bf-frame {
 		border-radius: 6px;
 		padding: 2rem;
-		border: 1px solid var(--color-border-subtle);
+		/* border: 1px solid var(--color-border-subtle); */
 	}
 
 	.bf-header {
