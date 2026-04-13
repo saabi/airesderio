@@ -1420,16 +1420,16 @@
 		--map-highlight-warm: #8b5431;
 
 		/* Base-map theme (SimpleMapBase.svelte) */
-		--simplemap-bg: var(--map-paper);
-		--simplemap-land: color-mix(in oklch, var(--map-paper) 88%, var(--ref-neutral-300) 12%);
-		--simplemap-water: color-mix(in oklch, var(--header-bg) 28%, var(--map-paper) 72%);
+		--simplemap-bg: #bababa;
+		--simplemap-land: #bababa;
+		--simplemap-water: #5cdefa;
 		/* Desaturated + slightly sepia park tone */
-		--simplemap-park: color-mix(in oklch, var(--ref-cta-teal) 18%, #b8a77b 82%);
+		--simplemap-park: #bde6be;
 		--simplemap-accent: color-mix(in oklch, #d6a88e 55%, var(--map-paper) 45%);
-		--simplemap-overlay: color-mix(in oklch, var(--header-bg) 10%, var(--map-paper) 90%);
-		--simplemap-road: color-mix(in oklch, var(--ref-neutral-600) 60%, var(--map-paper) 40%);
+		--simplemap-overlay: white;
+		--simplemap-road: white;
 		--simplemap-road-border: color-mix(in oklch, #b8a77b 60%, var(--map-paper) 40%);
-		--simplemap-stroke-light: color-mix(in oklch, var(--ref-neutral-350) 75%, var(--map-paper) 25%);
+		--simplemap-stroke-light: white;
 		--simplemap-stroke-paper: color-mix(in oklch, var(--map-paper) 92%, var(--ref-neutral-300) 8%);
 		--simplemap-stroke-light-opacity: 0.35;
 		--simplemap-stroke-mid-opacity: 0.55;
