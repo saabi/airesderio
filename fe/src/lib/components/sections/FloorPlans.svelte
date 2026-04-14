@@ -184,8 +184,10 @@
 		/* Positioning */
 		position: relative;
 
-		/* Layout */
+		/* Layout: cap width; height still comes from aspect-ratio on .carousel-images */
 		width: 100%;
+		max-width: 70vh;
+		margin-inline: auto;
 		overflow: hidden;
 
 		/* Box/Visual */
