@@ -2,7 +2,7 @@
 	// ===== IMPORTS =====
 	import { browser } from '$app/environment';
 
-	import Title from '$lib/components/ui/Title.svelte';
+	import Subtitle from '$lib/components/ui/Subtitle.svelte';
 	import IconTextRow from '$lib/components/ui/IconTextRow.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import LuxuryTilde from '$lib/components/icons/LuxuryTilde.svelte';
@@ -127,7 +127,7 @@
 		data-item-active={titleVisible || undefined}
 		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="" big="Equipamiento opcional" bigSize="small" below="Luxury Style" />
+		<Subtitle eyebrow="Equipamiento opcional" big="Luxury Style" bigSize="big" align="center" />
 	</div>
 
 	<p class="equip-intro">

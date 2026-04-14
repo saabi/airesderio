@@ -175,15 +175,18 @@
 		flex-direction: column;
 		gap: 1.5rem;
 		padding: 1.25rem 1rem;
+		padding-top: 0;
 		border-radius: 0.5rem;
 		background: #0a2a35;
 	}
 
 	.footer-logo {
-		display: flex;
+		display: inline-flex;
 		align-items: center;
 		justify-content: flex-start;
-		width: 100%;
+		align-self: flex-start;
+		width: fit-content;
+		max-width: 100%;
 		box-sizing: border-box;
 		padding: 0.65rem 1rem;
 		border-radius: 0.5rem;
@@ -212,9 +215,10 @@
 	}
 
 	.highlight-label {
-		font-size: 0.75rem;
+		font-size: clamp(1rem, 1.1vw, 0.9rem);
 		font-weight: var(--font-weight-semibold);
-		letter-spacing: 0.1em;
+		letter-spacing: 0.08em;
+		line-height: 1.25;
 		text-transform: uppercase;
 		color: #f06c5e;
 	}

@@ -60,7 +60,8 @@
 	.carousel-dots {
 		/* Layout */
 		display: flex;
-		gap: 0.5rem;
+		/* More breathing room by default; tightens automatically on narrow/constrained widths. */
+		gap: min(0.9rem, 2.5vw);
 		align-items: center;
 	}
 

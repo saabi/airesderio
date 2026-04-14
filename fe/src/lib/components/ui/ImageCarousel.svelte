@@ -871,8 +871,61 @@
 		transform: translateY(-50%) scale(0.95);
 	}
 
+	/* Global control styling for all ImageCarousel instances */
+	:global(.image-carousel .carousel-navigation .circular-button) {
+		width: 4.5rem;
+		height: 4.5rem;
+		background: #023850;
+		border: 1px solid #023850;
+		color: #fff;
+	}
+
+	:global(.image-carousel .carousel-navigation .circular-button:hover:not(:disabled)) {
+		background: #034663;
+		border-color: #034663;
+		color: #fff;
+		transform: scale(1.06);
+	}
+
+	:global(.image-carousel .carousel-navigation .nav-button:hover:not(:disabled)) {
+		transform: translateY(-50%) scale(1.06);
+	}
+
+	:global(.image-carousel .carousel-navigation .circular-button:focus-visible) {
+		outline: 3px solid #a6e7df;
+		outline-offset: 2px;
+	}
+
+	:global(.image-carousel .carousel-dots .dot) {
+		width: 1rem;
+		height: 1rem;
+		background: #a6e7df;
+	}
+
+	:global(.image-carousel .carousel-dots .dot:hover) {
+		background: #8cd9d0;
+	}
+
+	:global(.image-carousel .carousel-dots .dot.active) {
+		background: #023850;
+	}
+
+	:global(.image-carousel .carousel-dots .dot.active:hover) {
+		background: #034663;
+	}
+
+	:global(.image-carousel .carousel-dots .dot:focus-visible) {
+		outline: 2px solid #a6e7df;
+		outline-offset: 2px;
+	}
+
 	/* Mobile responsiveness */
 	@media (max-width: 640px) {
+		:global(.image-carousel .carousel-navigation .circular-button) {
+			width: 3.75rem;
+			height: 3.75rem;
+		}
+
 		:global(.image-carousel .nav-button.prev) {
 			/* Positioning */
 			left: 0.5rem;

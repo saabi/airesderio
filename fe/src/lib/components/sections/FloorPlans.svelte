@@ -131,10 +131,11 @@
 					showNavigation={true}
 					navigationPosition="above-image"
 					buttonVariant="bordered"
-					buttonSize="md"
+					buttonSize="xxl"
 					showDots={true}
 					dotsVariant="inverse"
 					dotsPosition="above-image"
+					dotsSize="large"
 					transitionType="fade"
 					transitionDuration={600}
 					imageFit="contain"
@@ -210,10 +211,6 @@
 			transition: none;
 		}
 	}
-
-	/* ImageCarousel handles image and navigation styles */
-
-
 
 	.floor-plan-info {
 		/* Layout: horizontal padding provided by carousel-caption */

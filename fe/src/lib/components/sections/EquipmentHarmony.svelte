@@ -154,7 +154,7 @@
 		data-item-active={titleVisible || undefined}
 		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="" big="EQUIPAMIENTO" bigSize="small" below="e interiores" />
+		<Title eyebrow="EQUIPAMIENTO EN" big="INTERIORES" bigSize="small" below="" />
 	</div>
 
 	<div class="equip-column">
