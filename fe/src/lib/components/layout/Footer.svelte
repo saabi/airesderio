@@ -82,6 +82,8 @@
 							{#if item.href}
 								<a
 									class='footer-contact-link'
+									class:cta-email={!!item.href?.startsWith('mailto:')}
+									class:cta-whatsapp={!!item.href?.includes('wa.me')}
 									href={item.href}
 									rel={item.external ? 'noopener noreferrer' : undefined}
 									target={item.external ? '_blank' : undefined}

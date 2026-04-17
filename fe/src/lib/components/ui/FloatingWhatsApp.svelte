@@ -95,7 +95,7 @@
 		href={whatsappUrl}
 		target='_blank'
 		rel='noopener noreferrer'
-		class='floating-whatsapp'
+		class='floating-whatsapp cta-whatsapp'
 		style={`transform: translateY(${transformY}px); opacity: ${opacity}; transition-duration: ${fadeDuration}ms;`}
 		aria-label={ariaLabel}
 		title='WhatsApp'

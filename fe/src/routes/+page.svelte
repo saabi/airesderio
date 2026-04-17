@@ -94,7 +94,7 @@
 	<meta property="og:title" content="Aires de Río - Departamentos en Santiago del Estero" />
 	<meta
 		property="og:description"
-		content="Moderno proyecto de departamentos con ubicación estratégica en el centro de Santiago del Estero. Departamentos de 2 y 4 ambientes amplios y luminosos."
+		content="Moderno proyecto de departamentos con ubicación estratégica en el centro de Santiago del Estero, capital. Departamentos de 2 y 4 ambientes amplios y luminosos."
 	/>
 	<meta property="og:image" content={`${siteUrl}/og-image.jpg`} />
 	<meta property="og:image:width" content="1200" />
