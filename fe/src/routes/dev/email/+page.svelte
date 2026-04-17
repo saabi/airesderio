@@ -8,6 +8,14 @@
 	const previews = $derived(data.previews ?? []);
 	let selectedId = $state('');
 
+	$effect(() => {
+		const list = data.previews ?? [];
+		if (list.length === 0) return;
+		if (!list.some((p) => p.id === selectedId)) {
+			selectedId = list[0].id;
+		}
+	});
+
 	const selectedPreview = $derived.by<EmailPreview | null>(() => {
 		if (previews.length === 0) return null;
 		return previews.find((preview) => preview.id === selectedId) ?? previews[0];

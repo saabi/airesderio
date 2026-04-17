@@ -85,7 +85,14 @@ function getInlineLogoAttachment() {
 }
 
 const EMAIL_SIGNATURE_LINE =
-	'Aires de Río - Departamentos de uno y dos habitaciones en Santiago del Estero';
+	'Aires de Río - Departamentos de 2 y 4 ambientes en Santiago del Estero';
+
+/** Same as `app.css` `--header-bg` (site header bar). */
+const EMAIL_HEADER_BG = '#022b3a';
+
+/** Same as `app.css` `.btn-cta-primary`: `--nav-button-fill`, `--nav-button-border`. */
+const EMAIL_CTA_BUTTON_BG = '#4497b9';
+const EMAIL_CTA_BUTTON_BORDER = '#000000';
 
 /** Single tappable WhatsApp CTA for HTML mail (wa.me + visible number). */
 const WHATSAPP_PHONE_ANCHOR = `<a href="https://wa.me/5493856222266" target="_blank" rel="noopener noreferrer" style="color:#0f766e;font-weight:600;text-decoration:underline;">WhatsApp al +54 9 385 6222266</a>`;
@@ -100,7 +107,7 @@ function emailWrapper(body: string): string {
 <tr><td align="center">
 <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:8px; overflow:hidden; max-width:100%;">
 	<tr>
-		<td style="background:#1a1a2e; padding:24px 32px; text-align:center;">
+		<td style="background:${EMAIL_HEADER_BG}; padding:24px 32px; text-align:center;">
 			<img
 				src="cid:${EMAIL_LOGO_CID}"
 				srcset="${getEmailHeaderLogoHttpsUrl()} 1x"
@@ -191,7 +198,7 @@ export function buildPdfDownloadEmail(params: SendPdfLinkParams): EmailPreviewPa
 
 	const subject = 'Tu ficha técnica — Aires de Río';
 	const body = `
-		<h2 style="margin:0 0 8px; font-size:20px; color:#1a1a2e;">¡Hola ${leadName}!</h2>
+		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">¡Hola ${leadName}!</h2>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
 			Gracias por tu interés en <strong>Aires de Río</strong>. Hacé clic en el botón para descargar la ficha técnica del proyecto.
 		</p>
@@ -200,7 +207,7 @@ export function buildPdfDownloadEmail(params: SendPdfLinkParams): EmailPreviewPa
 				<td align="center">
 					<table cellpadding="0" cellspacing="0" role="presentation">
 						<tr>
-							<td align="center" style="background:#1a1a2e; border-radius:6px;">
+							<td align="center" style="background:${EMAIL_CTA_BUTTON_BG}; border:2px solid ${EMAIL_CTA_BUTTON_BORDER}; border-radius:6px;">
 								<a href="${downloadUrl}" style="display:inline-block; padding:14px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
 									Descargar ficha técnica
 								</a>
@@ -253,7 +260,7 @@ export function buildDirectContactThankYouEmail(
 
 	const subject = 'Gracias por tu consulta — Aires de Río';
 	const body = `
-		<h2 style="margin:0 0 8px; font-size:20px; color:#1a1a2e;">¡Hola ${leadName}!</h2>
+		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">¡Hola ${leadName}!</h2>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
 			Gracias por tu interés en <strong>Aires de Río</strong>. Recibimos tu consulta y un asesor de nuestro equipo se pondrá en contacto con vos a la brevedad para brindarte información personalizada.
 		</p>
@@ -265,7 +272,7 @@ export function buildDirectContactThankYouEmail(
 				<td align="center">
 					<table cellpadding="0" cellspacing="0" role="presentation">
 						<tr>
-							<td align="center" style="background:#1a1a2e; border-radius:6px;">
+							<td align="center" style="background:${EMAIL_CTA_BUTTON_BG}; border:2px solid ${EMAIL_CTA_BUTTON_BORDER}; border-radius:6px;">
 								<a href="${downloadUrl}" style="display:inline-block; padding:14px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
 									Descargar ficha técnica
 								</a>
