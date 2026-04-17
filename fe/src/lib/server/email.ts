@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 import { env } from '$env/dynamic/private';
@@ -46,6 +49,38 @@ function getSiteUrl(): string {
 	return env.PUBLIC_SITE_URL || 'https://airesderio.com';
 }
 
+/**
+ * White raster logo for HTML mail (Gmail often blocks remote or SVG images).
+ * Use `airesderio-logotype-email-raster.svg`: same paths as the web logotype but a padded `viewBox`
+ * so ImageMagick/librsvg do not clip; keep that file in sync when the brand SVG changes.
+ * From `fe/static`:
+ * `convert -background none -density 720 airesderio-logotype-email-raster.svg -filter Lanczos -resize 1272 -channel RGB -negate -alpha set PNG32:airesderio-logotype-email-white.png`
+ */
+function getEmailLogoPngPath(): string {
+	const file = 'airesderio-logotype-email-white.png';
+	const chunkDir = dirname(fileURLToPath(import.meta.url));
+	const candidates = [
+		join(process.cwd(), 'static', file),
+		join(process.cwd(), 'build/client', file),
+		join(chunkDir, '..', '..', 'client', file),
+		join(chunkDir, '..', '..', '..', 'static', file)
+	];
+	for (const p of candidates) {
+		if (existsSync(p)) return p;
+	}
+	throw new Error(`${file} not found (email header); checked static/, build/client/, and paths relative to server bundle`);
+}
+
+let cachedEmailLogoDataUrl: string | undefined;
+
+function getEmailHeaderLogoDataUrl(): string {
+	if (!cachedEmailLogoDataUrl) {
+		const buf = readFileSync(getEmailLogoPngPath());
+		cachedEmailLogoDataUrl = `data:image/png;base64,${buf.toString('base64')}`;
+	}
+	return cachedEmailLogoDataUrl;
+}
+
 const EMAIL_SIGNATURE_LINE =
 	'Aires de Río - Departamentos de uno y dos habitaciones en Santiago del Estero';
 
@@ -64,10 +99,10 @@ function emailWrapper(body: string): string {
 	<tr>
 		<td style="background:#1a1a2e; padding:24px 32px; text-align:center;">
 			<img
-				src="${getSiteUrl()}/airesderio-logotype.svg"
+				src="${getEmailHeaderLogoDataUrl()}"
 				alt="Aires de Río"
 				width="240"
-				style="display:inline-block; width:240px; max-width:100%; height:auto; filter: invert(1);"
+				style="display:inline-block; width:240px; max-width:100%; height:auto; border:0; outline:none; text-decoration:none;"
 			/>
 		</td>
 	</tr>
