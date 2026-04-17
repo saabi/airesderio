@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import nodemailer from 'nodemailer';
@@ -32,6 +32,7 @@ function getTransporter(): Transporter {
 const DEFAULT_FROM_ADDRESS = 'noreply@airesderio.com';
 /** Shown in mail clients as the sender name; address still comes from CONTACT_FORM_FROM. */
 const FROM_DISPLAY_NAME = 'Aires de Rio';
+const EMAIL_LOGO_CID = 'airesderio-logo@cid';
 
 function getSmtpFromAddress(): string {
 	const raw = env.CONTACT_FORM_FROM?.trim();
@@ -47,6 +48,10 @@ function getFrom(): string {
 
 function getSiteUrl(): string {
 	return env.PUBLIC_SITE_URL || 'https://airesderio.com';
+}
+
+function getEmailHeaderLogoHttpsUrl(): string {
+	return `${getSiteUrl()}/airesderio-logotype-email-white.png`;
 }
 
 /**
@@ -71,14 +76,12 @@ function getEmailLogoPngPath(): string {
 	throw new Error(`${file} not found (email header); checked static/, build/client/, and paths relative to server bundle`);
 }
 
-let cachedEmailLogoDataUrl: string | undefined;
-
-function getEmailHeaderLogoDataUrl(): string {
-	if (!cachedEmailLogoDataUrl) {
-		const buf = readFileSync(getEmailLogoPngPath());
-		cachedEmailLogoDataUrl = `data:image/png;base64,${buf.toString('base64')}`;
-	}
-	return cachedEmailLogoDataUrl;
+function getInlineLogoAttachment() {
+	return {
+		filename: 'airesderio-logotype-email-white.png',
+		path: getEmailLogoPngPath(),
+		cid: EMAIL_LOGO_CID
+	};
 }
 
 const EMAIL_SIGNATURE_LINE =
@@ -99,7 +102,9 @@ function emailWrapper(body: string): string {
 	<tr>
 		<td style="background:#1a1a2e; padding:24px 32px; text-align:center;">
 			<img
-				src="${getEmailHeaderLogoDataUrl()}"
+				src="cid:${EMAIL_LOGO_CID}"
+				srcset="${getEmailHeaderLogoHttpsUrl()} 1x"
+				onerror="this.onerror=null;this.src='${getEmailHeaderLogoHttpsUrl()}';"
 				alt="Aires de Río"
 				width="240"
 				style="display:inline-block; width:240px; max-width:100%; height:auto; border:0; outline:none; text-decoration:none;"
@@ -166,7 +171,8 @@ export async function sendContactNotification(params: SendContactNotificationPar
 		to: recipient,
 		replyTo: params.leadEmail,
 		subject,
-		html
+		html,
+		attachments: [getInlineLogoAttachment()]
 	});
 }
 
@@ -225,7 +231,8 @@ export async function sendPdfDownloadLink(params: SendPdfLinkParams): Promise<vo
 		to: params.leadEmail,
 		replyTo: env.CONTACT_FORM_RECIPIENT || 'info@airesderio.com',
 		subject,
-		html
+		html,
+		attachments: [getInlineLogoAttachment()]
 	});
 }
 
@@ -289,6 +296,7 @@ export async function sendDirectContactThankYou(params: SendDirectContactThankYo
 		to: params.leadEmail,
 		replyTo: env.CONTACT_FORM_RECIPIENT || 'info@airesderio.com',
 		subject,
-		html
+		html,
+		attachments: [getInlineLogoAttachment()]
 	});
 }
