@@ -143,7 +143,6 @@
 	.site-footer {
 		/* Layout */
 		padding: 3rem 0 2rem;
-		margin-top: 4rem;
 
 		/* Box/Visual */
 		border-top: 1px solid color-mix(in oklch, var(--ref-brand-deep) 40%, var(--ref-neutral-900) 60%);

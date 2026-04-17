@@ -126,18 +126,18 @@
 	<div class="page-shell section">
 		<Intro />
 	</div>
-	<Location jsonUrl="/lugares/lugares-direcciones.json" showPlaceMarkers={true} />
 	<div class="section-band section-band--alt">
 		<div class="page-shell section">
-			<BuildingFeatures />
+			<Location jsonUrl="/lugares/lugares-direcciones.json" showPlaceMarkers={true} />
 		</div>
 	</div>
-	<div class="page-shell section">
-		<EquipmentHarmony />
-		<CarouselHarmony />
+	<div class="section-band section-band--alt">
+		<BuildingFeatures />
 	</div>
 	<div class="section-band section-band--alt">
 		<div class="page-shell section">
+			<EquipmentHarmony />
+			<CarouselHarmony />
 			<EquipmentLuxury />
 			<CarouselLuxury />
 		</div>
@@ -145,7 +145,9 @@
 	<div class="page-shell section">
 		<FloorPlans />
 	</div>
-	<ContactSection />
+	<div class="section-band section-band--alt">
+		<ContactSection />
+	</div>
 </main>
 
 <style>

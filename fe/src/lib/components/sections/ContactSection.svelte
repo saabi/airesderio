@@ -61,6 +61,7 @@
 		/* Layout */
 		max-width: var(--max);
 		margin: 0 auto;
+		padding-bottom: 4rem;
 		font-size: 1.2rem;
 	}
 
@@ -70,7 +71,6 @@
 		padding: 2rem 0;
 
 		/* Box/Visual */
-		border-top: 1px solid var(--color-border-subtle);
 	}
 
 	.container {
