@@ -10,7 +10,12 @@
 	import type { DotSize } from '$lib/components/ui/CarouselDots.svelte';
 
 	// ===== TYPES =====
-	export type NavigationPosition = 'absolute-sides' | 'around-dots' | 'below-image' | 'above-image';
+	export type NavigationPosition =
+		| 'absolute-sides'
+		| 'outside-sides'
+		| 'around-dots'
+		| 'below-image'
+		| 'above-image';
 	export type DotsPosition = 'below-image' | 'bottom-center' | 'above-image';
 	export type TransitionType = 'fade' | 'fade-scale' | 'instant' | 'slide';
 	export type ImageFit = 'cover' | 'contain';
@@ -371,8 +376,9 @@
 	class:transition-slide={transitionType === 'slide'}
 	class:fit-cover={imageFit === 'cover'}
 	class:fit-contain={imageFit === 'contain'}
-	class:dots-below={navigationPosition === 'below-image' || (showDots && dotsPosition === 'below-image' && navigationPosition === 'absolute-sides')}
-	class:has-above={(navigationPosition === 'above-image' && showNavigation && slideCount > 1) || (showDots && dotsPosition === 'above-image' && navigationPosition === 'absolute-sides' && slideCount > 1)}
+	class:nav-outside-sides={navigationPosition === 'outside-sides'}
+	class:dots-below={navigationPosition === 'below-image' || (showDots && dotsPosition === 'below-image' && (navigationPosition === 'absolute-sides' || navigationPosition === 'outside-sides'))}
+	class:has-above={(navigationPosition === 'above-image' && showNavigation && slideCount > 1) || (showDots && dotsPosition === 'above-image' && (navigationPosition === 'absolute-sides' || navigationPosition === 'outside-sides') && slideCount > 1)}
 	class:borders={showBorders}
 	role='region'
 	aria-label={ariaLabel}
@@ -544,9 +550,9 @@
 					<ArrowRight />
 				</CircularButton>
 			</div>
-		{:else if navigationPosition === 'absolute-sides'}
+		{:else if navigationPosition === 'absolute-sides' || navigationPosition === 'outside-sides'}
 			<div
-				class='carousel-navigation absolute-sides'
+				class='carousel-navigation {navigationPosition === "outside-sides" ? "outside-sides" : "absolute-sides"}'
 				role='group'
 				aria-label='Navegación del carrusel'
 				onmouseenter={() => (navButtonsHovered = true)}
@@ -574,7 +580,7 @@
 		{/if}
 	{/if}
 
-	{#if showDots && dotsPosition === 'below-image' && navigationPosition === 'absolute-sides' && slideCount > 1}
+	{#if showDots && dotsPosition === 'below-image' && (navigationPosition === 'absolute-sides' || navigationPosition === 'outside-sides') && slideCount > 1}
 		<CarouselDots
 			total={slideCount}
 			currentIndex={currentImageIndex}
@@ -871,6 +877,32 @@
 		transform: translateY(-50%) scale(0.95);
 	}
 
+	/* Navigation: outside-sides (buttons outside image bounds) */
+	.image-carousel.nav-outside-sides {
+		--carousel-outside-gutter: 5rem;
+		padding-inline: var(--carousel-outside-gutter);
+		box-sizing: border-box;
+		overflow: visible;
+	}
+
+	:global(.image-carousel.nav-outside-sides .nav-button.prev) {
+		left: var(--carousel-outside-gutter);
+		transform: translate(-100%, -50%);
+	}
+
+	:global(.image-carousel.nav-outside-sides .nav-button.next) {
+		right: var(--carousel-outside-gutter);
+		transform: translate(100%, -50%);
+	}
+
+	:global(.image-carousel.nav-outside-sides .nav-button.prev:hover:not(:disabled)) {
+		transform: translate(-100%, -50%) scale(1.06);
+	}
+
+	:global(.image-carousel.nav-outside-sides .nav-button.next:hover:not(:disabled)) {
+		transform: translate(100%, -50%) scale(1.06);
+	}
+
 	/* Global control styling for all ImageCarousel instances */
 	:global(.image-carousel .carousel-navigation .circular-button) {
 		width: 4.5rem;
@@ -921,6 +953,10 @@
 
 	/* Mobile responsiveness */
 	@media (max-width: 640px) {
+		.image-carousel.nav-outside-sides {
+			--carousel-outside-gutter: 4.25rem;
+		}
+
 		:global(.image-carousel .carousel-navigation .circular-button) {
 			width: 3.75rem;
 			height: 3.75rem;

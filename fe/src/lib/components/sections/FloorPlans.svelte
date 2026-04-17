@@ -1,5 +1,6 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
+	import { browser } from '$app/environment';
 	import Title from '$lib/components/ui/Title.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
@@ -43,11 +44,13 @@
 
 <script lang='ts'>
 	const DEFAULT_SLIDE_ASPECT = '4 / 3';
+	const DESKTOP_BREAKPOINT_QUERY = '(min-width: 851px)';
 
 	// ===== STATE =====
 	let currentPlanIndex = $state(0);
 	/** CSS `aspect-ratio` value for the active slide image (e.g. `1877 / 1549`). */
 	let planAspectRatio = $state<string>(DEFAULT_SLIDE_ASPECT);
+	let isDesktopCarouselLayout = $state(false);
 
 	const aspectBySrc = new Map<string, string>();
 
@@ -96,6 +99,17 @@
 		img.src = src;
 	});
 
+	$effect(() => {
+		if (!browser) return;
+		const media = window.matchMedia(DESKTOP_BREAKPOINT_QUERY);
+		const update = () => {
+			isDesktopCarouselLayout = media.matches;
+		};
+		update();
+		media.addEventListener('change', update);
+		return () => media.removeEventListener('change', update);
+	});
+
 	// ===== FUNCTIONS =====
 	function handleIndexChange(index: number) {
 		currentPlanIndex = index;
@@ -129,12 +143,12 @@
 					onIndexChange={handleIndexChange}
 					autoRotate={false}
 					showNavigation={true}
-					navigationPosition="above-image"
+					navigationPosition={isDesktopCarouselLayout ? 'outside-sides' : 'above-image'}
 					buttonVariant="bordered"
 					buttonSize="xxl"
 					showDots={true}
 					dotsVariant="inverse"
-					dotsPosition="above-image"
+					dotsPosition={isDesktopCarouselLayout ? 'below-image' : 'above-image'}
 					dotsSize="large"
 					transitionType="fade"
 					transitionDuration={600}
@@ -198,7 +212,7 @@
 	}
 
 	/* Size slide viewport from intrinsic image ratio (this carousel instance only). */
-	.carousel-wrapper :global(.image-carousel.floor-plans-carousel.has-above .carousel-images) {
+	.carousel-wrapper :global(.image-carousel.floor-plans-carousel .carousel-images) {
 		flex: 0 0 auto;
 		width: 100%;
 		aspect-ratio: var(--floor-plan-slide-aspect);
@@ -207,7 +221,7 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.carousel-wrapper :global(.image-carousel.floor-plans-carousel.has-above .carousel-images) {
+		.carousel-wrapper :global(.image-carousel.floor-plans-carousel .carousel-images) {
 			transition: none;
 		}
 	}

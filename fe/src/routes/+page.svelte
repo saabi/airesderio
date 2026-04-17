@@ -132,7 +132,9 @@
 		</div>
 	</div>
 	<div class="section-band section-band--alt">
-		<BuildingFeatures />
+		<div class="page-shell section">
+			<BuildingFeatures />
+		</div>
 	</div>
 	<div class="section-band section-band--alt">
 		<div class="page-shell section">
@@ -145,7 +147,7 @@
 	<div class="page-shell section">
 		<FloorPlans />
 	</div>
-	<div class="section-band section-band--alt">
+	<div class="section-band section-band--alt" >
 		<ContactSection />
 	</div>
 </main>
