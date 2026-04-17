@@ -100,12 +100,10 @@
 		aria-label={ariaLabel}
 		title='WhatsApp'
 	>
-		<span style='position: absolute; width: 0; height: 0; overflow: hidden;'>Link to WhatsApp</span>
 		<img
 			class='whatsapp-icon'
 			src='/whatsapp-icon.png'
-			alt='WhatsApp Icon'
-			aria-hidden='true'
+			alt='Link to WhatsApp'
 			loading='lazy'
 			decoding='async'
 		/>
