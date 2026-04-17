@@ -121,7 +121,7 @@
 	.exterior-image {
 		/* Layout */
 		display: block;
-		max-width: 100%;
+		max-width: 80vw;
 		min-height: 200px;
 		height: 100%;
 		overflow: hidden;

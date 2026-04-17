@@ -166,6 +166,7 @@
 				buttonSize="md"
 				showDots={true}
 				dotsVariant="default"
+				dotsSize="small"
 				transitionType="fade-scale"
 				imageFit="cover"
 				ariaLabel='Carrusel de imágenes del edificio'

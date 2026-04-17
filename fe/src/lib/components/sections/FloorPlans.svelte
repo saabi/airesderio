@@ -23,6 +23,7 @@
 		/** Vertical/mobile image; falls back to image when absent */
 		imageMobile?: string;
 		title: string;
+		titleMobile?: string;
 		subtitle: string;
 	}
 
@@ -31,6 +32,7 @@
 		{
 			image: '/planos/1hab-frente.png',
 			title: 'Departamento de 2 ambientes con balcón',
+			titleMobile: 'Dto. de 2 ambientes con balcón',
 			subtitle: 'FRENTE'
 		},
 		{
@@ -162,7 +164,12 @@
 				>
 					{#snippet caption()}
 						<figure class='floor-plan-info'>
-							<figcaption class='floor-plan-title'>{currentPlan.title}</figcaption>
+							<figcaption class='floor-plan-title'>
+								{ $verticalViewport && currentPlan.titleMobile
+									? currentPlan.titleMobile
+									: currentPlan.title }
+							</figcaption>
+
 							{#if currentPlan.subtitle}
 								<p class='floor-plan-subtitle'>{currentPlan.subtitle}</p>
 							{/if}
