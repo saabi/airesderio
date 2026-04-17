@@ -16,6 +16,7 @@
 		label: string;
 		value: string;
 		href?: string;
+		id?: string;
 		/** Open in new tab (e.g. WhatsApp web/app) */
 		external?: boolean;
 	};
@@ -27,11 +28,13 @@
 			label: 'Email comercial',
 			value: 'info@airesderio.com',
 			href: 'mailto:info@airesderio.com',
+			id: 'cta-email-footer'
 		},
 		{
 			label: 'Whatsapp mensajes',
 			value: '+54 9 385 6222266',
 			href: 'https://wa.me/5493856222266',
+			id: 'cta-whatsapp-footer',
 			external: true,
 		},
 	];
@@ -81,6 +84,7 @@
 							<span>{item.label}</span>
 							{#if item.href}
 								<a
+									id={item.id}
 									class='footer-contact-link'
 									class:cta-email={!!item.href?.startsWith('mailto:')}
 									class:cta-whatsapp={!!item.href?.includes('wa.me')}
