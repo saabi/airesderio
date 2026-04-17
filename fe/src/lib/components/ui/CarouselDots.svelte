@@ -35,46 +35,6 @@
 		}
 		return ariaLabel || `Go to item ${index + 1}`;
 	}
-	$effect((size) => {
-		// Detect parent section class (e.g. hero, location, etc) and log with `size`.
-		// Also detect/log if a parent has a class with "desktop" or "mobile" in the name.
-		const KNOWN_SECTIONS = ['hero', 'location', 'about', 'features', 'gallery', 'contact'];
-
-		const carouselDotsEl = document.querySelector('.carousel-dots');
-		let foundSection = null;
-		let deviceClass = null;
-
-		if (carouselDotsEl) {
-			let el = carouselDotsEl.parentElement;
-			while (el && el !== document.body) {
-				// Section detection
-				for (const sectionClass of KNOWN_SECTIONS) {
-					if (el.classList.contains(sectionClass)) {
-						foundSection = sectionClass;
-					}
-				}
-
-				// Device class detection
-				for (const className of el.classList) {
-					if (className.toLowerCase().includes('desktop')) {
-						deviceClass = 'desktop';
-					}
-					if (className.toLowerCase().includes('mobile')) {
-						deviceClass = 'mobile';
-					}
-				}
-
-				if (foundSection && deviceClass) break;
-				el = el.parentElement;
-			}
-
-			console.log(
-				`CarouselDots: section=${foundSection || 'none'}, deviceClass=${deviceClass || 'none'}, size=${size}`
-			);
-		} else {
-			console.log(`CarouselDots: dots element not found, size: ${size}`);
-		}
-	});
 </script>
 
 <div class='carousel-dots' class:container={containerClass}>

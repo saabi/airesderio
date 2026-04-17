@@ -88,10 +88,15 @@ export interface SendContactNotificationParams {
 	intent: string;
 }
 
-export async function sendContactNotification(params: SendContactNotificationParams): Promise<void> {
-	const { leadName, leadEmail, leadPhone, leadMessage, intent } = params;
-	const recipient = env.CONTACT_FORM_RECIPIENT || 'info@airesderio.com';
+export interface EmailPreviewPayload {
+	subject: string;
+	html: string;
+}
 
+export function buildContactNotificationEmail(
+	params: SendContactNotificationParams
+): EmailPreviewPayload {
+	const { leadName, leadEmail, leadPhone, leadMessage, intent } = params;
 	const subject = `${intent === 'direct-contact' ? 'RESPONDER! -' : 'Nuevo contacto:'} ${intent} - Aires de Río`;
 	const html = `
 		<h2>Nueva consulta desde el sitio web</h2>
@@ -103,11 +108,17 @@ export async function sendContactNotification(params: SendContactNotificationPar
 		<hr>
 		<p><small>Enviado desde el formulario de contacto de Aires de Río</small></p>
 	`;
+	return { subject, html };
+}
+
+export async function sendContactNotification(params: SendContactNotificationParams): Promise<void> {
+	const recipient = env.CONTACT_FORM_RECIPIENT || 'info@airesderio.com';
+	const { subject, html } = buildContactNotificationEmail(params);
 
 	await getTransporter().sendMail({
 		from: getFrom(),
 		to: recipient,
-		replyTo: leadEmail,
+		replyTo: params.leadEmail,
 		subject,
 		html
 	});
@@ -122,8 +133,8 @@ export interface SendPdfLinkParams {
 	token: string;
 }
 
-export async function sendPdfDownloadLink(params: SendPdfLinkParams): Promise<void> {
-	const { leadName, leadEmail, pdfType, token } = params;
+export function buildPdfDownloadEmail(params: SendPdfLinkParams): EmailPreviewPayload {
+	const { leadName, pdfType, token } = params;
 	const label = PDF_LABELS[pdfType] || pdfType;
 	const downloadUrl = `${getSiteUrl()}/api/pdf/${encodeURIComponent(pdfType)}?token=${encodeURIComponent(token)}`;
 
@@ -148,13 +159,18 @@ export async function sendPdfDownloadLink(params: SendPdfLinkParams): Promise<vo
 			<strong>${EMAIL_SIGNATURE_LINE}</strong>
 		</p>
 	`;
+	return { subject, html: emailWrapper(body) };
+}
+
+export async function sendPdfDownloadLink(params: SendPdfLinkParams): Promise<void> {
+	const { subject, html } = buildPdfDownloadEmail(params);
 
 	await getTransporter().sendMail({
 		from: getFrom(),
-		to: leadEmail,
+		to: params.leadEmail,
 		replyTo: env.CONTACT_FORM_RECIPIENT || 'info@airesderio.com',
 		subject,
-		html: emailWrapper(body)
+		html
 	});
 }
 
@@ -165,9 +181,10 @@ export interface SendDirectContactThankYouParams {
 	leadEmail: string;
 }
 
-export async function sendDirectContactThankYou(params: SendDirectContactThankYouParams): Promise<void> {
-	const { leadName, leadEmail } = params;
-
+export function buildDirectContactThankYouEmail(
+	params: SendDirectContactThankYouParams
+): EmailPreviewPayload {
+	const { leadName } = params;
 	const subject = 'Gracias por tu consulta - Aires de Río';
 	const body = `
 		<h2 style="margin:0 0 8px; font-size:20px; color:#1a1a2e;">¡Hola ${leadName}!</h2>
@@ -189,12 +206,17 @@ export async function sendDirectContactThankYou(params: SendDirectContactThankYo
 			<strong>${EMAIL_SIGNATURE_LINE}</strong>
 		</p>
 	`;
+	return { subject, html: emailWrapper(body) };
+}
+
+export async function sendDirectContactThankYou(params: SendDirectContactThankYouParams): Promise<void> {
+	const { subject, html } = buildDirectContactThankYouEmail(params);
 
 	await getTransporter().sendMail({
 		from: getFrom(),
-		to: leadEmail,
+		to: params.leadEmail,
 		replyTo: env.CONTACT_FORM_RECIPIENT || 'info@airesderio.com',
 		subject,
-		html: emailWrapper(body)
+		html
 	});
 }
