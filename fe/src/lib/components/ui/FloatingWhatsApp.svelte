@@ -163,6 +163,8 @@
 	.whatsapp-icon {
 		width: 1.75rem;
 		height: 1.75rem;
+		/* Clicks hit the parent <a> (GTM link click, focus ring) */
+		pointer-events: none;
 	}
 
 	@media (max-width: 850px) {
