@@ -23,21 +23,25 @@
 		/** Vertical/mobile image; falls back to image when absent */
 		imageMobile?: string;
 		title: string;
+		subtitle: string;
 	}
 
 	// ===== STATIC CONSTANTS =====
 	const FLOOR_PLANS: FloorPlan[] = [
 		{
 			image: '/planos/1hab-frente.png',
-			title: 'Departamento de 2 ambientes con balcón'
+			title: 'Departamento de 2 ambientes con balcón',
+			subtitle: 'FRENTE'
 		},
 		{
 			image: '/planos/1hab-contrafrente.png',
-			title: 'Departamento de 2 ambientes'
+			title: 'Departamento de 2 ambientes',
+			subtitle: 'CONTRAFRENTE'
 		},
 		{
 			image: '/planos/2hab-contrafrente.png',
-			title: 'Departamento de 4 ambientes'
+			title: 'Departamento de 4 ambientes',
+			subtitle: 'CONTRAFRENTE'
 		}
 	];
 </script>
@@ -159,6 +163,9 @@
 					{#snippet caption()}
 						<figure class='floor-plan-info'>
 							<figcaption class='floor-plan-title'>{currentPlan.title}</figcaption>
+							{#if currentPlan.subtitle}
+								<p class='floor-plan-subtitle'>{currentPlan.subtitle}</p>
+							{/if}
 						</figure>
 					{/snippet}
 					{#snippet slide(index)}
@@ -227,9 +234,13 @@
 	}
 
 	.floor-plan-info {
-		/* Layout: horizontal padding provided by carousel-caption */
+		/* Layout */
 		margin: 0;
-		padding: 0;
+		padding: 0.75rem 1rem 0.65rem;
+		border-radius: 0.5rem;
+
+		/* Box/Visual */
+		background: #bff3e3;
 
 		/* Typography */
 		text-align: center;
@@ -237,11 +248,21 @@
 
 	.floor-plan-title {
 		/* Typography */
-		font-family: var(--font-heading);
-		font-size: 1.1rem;
+		font-family: var(--font-body);
 		font-weight: var(--font-weight-bold);
-		color: var(--color-title-emphasis);
-		margin-bottom: 0.5rem;
+		line-height: 1.15;
+		color: #111827;
+		margin: 0;
+	}
+
+	.floor-plan-subtitle {
+		margin: 0.2rem 0 0;
+		font-family: var(--font-body);
+		font-weight: var(--font-weight-bold);
+		letter-spacing: 0.08em;
+		line-height: 1;
+		text-transform: uppercase;
+		color: #ef4444;
 	}
 
 	.floor-plan-download-wrap {
@@ -271,7 +292,11 @@
 		}
 
 		.floor-plan-title {
-			font-size: 1rem;
+			font-size: 1.15rem;
+		}
+
+		.floor-plan-subtitle {
+			font-size: 1.2rem;
 		}
 
 	}
