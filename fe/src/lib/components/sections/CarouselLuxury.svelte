@@ -20,7 +20,7 @@
 		{ src: '/carrousel-hero/desktop/d-14-living.jpg', alt: 'Living' },
 		{ src: '/carrousel-hero/desktop/d-19-habitacion.jpg', alt: 'Habitación' },
 		{ src: '/carrousel-hero/desktop/d-20-vestidor-iluminado.jpg', alt: 'Vestidor iluminado' },
-		{ src: '/carrousel-hero/desktop/d-21-baño-pituco.jpg', alt: 'Baño pituco' },
+		{ src: '/carrousel-hero/desktop/d-21-baño-pituco.jpg', alt: 'Baño Luxury' },
 		{ src: '/carrousel-hero/desktop/d-22-banitori.jpg', alt: 'Bañador' },
 		{ src: '/carrousel-hero/desktop/d-23-living-4amb.jpg', alt: 'Living 4 ambientes' },
 	];
