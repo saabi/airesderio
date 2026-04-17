@@ -26,25 +26,31 @@ function getTransporter(): Transporter {
 	return transporter;
 }
 
+const DEFAULT_FROM_ADDRESS = 'noreply@airesderio.com';
+/** Shown in mail clients as the sender name; address still comes from CONTACT_FORM_FROM. */
+const FROM_DISPLAY_NAME = 'Aires de Rio';
+
+function getSmtpFromAddress(): string {
+	const raw = env.CONTACT_FORM_FROM?.trim();
+	if (!raw) return DEFAULT_FROM_ADDRESS;
+	const bracket = raw.match(/<([^>]+)>/);
+	if (bracket) return bracket[1].trim();
+	return raw;
+}
+
 function getFrom(): string {
-	return env.CONTACT_FORM_FROM || 'noreply@airesderio.com';
+	return `${FROM_DISPLAY_NAME} <${getSmtpFromAddress()}>`;
 }
 
 function getSiteUrl(): string {
 	return env.PUBLIC_SITE_URL || 'https://airesderio.com';
 }
 
-const PDF_LABELS: Record<string, string> = {
-	departamentos: 'documentación del proyecto',
-	// Legacy pdf_type values (retry queue / old tokens)
-	'ficha-tecnica': 'documentación del proyecto',
-	'ficha-tecnica-harmony': 'documentación del proyecto',
-	'ficha-tecnica-luxury': 'documentación del proyecto',
-	planos: 'documentación del proyecto'
-};
-
 const EMAIL_SIGNATURE_LINE =
 	'Aires de Río - Departamentos de uno y dos habitaciones en Santiago del Estero';
+
+/** Single tappable WhatsApp CTA for HTML mail (wa.me + visible number). */
+const WHATSAPP_PHONE_ANCHOR = `<a href="https://wa.me/5493856222266" target="_blank" rel="noopener noreferrer" style="color:#0f766e;font-weight:600;text-decoration:underline;">WhatsApp al +54 9 385 6222266</a>`;
 
 function emailWrapper(body: string): string {
 	return `
@@ -140,28 +146,37 @@ export interface SendPdfLinkParams {
 
 export function buildPdfDownloadEmail(params: SendPdfLinkParams): EmailPreviewPayload {
 	const { leadName, pdfType, token } = params;
-	const label = PDF_LABELS[pdfType] || pdfType;
 	const downloadUrl = `${getSiteUrl()}/api/pdf/${encodeURIComponent(pdfType)}?token=${encodeURIComponent(token)}`;
 
-	const subject = 'Tu PDF de Aires de Río — Departamentos';
+	const subject = 'Tu ficha técnica — Aires de Río';
 	const body = `
 		<h2 style="margin:0 0 8px; font-size:20px; color:#1a1a2e;">¡Hola ${leadName}!</h2>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
-			Gracias por tu interés en <strong>Aires de Río</strong>. Hacé clic en el botón para descargar <strong>${label}</strong>.
+			Gracias por tu interés en <strong>Aires de Río</strong>. Hacé clic en el botón para descargar la ficha técnica del proyecto.
 		</p>
-		<table cellpadding="0" cellspacing="0" style="margin:24px 0;">
-			<tr><td align="center" style="background:#1a1a2e; border-radius:6px;">
-				<a href="${downloadUrl}" style="display:inline-block; padding:14px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
-					Descargar PDF
-				</a>
-			</td></tr>
+		<table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:24px 0;">
+			<tr>
+				<td align="center">
+					<table cellpadding="0" cellspacing="0" role="presentation">
+						<tr>
+							<td align="center" style="background:#1a1a2e; border-radius:6px;">
+								<a href="${downloadUrl}" style="display:inline-block; padding:14px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
+									Descargar ficha técnica
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 		</table>
-		<p style="margin:16px 0 0; font-size:14px; color:#666; line-height:1.5;">
-			Si tenés alguna consulta, no dudes en responder este correo o contactarnos a través de nuestro sitio web.
+		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
+			¿Querés coordinar una reunión en persona con un asesor? Escribinos por ${WHATSAPP_PHONE_ANCHOR} (sólo mensajes de texto) y coordinamos día y horario.
 		</p>
-		<p style="margin:24px 0 0; font-size:15px; color:#333;">
-			¡Saludos!<br>
-			<strong>${EMAIL_SIGNATURE_LINE}</strong>
+		<p style="margin:0 0 8px; font-size:15px; color:#333; line-height:1.6;">
+			Quedamos a disposición para acompañarte en cada paso.
+		</p>
+		<p style="margin:0; font-size:15px; color:#333;">
+			<strong>Equipo Aires de Río</strong>
 		</p>
 	`;
 	return { subject, html: emailWrapper(body) };
@@ -184,31 +199,48 @@ export async function sendPdfDownloadLink(params: SendPdfLinkParams): Promise<vo
 export interface SendDirectContactThankYouParams {
 	leadName: string;
 	leadEmail: string;
+	pdfType: string;
+	token: string;
 }
 
 export function buildDirectContactThankYouEmail(
 	params: SendDirectContactThankYouParams
 ): EmailPreviewPayload {
-	const { leadName } = params;
-	const subject = 'Gracias por tu consulta - Aires de Río';
+	const { leadName, pdfType, token } = params;
+	const downloadUrl = `${getSiteUrl()}/api/pdf/${encodeURIComponent(pdfType)}?token=${encodeURIComponent(token)}`;
+
+	const subject = 'Gracias por tu consulta — Aires de Río';
 	const body = `
 		<h2 style="margin:0 0 8px; font-size:20px; color:#1a1a2e;">¡Hola ${leadName}!</h2>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
-			Gracias por tu interés en <strong>Aires de Río</strong>. Recibimos tu consulta y un representante de nuestro equipo se pondrá en contacto con vos a la brevedad.
+			Gracias por tu interés en <strong>Aires de Río</strong>. Recibimos tu consulta y un asesor de nuestro equipo se pondrá en contacto con vos a la brevedad para brindarte información personalizada.
 		</p>
-		<p style="margin:0 0 16px; font-size:14px; color:#666; line-height:1.5;">
-			Mientras tanto, te invitamos a conocer más sobre nuestro proyecto visitando nuestro sitio web.
+		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
+			Mientras tanto, podés descargar la ficha técnica del proyecto y de las unidades disponibles para conocer en detalle sus características, terminaciones, superficies y equipamiento.
 		</p>
-		<table cellpadding="0" cellspacing="0" style="margin:24px 0;">
-			<tr><td align="center" style="background:#1a1a2e; border-radius:6px;">
-				<a href="${getSiteUrl()}" style="display:inline-block; padding:12px 28px; font-size:15px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
-					Visitar Aires de Río
-				</a>
-			</td></tr>
+		<table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:24px 0;">
+			<tr>
+				<td align="center">
+					<table cellpadding="0" cellspacing="0" role="presentation">
+						<tr>
+							<td align="center" style="background:#1a1a2e; border-radius:6px;">
+								<a href="${downloadUrl}" style="display:inline-block; padding:14px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
+									Descargar ficha técnica
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 		</table>
-		<p style="margin:24px 0 0; font-size:15px; color:#333;">
-			¡Saludos!<br>
-			<strong>${EMAIL_SIGNATURE_LINE}</strong>
+		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
+			Para coordinar una reunión en persona con un asesor, escribinos por ${WHATSAPP_PHONE_ANCHOR} (sólo mensajes de texto) y coordinamos día y horario.
+		</p>
+		<p style="margin:0 0 8px; font-size:15px; color:#333; line-height:1.6;">
+			Quedamos a disposición para acompañarte en cada paso.
+		</p>
+		<p style="margin:0; font-size:15px; color:#333;">
+			<strong>Equipo Aires de Río</strong>
 		</p>
 	`;
 	return { subject, html: emailWrapper(body) };

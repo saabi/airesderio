@@ -30,7 +30,9 @@ export const load: PageServerLoad = async () => {
 
 	const thankYouLead = buildDirectContactThankYouEmail({
 		leadName: 'Lucía',
-		leadEmail: 'lucia@example.com'
+		leadEmail: 'lucia@example.com',
+		pdfType: 'departamentos',
+		token: 'preview-token'
 	});
 
 	const previews: EmailPreview[] = [

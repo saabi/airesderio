@@ -2,7 +2,7 @@
  * Contact Form API Route
  *
  * Stores leads in PostgreSQL, sends notification via SMTP (DreamHost),
- * and returns PDF access tokens when intent is a PDF type.
+ * and stores PDF access tokens for PDF intents and for direct-contact (ficha en el mail de agradecimiento).
  * On SMTP failure after persistence, enqueues retry jobs and still returns success.
  */
 import { json, type RequestHandler } from '@sveltejs/kit';
@@ -122,7 +122,9 @@ export const POST: RequestHandler = async ({ request }) => {
 			throw new Error('Failed to insert lead');
 		}
 
-		let tokens: Record<string, string> = {};
+		let leadPdfToken: string | null = null;
+		let leadPdfType: string | null = null;
+
 		if (isPdfIntent(intent)) {
 			const expiresAt = new Date(Date.now() + TOKEN_EXPIRY_HOURS * 60 * 60 * 1000);
 			const token = generateToken();
@@ -132,7 +134,20 @@ export const POST: RequestHandler = async ({ request }) => {
 				pdfType: intent,
 				expiresAt
 			});
-			tokens[intent] = token;
+			leadPdfToken = token;
+			leadPdfType = intent;
+		} else if (intent === 'direct-contact') {
+			const pdfType = 'departamentos';
+			const expiresAt = new Date(Date.now() + TOKEN_EXPIRY_HOURS * 60 * 60 * 1000);
+			const token = generateToken();
+			await db.insert(pdfAccessTokens).values({
+				leadId: lead.id,
+				token,
+				pdfType,
+				expiresAt
+			});
+			leadPdfToken = token;
+			leadPdfType = pdfType;
 		}
 
 		const fullName = `${firstName} ${lastName}`;
@@ -157,39 +172,43 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		try {
-			if (isPdfIntent(intent) && tokens[intent]) {
+			if (isPdfIntent(intent) && leadPdfToken && leadPdfType) {
 				await sendPdfDownloadLink({
 					leadName: firstName,
 					leadEmail: email,
-					pdfType: intent,
-					token: tokens[intent]
+					pdfType: leadPdfType,
+					token: leadPdfToken
 				});
-			} else if (intent === 'direct-contact') {
+			} else if (intent === 'direct-contact' && leadPdfToken && leadPdfType) {
 				await sendDirectContactThankYou({
 					leadName: firstName,
-					leadEmail: email
+					leadEmail: email,
+					pdfType: leadPdfType,
+					token: leadPdfToken
 				});
 			}
 		} catch (emailErr) {
 			console.error('SMTP error (lead email):', emailErr);
-			if (isPdfIntent(intent) && tokens[intent]) {
+			if (isPdfIntent(intent) && leadPdfToken && leadPdfType) {
 				await safeEnqueue(db, lead.id, 'lead_pdf', {
 					leadName: firstName,
 					leadEmail: email,
-					pdfType: intent,
-					token: tokens[intent]
+					pdfType: leadPdfType,
+					token: leadPdfToken
 				}, emailErr);
-			} else if (intent === 'direct-contact') {
+			} else if (intent === 'direct-contact' && leadPdfToken && leadPdfType) {
 				await safeEnqueue(db, lead.id, 'lead_thankyou', {
 					leadName: firstName,
-					leadEmail: email
+					leadEmail: email,
+					pdfType: leadPdfType,
+					token: leadPdfToken
 				}, emailErr);
 			}
 		}
 
 		const responseMessage =
 			intent === 'direct-contact'
-				? 'Formulario enviado correctamente. Nos pondremos en contacto contigo pronto.'
+				? 'Formulario enviado correctamente. Te enviamos un correo con un enlace para descargar la ficha técnica; un asesor se pondrá en contacto a la brevedad.'
 				: 'Formulario enviado correctamente. Revisá tu correo electrónico para descargar el archivo.';
 
 		return json({ success: true, message: responseMessage });

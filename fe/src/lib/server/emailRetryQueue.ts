@@ -71,7 +71,9 @@ export async function processDueEmailOutboundJobs(
 				case 'lead_thankyou':
 					await sendDirectContactThankYou({
 						leadName: payload.leadName ?? '',
-						leadEmail: payload.leadEmail ?? ''
+						leadEmail: payload.leadEmail ?? '',
+						pdfType: payload.pdfType ?? 'departamentos',
+						token: payload.token ?? ''
 					});
 					break;
 				default:
