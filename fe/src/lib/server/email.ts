@@ -57,7 +57,12 @@ function emailWrapper(body: string): string {
 <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:8px; overflow:hidden; max-width:100%;">
 	<tr>
 		<td style="background:#1a1a2e; padding:24px 32px; text-align:center;">
-			<span style="font-family:'Roboto',Helvetica,sans-serif; font-size:24px; font-weight:700; color:#ffffff; letter-spacing:0.05em;">AIRES DE RÍO</span>
+			<img
+				src="${getSiteUrl()}/airesderio-logotype.svg"
+				alt="Aires de Río"
+				width="240"
+				style="display:inline-block; width:240px; max-width:100%; height:auto; filter: invert(1);"
+			/>
 		</td>
 	</tr>
 	<tr>
