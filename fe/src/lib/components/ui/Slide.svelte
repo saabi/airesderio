@@ -4,6 +4,7 @@
 	import type { Snippet } from 'svelte';
 	import type { Component } from 'svelte';
 	import Picture from '$lib/components/ui/Picture.svelte';
+	import type { SlideMediaReadyInfo } from '$lib/types/slideMedia';
 
 	// ===== TYPES =====
 	export type SlideType = 'image' | 'video' | 'component' | 'custom';
@@ -19,6 +20,10 @@
 		src?: string | unknown; // URL string for image/video
 		alt?: string;
 		useAutoAlternateSrc?: boolean;
+		/** Passed to Picture: WebP srcset with width descriptors */
+		webpSrcset?: string;
+		/** Passed to Picture: fallback img srcset (e.g. high-res PNG) */
+		imgSrcset?: string;
 		// Video
 		poster?: string;
 		muted?: boolean;
@@ -28,6 +33,8 @@
 		onVideoEnd?: () => void;
 		/** When true and type is video, resets playback to start (e.g. when carousel steps to this slide). */
 		isActive?: boolean;
+		/** Fired when primary media has intrinsic dimensions; only when {@link isActive} is true. */
+		onSlideMediaReady?: (info: SlideMediaReadyInfo) => void;
 		// Component
 		component?: Component;
 		props?: Record<string, unknown>;
@@ -43,6 +50,8 @@
 		src,
 		alt = '',
 		useAutoAlternateSrc = true,
+		webpSrcset,
+		imgSrcset,
 		poster,
 		muted = true,
 		playsInline = true,
@@ -50,6 +59,7 @@
 		autoplay = false,
 		onVideoEnd,
 		isActive = false,
+		onSlideMediaReady,
 		component,
 		props = {},
 		children
@@ -73,16 +83,65 @@
 			}
 		}
 	});
+
+	function handleImageDecode(info: {
+		currentSrc: string;
+		naturalWidth: number;
+		naturalHeight: number;
+	}): void {
+		if (!isActive || !onSlideMediaReady) return;
+		onSlideMediaReady({
+			kind: 'image',
+			currentSrc: info.currentSrc,
+			naturalWidth: info.naturalWidth,
+			naturalHeight: info.naturalHeight
+		});
+	}
+
+	$effect(() => {
+		if (type !== 'video' || !isActive || !onSlideMediaReady || !videoEl || typeof src !== 'string')
+			return;
+
+		const v = videoEl;
+		const emit = () => {
+			if (!isActive || !onSlideMediaReady || !videoEl) return;
+			if (videoEl.videoWidth <= 0 || videoEl.videoHeight <= 0) return;
+			const url = videoEl.currentSrc || src;
+			onSlideMediaReady({
+				kind: 'video',
+				src: url,
+				videoWidth: videoEl.videoWidth,
+				videoHeight: videoEl.videoHeight
+			});
+		};
+
+		if (v.readyState >= 1) {
+			emit();
+			return;
+		}
+
+		v.addEventListener('loadedmetadata', emit, { once: true });
+		return () => v.removeEventListener('loadedmetadata', emit);
+	});
 </script>
 
 <div class="slide-content">
 	{#if type === 'image' && src != null}
-		{@const imageSrc = typeof src === 'string' ? src : (src as { img?: { src?: string }; src?: string })?.img?.src ?? (src as { src?: string })?.src ?? ''}
+		{@const imageSrc =
+			typeof src === 'string'
+				? src
+				: ((src as { img?: { src?: string }; src?: string })?.img?.src ??
+					(src as { src?: string })?.src ??
+					'')}
 		{#if imageSrc}
 			<Picture
 				src={imageSrc}
-				alt={alt}
-				useAutoAlternateSrc={useAutoAlternateSrc}
+				{alt}
+				{useAutoAlternateSrc}
+				{webpSrcset}
+				{imgSrcset}
+				sizes={imageSizes}
+				onImgDecode={onSlideMediaReady ? handleImageDecode : undefined}
 				class="carousel-image-content"
 				loading="lazy"
 			/>
@@ -92,7 +151,7 @@
 			bind:this={videoEl}
 			class="carousel-image-content"
 			{src}
-			poster={poster}
+			{poster}
 			{muted}
 			playsinline={playsInline}
 			{controls}

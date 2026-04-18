@@ -1,4 +1,4 @@
-<script module lang='ts'>
+<script module lang="ts">
 	// ===== IMPORTS =====
 	import { browser } from '$app/environment';
 	import Title from '$lib/components/ui/Title.svelte';
@@ -16,6 +16,8 @@
 		animationDuration,
 		animationOffset
 	} from '$lib/constants/animation';
+	import type { SlideMediaReadyInfo } from '$lib/types/slideMedia';
+	import { parseTierFromCurrentSrc, type CarouselImageTier } from '$lib/utils/carouselImageTier';
 
 	// ===== TYPES =====
 	interface FloorPlan {
@@ -46,9 +48,22 @@
 			subtitle: 'CONTRAFRENTE'
 		}
 	];
+
+	/** Width descriptors match intrinsic pixel widths of assets in /static/planos/. */
+	const FLOOR_PLAN_WEBP_SRCSETS = [
+		'/planos/1hab-frente-half.webp 1008w, /planos/1hab-frente.webp 2016w',
+		'/planos/1hab-contrafrente-half.webp 1008w, /planos/1hab-contrafrente.webp 2016w',
+		'/planos/2hab-contrafrente-half.webp 1008w, /planos/2hab-contrafrente.webp 2016w'
+	] as const;
+
+	const FLOOR_PLAN_IMG_SRCSETS = [
+		'/planos/1hab-frente.png 2016w',
+		'/planos/1hab-contrafrente.png 2016w',
+		'/planos/2hab-contrafrente.png 2016w'
+	] as const;
 </script>
 
-<script lang='ts'>
+<script lang="ts">
 	const DEFAULT_SLIDE_ASPECT = '4 / 3';
 	const DESKTOP_BREAKPOINT_QUERY = '(min-width: 851px)';
 
@@ -57,6 +72,8 @@
 	/** CSS `aspect-ratio` value for the active slide image (e.g. `1877 / 1549`). */
 	let planAspectRatio = $state<string>(DEFAULT_SLIDE_ASPECT);
 	let isDesktopCarouselLayout = $state(false);
+	/** Heuristic tier from last active slide {@link HTMLImageElement.currentSrc} (for next-slide / probes). */
+	let imageTier = $state<CarouselImageTier | null>(null);
 
 	const aspectBySrc = new Map<string, string>();
 
@@ -78,6 +95,7 @@
 	);
 
 	// ===== EFFECTS =====
+	/** Restore cached aspect when switching slides (before active slide’s img fires decode). */
 	$effect(() => {
 		const src = activePlans[currentPlanIndex]?.image;
 		if (!src) return;
@@ -85,25 +103,22 @@
 		const cached = aspectBySrc.get(src);
 		if (cached) {
 			planAspectRatio = cached;
-			return;
+		} else {
+			planAspectRatio = DEFAULT_SLIDE_ASPECT;
 		}
-
-		planAspectRatio = DEFAULT_SLIDE_ASPECT;
-
-		const img = new Image();
-		const srcAtRequest = src;
-		img.onload = () => {
-			if (activePlans[currentPlanIndex]?.image !== srcAtRequest) return;
-			if (!img.naturalWidth || !img.naturalHeight) return;
-			const ratio = `${img.naturalWidth} / ${img.naturalHeight}`;
-			aspectBySrc.set(srcAtRequest, ratio);
-			planAspectRatio = ratio;
-		};
-		img.onerror = () => {
-			/* keep DEFAULT_SLIDE_ASPECT */
-		};
-		img.src = src;
 	});
+
+	function handleSlideMediaReady(info: SlideMediaReadyInfo): void {
+		if (info.kind !== 'image') return;
+
+		const logicalSrc = activePlans[currentPlanIndex]?.image;
+		if (!logicalSrc) return;
+
+		imageTier = parseTierFromCurrentSrc(info.currentSrc);
+		const ratio = `${info.naturalWidth} / ${info.naturalHeight}`;
+		aspectBySrc.set(logicalSrc, ratio);
+		planAspectRatio = ratio;
+	}
 
 	$effect(() => {
 		if (!browser) return;
@@ -123,26 +138,30 @@
 </script>
 
 <section
-	id='planos'
-	aria-labelledby='planos-heading'
+	id="planos"
+	aria-labelledby="planos-heading"
 	use:floorPlansObserver
 	data-section-active={$floorPlansVisible}
 >
-	<VisuallyHidden id='planos-heading' tag='h2'>Planos</VisuallyHidden>
+	<VisuallyHidden id="planos-heading" tag="h2">Planos</VisuallyHidden>
 	<div
-		class='scroll-animate'
+		class="scroll-animate"
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow='PLANOS y' big='Distribución' />
+		<Title eyebrow="PLANOS y" big="Distribución" />
 	</div>
 	<div
-		class='floor-plans-container scroll-animate'
+		class="floor-plans-container scroll-animate"
 		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<div class='carousel-wrapper' style:--floor-plan-slide-aspect={planAspectRatio}>
+		<div
+			class="carousel-wrapper"
+			style:--floor-plan-slide-aspect={planAspectRatio}
+			data-floor-plan-image-tier={imageTier ?? ''}
+		>
 			{#key $verticalViewport}
 				<ImageCarousel
-					class='floor-plans-carousel'
+					class="floor-plans-carousel"
 					slideCount={activePlans.length}
 					slideAriaLabel={(index) => `Plano ${index + 1}: ${activePlans[index].title}`}
 					bind:currentIndex={currentPlanIndex}
@@ -163,31 +182,40 @@
 					ariaLabel="Galería de planos de distribución"
 				>
 					{#snippet caption()}
-						<figure class='floor-plan-info'>
-							<figcaption class='floor-plan-title'>
-								{ $verticalViewport && currentPlan.titleMobile
+						<figure class="floor-plan-info">
+							<figcaption class="floor-plan-title">
+								{$verticalViewport && currentPlan.titleMobile
 									? currentPlan.titleMobile
-									: currentPlan.title }
+									: currentPlan.title}
 							</figcaption>
 
 							{#if currentPlan.subtitle}
-								<p class='floor-plan-subtitle'>{currentPlan.subtitle}</p>
+								<p class="floor-plan-subtitle">{currentPlan.subtitle}</p>
 							{/if}
 						</figure>
 					{/snippet}
 					{#snippet slide(index)}
-						<Slide type="image" src={activePlans[index].image} alt={activePlans[index].title} useAutoAlternateSrc={false} />
+						<Slide
+							type="image"
+							src={activePlans[index].image}
+							alt={activePlans[index].title}
+							useAutoAlternateSrc={false}
+							webpSrcset={FLOOR_PLAN_WEBP_SRCSETS[index]}
+							imgSrcset={FLOOR_PLAN_IMG_SRCSETS[index]}
+							isActive={index === currentPlanIndex}
+							onSlideMediaReady={handleSlideMediaReady}
+						/>
 					{/snippet}
 				</ImageCarousel>
 			{/key}
 		</div>
-		<div class='floor-plan-download-wrap'>
+		<div class="floor-plan-download-wrap">
 			<button
-				id='cta-planos'
-				type='button'
-				class='floor-plan-download btn-cta-primary'
+				id="cta-planos"
+				type="button"
+				class="floor-plan-download btn-cta-primary"
 				onclick={() => pdfRequestModalStore.open('departamentos', 'planos')}
-				aria-label='Solicitar ficha técnica'
+				aria-label="Solicitar ficha técnica"
 			>
 				SOLICITAR FICHA TÉCNICA
 			</button>
@@ -220,9 +248,10 @@
 		overflow: hidden;
 
 		/* Box/Visual */
-/* 		border: 1px solid var(--color-border-default);
+		/* 		border: 1px solid var(--color-border-default);
 		border-radius: 0.5rem;
- */		background: var(--color-bg-canvas);
+ */
+		background: var(--color-bg-canvas);
 	}
 
 	/* Size slide viewport from intrinsic image ratio (this carousel instance only). */
@@ -305,6 +334,5 @@
 		.floor-plan-subtitle {
 			font-size: 1.2rem;
 		}
-
 	}
 </style>
