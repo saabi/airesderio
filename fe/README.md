@@ -171,6 +171,30 @@ After pulling schema changes, apply Drizzle migrations (requires `DATABASE_URL`)
 npm run db:migrate
 ```
 
+### Backup and restore
+
+Requires PostgreSQL client tools (`pg_dump`, `psql`) on your PATH. Uses `DATABASE_URL` from `.env`.
+
+- **Backup** — plain SQL file (schema-agnostic; includes `--clean` / `--if-exists` for easier full restores):
+
+  ```bash
+  cd fe && npm run db:backup
+  # optional path:
+  npm run db:backup -- ./mi-copia.sql
+  ```
+
+  Default output directory: `fe/backups/` (override with env `BACKUP_DIR`, relative to `fe/`).
+
+- **Restore** — applies any compatible `.sql` dump to the database in `DATABASE_URL`:
+
+  ```bash
+  cd fe && npm run db:restore -- ./backups/airesderio-2025-04-17T12-00-00.sql
+  ```
+
+  You will be prompted to type `RESTAURAR` to confirm. For automation: `npm run db:restore -- --yes ./copia.sql`.
+
+  Restoring over an existing database may drop objects present in the dump; use a dedicated database or a recent backup when testing.
+
 ## Email retry queue (production)
 
 If SMTP fails after a lead is saved, jobs are stored in `email_outbound_jobs` and must be processed periodically.

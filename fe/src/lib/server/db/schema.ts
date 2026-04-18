@@ -1,4 +1,13 @@
-import { pgTable, uuid, varchar, text, timestamp, index, integer } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	uuid,
+	varchar,
+	text,
+	timestamp,
+	index,
+	integer,
+	boolean
+} from 'drizzle-orm/pg-core';
 
 export const leads = pgTable(
 	'leads',
@@ -13,6 +22,8 @@ export const leads = pgTable(
 		ipAddress: varchar('ip_address', { length: 45 }),
 		// Per-email download counter for PDFs (also used as a proxy for verification)
 		downloadCount: integer('download_count').notNull().default(0),
+		/** Admin UI: destacar leads importantes (similar a Gmail). */
+		starred: boolean('starred').notNull().default(false),
 		createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 	},
 	(table) => ({

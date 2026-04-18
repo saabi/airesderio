@@ -30,7 +30,9 @@
 		"test:db": "node scripts/test-db.js",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
-		"db:push": "drizzle-kit push"
+		"db:push": "drizzle-kit push",
+		"db:backup": "node scripts/db-backup.js",
+		"db:restore": "node scripts/db-restore.js"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.0",
