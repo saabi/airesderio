@@ -17,24 +17,72 @@ done
 # Store current commit hash
 CURRENT_COMMIT=$(git rev-parse HEAD)
 
-# Pull updates
-git pull origin dev
+# Track whether we actually created a stash entry.
+STASH_CREATED=false
+if ! git diff --quiet || ! git diff --cached --quiet || [[ -n "$(git ls-files --others --exclude-standard)" ]]; then
+	git stash push --include-untracked
+	STASH_CREATED=true
+fi
 
+restore_stash() {
+	if [[ "$STASH_CREATED" != true ]]; then
+		return 0
+	fi
+
+	if ! git stash pop; then
+		echo "Failed to restore stashed changes."
+		return 1
+	fi
+	STASH_CREATED=false
+}
+
+rollback_to_original_commit() {
+	echo "Rolling back to commit $CURRENT_COMMIT..."
+	git reset --hard "$CURRENT_COMMIT"
+}
+
+# Pull updates; on failure, return repo to original state (including stash).
+if ! git pull origin dev; then
+	echo "git pull failed."
+	rollback_to_original_commit
+	if ! restore_stash; then
+		echo "Aborting: could not restore stash after pull failure."
+		exit 1
+	fi
+	echo "Aborting after pull failure."
+	exit 1
+fi
+
+# Restore stashed changes. If this fails post-pull, rollback and retry restore.
+if ! restore_stash; then
+	echo "Stash restore failed after pull. Reverting and retrying stash restore..."
+	rollback_to_original_commit
+	if ! restore_stash; then
+		echo "Aborting: stash restore failed even after rollback."
+		exit 1
+	fi
+	echo "Aborting: repository restored to pre-update state."
+	exit 1
+fi
+
+
+# Build the app
+if ! npm run build; then
+	echo "Build failed. Rolling back to previous commit..."
+	rollback_to_original_commit
+	if ! restore_stash; then
+		echo "Aborting: could not restore stash after build rollback."
+		exit 1
+	fi
+	exit 1
+fi
+
+# Run db:backup and db:push if --push is set right before restart because build may have made schema changes
 if [[ "$RUN_PUSH" == true ]]; then
 	echo "Running db:backup (before db:push)..."
 	npm run db:backup
 	echo "Running db:push..."
 	npm run db:push
-fi
-
-# Build the app
-npm run build
-
-# If build fails, revert and exit
-if [ $? -ne 0 ]; then
-   echo "Build failed. Rolling back to previous commit..."
-   git reset --hard $CURRENT_COMMIT
-   exit 1
 fi
 
 # Restart app with PM2
