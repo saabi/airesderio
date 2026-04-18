@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Deploy: pull, optional schema push (db:backup then db:push), build, PM2 restart.
+# Run from repo anywhere: ./fe/upgrade   or   cd fe && ./upgrade
+#
+# Options (optional):
+#   --push      run db:backup then npm run db:push before build (push always backs up first)
+#
+# Or set environment (e.g. in cron):
+#   RUN_DB_PUSH=1 ./upgrade
+
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+RUN_PUSH=false
+
+for arg in "$@"; do
+	case "$arg" in
+		--push) RUN_PUSH=true ;;
+	esac
+done
+
+[[ "${RUN_DB_PUSH:-}" == "1" ]] && RUN_PUSH=true
+
+git stash
+git pull
+git stash pop || true
+
+if [[ "$RUN_PUSH" == true ]]; then
+	echo "Running db:backup (before db:push)..."
+	npm run db:backup
+	echo "Running db:push..."
+	npm run db:push
+fi
+
+npm run build
+pm2 restart airesderio
