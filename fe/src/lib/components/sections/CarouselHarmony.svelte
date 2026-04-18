@@ -57,7 +57,7 @@
 					interval={2500}
 					pauseOnHover={true}
 					showNavigation={true}
-					navigationPosition="around-dots"
+					navigationPosition={$verticalViewport ? 'below-image' : 'around-dots'}
 					buttonVariant="overlay"
 					buttonSize="md"
 					showDots={true}
@@ -120,10 +120,19 @@
 		width: 100%;
 		max-width: 56rem;
 		margin: 0 auto;
+		overflow: visible;
+		will-change: transform, opacity;
+	}
+
+	/* Sombra y bordes solo sobre el área de imagen (no flechas/puntos debajo) */
+	.carousel-gallery :global(.image-carousel) {
+		overflow: visible;
+	}
+
+	.carousel-gallery :global(.carousel-images) {
 		border-radius: 0.5rem;
 		overflow: hidden;
 		box-shadow: 0 0.25rem 0.75rem var(--shadow-soft);
-		will-change: transform, opacity;
 	}
 
 	@media (max-width: 850px) {

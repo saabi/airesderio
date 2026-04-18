@@ -94,7 +94,8 @@
 		showDots = true,
 		dotsVariant = 'default',
 		dotsPosition = 'bottom-center',
-		dotsSize = 'medium',
+		/** Matches previous 1rem global dot size when prop omitted. */
+		dotsSize = 'large',
 		transitionType = 'fade-scale',
 		transitionDuration = 800,
 		imageFit = 'cover',
@@ -438,6 +439,7 @@
 				ariaLabel={(index) => `Ver imagen ${index + 1}`}
 				variant={dotsVariant}
 				containerClass='container'
+				size={dotsSize}
 			/>
 		</div>
 	{/if}
@@ -503,6 +505,7 @@
 						ariaLabel={(index) => `Ver imagen ${index + 1}`}
 						variant={dotsVariant}
 						showTransform={true}
+						size={dotsSize}
 					/>
 				{/if}
 				<CircularButton
@@ -539,6 +542,7 @@
 						variant={dotsVariant}
 						showTransform={true}
 						containerClass='container'
+						size={dotsSize}
 					/>
 				{/if}
 				<CircularButton
@@ -588,6 +592,7 @@
 			ariaLabel={(index) => `Ver imagen ${index + 1}`}
 			variant={dotsVariant}
 			containerClass='container'
+			size={dotsSize}
 		/>
 	{/if}
 
@@ -928,9 +933,8 @@
 		outline-offset: 2px;
 	}
 
+	/* Dot dimensions: CarouselDots `size` / `dotsSize` only (no fixed width/height here). */
 	:global(.image-carousel .carousel-dots .dot) {
-		width: 1rem;
-		height: 1rem;
 		background: #a6e7df;
 	}
 

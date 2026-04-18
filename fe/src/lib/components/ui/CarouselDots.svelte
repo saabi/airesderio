@@ -1,7 +1,7 @@
 <script module lang='ts'>
 	// ===== TYPES =====
 	export type DotVariant = 'default' | 'accent' | 'inverse';
-	export type DotSize = 'small' | 'medium' | 'large';
+	export type DotSize = 'small' | 'medium' | 'large' | 'xl';
 
 	interface Props {
 		total: number;
@@ -49,6 +49,7 @@
 			class:size-small={size === 'small'}
 			class:size-medium={size === 'medium'}
 			class:size-large={size === 'large'}
+			class:size-xl={size === 'xl'}
 			onclick={() => onDotClick(index)}
 			aria-label={getAriaLabel(index)}
 			type='button'
@@ -91,6 +92,7 @@
 		/* Layout */
 		width: 0.5rem;
 		height: 0.5rem;
+		padding: 0;
 	}
 
 	.dot.size-medium {
@@ -103,6 +105,12 @@
 		/* Layout */
 		width: 1rem;
 		height: 1rem;
+	}
+
+	.dot.size-xl {
+		/* Layout */
+		width: 1.25rem;
+		height: 1.25rem;
 	}
 
 	/* Variant: default (for Carousel.svelte - inverse style) */
