@@ -42,7 +42,7 @@ rollback_to_original_commit() {
 }
 
 # Pull updates; on failure, return repo to original state (including stash).
-if ! git pull origin dev; then
+if ! git pull; then
 	echo "git pull failed."
 	rollback_to_original_commit
 	if ! restore_stash; then
