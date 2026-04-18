@@ -12,6 +12,7 @@
 	import FloatingCTA from '$lib/components/ui/FloatingCTA.svelte';
 	import FloatingWhatsApp from '$lib/components/ui/FloatingWhatsApp.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
+	import ScrollDownHint from '$lib/components/ui/ScrollDownHint.svelte';
 	import CarouselHarmony from '$lib/components/sections/CarouselHarmony.svelte';
 	import CarouselLuxury from '$lib/components/sections/CarouselLuxury.svelte';
 	import Intro from '$lib/components/sections/Intro.svelte';
@@ -120,6 +121,7 @@
 
 <main>
 	<Hero />
+	<ScrollDownHint />
 	<FloatingCTA />
 	<FloatingWhatsApp />
 
@@ -147,7 +149,7 @@
 	<div class="page-shell section">
 		<FloorPlans />
 	</div>
-	<div class="section-band section-band--alt" >
+	<div class="section-band section-band--alt">
 		<ContactSection />
 	</div>
 </main>

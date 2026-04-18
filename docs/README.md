@@ -41,7 +41,8 @@ docs/
     ├── 020-add-floor-plan-photos.md
     ├── 021-select-typeface-system.md
     ├── 022-componentize-carousel-dots.md
-    └── 023-map-data-structure-migration.md
+    ├── 023-map-data-structure-migration.md
+    └── 026-landing-scroll-down-hint.md
 ```
 
 ## Quick Start
