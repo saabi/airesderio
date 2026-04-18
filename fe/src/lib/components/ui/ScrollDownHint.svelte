@@ -2,6 +2,8 @@
 	import { browser } from '$app/environment';
 	import {
 		SCROLL_HINT_DELAY_MS,
+		SCROLL_HINT_FLASH_DURATION_MS,
+		SCROLL_HINT_FLASH_DURATION_REDUCED_MS,
 		SCROLL_HINT_SCROLL_THRESHOLD,
 		SCROLL_HINT_STORAGE_KEY,
 		shouldStartScrollHintTimer
@@ -50,8 +52,29 @@
 			return;
 		}
 
-		let timer: ReturnType<typeof setTimeout> | null = null;
+		let initialTimer: ReturnType<typeof setTimeout> | null = null;
+		let hideAfterFlashTimer: ReturnType<typeof setTimeout> | null = null;
+		let nextShowTimer: ReturnType<typeof setTimeout> | null = null;
 		let done = false;
+
+		const flashDurationMs = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+			? SCROLL_HINT_FLASH_DURATION_REDUCED_MS
+			: SCROLL_HINT_FLASH_DURATION_MS;
+
+		function clearCycleTimers(): void {
+			if (initialTimer !== null) {
+				clearTimeout(initialTimer);
+				initialTimer = null;
+			}
+			if (hideAfterFlashTimer !== null) {
+				clearTimeout(hideAfterFlashTimer);
+				hideAfterFlashTimer = null;
+			}
+			if (nextShowTimer !== null) {
+				clearTimeout(nextShowTimer);
+				nextShowTimer = null;
+			}
+		}
 
 		function dismissFromScroll(): void {
 			if (done) return;
@@ -59,10 +82,7 @@
 			done = true;
 			visible = false;
 			persistDismissed();
-			if (timer !== null) {
-				clearTimeout(timer);
-				timer = null;
-			}
+			clearCycleTimers();
 			window.removeEventListener('scroll', onScroll);
 		}
 
@@ -70,17 +90,32 @@
 			dismissFromScroll();
 		}
 
-		window.addEventListener('scroll', onScroll, { passive: true });
-
-		timer = setTimeout(() => {
-			timer = null;
+		function runFlashCycle(): void {
 			if (done) return;
 			visible = true;
+			hideAfterFlashTimer = setTimeout(() => {
+				hideAfterFlashTimer = null;
+				if (done) return;
+				visible = false;
+				nextShowTimer = setTimeout(() => {
+					nextShowTimer = null;
+					if (done) return;
+					runFlashCycle();
+				}, SCROLL_HINT_DELAY_MS);
+			}, flashDurationMs);
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+
+		initialTimer = setTimeout(() => {
+			initialTimer = null;
+			if (done) return;
+			runFlashCycle();
 		}, SCROLL_HINT_DELAY_MS);
 
 		return () => {
 			done = true;
-			if (timer !== null) clearTimeout(timer);
+			clearCycleTimers();
 			window.removeEventListener('scroll', onScroll);
 		};
 	});
@@ -136,10 +171,12 @@
 		height: 1.35rem;
 		flex-shrink: 0;
 		opacity: 0.95;
+		pointer-events: none;
 	}
 
 	.scroll-hint__text {
 		text-wrap: balance;
+		pointer-events: none;
 	}
 
 	/* Attention “flash”: a few opacity pulses */
