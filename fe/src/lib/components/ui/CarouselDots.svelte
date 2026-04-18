@@ -37,7 +37,14 @@
 	}
 </script>
 
-<div class='carousel-dots' class:container={containerClass}>
+<div
+	class='carousel-dots'
+	class:container={containerClass}
+	class:size-small={size === 'small'}
+	class:size-medium={size === 'medium'}
+	class:size-large={size === 'large'}
+	class:size-xl={size === 'xl'}
+>
 	{#each Array(total) as _, index}
 		<button
 			class='dot'
@@ -46,10 +53,6 @@
 			class:variant-default={variant === 'default'}
 			class:variant-accent={variant === 'accent'}
 			class:variant-inverse={variant === 'inverse'}
-			class:size-small={size === 'small'}
-			class:size-medium={size === 'medium'}
-			class:size-large={size === 'large'}
-			class:size-xl={size === 'xl'}
 			onclick={() => onDotClick(index)}
 			aria-label={getAriaLabel(index)}
 			type='button'
@@ -87,27 +90,27 @@
 			transform 0.2s ease;
 	}
 
-	/* Size variants */
-	.dot.size-small {
+	/* Size variants (class on .carousel-dots, not repeated per .dot) */
+	.carousel-dots.size-small .dot {
 		/* Layout */
 		width: 0.5rem;
 		height: 0.5rem;
 		padding: 0;
 	}
 
-	.dot.size-medium {
+	.carousel-dots.size-medium .dot {
 		/* Layout */
 		width: 0.75rem;
 		height: 0.75rem;
 	}
 
-	.dot.size-large {
+	.carousel-dots.size-large .dot {
 		/* Layout */
 		width: 1rem;
 		height: 1rem;
 	}
 
-	.dot.size-xl {
+	.carousel-dots.size-xl .dot {
 		/* Layout */
 		width: 1.25rem;
 		height: 1.25rem;
