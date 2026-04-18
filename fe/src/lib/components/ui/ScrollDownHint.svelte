@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import ScrollDownArrowsIcon from '$lib/components/ui/ScrollDownArrowsIcon.svelte';
 	import {
 		SCROLL_HINT_DELAY_MS,
 		SCROLL_HINT_FLASH_DURATION_MS,
@@ -123,11 +124,10 @@
 
 {#if visible}
 	<div class="scroll-hint scroll-hint--flash" role="status" aria-live="polite">
-		<svg class="scroll-hint__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-			<path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-			<path fill="currentColor" d="M7.41 13.41 12 18l4.59-4.59L18 15l-6 6-6-6 1.41-1.41z" />
-		</svg>
-		<span class="scroll-hint__text">Deslizá para ver más</span>
+		<div class="scroll-hint__panel">
+			<span class="scroll-hint__text">Deslizá para ver más</span>
+		</div>
+		<ScrollDownArrowsIcon class="scroll-hint__arrows" />
 	</div>
 {/if}
 
@@ -145,32 +145,37 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 0.35rem;
-		max-width: min(9rem, 28vw);
+		max-width: min(6rem, 28vw);
 		padding: 0.5rem 0.65rem;
+		color: var(--color-text-inverse);
+		pointer-events: none;
+	}
 
-		/* Box/Visual */
-		border-radius: 0.5rem;
-		background: color-mix(in oklch, var(--header-bg) 88%, transparent);
+
+	.scroll-hint__panel {
+		width: 100%;
+		padding: 0.25rem 0.325rem;
+		border-radius: 0.25rem;
+		background: var(--color-title-emphasis);
 		color: var(--color-text-inverse);
 		box-shadow:
-			0 0.35rem 1rem rgba(0, 0, 0, 0.25),
-			0 0 0 1px color-mix(in oklch, var(--color-text-inverse) 15%, transparent);
-		backdrop-filter: blur(8px);
-		pointer-events: none;
+			0 0.175rem 0.5rem rgba(0, 0, 0, 0.2),
+			0 0 0 1px color-mix(in oklch, var(--color-text-inverse) 22%, transparent);
 
-		/* Typography */
 		font-family: var(--font-body);
-		font-size: 0.75rem;
+		font-size: 1rem;
 		font-weight: var(--font-weight-medium);
 		line-height: 1.25;
 		text-align: center;
 	}
 
-	.scroll-hint__icon {
-		width: 1.35rem;
-		height: 1.35rem;
+	.scroll-hint :global(.scroll-hint__arrows) {
+		width: 1rem;
+		height: 1rem;
 		flex-shrink: 0;
 		opacity: 0.95;
+		color: var(--color-title-emphasis);
+		filter: drop-shadow(0 0.05rem 0.125rem rgba(0, 0, 0, 0.3));
 		pointer-events: none;
 	}
 
@@ -211,14 +216,17 @@
 
 	@media (max-width: 850px) {
 		.scroll-hint {
-			font-size: 0.7rem;
-			padding: 0.45rem 0.55rem;
 			right: var(--scroll-hint-inset, 0.75rem);
 		}
 
-		.scroll-hint__icon {
-			width: 1.2rem;
-			height: 1.2rem;
+		.scroll-hint__panel {
+			font-size: 0.6rem;
+			padding: 0.225rem 0.275rem;
+		}
+
+		.scroll-hint :global(.scroll-hint__arrows) {
+			width: 3rem;
+			height: 3rem;
 		}
 	}
 </style>
