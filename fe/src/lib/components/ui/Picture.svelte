@@ -19,7 +19,12 @@
 		/** Optional width-descriptor srcset for the fallback `<img>` (e.g. high-res PNG). */
 		imgSrcset,
 		/** When set (e.g. from {@link Slide}), called after `<img>` has intrinsic dimensions. */
-		onImgDecode
+		onImgDecode,
+		/**
+		 * When false (e.g. inactive carousel slide), decode may still run; parent re-checks when true.
+		 * Include in effects so becoming active re-emits if the image is already complete.
+		 */
+		isActive = true
 	}: {
 		src: string;
 		alt?: string;
@@ -36,6 +41,7 @@
 			naturalWidth: number;
 			naturalHeight: number;
 		}) => void;
+		isActive?: boolean;
 	} = $props();
 
 	let imgEl: HTMLImageElement | null = $state(null);
@@ -81,6 +87,8 @@
 		const el = imgEl;
 		// Re-run when `src` changes so cached / late loads still emit.
 		void src;
+		// Re-run when a carousel slide becomes active so preloaded (complete) images emit again.
+		void isActive;
 
 		if (el.complete && el.naturalWidth > 0) {
 			emitImgDecode();

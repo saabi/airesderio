@@ -24,6 +24,8 @@
 		webpSrcset?: string;
 		/** Passed to Picture: fallback img srcset (e.g. high-res PNG) */
 		imgSrcset?: string;
+		/** Stable image URL for this slide (e.g. PNG path); forwarded in {@link onSlideMediaReady} for image kind. */
+		logicalSrc?: string;
 		// Video
 		poster?: string;
 		muted?: boolean;
@@ -52,6 +54,7 @@
 		useAutoAlternateSrc = true,
 		webpSrcset,
 		imgSrcset,
+		logicalSrc,
 		poster,
 		muted = true,
 		playsInline = true,
@@ -84,14 +87,18 @@
 		}
 	});
 
-	function handleImageDecode(info: {
-		currentSrc: string;
-		naturalWidth: number;
-		naturalHeight: number;
-	}): void {
+	function handleImageDecode(
+		info: {
+			currentSrc: string;
+			naturalWidth: number;
+			naturalHeight: number;
+		},
+		resolvedLogicalSrc: string
+	): void {
 		if (!isActive || !onSlideMediaReady) return;
 		onSlideMediaReady({
 			kind: 'image',
+			logicalSrc: resolvedLogicalSrc,
 			currentSrc: info.currentSrc,
 			naturalWidth: info.naturalWidth,
 			naturalHeight: info.naturalHeight
@@ -134,6 +141,7 @@
 					(src as { src?: string })?.src ??
 					'')}
 		{#if imageSrc}
+			{@const resolvedLogicalSrc = logicalSrc ?? imageSrc}
 			<Picture
 				src={imageSrc}
 				{alt}
@@ -141,7 +149,10 @@
 				{webpSrcset}
 				{imgSrcset}
 				sizes={imageSizes}
-				onImgDecode={onSlideMediaReady ? handleImageDecode : undefined}
+				isActive={isActive}
+				onImgDecode={onSlideMediaReady
+					? (info) => handleImageDecode(info, resolvedLogicalSrc)
+					: undefined}
 				class="carousel-image-content"
 				loading="lazy"
 			/>

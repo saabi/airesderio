@@ -4,6 +4,8 @@
 export type SlideMediaReadyInfo =
 	| {
 			kind: 'image';
+			/** Stable URL for this slide (e.g. PNG path); use for caching, not {@link currentSrc}. */
+			logicalSrc: string;
 			currentSrc: string;
 			naturalWidth: number;
 			naturalHeight: number;

@@ -111,7 +111,7 @@
 	function handleSlideMediaReady(info: SlideMediaReadyInfo): void {
 		if (info.kind !== 'image') return;
 
-		const logicalSrc = activePlans[currentPlanIndex]?.image;
+		const { logicalSrc } = info;
 		if (!logicalSrc) return;
 
 		imageTier = parseTierFromCurrentSrc(info.currentSrc);
@@ -198,6 +198,7 @@
 						<Slide
 							type="image"
 							src={activePlans[index].image}
+							logicalSrc={activePlans[index].image}
 							alt={activePlans[index].title}
 							useAutoAlternateSrc={false}
 							webpSrcset={FLOOR_PLAN_WEBP_SRCSETS[index]}
