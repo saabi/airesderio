@@ -7,15 +7,10 @@
 	import Slide from '$lib/components/ui/Slide.svelte';
 
 	// Local utilities
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 	import { verticalViewport } from '$lib/utils/viewport';
-	import {
-		ANIMATION,
-		animationDelay,
-		animationDuration,
-		animationOffset
-	} from '$lib/constants/animation';
+	import { animationDuration, animationOffset } from '$lib/constants/animation';
+	import { scrollReveal } from '$lib/utils/scrollReveal';
 	import type { SlideMediaReadyInfo } from '$lib/types/slideMedia';
 	import { parseTierFromCurrentSrc, type CarouselImageTier } from '$lib/utils/carouselImageTier';
 
@@ -86,14 +81,6 @@
 	);
 	let currentPlan = $derived.by(() => activePlans[currentPlanIndex]);
 
-	// ===== INSTANCE CONSTANTS =====
-	const { action: floorPlansObserver, visible: floorPlansVisible } = createSectionObserver(
-		'floor-plans',
-		{
-			threshold: ANIMATION.threshold.section
-		}
-	);
-
 	// ===== EFFECTS =====
 	/** Restore cached aspect when switching slides (before active slide’s img fires decode). */
 	$effect(() => {
@@ -137,22 +124,19 @@
 	}
 </script>
 
-<section
-	id="planos"
-	aria-labelledby="planos-heading"
-	use:floorPlansObserver
-	data-section-active={$floorPlansVisible}
->
+<section id="planos" aria-labelledby="planos-heading">
 	<VisuallyHidden id="planos-heading" tag="h2">Planos</VisuallyHidden>
 	<div
 		class="scroll-animate"
+		use:scrollReveal
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<Title eyebrow="PLANOS y" big="Distribución" />
 	</div>
 	<div
 		class="floor-plans-container scroll-animate"
-		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
+		use:scrollReveal
+		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<div
 			class="carousel-wrapper"

@@ -1,17 +1,11 @@
 <script module lang='ts'>
 	// ===== IMPORTS =====
-	import Title from '$lib/components/ui/Title.svelte';
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 	import Slide from '$lib/components/ui/Slide.svelte';
 
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { verticalViewport } from '$lib/utils/viewport';
-	import {
-		ANIMATION,
-		animationDelay,
-		animationDuration,
-		animationOffset
-	} from '$lib/constants/animation';
+	import { animationDuration, animationOffset } from '$lib/constants/animation';
+	import { scrollReveal } from '$lib/utils/scrollReveal';
 
 	// ===== STATIC CONSTANTS =====
 	const CAROUSEL_IMAGES = [
@@ -30,24 +24,18 @@
 
 <script lang='ts'>
 	const activeImages = $derived($verticalViewport ? CAROUSEL_IMAGES_MOBILE : CAROUSEL_IMAGES);
-
-	const { action: sectionObserver, visible: sectionVisible } = createSectionObserver(
-		'carousel-luxury',
-		{ threshold: ANIMATION.threshold.section }
-	);
 </script>
 
 <section
 	id='carousel-luxury'
 	class='carousel-section carousel-section--luxury'
 	aria-labelledby='carousel-luxury-heading'
-	use:sectionObserver
-	data-section-active={$sectionVisible}
 >
 	<div class='carousel-container'>
 		<div
 			class='carousel-gallery scroll-animate'
-			style={`--scroll-animate-delay: ${animationDelay(3)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
+			use:scrollReveal
+			style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
 		>
 			{#key $verticalViewport}
 				<ImageCarousel
@@ -79,7 +67,8 @@
 		<div class='carousel-text'>
 			<p
 				class='scroll-animate'
-				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-duration: ${animationDuration()};`}
+				use:scrollReveal
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				Ambientes amplios que combinan diseño contemporáneo y funcionalidad, con
 				materiales ecológicos, formas curvas y detalles en madera.

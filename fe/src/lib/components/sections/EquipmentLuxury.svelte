@@ -1,20 +1,13 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
-	import { browser } from '$app/environment';
-
 	import Subtitle from '$lib/components/ui/Subtitle.svelte';
 	import IconTextRow from '$lib/components/ui/IconTextRow.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import LuxuryTilde from '$lib/components/icons/LuxuryTilde.svelte';
 
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
-	import {
-		ANIMATION,
-		animationDelay,
-		animationDuration,
-		animationOffset
-	} from '$lib/constants/animation';
+	import { animationDuration, animationOffset } from '$lib/constants/animation';
+	import { scrollReveal } from '$lib/utils/scrollReveal';
 
 	// ===== TYPES =====
 	type EquipmentItem = {
@@ -53,84 +46,21 @@
 	];
 </script>
 
-<script lang="ts">
-	const { action: sectionObserver, visible: sectionVisible } = createSectionObserver(
-		'equipados-luxury',
-		{ threshold: ANIMATION.threshold.section }
-	);
-
-	let visibleItems = $state<Set<number>>(new Set());
-	let titleVisible = $state(false);
-
-	function createTitleObserver(element: HTMLElement) {
-		if (!browser) return;
-		let observer: IntersectionObserver | null = null;
-		requestAnimationFrame(() => {
-			observer = new IntersectionObserver(
-				(entries) => {
-					for (const entry of entries) {
-						if (entry.isIntersecting) {
-							titleVisible = true;
-							observer?.unobserve(entry.target);
-						}
-					}
-				},
-				{ threshold: 0.1, rootMargin: '0px' }
-			);
-			observer.observe(element);
-		});
-		return {
-			destroy() {
-				observer?.disconnect();
-			}
-		};
-	}
-
-	function createItemObserver(index: number) {
-		return (element: HTMLElement) => {
-			if (!browser) return;
-			let observer: IntersectionObserver | null = null;
-			requestAnimationFrame(() => {
-				observer = new IntersectionObserver(
-					(entries) => {
-						for (const entry of entries) {
-							if (entry.isIntersecting) {
-								visibleItems = new Set([...visibleItems, index]);
-								observer?.unobserve(entry.target);
-							}
-						}
-					},
-					{ threshold: 0.1, rootMargin: '0px' }
-				);
-				observer.observe(element);
-			});
-			return {
-				destroy() {
-					observer?.disconnect();
-				}
-			};
-		};
-	}
-</script>
-
 <section
 	id="equipados-luxury"
 	class="equip-section equip-section--luxury"
 	aria-labelledby="equipados-luxury-heading"
-	use:sectionObserver
-	data-section-active={$sectionVisible}
 >
 	<div
 		id="equipados-luxury-heading"
-		use:createTitleObserver
 		class="scroll-animate"
-		data-item-active={titleVisible || undefined}
-		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+		use:scrollReveal
+		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<Subtitle eyebrow="Equipamiento opcional" big="Luxury Style" bigSize="big" align="center" />
 	</div>
 
-	<p class="equip-intro">
+	<p class="equip-intro scroll-animate" use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}>
 		<strong>
 			Adicionalmente, ofrecemos terminaciones y equipamientos que permiten adaptar tu departamento completamente a tu estilo de vida y necesidades. Descubrí un espacio pensado para evolucionar con vos, donde podés personalizar tus ambientes con tecnología de vanguardia y un diseño interior sofisticado. Departamentos completamente equipados, listos para habitar y disfrutar.
 		</strong>
@@ -144,12 +74,10 @@
 				style="--equip-rows: {Math.ceil(lineaLuxury.length / 2)}"
 			>
 				{#each lineaLuxury as item, index (index)}
-					{@const itemAction = createItemObserver(index)}
 					<li
-						use:itemAction
 						class="scroll-animate"
-						data-item-active={visibleItems.has(index) || undefined}
-						style={`--scroll-animate-delay: ${animationDelay(index + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
+						use:scrollReveal
+						style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 					>
 						<IconTextRow text={item.text}>
 							{#snippet icon()}

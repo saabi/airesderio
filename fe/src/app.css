@@ -363,18 +363,13 @@
 		scale(var(--scroll-animate-scale, 0.98));
 }
 
-[data-section-active='true'] .scroll-animate:not([data-item-active]) {
-	opacity: 1;
-	transform: translate3d(0, 0, 0) scale(1);
-}
-
 .scroll-animate[data-item-active] {
 	opacity: 1;
 	transform: translate3d(0, 0, 0) scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
-	[data-section-active] .scroll-animate {
+	.scroll-animate[data-item-active] {
 		transform: none;
 		transition-duration: 0ms;
 	}

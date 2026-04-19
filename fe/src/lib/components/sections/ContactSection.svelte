@@ -3,43 +3,43 @@
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
 	import ContactForm from '$lib/components/forms/ContactForm.svelte';
 	import Picture from '$lib/components/ui/Picture.svelte';
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { theme } from '$lib/stores/theme';
+	import { animationDuration, animationOffset } from '$lib/constants/animation';
+	import { scrollReveal } from '$lib/utils/scrollReveal';
 </script>
 
-<script lang='ts'>
-	// ===== IMPORTS =====
-	import {
-		ANIMATION,
-		animationDelay,
-		animationDuration,
-		animationOffset
-	} from '$lib/constants/animation';
-
-	// ===== INSTANCE CONSTANTS =====
-	const { action: contactObserver, visible: contactVisible } = createSectionObserver('contact', {
-		threshold: ANIMATION.threshold.section
-	});
-</script>
-
-<section
-	id='contacto'
-	class='section'
-	aria-labelledby='contact-heading'
-	use:contactObserver
-	data-section-active={$contactVisible}
->
+<section id='contacto' class='section' aria-labelledby='contact-heading'>
 	<div class='container'>
-		<div
-			class='form scroll-animate'
-			style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
-		>
-			<h2 id='contact-heading'>Contacto</h2>
-			<p>Comunicate con nosotros</p>
-			<ContactForm />
+		<div class='form'>
+			<h2
+				id='contact-heading'
+				class='scroll-animate'
+				use:scrollReveal
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+			>
+				Contacto
+			</h2>
+			<p
+				class='scroll-animate'
+				use:scrollReveal
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+			>
+				Comunicate con nosotros
+			</p>
+			<div
+				class='form-fields scroll-animate'
+				use:scrollReveal
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+			>
+				<ContactForm />
+			</div>
 		</div>
 		<div class='right-column'>
-			<div class='exterior-image scroll-animate' style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}>
+			<div
+				class='exterior-image scroll-animate'
+				use:scrollReveal
+				style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
+			>
 				<Picture
 					src="/exteriores/exterior_03.png"
 					alt="Aires de Río exterior"
@@ -84,6 +84,10 @@
 	.form {
 		/* Layout */
 		justify-self: end;
+	}
+
+	.form-fields {
+		min-width: 0;
 	}
 
 	.right-column {

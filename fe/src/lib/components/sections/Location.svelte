@@ -18,13 +18,11 @@
 	}
 
 	// Local utilities
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import {
-		ANIMATION,
-		animationDelay,
 		animationDuration,
 		animationOffset
 	} from '$lib/constants/animation';
+	import { scrollReveal } from '$lib/utils/scrollReveal';
 
 	// ===== STATIC CONSTANTS =====
 	const MAP_JSON_URL = '/places/map.json';
@@ -55,51 +53,6 @@
 		if (!mapData) return {};
 		return Object.fromEntries(mapData.places.map((p) => [p.id, p]));
 	});
-
-	// ===== INSTANCE CONSTANTS =====
-	const { action: locationObserver, visible: locationVisible } = createSectionObserver('location', {
-		threshold: ANIMATION.threshold.section
-	});
-
-	// ===== STATE =====
-	let titleVisible = $state(false);
-
-	// ===== FUNCTIONS =====
-	function createTitleObserver(element: HTMLElement) {
-		if (!browser) return;
-
-		let observer: IntersectionObserver | null = null;
-
-		requestAnimationFrame(() => {
-			observer = new IntersectionObserver(
-				(entries) => {
-					for (const entry of entries) {
-						if (entry.isIntersecting) {
-							titleVisible = true;
-							if (observer) {
-								observer.unobserve(entry.target);
-							}
-						}
-					}
-				},
-				{
-					threshold: 0.1,
-					rootMargin: '0px'
-				}
-			);
-
-			observer.observe(element);
-		});
-
-		return {
-			destroy() {
-				if (observer) {
-					observer.disconnect();
-				}
-			}
-		};
-	}
-
 
 	// ===== EFFECTS =====
 	// (Effects will be added here if needed)
@@ -177,33 +130,31 @@
 	});
 </script>
 
-<section
-	id='ubicacion'
-	class='ubi'
-	aria-labelledby='ubicacion-heading'
-	use:locationObserver
-	data-section-active={$locationVisible}
->
+<section id='ubicacion' class='ubi' aria-labelledby='ubicacion-heading'>
 	<div
-		use:createTitleObserver
 		class='title-block scroll-animate'
-		data-item-active={titleVisible || undefined}
-		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+		use:scrollReveal
+		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<Title eyebrow='¿Dónde se encuentra?' big='UBICACIÓN' />
 	</div>
 	<div class='location-block'>
 		<div class='location-text-column'>
-			<div
-				class='location-text scroll-animate'
-				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
-			>
-				<p>
+			<div class='location-text'>
+				<p
+					class='scroll-animate'
+					use:scrollReveal
+					style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+				>
 					<AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> se encuentra en Avenida Rivadavia 25 Este, con fácil acceso tanto al centro de Santiago del
 					Estero como a la Ciudad de la Banda a través del Puente Nuevo. Rodeado de modernos desarrollos como la nueva terminal de ómnibus y el fórum, está también a pasos de la Avenida Roca, eje gastronómico y de bares, y del Parque
 					Aguirre, el principal pulmón verde de la ciudad. Además, Plaza Vea, con supermercado y shopping a sólo una cuadra, suma practicidad a tu día a día.
 				</p>
-				<p>
+				<p
+					class='scroll-animate'
+					use:scrollReveal
+					style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+				>
 					Vivir en <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> significa disfrutar de un punto estratégico pensado para combinar vida social,
 					profesional, ocio y comodidad.
 				</p>
@@ -241,7 +192,8 @@
 		</div>
 		<div
 			class='map-container scroll-animate'
-			style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
+			use:scrollReveal
+			style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 		>
 		{#if mapData}
 			<Map

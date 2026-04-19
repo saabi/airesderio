@@ -3,9 +3,9 @@
 	import ImageCarousel from '$lib/components/ui/ImageCarousel.svelte';
 	import Slide from '$lib/components/ui/Slide.svelte';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
+	import { scrollReveal } from '$lib/utils/scrollReveal';
 	import { verticalViewport } from '$lib/utils/viewport';
-	import { ANIMATION, animationDuration, animationOffset } from '$lib/constants/animation';
+	import { animationDuration, animationOffset } from '$lib/constants/animation';
 
 	// ===== TYPES =====
 	interface Props {
@@ -95,10 +95,6 @@
 		currentIndex = (currentIndex + 1) % len;
 	}
 
-	// ===== INSTANCE CONSTANTS =====
-	const { action: heroObserver, visible: heroVisible } = createSectionObserver('hero', {
-		threshold: ANIMATION.threshold.hero
-	});
 </script>
 
 <section
@@ -106,12 +102,11 @@
 	class='hero'
 	role='banner'
 	aria-labelledby='hero-heading'
-	use:heroObserver
-	data-section-active={$heroVisible}
 >
 	<VisuallyHidden id='hero-heading' tag='h2'>Presentación y Contacto - Aires de Río</VisuallyHidden>
 	<div
 		class='hero-carousel scroll-animate'
+		use:scrollReveal
 		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<!-- Desktop carousel: visible in landscape via CSS. Only its timer runs in landscape so indices stay in 0..23. -->

@@ -1,75 +1,51 @@
 <script lang='ts'>
 	// ===== IMPORTS =====
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { theme } from '$lib/stores/theme';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
-	import {
-		ANIMATION,
-		animationDelay,
-		animationDuration,
-		animationOffset
-	} from '$lib/constants/animation';
+	import { animationDuration, animationOffset } from '$lib/constants/animation';
 	import VisuallyHidden from '$lib/components/ui/VisuallyHidden.svelte';
-
-	// ===== INSTANCE CONSTANTS =====
-	const { action: welcomeObserver, visible: welcomeVisible } = createSectionObserver('welcome', {
-		threshold: ANIMATION.threshold.section
-	});
-	const { action: introObserver, visible: introVisible } = createSectionObserver('intro', {
-		threshold: ANIMATION.threshold.section
-	});
+	import { scrollReveal } from '$lib/utils/scrollReveal';
 </script>
 
-<section
-	class='intro'
-	id='proyecto'
-	aria-labelledby='proyecto-heading'
-	use:introObserver
-	data-section-active={$introVisible}
->
+<section class='intro' id='proyecto' aria-labelledby='proyecto-heading'>
 	<VisuallyHidden id='proyecto-heading' tag='h2'>Sobre el Proyecto</VisuallyHidden>
-	<div
-		class='scroll-animate'
-		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
-	>
-		<section
-			id='welcome'
-			class='welcome-section'
-			use:welcomeObserver
-			data-section-active={$welcomeVisible}
-		>
+	<div class='intro-copy'>
+		<section id='welcome' class='welcome-section'>
 			<p
 				class='welcome scroll-animate'
-				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()}; --scroll-animate-delay: ${animationDelay(1)};`}
+				use:scrollReveal
+				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 			>
 				Santiago del Estero da la bienvenida a <AiresDeRioLogo class='logo-inline' height='2em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> un nuevo proyecto de departamentos con
 				las mejores prestaciones y estratégica ubicación.
 			</p>
 		</section>
-		<p>
+		<p class='scroll-animate' use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}>
 			Quienes vivan en <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> gozarán de una multi-oferta de entretenimiento, shopping, áreas
 			verdes, deportes, confiterías y eventos culturales.
 		</p>
-		<p>
+		<p class='scroll-animate' use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}>
 			El edificio ofrece departamentos de 2 y 4 ambientes amplios y luminosos, donde el diseño y las
 			comodidades han sido pensadas para satisfacer a quienes quieran una vida cómoda y a un paso de
 			todo.
 		</p>
 	</div>
-	<aside
-		class='kpis scroll-animate'
-		style={`--scroll-animate-delay: ${animationDelay(1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
-		aria-labelledby='kpis-heading'
-	>
+	<aside class='kpis' aria-labelledby='kpis-heading'>
 		<VisuallyHidden id='kpis-heading' tag='h3'
 			>Características principales del proyecto</VisuallyHidden
 		>
 		<dl>
-			<dt class='kpi'><strong>2 Y 4 AMBIENTES</strong><small>1 dormitorio<br>2 dormitorios + estudio</small></dt>
+			<dt class='kpi scroll-animate' use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}>
+				<strong>2 Y 4 AMBIENTES</strong><small>1 dormitorio<br>2 dormitorios + estudio</small>
+			</dt>
 			<VisuallyHidden tag='dd'>Tipos de unidades disponibles</VisuallyHidden>
-			<dt class='kpi'><strong>PISCINA</strong><small>Con solarium húmedo en terraza</small></dt>
+			<dt class='kpi scroll-animate' use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}>
+				<strong>PISCINA</strong><small>Con solarium húmedo en terraza</small>
+			</dt>
 			<VisuallyHidden tag='dd'>Amenities en terraza con piscina y solarium húmedo</VisuallyHidden>
-			<dt class='kpi'><strong>CAFETERÍA</strong><small>En planta baja</small></dt>
+			<dt class='kpi scroll-animate' use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}>
+				<strong>CAFETERÍA</strong><small>En planta baja</small>
+			</dt>
 			<VisuallyHidden tag='dd'>Servicio de cafetería incluido</VisuallyHidden>
 		</dl>
 	</aside>
@@ -88,6 +64,12 @@
 		font-size: 1.4rem;
 		margin: 0 auto;
 	}
+
+	.intro-copy {
+		/* Layout */
+		min-width: 0;
+	}
+
 	.welcome {
 		/* Layout */
 		display: block;
@@ -131,9 +113,10 @@
 		display: contents;
 	}
 
-	.kpis dt {
-		/* Layout */
-		display: contents;
+	.kpis dt.kpi {
+		/* Layout: one box per KPI for scroll reveal + grid */
+		display: block;
+		min-width: 0;
 	}
 
 	.kpi strong {
@@ -149,7 +132,7 @@
 	}
 
 	.kpi--grey strong {
-		color: #6D6D6D;
+		color: #6d6d6d;
 	}
 
 	.kpi small {

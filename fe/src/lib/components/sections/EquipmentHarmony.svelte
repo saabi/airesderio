@@ -1,7 +1,5 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
-	import { browser } from '$app/environment';
-
 	import Title from '$lib/components/ui/Title.svelte';
 	import IconTextRow from '$lib/components/ui/IconTextRow.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
@@ -15,14 +13,9 @@
 	import TomasCorriente from '$lib/components/icons/TomasCorriente.svelte';
 	import UnidadesAire from '$lib/components/icons/UnidadesAire.svelte';
 
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
-	import {
-		ANIMATION,
-		animationDelay,
-		animationDuration,
-		animationOffset
-	} from '$lib/constants/animation';
+	import { animationDuration, animationOffset } from '$lib/constants/animation';
+	import { scrollReveal } from '$lib/utils/scrollReveal';
 
 	// ===== TYPES =====
 	type EquipmentItem = {
@@ -81,78 +74,16 @@
 	];
 </script>
 
-<script lang="ts">
-	const { action: sectionObserver, visible: sectionVisible } = createSectionObserver('equipados', {
-		threshold: ANIMATION.threshold.section
-	});
-
-	let visibleItems = $state<Set<number>>(new Set());
-	let titleVisible = $state(false);
-
-	function createTitleObserver(element: HTMLElement) {
-		if (!browser) return;
-		let observer: IntersectionObserver | null = null;
-		requestAnimationFrame(() => {
-			observer = new IntersectionObserver(
-				(entries) => {
-					for (const entry of entries) {
-						if (entry.isIntersecting) {
-							titleVisible = true;
-							observer?.unobserve(entry.target);
-						}
-					}
-				},
-				{ threshold: 0.1, rootMargin: '0px' }
-			);
-			observer.observe(element);
-		});
-		return {
-			destroy() {
-				observer?.disconnect();
-			}
-		};
-	}
-
-	function createItemObserver(index: number) {
-		return (element: HTMLElement) => {
-			if (!browser) return;
-			let observer: IntersectionObserver | null = null;
-			requestAnimationFrame(() => {
-				observer = new IntersectionObserver(
-					(entries) => {
-						for (const entry of entries) {
-							if (entry.isIntersecting) {
-								visibleItems = new Set([...visibleItems, index]);
-								observer?.unobserve(entry.target);
-							}
-						}
-					},
-					{ threshold: 0.1, rootMargin: '0px' }
-				);
-				observer.observe(element);
-			});
-			return {
-				destroy() {
-					observer?.disconnect();
-				}
-			};
-		};
-	}
-</script>
-
 <section
 	id="equipados"
 	class="equip-section equip-section--harmony"
 	aria-labelledby="equipados-heading"
-	use:sectionObserver
-	data-section-active={$sectionVisible}
 >
 	<div
 		id="equipados-heading"
-		use:createTitleObserver
 		class="scroll-animate"
-		data-item-active={titleVisible || undefined}
-		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+		use:scrollReveal
+		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<Title eyebrow="EQUIPAMIENTO EN" big="INTERIORES" bigSize="small" below="" />
 	</div>
@@ -165,12 +96,10 @@
 				style="--equip-rows: {Math.ceil(lineaHarmony.length / 2)}"
 			>
 				{#each lineaHarmony as item, index (index)}
-					{@const itemAction = createItemObserver(index)}
 					<li
-						use:itemAction
 						class="scroll-animate"
-						data-item-active={visibleItems.has(index) || undefined}
-						style={`--scroll-animate-delay: ${animationDelay(index + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
+						use:scrollReveal
+						style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 					>
 						<IconTextRow text={item.text}>
 							{#snippet icon()}

@@ -1,7 +1,5 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
-	import { browser } from '$app/environment';
-
 	import Title from '$lib/components/ui/Title.svelte';
 	import IconTextRow from '$lib/components/ui/IconTextRow.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
@@ -15,13 +13,8 @@
 	import InstalacionElectrica from '$lib/components/icons/InstalacionElectrica.svelte';
 	import MuroLadrillo from '$lib/components/icons/MuroLadrillo.svelte';
 	import Ubicacion from '$lib/components/icons/Ubicacion.svelte';
-	import { createSectionObserver } from '$lib/utils/sectionVisibility';
-	import {
-		ANIMATION,
-		animationDelay,
-		animationDuration,
-		animationOffset
-	} from '$lib/constants/animation';
+	import { animationDuration, animationOffset } from '$lib/constants/animation';
+	import { scrollReveal } from '$lib/utils/scrollReveal';
 
 	type LeftBulletItem = {
 		text: string;
@@ -72,51 +65,15 @@
 	];
 </script>
 
-<script lang="ts">
-	const { action: sectionObserver, visible: sectionVisible } = createSectionObserver(
-		'building-features',
-		{ threshold: ANIMATION.threshold.section }
-	);
-
-	let titleVisible = $state(false);
-
-	function createTitleObserver(node: HTMLElement) {
-		if (!browser) {
-			titleVisible = true;
-			return;
-		}
-		const observer = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					if (entry.isIntersecting) {
-						titleVisible = true;
-						observer.unobserve(entry.target);
-					}
-				}
-			},
-			{ threshold: 0.1 }
-		);
-		observer.observe(node);
-		return {
-			destroy() {
-				observer.disconnect();
-			}
-		};
-	}
-</script>
-
 <section
 	id="building-features"
 	class="building-features"
 	aria-labelledby="building-features-heading"
-	use:sectionObserver
-	data-section-active={$sectionVisible}
 >
 	<div
-		use:createTitleObserver
 		class="scroll-animate bf-title-wrap"
-		data-item-active={titleVisible || undefined}
-		style={`--scroll-animate-delay: ${animationDelay(0)}; --scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+		use:scrollReveal
+		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
 		<Title eyebrow="Características y" big="AMENITIES" />
 	</div>
@@ -129,8 +86,8 @@
 					{#each leftBullets as item, i (i)}
 						<li
 							class="scroll-animate bf-bullet"
-							data-item-active={titleVisible || undefined}
-							style={`--scroll-animate-delay: ${animationDelay(i + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
+							use:scrollReveal
+							style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 						>
 							<IconTextRow text={item.text}>
 								{#snippet icon()}
@@ -172,8 +129,8 @@
 					{#each extraInfra as item, i (item.text)}
 						<li
 							class="scroll-animate bf-extra-item"
-							data-item-active={titleVisible || undefined}
-							style={`--scroll-animate-delay: ${animationDelay(i + 1)}; --scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
+							use:scrollReveal
+							style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
 						>
 							<IconTextRow text={item.text}>
 								{#snippet icon()}
