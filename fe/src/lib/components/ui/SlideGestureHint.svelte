@@ -10,7 +10,25 @@
 		shouldStartScrollHintTimer
 	} from '$lib/utils/scrollDownHint';
 
+	/** Matches common mobile layout breakpoint (see ImageCarousel / sections). */
+	const MOBILE_MAX_WIDTH_PX = 850;
+
 	let visible = $state(false);
+	/** Hero carousel swipe uses touch; only hint lateral swipe on narrow viewports with touch. */
+	let showSwipeHints = $state(false);
+
+	$effect(() => {
+		if (!browser) return;
+		const mq = window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH_PX}px)`);
+		function syncSwipeHints(): void {
+			const touch =
+				'ontouchstart' in window || (typeof navigator !== 'undefined' && (navigator.maxTouchPoints ?? 0) > 0);
+			showSwipeHints = mq.matches && touch;
+		}
+		syncSwipeHints();
+		mq.addEventListener('change', syncSwipeHints);
+		return () => mq.removeEventListener('change', syncSwipeHints);
+	});
 
 	function persistDismissed(): void {
 		try {
@@ -123,36 +141,72 @@
 </script>
 
 {#if visible}
-	<div class="scroll-hint scroll-hint--flash" role="status" aria-live="polite">
-		<div class="scroll-hint__panel">
-			<span class="scroll-hint__text">Deslizá para ver más</span>
+	<div
+		class="gesture-hint gesture-hint--flash"
+		role="status"
+		aria-live="polite"
+		aria-label={showSwipeHints
+			? 'Deslizá hacia abajo para ver más, o hacia los lados para cambiar de imagen en la galería.'
+			: 'Deslizá hacia abajo para ver más.'}
+	>
+		<div class="gesture-hint__center">
+			<div class="gesture-hint__panel-container">
+				{#if showSwipeHints}
+					<ScrollDownArrowsIcon
+						class="gesture-hint__arrows gesture-hint__arrows--side gesture-hint__arrows--next"
+					/>
+				{/if}
+				<div class="gesture-hint__panel">
+					<span class="gesture-hint__text">Deslizá para ver más</span>
+				</div>
+				{#if showSwipeHints}
+					<ScrollDownArrowsIcon
+						class="gesture-hint__arrows gesture-hint__arrows--side gesture-hint__arrows--prev"
+					/>
+				{/if}
+			</div>
+			<ScrollDownArrowsIcon class="gesture-hint__arrows gesture-hint__arrows--down" />
 		</div>
-		<ScrollDownArrowsIcon class="scroll-hint__arrows" />
 	</div>
 {/if}
 
 <style>
-	.scroll-hint {
+	.gesture-hint {
 		/* Positioning: vertically at three-quarters viewport height */
 		position: fixed;
 		top: 75%;
-		right: var(--scroll-hint-inset, 1rem);
+		right: var(--gesture-hint-inset, var(--scroll-hint-inset, 1rem));
 		z-index: 35;
 		transform: translateY(-50%);
 
-		/* Layout */
+		/* Layout: side arrows + label + down arrows */
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		align-items: center;
+		justify-content: center;
 		gap: 0.35rem;
-		max-width: min(6rem, 28vw);
-		padding: 0.5rem 0.65rem;
+		max-width: min(13rem, 90vw);
+		padding: 0.5rem 0.5rem;
 		color: var(--color-text-inverse);
 		pointer-events: none;
 	}
 
+	.gesture-hint__panel-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.35rem;
+	}
+	.gesture-hint__center {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.35rem;
+		min-width: 0;
+		flex: 0 1 auto;
+	}
 
-	.scroll-hint__panel {
+	.gesture-hint__panel {
 		width: 100%;
 		padding: 0.25rem 0.325rem;
 		border-radius: 0.25rem;
@@ -169,7 +223,26 @@
 		text-align: center;
 	}
 
-	.scroll-hint :global(.scroll-hint__arrows) {
+	/* Same SVG as down chevrons; rotated for horizontal swipe */
+	.gesture-hint :global(.gesture-hint__arrows--prev) {
+		transform: rotate(-90deg);
+	}
+
+	.gesture-hint :global(.gesture-hint__arrows--next) {
+		transform: rotate(90deg);
+	}
+
+	.gesture-hint :global(.gesture-hint__arrows--side) {
+		width: 0.85rem;
+		height: 0.85rem;
+		flex-shrink: 0;
+		opacity: 0.95;
+		color: var(--color-title-emphasis);
+		filter: drop-shadow(0 0.05rem 0.125rem rgba(0, 0, 0, 0.3));
+		pointer-events: none;
+	}
+
+	.gesture-hint :global(.gesture-hint__arrows--down) {
 		width: 1rem;
 		height: 1rem;
 		flex-shrink: 0;
@@ -179,17 +252,17 @@
 		pointer-events: none;
 	}
 
-	.scroll-hint__text {
+	.gesture-hint__text {
 		text-wrap: balance;
 		pointer-events: none;
 	}
 
 	/* Attention “flash”: a few opacity pulses */
-	.scroll-hint--flash {
-		animation: scroll-hint-pulse 0.65s ease-in-out 3;
+	.gesture-hint--flash {
+		animation: gesture-hint-pulse 0.65s ease-in-out 3;
 	}
 
-	@keyframes scroll-hint-pulse {
+	@keyframes gesture-hint-pulse {
 		0%,
 		100% {
 			opacity: 1;
@@ -200,11 +273,11 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.scroll-hint--flash {
-			animation: scroll-hint-fade-in 0.35s ease-out 1;
+		.gesture-hint--flash {
+			animation: gesture-hint-fade-in 0.35s ease-out 1;
 		}
 
-		@keyframes scroll-hint-fade-in {
+		@keyframes gesture-hint-fade-in {
 			from {
 				opacity: 0;
 			}
@@ -215,18 +288,23 @@
 	}
 
 	@media (max-width: 850px) {
-		.scroll-hint {
-			right: var(--scroll-hint-inset, 0.75rem);
+		.gesture-hint {
+			right: var(--gesture-hint-inset, var(--scroll-hint-inset, 0.75rem));
 		}
 
-		.scroll-hint__panel {
+		.gesture-hint__panel {
 			font-size: 0.6rem;
 			padding: 0.225rem 0.275rem;
 		}
 
-		.scroll-hint :global(.scroll-hint__arrows) {
+		.gesture-hint :global(.gesture-hint__arrows--down) {
 			width: 3rem;
 			height: 3rem;
+		}
+
+		.gesture-hint :global(.gesture-hint__arrows--side) {
+			width: 1.75rem;
+			height: 1.75rem;
 		}
 	}
 </style>
