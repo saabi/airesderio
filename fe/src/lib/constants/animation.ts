@@ -5,12 +5,12 @@ export const ANIMATION = {
 		dense: 0.28
 	},
 	offset: {
-		text: '40px',
-		visual: '48px'
+		text: '56px',
+		visual: '80px'
 	},
 	duration: {
-		default: '500ms',
-		slow: '600ms'
+		default: '580ms',
+		slow: '700ms'
 	},
 	delay: {
 		step: 80

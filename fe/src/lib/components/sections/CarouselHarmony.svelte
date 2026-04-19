@@ -36,7 +36,7 @@
 		<div
 			class='carousel-gallery scroll-animate'
 			use:scrollReveal
-			style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.95;`}
+			style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration('slow')}; --scroll-animate-scale: 0.9; --scroll-animate-rotate: -0.5deg;`}
 		>
 			{#key $verticalViewport}
 				<ImageCarousel

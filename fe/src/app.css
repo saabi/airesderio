@@ -350,22 +350,32 @@
 }
 
 .scroll-animate {
+	/* Transform: overshoot easing for “fly in and land”; opacity fades slightly faster */
 	transition:
-		transform var(--scroll-animate-duration, 500ms)
-			var(--scroll-animate-easing, cubic-bezier(0.22, 1, 0.36, 1)),
-		opacity var(--scroll-animate-duration, 500ms) ease;
+		transform var(--scroll-animate-duration, 580ms)
+			var(
+				--scroll-animate-easing,
+				cubic-bezier(0.175, 0.88, 0.28, 1.06)
+			),
+		opacity var(--scroll-animate-opacity-duration, 420ms)
+			var(--scroll-animate-opacity-easing, cubic-bezier(0.25, 0.46, 0.2, 1));
 	transition-delay: var(--scroll-animate-delay, 0ms);
 }
 
 .scroll-animate:not([data-item-active]) {
 	opacity: 0;
-	transform: translate3d(0, var(--scroll-animate-offset, 40px), 0)
-		scale(var(--scroll-animate-scale, 0.98));
+	transform: translate3d(
+			var(--scroll-animate-shift-x, 0),
+			var(--scroll-animate-offset, 56px),
+			0
+		)
+		scale(var(--scroll-animate-scale, 0.94))
+		rotate(var(--scroll-animate-rotate, -0.35deg));
 }
 
 .scroll-animate[data-item-active] {
 	opacity: 1;
-	transform: translate3d(0, 0, 0) scale(1);
+	transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
