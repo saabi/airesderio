@@ -133,9 +133,9 @@
 
 <style>
 	.scroll-hint {
-		/* Positioning */
+		/* Positioning: vertically at three-quarters viewport height */
 		position: fixed;
-		top: 50%;
+		top: 75%;
 		right: var(--scroll-hint-inset, 1rem);
 		z-index: 35;
 		transform: translateY(-50%);
