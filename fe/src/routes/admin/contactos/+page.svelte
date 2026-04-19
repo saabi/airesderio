@@ -14,6 +14,14 @@
 		createdAt: string;
 	};
 
+	type MessagePopoutState = {
+		text: string;
+		top: number;
+		left: number;
+		maxWidth: number;
+		placeAbove: boolean;
+	};
+
 	let leads = $state<LeadRow[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
@@ -28,6 +36,7 @@
 	let deleteLoading = $state(false);
 	let deleteError = $state<string | null>(null);
 	let starError = $state<string | null>(null);
+	let activeMessagePopout = $state<MessagePopoutState | null>(null);
 
 	/** Orden opcional: destacados arriba, luego por fecha (más recientes primero). */
 	let starredFirst = $state(false);
@@ -164,6 +173,31 @@
 		return lead.downloadCount ?? 0;
 	}
 
+	function showMessagePopout(event: MouseEvent | FocusEvent, message: string) {
+		const text = message.trim();
+		if (!text) return;
+
+		const trigger = event.currentTarget;
+		if (!(trigger instanceof HTMLElement)) return;
+
+		const triggerRect = trigger.getBoundingClientRect();
+		const layerPadding = 8;
+		const gap = 6;
+		const availableWidth = Math.max(160, Math.floor(window.innerWidth - layerPadding * 2));
+		const maxWidth = Math.min(448, availableWidth);
+		const baseLeft = triggerRect.left;
+		const maxLeft = Math.max(layerPadding, window.innerWidth - maxWidth - layerPadding);
+		const left = Math.min(Math.max(layerPadding, baseLeft), maxLeft);
+		const preferAbove = window.innerHeight - triggerRect.bottom < 180;
+		const top = preferAbove ? triggerRect.top - gap : triggerRect.bottom + gap;
+
+		activeMessagePopout = { text, top, left, maxWidth, placeAbove: preferAbove };
+	}
+
+	function hideMessagePopout() {
+		activeMessagePopout = null;
+	}
+
 	async function clearContactData() {
 		purgeError = null;
 		if (
@@ -243,7 +277,8 @@
 	{/if}
 
 	<div class="table-wrap">
-		<table class="leads-table">
+		<div class="table-scroll">
+			<table class="leads-table">
 			<thead>
 				<tr>
 					<th class="th-check" scope="col">
@@ -298,11 +333,40 @@
 						<td>{lead.intent}</td>
 						<td>{downloadsFor(lead) > 0 ? 'Sí' : 'No'}</td>
 						<td>{downloadsFor(lead)}</td>
-						<td class="message-cell">{lead.message ?? '—'}</td>
+						<td class="message-cell">
+							{#if lead.message?.trim()}
+								<button
+									type="button"
+									class="message-preview-wrap"
+									aria-label="Ver mensaje completo"
+									onmouseenter={(event) => showMessagePopout(event, lead.message ?? '')}
+									onmouseleave={hideMessagePopout}
+									onfocus={(event) => showMessagePopout(event, lead.message ?? '')}
+									onblur={hideMessagePopout}
+								>
+									<span class="message-preview">{lead.message}</span>
+								</button>
+							{:else}
+								—
+							{/if}
+						</td>
 					</tr>
 				{/each}
 			</tbody>
-		</table>
+			</table>
+		</div>
+		<div class="message-popout-layer" aria-hidden="true">
+			{#if activeMessagePopout}
+				<div
+					class="message-popout"
+					role="tooltip"
+					class:above={activeMessagePopout.placeAbove}
+					style={`left: ${activeMessagePopout.left}px; top: ${activeMessagePopout.top}px; max-width: ${activeMessagePopout.maxWidth}px;`}
+				>
+					{activeMessagePopout.text}
+				</div>
+			{/if}
+		</div>
 	</div>
 {/if}
 
@@ -416,10 +480,18 @@
 	}
 
 	.table-wrap {
-		overflow-x: auto;
+		position: relative;
 		border: 1px solid var(--color-border-default);
 		border-radius: 0.5rem;
 		background: var(--color-bg-canvas);
+		overflow: visible;
+	}
+
+	.table-scroll {
+		overflow-x: auto;
+		border-radius: inherit;
+		position: relative;
+		z-index: 1;
 	}
 
 	.leads-table {
@@ -502,9 +574,60 @@
 
 	.message-cell {
 		max-width: 12rem;
-		overflow: hidden;
+	}
+
+	.message-preview-wrap {
+		display: inline-block;
+		max-width: 100%;
+		vertical-align: top;
+		padding: 0;
+		border: 0;
+		border-radius: 0.25rem;
+		background: transparent;
+		font: inherit;
+		text-align: left;
+		color: inherit;
+		cursor: help;
+	}
+
+	.message-preview-wrap:focus-visible {
+		outline: 2px solid var(--color-accent-primary, #4497b9);
+		outline-offset: 2px;
+	}
+
+	.message-preview {
+		display: block;
+		max-width: 12rem;
 		text-overflow: ellipsis;
+		overflow: hidden;
 		white-space: nowrap;
+	}
+
+	.message-popout {
+		position: absolute;
+		z-index: 10000;
+		width: max-content;
+		padding: 0.6rem 0.7rem;
+		border: 1px solid var(--color-border-default);
+		border-radius: 0.45rem;
+		background: var(--color-bg-canvas);
+		color: var(--color-text-primary);
+		box-shadow: 0 10px 25px color-mix(in srgb, var(--color-text-primary) 18%, transparent);
+		white-space: normal;
+		line-height: 1.35;
+		overflow-wrap: anywhere;
+	}
+
+	.message-popout.above {
+		transform: translateY(-100%);
+	}
+
+	.message-popout-layer {
+		position: fixed;
+		inset: 0;
+		overflow: visible;
+		pointer-events: none;
+		z-index: 9999;
 	}
 
 	.danger-zone {
