@@ -2,7 +2,8 @@ import type { PageServerLoad } from './$types';
 import {
 	buildContactNotificationEmail,
 	buildDirectContactThankYouEmail,
-	buildPdfDownloadEmail
+	buildPdfDownloadEmail,
+	buildWhatsappLeadThankYouEmail
 } from '$lib/server/email';
 
 type EmailPreview = {
@@ -35,6 +36,13 @@ export const load: PageServerLoad = async () => {
 		token: 'preview-token'
 	});
 
+	const whatsappLead = buildWhatsappLeadThankYouEmail({
+		leadName: 'Martín',
+		leadEmail: 'martin@example.com',
+		pdfType: 'departamentos',
+		token: 'preview-token'
+	});
+
 	const previews: EmailPreview[] = [
 		{
 			id: 'team-notification',
@@ -53,6 +61,12 @@ export const load: PageServerLoad = async () => {
 			label: 'Lead: agradecimiento',
 			subject: thankYouLead.subject,
 			html: thankYouLead.html
+		},
+		{
+			id: 'whatsapp-thank-you',
+			label: 'Lead WhatsApp: agradecimiento sin invitación',
+			subject: whatsappLead.subject,
+			html: whatsappLead.html
 		}
 	];
 

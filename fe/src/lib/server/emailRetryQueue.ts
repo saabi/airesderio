@@ -4,12 +4,17 @@ import { emailOutboundJobs } from '$lib/server/db/schema.js';
 import {
 	sendContactNotification,
 	sendPdfDownloadLink,
-	sendDirectContactThankYou
+	sendDirectContactThankYou,
+	sendWhatsappLeadThankYou
 } from '$lib/server/email.js';
 
 export type DbClient = ReturnType<typeof getDb>;
 
-export type OutboundJobKind = 'team_notification' | 'lead_pdf' | 'lead_thankyou';
+export type OutboundJobKind =
+	| 'team_notification'
+	| 'lead_pdf'
+	| 'lead_thankyou'
+	| 'lead_whatsapp';
 
 const RETRY_MS = 5 * 60 * 1000;
 
@@ -70,6 +75,14 @@ export async function processDueEmailOutboundJobs(
 					break;
 				case 'lead_thankyou':
 					await sendDirectContactThankYou({
+						leadName: payload.leadName ?? '',
+						leadEmail: payload.leadEmail ?? '',
+						pdfType: payload.pdfType ?? 'departamentos',
+						token: payload.token ?? ''
+					});
+					break;
+				case 'lead_whatsapp':
+					await sendWhatsappLeadThankYou({
 						leadName: payload.leadName ?? '',
 						leadEmail: payload.leadEmail ?? '',
 						pdfType: payload.pdfType ?? 'departamentos',

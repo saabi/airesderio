@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	type LeadRow = {
 		id: string;
@@ -26,8 +27,7 @@
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
-	let selectedIds = $state(new Set<string>());
-	let selectAllInput = $state<HTMLInputElement | null>(null);
+	let selectedIds = new SvelteSet<string>();
 
 	let purgePassword = $state('');
 	let purgeLoading = $state(false);
@@ -37,9 +37,23 @@
 	let deleteError = $state<string | null>(null);
 	let starError = $state<string | null>(null);
 	let activeMessagePopout = $state<MessagePopoutState | null>(null);
+	let manualNombre = $state('');
+	let manualApellido = $state('');
+	let manualCorreo = $state('');
+	let manualTelefono = $state('');
+	let manualMensaje = $state('');
+	let manualReason = $state<'manual-entry' | 'whatsapp-lead'>('whatsapp-lead');
+	let sendPdfEmail = $state(true);
+	let dontInviteToWhatsapp = $state(false);
+	let manualSubmitLoading = $state(false);
+	let manualSubmitStatus = $state<{ type: 'success' | 'error'; text: string } | null>(null);
+	let showManualLeadModal = $state(false);
+	let manualLeadTriggerButton: HTMLButtonElement | null = null;
 
 	/** Orden opcional: destacados arriba, luego por fecha (más recientes primero). */
 	let starredFirst = $state(false);
+
+	const manualEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 	function sortLeadsStarredFirst(list: LeadRow[]): LeadRow[] {
 		return [...list].sort((a, b) => {
@@ -60,7 +74,10 @@
 				...row,
 				starred: Boolean(row.starred)
 			})) as LeadRow[];
-			selectedIds = new Set([...selectedIds].filter((id) => leads.some((l) => l.id === id)));
+			const validIds = new Set(leads.map((l) => l.id));
+			for (const id of selectedIds) {
+				if (!validIds.has(id)) selectedIds.delete(id);
+			}
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error desconocido';
 		} finally {
@@ -72,6 +89,8 @@
 		void loadLeads();
 	});
 
+	const canToggleDontInviteToWhatsapp = $derived(manualReason === 'whatsapp-lead');
+
 	const visibleLeads = $derived(starredFirst ? sortLeadsStarredFirst(leads) : leads);
 
 	const visibleSelectedCount = $derived(
@@ -81,30 +100,21 @@
 	const selectAllChecked = $derived(
 		visibleLeads.length > 0 && visibleSelectedCount === visibleLeads.length
 	);
-
-	$effect(() => {
-		const el = selectAllInput;
-		if (!el) return;
-		const len = visibleLeads.length;
-		const n = visibleSelectedCount;
-		el.indeterminate = len > 0 && n > 0 && n < len;
-	});
+	const selectAllIndeterminate = $derived(
+		visibleLeads.length > 0 && visibleSelectedCount > 0 && visibleSelectedCount < visibleLeads.length
+	);
 
 	function toggleRow(id: string, checked: boolean) {
-		const next = new Set(selectedIds);
-		if (checked) next.add(id);
-		else next.delete(id);
-		selectedIds = next;
+		if (checked) selectedIds.add(id);
+		else selectedIds.delete(id);
 	}
 
 	function toggleSelectAll(checked: boolean) {
 		const ids = visibleLeads.map((l) => l.id);
-		const next = new Set(selectedIds);
 		for (const id of ids) {
-			if (checked) next.add(id);
-			else next.delete(id);
+			if (checked) selectedIds.add(id);
+			else selectedIds.delete(id);
 		}
-		selectedIds = next;
 	}
 
 	async function toggleStar(lead: LeadRow) {
@@ -151,7 +161,7 @@
 				return;
 			}
 			leads = leads.filter((l) => !ids.includes(l.id));
-			selectedIds = new Set();
+			selectedIds.clear();
 		} catch {
 			deleteError = 'Error de red al eliminar.';
 		} finally {
@@ -198,6 +208,119 @@
 		activeMessagePopout = null;
 	}
 
+	function handleReasonChange(reason: 'manual-entry' | 'whatsapp-lead') {
+		const becameWhatsapp = manualReason !== 'whatsapp-lead' && reason === 'whatsapp-lead';
+		manualReason = reason;
+		if (becameWhatsapp) {
+			dontInviteToWhatsapp = true;
+		}
+		if (reason !== 'whatsapp-lead') {
+			dontInviteToWhatsapp = false;
+		}
+	}
+
+	function handleSendPdfEmailChange(checked: boolean) {
+		sendPdfEmail = checked;
+	}
+
+	function openManualLeadModal() {
+		manualSubmitStatus = null;
+		showManualLeadModal = true;
+	}
+
+	function registerManualLeadTrigger(node: HTMLButtonElement) {
+		manualLeadTriggerButton = node;
+		return {
+			destroy() {
+				if (manualLeadTriggerButton === node) {
+					manualLeadTriggerButton = null;
+				}
+			}
+		};
+	}
+
+	async function closeManualLeadModalInternal() {
+		showManualLeadModal = false;
+		await tick();
+		manualLeadTriggerButton?.focus();
+	}
+
+	function closeManualLeadModal() {
+		if (manualSubmitLoading) return;
+		void closeManualLeadModalInternal();
+	}
+
+	function handleManualLeadModalKeydown(event: KeyboardEvent) {
+		if (!showManualLeadModal || event.key !== 'Escape') return;
+		event.preventDefault();
+		closeManualLeadModal();
+	}
+
+	async function submitManualLead(event: SubmitEvent) {
+		event.preventDefault();
+		manualSubmitStatus = null;
+
+		const nombre = manualNombre.trim();
+		const apellido = manualApellido.trim();
+		const correo = manualCorreo.trim();
+		const telefono = manualTelefono.trim();
+		const mensaje = manualMensaje.trim();
+		const reason = manualReason;
+
+		if (!nombre || !apellido || !correo || !reason) {
+			manualSubmitStatus = { type: 'error', text: 'Completá nombre, apellido, correo y razón.' };
+			return;
+		}
+
+		if (!manualEmailRegex.test(correo)) {
+			manualSubmitStatus = { type: 'error', text: 'Ingresá un correo válido.' };
+			return;
+		}
+
+		manualSubmitLoading = true;
+		try {
+			const res = await fetch('/api/admin/leads', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					nombre,
+					apellido,
+					correo,
+					telefono,
+					mensaje,
+					reason,
+					sendPdfEmail,
+					dontInviteToWhatsapp
+				})
+			});
+			const data = await res.json().catch(() => ({}));
+			if (!res.ok) {
+				throw new Error(
+					typeof data.error === 'string' ? data.error : 'No se pudo crear el lead manualmente.'
+				);
+			}
+
+			manualNombre = '';
+			manualApellido = '';
+			manualCorreo = '';
+			manualTelefono = '';
+			manualMensaje = '';
+			manualReason = 'whatsapp-lead';
+			sendPdfEmail = true;
+			dontInviteToWhatsapp = false;
+			manualSubmitStatus = { type: 'success', text: 'Lead creado correctamente.' };
+			await loadLeads();
+			await closeManualLeadModalInternal();
+		} catch (e) {
+			manualSubmitStatus = {
+				type: 'error',
+				text: e instanceof Error ? e.message : 'Error de red al crear el lead.'
+			};
+		} finally {
+			manualSubmitLoading = false;
+		}
+	}
+
 	async function clearContactData() {
 		purgeError = null;
 		if (
@@ -226,7 +349,7 @@
 			}
 			purgePassword = '';
 			leads = [];
-			selectedIds = new Set();
+			selectedIds.clear();
 		} catch {
 			purgeError = 'Error de red al vaciar los datos.';
 		} finally {
@@ -240,6 +363,7 @@
 <svelte:head>
 	<title>Contactos - Admin | Aires de Río</title>
 </svelte:head>
+<svelte:window onkeydown={handleManualLeadModalKeydown} />
 
 <h1>Contactos</h1>
 
@@ -255,6 +379,14 @@
 			<input type="checkbox" bind:checked={starredFirst} />
 			<span>Destacados primero</span>
 		</label>
+		<button
+			type="button"
+			class="bulk-manual-lead"
+			use:registerManualLeadTrigger
+			onclick={openManualLeadModal}
+		>
+			Nuevo lead manual
+		</button>
 		<span class="bulk-toolbar-spacer" aria-hidden="true"></span>
 		<span class="bulk-count">{selectionCount} seleccionado{selectionCount === 1 ? '' : 's'}</span>
 		<button
@@ -283,7 +415,7 @@
 				<tr>
 					<th class="th-check" scope="col">
 						<input
-							bind:this={selectAllInput}
+							indeterminate={selectAllIndeterminate}
 							type="checkbox"
 							checked={selectAllChecked}
 							aria-label="Seleccionar todos los contactos visibles"
@@ -368,6 +500,107 @@
 			{/if}
 		</div>
 	</div>
+
+	{#if showManualLeadModal}
+		<div class="manual-lead-modal-backdrop">
+			<button
+				type="button"
+				class="manual-lead-modal-dismiss"
+				aria-label="Cerrar formulario de lead manual"
+				disabled={manualSubmitLoading}
+				onclick={closeManualLeadModal}
+			></button>
+			<div
+				class="manual-lead-card manual-lead-modal-card"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="manual-lead-modal-title"
+			>
+				<div class="manual-lead-modal-header">
+					<h2 id="manual-lead-modal-title">Cargar lead manual</h2>
+					<button
+						type="button"
+						class="manual-lead-close"
+						aria-label="Cerrar formulario de lead manual"
+						disabled={manualSubmitLoading}
+						onclick={closeManualLeadModal}
+					>
+						×
+					</button>
+				</div>
+				<form class="manual-lead-form" onsubmit={submitManualLead}>
+					<label>
+						<span>Nombre *</span>
+						<input type="text" bind:value={manualNombre} required disabled={manualSubmitLoading} />
+					</label>
+					<label>
+						<span>Apellido *</span>
+						<input type="text" bind:value={manualApellido} required disabled={manualSubmitLoading} />
+					</label>
+					<label>
+						<span>Correo *</span>
+						<input type="email" bind:value={manualCorreo} required disabled={manualSubmitLoading} />
+					</label>
+					<label>
+						<span>Teléfono</span>
+						<input type="text" bind:value={manualTelefono} disabled={manualSubmitLoading} />
+					</label>
+					<label>
+						<span>Razón *</span>
+						<select
+							value={manualReason}
+							required
+							disabled={manualSubmitLoading}
+							onchange={(event) =>
+								handleReasonChange(event.currentTarget.value as 'manual-entry' | 'whatsapp-lead')}
+						>
+							<option value="manual-entry">manual-entry</option>
+							<option value="whatsapp-lead">whatsapp-lead</option>
+						</select>
+					</label>
+					<label class="manual-lead-message">
+						<span>Mensaje</span>
+						<textarea rows="3" bind:value={manualMensaje} disabled={manualSubmitLoading}></textarea>
+					</label>
+					<label class="manual-lead-checkbox">
+						<input
+							type="checkbox"
+							checked={sendPdfEmail}
+							disabled={manualSubmitLoading}
+							onchange={(event) => handleSendPdfEmailChange(event.currentTarget.checked)}
+						/>
+						<span>Enviar email con ficha PDF</span>
+					</label>
+					<label class="manual-lead-checkbox">
+						<input
+							type="checkbox"
+							bind:checked={dontInviteToWhatsapp}
+							disabled={manualSubmitLoading || !canToggleDontInviteToWhatsapp}
+						/>
+						<span>No invitar a WhatsApp en el email</span>
+					</label>
+					<div class="manual-lead-actions">
+						<button type="button" class="manual-lead-cancel" onclick={closeManualLeadModal}>
+							Cancelar
+						</button>
+						<button type="submit" disabled={manualSubmitLoading}>
+							{manualSubmitLoading ? 'Guardando…' : 'Crear lead manual'}
+						</button>
+					</div>
+				</form>
+				{#if manualSubmitStatus}
+					<p
+						class="manual-lead-status"
+						class:is-success={manualSubmitStatus.type === 'success'}
+						class:is-error={manualSubmitStatus.type === 'error'}
+						role="status"
+					>
+						{manualSubmitStatus.text}
+					</p>
+				{/if}
+			</div>
+		</div>
+	{/if}
 {/if}
 
 <section class="danger-zone" aria-labelledby="danger-zone-title">
@@ -419,6 +652,105 @@
 		font-size: 0.9rem;
 	}
 
+	.manual-lead-card {
+		margin: 0 0 1rem;
+		padding: 1rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--color-border-default);
+		background: var(--color-bg-canvas);
+	}
+
+	.manual-lead-card h2 {
+		margin: 0 0 0.75rem;
+		font-size: 1.05rem;
+		font-weight: 600;
+		color: var(--color-text-primary);
+	}
+
+	.manual-lead-form {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		gap: 0.75rem;
+	}
+
+	.manual-lead-form label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		font-size: 0.85rem;
+		color: var(--color-text-secondary);
+	}
+
+	.manual-lead-form input,
+	.manual-lead-form textarea,
+	.manual-lead-form select {
+		padding: 0.5rem 0.6rem;
+		border: 1px solid var(--color-border-default);
+		border-radius: 0.35rem;
+		font: inherit;
+		color: var(--color-text-primary);
+		background: var(--color-bg-canvas);
+	}
+
+	.manual-lead-message {
+		grid-column: 1 / -1;
+	}
+
+	.manual-lead-checkbox {
+		flex-direction: row !important;
+		align-items: center;
+		gap: 0.45rem !important;
+		color: var(--color-text-primary) !important;
+	}
+
+	.manual-lead-checkbox input {
+		width: 1rem;
+		height: 1rem;
+		accent-color: var(--color-accent-primary, #4497b9);
+	}
+
+	.manual-lead-actions {
+		grid-column: 1 / -1;
+		display: flex;
+		gap: 0.5rem;
+		justify-content: flex-end;
+	}
+
+	.manual-lead-actions button {
+		padding: 0.5rem 0.85rem;
+		font: inherit;
+		font-weight: 600;
+		color: #fff;
+		background: var(--color-accent-primary, #4497b9);
+		border: none;
+		border-radius: 0.35rem;
+		cursor: pointer;
+	}
+
+	.manual-lead-actions button:disabled {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+
+	.manual-lead-cancel {
+		color: var(--color-text-primary) !important;
+		background: transparent !important;
+		border: 1px solid var(--color-border-default) !important;
+	}
+
+	.manual-lead-status {
+		margin: 0.75rem 0 0;
+		font-size: 0.875rem;
+	}
+
+	.manual-lead-status.is-success {
+		color: #166534;
+	}
+
+	.manual-lead-status.is-error {
+		color: var(--color-error-text, #721c24);
+	}
+
 	.bulk-toolbar {
 		display: flex;
 		flex-wrap: wrap;
@@ -457,6 +789,22 @@
 		color: var(--color-text-secondary);
 	}
 
+	.bulk-manual-lead {
+		padding: 0.4rem 0.75rem;
+		font: inherit;
+		font-weight: 600;
+		font-size: 0.875rem;
+		color: #fff;
+		background: var(--color-accent-primary, #4497b9);
+		border: none;
+		border-radius: 0.35rem;
+		cursor: pointer;
+	}
+
+	.bulk-manual-lead:hover {
+		background: color-mix(in srgb, var(--color-accent-primary, #4497b9) 85%, black);
+	}
+
 	.bulk-delete {
 		padding: 0.4rem 0.75rem;
 		font: inherit;
@@ -477,6 +825,70 @@
 		opacity: 0.45;
 		cursor: not-allowed;
 		filter: grayscale(0.25);
+	}
+
+	.manual-lead-modal-backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 12000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem;
+		background: color-mix(in srgb, #000 45%, transparent);
+	}
+
+	.manual-lead-modal-dismiss {
+		position: absolute;
+		inset: 0;
+		border: 0;
+		padding: 0;
+		margin: 0;
+		background: transparent;
+		cursor: default;
+	}
+
+	.manual-lead-modal-card {
+		position: relative;
+		z-index: 1;
+		margin: 0;
+		width: min(56rem, calc(100vw - 2rem));
+		max-height: calc(100vh - 2rem);
+		overflow: auto;
+	}
+
+	.manual-lead-modal-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.manual-lead-modal-header h2 {
+		margin: 0;
+		font-size: 1.05rem;
+		font-weight: 600;
+		color: var(--color-text-primary);
+	}
+
+	.manual-lead-close {
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		font: inherit;
+		font-size: 1.35rem;
+		line-height: 1;
+		color: var(--color-text-primary);
+		background: transparent;
+		border: 1px solid var(--color-border-default);
+		border-radius: 0.35rem;
+		cursor: pointer;
+	}
+
+	.manual-lead-close:disabled {
+		opacity: 0.65;
+		cursor: not-allowed;
 	}
 
 	.table-wrap {

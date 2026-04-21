@@ -307,3 +307,58 @@ export async function sendDirectContactThankYou(params: SendDirectContactThankYo
 		attachments: [getInlineLogoAttachment()]
 	});
 }
+
+export function buildWhatsappLeadThankYouEmail(
+	params: SendDirectContactThankYouParams
+): EmailPreviewPayload {
+	const { leadName, pdfType, token } = params;
+	const downloadUrl = `${getSiteUrl()}/api/pdf/${encodeURIComponent(pdfType)}?token=${encodeURIComponent(token)}`;
+
+	const subject = 'Gracias por tu consulta — Aires de Río';
+	const body = `
+		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">¡Hola ${leadName}!</h2>
+		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
+			Gracias por tu interés en <strong>Aires de Río</strong> y por haberte comunicado con nuestro equipo.
+		</p>
+		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
+			Te compartimos la ficha técnica del proyecto y de las unidades disponibles para que puedas revisar sus características, superficies y equipamiento.
+		</p>
+		<table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:24px 0;">
+			<tr>
+				<td align="center">
+					<table cellpadding="0" cellspacing="0" role="presentation">
+						<tr>
+							<td align="center" style="background:${EMAIL_CTA_BUTTON_BG}; border:2px solid ${EMAIL_CTA_BUTTON_BORDER}; border-radius:6px;">
+								<a href="${downloadUrl}" style="display:inline-block; padding:14px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
+									Descargar ficha técnica
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<p style="margin:0 0 8px; font-size:15px; color:#333; line-height:1.6;">
+			Quedamos a disposición para acompañarte en cada paso.
+		</p>
+		<p style="margin:0; font-size:15px; color:#333;">
+			<strong>Equipo Aires de Río</strong>
+		</p>
+	`;
+	return { subject, html: emailWrapper(body) };
+}
+
+export async function sendWhatsappLeadThankYou(
+	params: SendDirectContactThankYouParams
+): Promise<void> {
+	const { subject, html } = buildWhatsappLeadThankYouEmail(params);
+
+	await getTransporter().sendMail({
+		from: getFrom(),
+		to: params.leadEmail,
+		replyTo: env.CONTACT_FORM_RECIPIENT || 'info@airesderio.com',
+		subject,
+		html,
+		attachments: [getInlineLogoAttachment()]
+	});
+}
