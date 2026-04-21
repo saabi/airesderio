@@ -91,7 +91,9 @@
 		void loadLeads();
 	});
 
-	const canToggleDontInviteToWhatsapp = $derived(manualReason === 'whatsapp-lead');
+	const canToggleDontInviteToWhatsapp = $derived(
+		manualReason === 'whatsapp-lead' && sendPdfEmail
+	);
 
 	const visibleLeads = $derived(starredFirst ? sortLeadsStarredFirst(leads) : leads);
 
@@ -580,19 +582,19 @@
 						<label class="manual-lead-checkbox">
 							<input
 								type="checkbox"
+								bind:checked={notifyInfoEmail}
+								disabled={manualSubmitLoading}
+							/>
+							<span>Notificar a info@airesderio.com</span>
+						</label>
+						<label class="manual-lead-checkbox">
+							<input
+								type="checkbox"
 								checked={sendPdfEmail}
 								disabled={manualSubmitLoading}
 								onchange={(event) => handleSendPdfEmailChange(event.currentTarget.checked)}
 							/>
 							<span>Enviar email con ficha PDF</span>
-						</label>
-						<label class="manual-lead-checkbox">
-							<input
-								type="checkbox"
-								bind:checked={notifyInfoEmail}
-								disabled={manualSubmitLoading}
-							/>
-							<span>Notificar a info@airesderio.com</span>
 						</label>
 						<label class="manual-lead-checkbox">
 							<input
