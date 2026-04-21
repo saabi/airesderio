@@ -72,7 +72,8 @@ export const GET: RequestHandler = async ({ cookies }) => {
  *   "mensaje"?: string,
  *   "reason": "manual-entry" | "whatsapp-lead",
  *   "sendPdfEmail": boolean,
- *   "dontInviteToWhatsapp"?: boolean
+ *   "dontInviteToWhatsapp"?: boolean,
+ *   "notifyInfoEmail"?: boolean
  * }
  */
 export const POST: RequestHandler = async ({ request, cookies }) => {
@@ -108,6 +109,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	const reasonRaw = typeof obj.reason === 'string' ? sanitizeInput(obj.reason, 50) : '';
 	const sendPdfEmail = obj.sendPdfEmail === true;
 	const dontInviteToWhatsapp = obj.dontInviteToWhatsapp === true;
+	const notifyInfoEmail = obj.notifyInfoEmail === true;
 
 	if (!nombre || !apellido || !correo || !reasonRaw) {
 		return json({ error: 'Completá los campos requeridos.' }, { status: 400 });
@@ -155,23 +157,25 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			});
 		}
 
-		try {
-			await sendContactNotification({
-				leadName,
-				leadEmail: correo,
-				leadPhone: telefono ?? undefined,
-				leadMessage: mensaje ?? undefined,
-				intent: reasonRaw
-			});
-		} catch (emailErr) {
-			console.error('SMTP error (team notification):', emailErr);
-			await enqueueOutboundEmailJob(db, lead.id, 'team_notification', {
-				intent: reasonRaw,
-				leadName,
-				leadEmail: correo,
-				leadPhone: telefono ?? undefined,
-				leadMessage: mensaje ?? undefined
-			});
+		if (notifyInfoEmail) {
+			try {
+				await sendContactNotification({
+					leadName,
+					leadEmail: correo,
+					leadPhone: telefono ?? undefined,
+					leadMessage: mensaje ?? undefined,
+					intent: reasonRaw
+				});
+			} catch (emailErr) {
+				console.error('SMTP error (team notification):', emailErr);
+				await enqueueOutboundEmailJob(db, lead.id, 'team_notification', {
+					intent: reasonRaw,
+					leadName,
+					leadEmail: correo,
+					leadPhone: telefono ?? undefined,
+					leadMessage: mensaje ?? undefined
+				});
+			}
 		}
 
 		if (sendPdfEmail && token) {

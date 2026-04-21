@@ -44,6 +44,7 @@
 	let manualMensaje = $state('');
 	let manualReason = $state<'manual-entry' | 'whatsapp-lead'>('whatsapp-lead');
 	let sendPdfEmail = $state(true);
+	let notifyInfoEmail = $state(false);
 	let dontInviteToWhatsapp = $state(true);
 	let manualSubmitLoading = $state(false);
 	let manualSubmitStatus = $state<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -215,7 +216,7 @@
 			dontInviteToWhatsapp = true;
 		}
 		if (reason !== 'whatsapp-lead') {
-			dontInviteToWhatsapp = true;
+			dontInviteToWhatsapp = false;
 		}
 	}
 
@@ -288,6 +289,7 @@
 					mensaje,
 					reason,
 					sendPdfEmail,
+					notifyInfoEmail,
 					dontInviteToWhatsapp
 				})
 			});
@@ -305,6 +307,7 @@
 			manualMensaje = '';
 			manualReason = 'whatsapp-lead';
 			sendPdfEmail = true;
+			notifyInfoEmail = false;
 			dontInviteToWhatsapp = true;
 			manualSubmitStatus = { type: 'success', text: 'Lead creado correctamente.' };
 			await loadLeads();
@@ -568,6 +571,14 @@
 							onchange={(event) => handleSendPdfEmailChange(event.currentTarget.checked)}
 						/>
 						<span>Enviar email con ficha PDF</span>
+					</label>
+					<label class="manual-lead-checkbox">
+						<input
+							type="checkbox"
+							bind:checked={notifyInfoEmail}
+							disabled={manualSubmitLoading}
+						/>
+						<span>Notificar a info@airesderio.com</span>
 					</label>
 					<label class="manual-lead-checkbox">
 						<input

@@ -318,7 +318,7 @@ export function buildWhatsappLeadThankYouEmail(
 	const body = `
 		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">¡Hola ${leadName}!</h2>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
-			Gracias por tu interés en <strong>Aires de Río</strong> y por haberte comunicado con nuestro equipo.
+			Gracias por haberte comunicado con nuestro equipo.
 		</p>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
 			Te compartimos la ficha técnica del proyecto y de las unidades disponibles para que puedas revisar sus características, superficies y equipamiento.
@@ -339,7 +339,7 @@ export function buildWhatsappLeadThankYouEmail(
 			</tr>
 		</table>
 		<p style="margin:0 0 8px; font-size:15px; color:#333; line-height:1.6;">
-			Quedamos a disposición para acompañarte en cada paso.
+			Quedamos a tu disposición para cualquier otro duda que te surja.
 		</p>
 		<p style="margin:0; font-size:15px; color:#333;">
 			<strong>Equipo Aires de Río</strong>
