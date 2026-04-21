@@ -10,42 +10,43 @@
 <section class='intro' id='proyecto' aria-labelledby='proyecto-heading'>
 	<VisuallyHidden id='proyecto-heading' tag='h2'>Sobre el Proyecto</VisuallyHidden>
 	<div class='intro-copy'>
-		<section id='welcome' class='welcome-section'>
-			<p
-				class='welcome scroll-animate'
-				use:scrollReveal
-				style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
-			>
-				Santiago del Estero da la bienvenida a <AiresDeRioLogo class='logo-inline' height='2em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> un nuevo proyecto de departamentos con
-				las mejores prestaciones y estratégica ubicación.
+		<div
+			class='scroll-animate'
+			use:scrollReveal
+			style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+		>
+			<section id='welcome' class='welcome-section'>
+				<p class='welcome'>
+					Santiago del Estero da la bienvenida a <AiresDeRioLogo class='logo-inline' height='2em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> un nuevo proyecto de departamentos con
+					las mejores prestaciones y estratégica ubicación.
+				</p>
+			</section>
+			<p>
+				Quienes vivan en <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> gozarán de una multi-oferta de entretenimiento, shopping, áreas
+				verdes, deportes, confiterías y eventos culturales.
 			</p>
-		</section>
-		<p class='scroll-animate' use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}>
-			Quienes vivan en <AiresDeRioLogo class='logo-inline' height='1em' theme={$theme} showIsotype={false} fitViewBox={true} showDepartamentos={false} /> gozarán de una multi-oferta de entretenimiento, shopping, áreas
-			verdes, deportes, confiterías y eventos culturales.
-		</p>
-		<p class='scroll-animate' use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}>
-			El edificio ofrece departamentos de 2 y 4 ambientes amplios y luminosos, donde el diseño y las
-			comodidades han sido pensadas para satisfacer a quienes quieran una vida cómoda y a un paso de
-			todo.
-		</p>
+			<p>
+				El edificio ofrece departamentos de 2 y 4 ambientes amplios y luminosos, donde el diseño y las
+				comodidades han sido pensadas para satisfacer a quienes quieran una vida cómoda y a un paso de
+				todo.
+			</p>
+		</div>
 	</div>
-	<aside class='kpis' aria-labelledby='kpis-heading'>
+	<aside
+		class='kpis scroll-animate'
+		use:scrollReveal
+		style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}
+		aria-labelledby='kpis-heading'
+	>
 		<VisuallyHidden id='kpis-heading' tag='h3'
 			>Características principales del proyecto</VisuallyHidden
 		>
 		<dl>
-			<dt class='kpi scroll-animate' use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}>
-				<strong>2 Y 4 AMBIENTES</strong><small>1 dormitorio<br>2 dormitorios + estudio</small>
-			</dt>
+			<dt class='kpi'><strong>2 Y 4 AMBIENTES</strong><small>1 dormitorio<br>2 dormitorios + estudio</small></dt>
 			<VisuallyHidden tag='dd'>Tipos de unidades disponibles</VisuallyHidden>
-			<dt class='kpi scroll-animate' use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}>
-				<strong>PISCINA</strong><small>Con solarium húmedo en terraza</small>
-			</dt>
+			<dt class='kpi'><strong>PISCINA</strong><small>Con solarium húmedo en terraza</small></dt>
 			<VisuallyHidden tag='dd'>Amenities en terraza con piscina y solarium húmedo</VisuallyHidden>
-			<dt class='kpi scroll-animate' use:scrollReveal style={`--scroll-animate-offset: ${animationOffset('visual')}; --scroll-animate-duration: ${animationDuration()};`}>
-				<strong>CAFETERÍA</strong><small>En planta baja</small>
-			</dt>
+			<dt class='kpi'><strong>CAFETERÍA</strong><small>En planta baja</small></dt>
 			<VisuallyHidden tag='dd'>Servicio de cafetería incluido</VisuallyHidden>
 		</dl>
 	</aside>
@@ -113,10 +114,8 @@
 		display: contents;
 	}
 
-	.kpis dt.kpi {
-		/* Layout: one box per KPI for scroll reveal + grid */
-		display: block;
-		min-width: 0;
+	.kpis dt {
+		display: contents;
 	}
 
 	.kpi strong {
@@ -129,10 +128,6 @@
 		line-height: 1;
 		letter-spacing: 0.02em;
 		color: #4497b9;
-	}
-
-	.kpi--grey strong {
-		color: #6d6d6d;
 	}
 
 	.kpi small {
