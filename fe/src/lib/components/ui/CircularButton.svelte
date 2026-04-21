@@ -6,6 +6,7 @@
 	interface Props {
 		onClick: () => void;
 		ariaLabel: string;
+		title?: string;
 		size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | number;
 		variant?: 'overlay' | 'solid' | 'bordered' | 'accent';
 		disabled?: boolean;
@@ -19,6 +20,7 @@
 	let {
 		onClick,
 		ariaLabel,
+		title: titleAttr,
 		size = 'md',
 		variant = 'overlay',
 		disabled = false,
@@ -62,6 +64,7 @@
 	class:disabled={disabled}
 	onclick={onClick}
 	aria-label={ariaLabel}
+	title={titleAttr}
 	disabled={disabled}
 	style="--button-size: {sizeValue}; --button-size-mobile: {mobileSizeValue}; {inlineStyle}"
 >
@@ -181,7 +184,6 @@
 		border-color: var(--color-border);
 		color: var(--color-text-secondary);
 		cursor: not-allowed;
-		pointer-events: none;
 	}
 
 	.circular-button.accent.disabled {

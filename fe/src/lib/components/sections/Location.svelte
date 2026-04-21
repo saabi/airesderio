@@ -166,6 +166,7 @@
 					variant="accent"
 					size="xxl"
 					ariaLabel="Anterior ubicación"
+					title="Ubicación anterior en el mapa"
 					onClick={() => mapComponent?.prev()}
 				>
 					<ArrowLeft />
@@ -174,6 +175,9 @@
 					variant="accent"
 					size="xxl"
 					ariaLabel="Volver al estado inicial"
+					title={hasPlaceSelected
+						? 'Volver al estado inicial del mapa'
+						: 'Seleccioná un punto en el mapa para activar esta acción'}
 					onClick={() => mapComponent?.reset()}
 					disabled={!hasPlaceSelected}
 				>
@@ -183,6 +187,7 @@
 					variant="accent"
 					size="xxl"
 					ariaLabel="Siguiente ubicación"
+					title="Siguiente ubicación en el mapa"
 					onClick={() => mapComponent?.next()}
 				>
 					<ArrowRight />
