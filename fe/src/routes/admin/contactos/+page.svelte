@@ -44,7 +44,7 @@
 	let manualMensaje = $state('');
 	let manualReason = $state<'manual-entry' | 'whatsapp-lead'>('whatsapp-lead');
 	let sendPdfEmail = $state(true);
-	let dontInviteToWhatsapp = $state(false);
+	let dontInviteToWhatsapp = $state(true);
 	let manualSubmitLoading = $state(false);
 	let manualSubmitStatus = $state<{ type: 'success' | 'error'; text: string } | null>(null);
 	let showManualLeadModal = $state(false);
@@ -215,7 +215,7 @@
 			dontInviteToWhatsapp = true;
 		}
 		if (reason !== 'whatsapp-lead') {
-			dontInviteToWhatsapp = false;
+			dontInviteToWhatsapp = true;
 		}
 	}
 
@@ -230,11 +230,9 @@
 
 	function registerManualLeadTrigger(node: HTMLButtonElement) {
 		manualLeadTriggerButton = node;
-		return {
-			destroy() {
-				if (manualLeadTriggerButton === node) {
-					manualLeadTriggerButton = null;
-				}
+		return () => {
+			if (manualLeadTriggerButton === node) {
+				manualLeadTriggerButton = null;
 			}
 		};
 	}
@@ -307,7 +305,7 @@
 			manualMensaje = '';
 			manualReason = 'whatsapp-lead';
 			sendPdfEmail = true;
-			dontInviteToWhatsapp = false;
+			dontInviteToWhatsapp = true;
 			manualSubmitStatus = { type: 'success', text: 'Lead creado correctamente.' };
 			await loadLeads();
 			await closeManualLeadModalInternal();
@@ -382,7 +380,7 @@
 		<button
 			type="button"
 			class="bulk-manual-lead"
-			use:registerManualLeadTrigger
+			{@attach registerManualLeadTrigger}
 			onclick={openManualLeadModal}
 		>
 			Nuevo lead manual
