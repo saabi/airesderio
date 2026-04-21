@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-	import { SvelteSet } from 'svelte/reactivity';
+	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 
 	type LeadRow = {
 		id: string;
@@ -51,6 +51,19 @@
 	let manualSubmitStatus = $state<{ type: 'success' | 'error'; text: string } | null>(null);
 	let showManualLeadModal = $state(false);
 	let manualLeadTriggerButton: HTMLButtonElement | null = null;
+	let showEditLeadModal = $state(false);
+	let editLeadId = $state('');
+	let editFirstName = $state('');
+	let editLastName = $state('');
+	let editEmail = $state('');
+	let editPhone = $state('');
+	let editIntent = $state('');
+	let editMessage = $state('');
+	let editSubmitLoading = $state(false);
+	let editSubmitStatus = $state<{ type: 'success' | 'error'; text: string } | null>(null);
+	let editPreventDuplicate = $state(true);
+	let editLeadRestoreTriggerId = $state<string | null>(null);
+	const editLeadTriggerButtons = new SvelteMap<string, HTMLButtonElement>();
 
 	/** Orden opcional: destacados arriba, luego por fecha (más recientes primero). */
 	let starredFirst = $state(false);
@@ -227,6 +240,53 @@
 		sendPdfEmail = checked;
 	}
 
+	function registerEditLeadTrigger(id: string) {
+		return (node: HTMLButtonElement) => {
+			editLeadTriggerButtons.set(id, node);
+			return () => {
+				if (editLeadTriggerButtons.get(id) === node) {
+					editLeadTriggerButtons.delete(id);
+				}
+			};
+		};
+	}
+
+	function isEmailDuplicatedForOtherLead(leadId: string, email: string): boolean {
+		const normalized = email.trim().toLowerCase();
+		if (!normalized) return false;
+		return leads.some((row) => row.id !== leadId && row.email.trim().toLowerCase() === normalized);
+	}
+
+	function openEditLeadModal(lead: LeadRow) {
+		editLeadId = lead.id;
+		editFirstName = lead.firstName;
+		editLastName = lead.lastName;
+		editEmail = lead.email;
+		editPhone = lead.phone ?? '';
+		editIntent = lead.intent;
+		editMessage = lead.message ?? '';
+		editPreventDuplicate = !isEmailDuplicatedForOtherLead(lead.id, lead.email);
+		editLeadRestoreTriggerId = lead.id;
+		editSubmitStatus = null;
+		showEditLeadModal = true;
+	}
+
+	async function closeEditLeadModalInternal() {
+		showEditLeadModal = false;
+		editSubmitStatus = null;
+		const triggerId = editLeadRestoreTriggerId;
+		editLeadRestoreTriggerId = null;
+		await tick();
+		if (triggerId) {
+			editLeadTriggerButtons.get(triggerId)?.focus();
+		}
+	}
+
+	function closeEditLeadModal() {
+		if (editSubmitLoading) return;
+		void closeEditLeadModalInternal();
+	}
+
 	function openManualLeadModal() {
 		manualSubmitStatus = null;
 		showManualLeadModal = true;
@@ -253,9 +313,85 @@
 	}
 
 	function handleManualLeadModalKeydown(event: KeyboardEvent) {
-		if (!showManualLeadModal || event.key !== 'Escape') return;
+		if (event.key !== 'Escape') return;
 		event.preventDefault();
-		closeManualLeadModal();
+		if (showEditLeadModal) {
+			closeEditLeadModal();
+			return;
+		}
+		if (showManualLeadModal) {
+			closeManualLeadModal();
+		}
+	}
+
+	async function submitEditLead(event: SubmitEvent) {
+		event.preventDefault();
+		editSubmitStatus = null;
+
+		const firstName = editFirstName.trim();
+		const lastName = editLastName.trim();
+		const email = editEmail.trim();
+		const phone = editPhone.trim();
+		const intent = editIntent.trim();
+		const message = editMessage.trim();
+
+		if (!email) {
+			editSubmitStatus = { type: 'error', text: 'Completá el correo.' };
+			return;
+		}
+
+		if (!manualEmailRegex.test(email)) {
+			editSubmitStatus = { type: 'error', text: 'Ingresá un correo válido.' };
+			return;
+		}
+
+		if (!intent) {
+			editSubmitStatus = { type: 'error', text: 'Completá la intención.' };
+			return;
+		}
+
+		if (intent === 'whatsapp-lead' && !phone) {
+			editSubmitStatus = {
+				type: 'error',
+				text: 'Ingresá teléfono cuando la intención sea whatsapp-lead.'
+			};
+			return;
+		}
+
+		if (!editLeadId) {
+			editSubmitStatus = { type: 'error', text: 'No se encontró el lead a editar.' };
+			return;
+		}
+
+		editSubmitLoading = true;
+		try {
+			const res = await fetch(`/api/admin/leads/${encodeURIComponent(editLeadId)}`, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					firstName,
+					lastName,
+					email,
+					phone,
+					message,
+					intent,
+					allowDuplicate: !editPreventDuplicate
+				})
+			});
+			const data = await res.json().catch(() => ({}));
+			if (!res.ok) {
+				throw new Error(typeof data.error === 'string' ? data.error : 'No se pudo actualizar el lead.');
+			}
+			await loadLeads();
+			await closeEditLeadModalInternal();
+		} catch (e) {
+			editSubmitStatus = {
+				type: 'error',
+				text: e instanceof Error ? e.message : 'Error de red al actualizar el lead.'
+			};
+		} finally {
+			editSubmitLoading = false;
+		}
 	}
 
 	async function submitManualLead(event: SubmitEvent) {
@@ -442,6 +578,7 @@
 					<th>Intención</th>
 					<th>Email verificado</th>
 					<th>Descargas PDF</th>
+					<th class="th-actions">Acciones</th>
 					<th>Mensaje</th>
 				</tr>
 			</thead>
@@ -476,6 +613,16 @@
 						<td>{lead.intent}</td>
 						<td>{downloadsFor(lead) > 0 ? 'Sí' : 'No'}</td>
 						<td>{downloadsFor(lead)}</td>
+						<td class="td-actions">
+							<button
+								type="button"
+								class="row-edit-btn"
+								{@attach registerEditLeadTrigger(lead.id)}
+								onclick={() => openEditLeadModal(lead)}
+							>
+								Editar
+							</button>
+						</td>
 						<td class="message-cell">
 							{#if lead.message?.trim()}
 								<button
@@ -626,6 +773,96 @@
 						role="status"
 					>
 						{manualSubmitStatus.text}
+					</p>
+				{/if}
+			</div>
+		</div>
+	{/if}
+
+	{#if showEditLeadModal}
+		<div class="manual-lead-modal-backdrop">
+			<button
+				type="button"
+				class="manual-lead-modal-dismiss"
+				aria-label="Cerrar edición del lead"
+				disabled={editSubmitLoading}
+				onclick={closeEditLeadModal}
+			></button>
+			<div
+				class="manual-lead-card manual-lead-modal-card edit-lead-modal-card"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="edit-lead-modal-title"
+			>
+				<div class="manual-lead-modal-header">
+					<h2 id="edit-lead-modal-title">Editar lead</h2>
+					<button
+						type="button"
+						class="manual-lead-close"
+						aria-label="Cerrar edición del lead"
+						disabled={editSubmitLoading}
+						onclick={closeEditLeadModal}
+					>
+						×
+					</button>
+				</div>
+				<form class="manual-lead-form" onsubmit={submitEditLead}>
+					<label>
+						<span>Nombre</span>
+						<input type="text" bind:value={editFirstName} disabled={editSubmitLoading} />
+					</label>
+					<label>
+						<span>Apellido</span>
+						<input type="text" bind:value={editLastName} disabled={editSubmitLoading} />
+					</label>
+					<label>
+						<span>Correo *</span>
+						<input type="email" bind:value={editEmail} required disabled={editSubmitLoading} />
+					</label>
+					<label>
+						<span>Teléfono{editIntent === 'whatsapp-lead' ? ' *' : ''}</span>
+						<input
+							type="text"
+							bind:value={editPhone}
+							required={editIntent === 'whatsapp-lead'}
+							disabled={editSubmitLoading}
+						/>
+					</label>
+					<label>
+						<span>Intención</span>
+						<input type="text" bind:value={editIntent} required disabled={editSubmitLoading} />
+					</label>
+					<label class="manual-lead-message">
+						<span>Mensaje</span>
+						<textarea rows="3" bind:value={editMessage} disabled={editSubmitLoading}></textarea>
+					</label>
+					<div class="manual-lead-checkbox-group">
+						<label class="manual-lead-checkbox">
+							<input
+								type="checkbox"
+								bind:checked={editPreventDuplicate}
+								disabled={editSubmitLoading}
+							/>
+							<span>No permitir correo duplicado</span>
+						</label>
+					</div>
+					<div class="manual-lead-actions">
+						<button type="button" class="manual-lead-cancel" onclick={closeEditLeadModal}>
+							Cancelar
+						</button>
+						<button type="submit" disabled={editSubmitLoading}>
+							{editSubmitLoading ? 'Guardando…' : 'Guardar cambios'}
+						</button>
+					</div>
+				</form>
+				{#if editSubmitStatus}
+					<p
+						class="manual-lead-status"
+						class:is-success={editSubmitStatus.type === 'success'}
+						class:is-error={editSubmitStatus.type === 'error'}
+						role="status"
+					>
+						{editSubmitStatus.text}
 					</p>
 				{/if}
 			</div>
@@ -976,6 +1213,11 @@
 		padding-right: 0.25rem;
 	}
 
+	.th-actions,
+	.td-actions {
+		width: 6.5rem;
+	}
+
 	.leads-table th {
 		background: var(--color-bg-contrast);
 		font-weight: 600;
@@ -1015,6 +1257,31 @@
 	.star-btn:focus-visible {
 		outline: 2px solid var(--color-accent-primary);
 		outline-offset: 2px;
+	}
+
+	.row-edit-btn {
+		padding: 0.3rem 0.6rem;
+		font: inherit;
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: var(--color-accent-primary, #4497b9);
+		background: transparent;
+		border: 1px solid color-mix(in srgb, var(--color-accent-primary, #4497b9) 40%, transparent);
+		border-radius: 0.3rem;
+		cursor: pointer;
+	}
+
+	.row-edit-btn:hover {
+		background: color-mix(in srgb, var(--color-accent-primary, #4497b9) 10%, transparent);
+	}
+
+	.row-edit-btn:focus-visible {
+		outline: 2px solid var(--color-accent-primary, #4497b9);
+		outline-offset: 2px;
+	}
+
+	.edit-lead-modal-card {
+		width: min(46rem, calc(100vw - 2rem));
 	}
 
 	.leads-table td a {
