@@ -16,7 +16,10 @@
 				<button type="submit">Salir</button>
 			</form>
 		</nav>
-		<main class="admin-main">
+		<main
+			class="admin-main"
+			class:admin-main-full-width={$page.url.pathname.startsWith('/admin/contactos')}
+		>
 			{@render children()}
 		</main>
 	</div>
@@ -71,5 +74,10 @@
 		padding: 1.5rem;
 		max-width: 1200px;
 		margin: 0 auto;
+	}
+
+	.admin-main.admin-main-full-width {
+		max-width: none;
+		margin: 0;
 	}
 </style>
