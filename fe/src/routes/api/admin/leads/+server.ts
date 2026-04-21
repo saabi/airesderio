@@ -9,7 +9,7 @@ import {
 	sendWhatsappLeadThankYou
 } from '$lib/server/email.js';
 import { enqueueOutboundEmailJob } from '$lib/server/emailRetryQueue.js';
-import { desc, inArray } from 'drizzle-orm';
+import { desc, inArray, sql } from 'drizzle-orm';
 import { randomBytes } from 'crypto';
 
 const UUID_RE =
@@ -73,7 +73,8 @@ export const GET: RequestHandler = async ({ cookies }) => {
  *   "reason": "manual-entry" | "whatsapp-lead",
  *   "sendPdfEmail": boolean,
  *   "dontInviteToWhatsapp"?: boolean,
- *   "notifyInfoEmail"?: boolean
+ *   "notifyInfoEmail"?: boolean,
+ *   "allowDuplicate"?: boolean
  * }
  */
 export const POST: RequestHandler = async ({ request, cookies }) => {
@@ -110,9 +111,10 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	const sendPdfEmail = obj.sendPdfEmail === true;
 	const dontInviteToWhatsapp = obj.dontInviteToWhatsapp === true;
 	const notifyInfoEmail = obj.notifyInfoEmail === true;
+	const allowDuplicate = obj.allowDuplicate === true;
 
-	if (!nombre || !apellido || !correo || !reasonRaw) {
-		return json({ error: 'Completá los campos requeridos.' }, { status: 400 });
+	if (!correo || !reasonRaw) {
+		return json({ error: 'Completá correo y razón.' }, { status: 400 });
 	}
 
 	if (!isManualReason(reasonRaw)) {
@@ -123,8 +125,22 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		return json({ error: 'Ingresá un correo electrónico válido.' }, { status: 400 });
 	}
 
+	if (reasonRaw === 'whatsapp-lead' && !telefono) {
+		return json({ error: 'Ingresá teléfono para leads de WhatsApp.' }, { status: 400 });
+	}
+
 	try {
 		const db = getDb();
+		if (!allowDuplicate) {
+			const existing = await db
+				.select({ id: leads.id })
+				.from(leads)
+				.where(sql`lower(${leads.email}) = lower(${correo})`)
+				.limit(1);
+			if (existing.length > 0) {
+				return json({ error: 'Ya existe un lead con ese correo.' }, { status: 409 });
+			}
+		}
 		const [lead] = await db
 			.insert(leads)
 			.values({
@@ -142,7 +158,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			throw new Error('Failed to insert lead');
 		}
 
-		const leadName = `${nombre} ${apellido}`;
+		const leadName = `${nombre} ${apellido}`.trim();
 		let token: string | null = null;
 		const pdfType = 'departamentos';
 

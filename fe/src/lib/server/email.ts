@@ -97,6 +97,11 @@ const EMAIL_CTA_BUTTON_BORDER = '#000000';
 /** Single tappable WhatsApp CTA for HTML mail (wa.me + visible number). */
 const WHATSAPP_PHONE_ANCHOR = `<a href="https://wa.me/5493856222266" target="_blank" rel="noopener noreferrer" style="color:#0f766e;font-weight:600;text-decoration:underline;">WhatsApp al +54 9 385 6222266</a>`;
 
+function buildLeadGreeting(leadName: string): string {
+	const safeName = leadName.trim();
+	return safeName ? `¡Hola ${safeName}!` : '¡Hola!';
+}
+
 function emailWrapper(body: string): string {
 	return `
 <!DOCTYPE html>
@@ -195,10 +200,11 @@ export interface SendPdfLinkParams {
 export function buildPdfDownloadEmail(params: SendPdfLinkParams): EmailPreviewPayload {
 	const { leadName, pdfType, token } = params;
 	const downloadUrl = `${getSiteUrl()}/api/pdf/${encodeURIComponent(pdfType)}?token=${encodeURIComponent(token)}`;
+	const greeting = buildLeadGreeting(leadName);
 
 	const subject = 'Tu ficha técnica — Aires de Río';
 	const body = `
-		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">¡Hola ${leadName}!</h2>
+		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">${greeting}</h2>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
 			Gracias por tu interés en <strong>Aires de Río</strong>. Hacé clic en el botón para descargar la ficha técnica del proyecto.
 		</p>
@@ -257,10 +263,11 @@ export function buildDirectContactThankYouEmail(
 ): EmailPreviewPayload {
 	const { leadName, pdfType, token } = params;
 	const downloadUrl = `${getSiteUrl()}/api/pdf/${encodeURIComponent(pdfType)}?token=${encodeURIComponent(token)}`;
+	const greeting = buildLeadGreeting(leadName);
 
 	const subject = 'Gracias por tu consulta — Aires de Río';
 	const body = `
-		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">¡Hola ${leadName}!</h2>
+		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">${greeting}</h2>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
 			Gracias por tu interés en <strong>Aires de Río</strong>. Recibimos tu consulta y un asesor de nuestro equipo se pondrá en contacto con vos a la brevedad para brindarte información personalizada.
 		</p>
@@ -313,10 +320,11 @@ export function buildWhatsappLeadThankYouEmail(
 ): EmailPreviewPayload {
 	const { leadName, pdfType, token } = params;
 	const downloadUrl = `${getSiteUrl()}/api/pdf/${encodeURIComponent(pdfType)}?token=${encodeURIComponent(token)}`;
+	const greeting = buildLeadGreeting(leadName);
 
 	const subject = 'Gracias por tu consulta — Aires de Río';
 	const body = `
-		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">¡Hola ${leadName}!</h2>
+		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">${greeting}</h2>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
 			Gracias por haberte comunicado con nuestro equipo.
 		</p>

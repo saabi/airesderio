@@ -46,6 +46,7 @@
 	let sendPdfEmail = $state(true);
 	let notifyInfoEmail = $state(false);
 	let dontInviteToWhatsapp = $state(true);
+	let allowDuplicate = $state(false);
 	let manualSubmitLoading = $state(false);
 	let manualSubmitStatus = $state<{ type: 'success' | 'error'; text: string } | null>(null);
 	let showManualLeadModal = $state(false);
@@ -266,13 +267,18 @@
 		const mensaje = manualMensaje.trim();
 		const reason = manualReason;
 
-		if (!nombre || !apellido || !correo || !reason) {
-			manualSubmitStatus = { type: 'error', text: 'Completá nombre, apellido, correo y razón.' };
+		if (!correo || !reason) {
+			manualSubmitStatus = { type: 'error', text: 'Completá correo y razón.' };
 			return;
 		}
 
 		if (!manualEmailRegex.test(correo)) {
 			manualSubmitStatus = { type: 'error', text: 'Ingresá un correo válido.' };
+			return;
+		}
+
+		if (reason === 'whatsapp-lead' && !telefono) {
+			manualSubmitStatus = { type: 'error', text: 'Ingresá teléfono para leads de WhatsApp.' };
 			return;
 		}
 
@@ -290,7 +296,8 @@
 					reason,
 					sendPdfEmail,
 					notifyInfoEmail,
-					dontInviteToWhatsapp
+					dontInviteToWhatsapp,
+					allowDuplicate
 				})
 			});
 			const data = await res.json().catch(() => ({}));
@@ -309,6 +316,7 @@
 			sendPdfEmail = true;
 			notifyInfoEmail = false;
 			dontInviteToWhatsapp = true;
+			allowDuplicate = false;
 			manualSubmitStatus = { type: 'success', text: 'Lead creado correctamente.' };
 			await loadLeads();
 			await closeManualLeadModalInternal();
@@ -531,20 +539,25 @@
 				</div>
 				<form class="manual-lead-form" onsubmit={submitManualLead}>
 					<label>
-						<span>Nombre *</span>
-						<input type="text" bind:value={manualNombre} required disabled={manualSubmitLoading} />
+						<span>Nombre</span>
+						<input type="text" bind:value={manualNombre} disabled={manualSubmitLoading} />
 					</label>
 					<label>
-						<span>Apellido *</span>
-						<input type="text" bind:value={manualApellido} required disabled={manualSubmitLoading} />
+						<span>Apellido</span>
+						<input type="text" bind:value={manualApellido} disabled={manualSubmitLoading} />
 					</label>
 					<label>
 						<span>Correo *</span>
 						<input type="email" bind:value={manualCorreo} required disabled={manualSubmitLoading} />
 					</label>
 					<label>
-						<span>Teléfono</span>
-						<input type="text" bind:value={manualTelefono} disabled={manualSubmitLoading} />
+						<span>Teléfono{manualReason === 'whatsapp-lead' ? ' *' : ''}</span>
+						<input
+							type="text"
+							bind:value={manualTelefono}
+							required={manualReason === 'whatsapp-lead'}
+							disabled={manualSubmitLoading}
+						/>
 					</label>
 					<label>
 						<span>Razón *</span>
@@ -563,31 +576,37 @@
 						<span>Mensaje</span>
 						<textarea rows="3" bind:value={manualMensaje} disabled={manualSubmitLoading}></textarea>
 					</label>
-					<label class="manual-lead-checkbox">
-						<input
-							type="checkbox"
-							checked={sendPdfEmail}
-							disabled={manualSubmitLoading}
-							onchange={(event) => handleSendPdfEmailChange(event.currentTarget.checked)}
-						/>
-						<span>Enviar email con ficha PDF</span>
-					</label>
-					<label class="manual-lead-checkbox">
-						<input
-							type="checkbox"
-							bind:checked={notifyInfoEmail}
-							disabled={manualSubmitLoading}
-						/>
-						<span>Notificar a info@airesderio.com</span>
-					</label>
-					<label class="manual-lead-checkbox">
-						<input
-							type="checkbox"
-							bind:checked={dontInviteToWhatsapp}
-							disabled={manualSubmitLoading || !canToggleDontInviteToWhatsapp}
-						/>
-						<span>No invitar a WhatsApp en el email</span>
-					</label>
+					<div class="manual-lead-checkbox-group">
+						<label class="manual-lead-checkbox">
+							<input
+								type="checkbox"
+								checked={sendPdfEmail}
+								disabled={manualSubmitLoading}
+								onchange={(event) => handleSendPdfEmailChange(event.currentTarget.checked)}
+							/>
+							<span>Enviar email con ficha PDF</span>
+						</label>
+						<label class="manual-lead-checkbox">
+							<input
+								type="checkbox"
+								bind:checked={notifyInfoEmail}
+								disabled={manualSubmitLoading}
+							/>
+							<span>Notificar a info@airesderio.com</span>
+						</label>
+						<label class="manual-lead-checkbox">
+							<input
+								type="checkbox"
+								bind:checked={dontInviteToWhatsapp}
+								disabled={manualSubmitLoading || !canToggleDontInviteToWhatsapp}
+							/>
+							<span>No invitar a WhatsApp en el email</span>
+						</label>
+						<label class="manual-lead-checkbox">
+							<input type="checkbox" bind:checked={allowDuplicate} disabled={manualSubmitLoading} />
+							<span>Agregar aunque duplicado</span>
+						</label>
+					</div>
 					<div class="manual-lead-actions">
 						<button type="button" class="manual-lead-cancel" onclick={closeManualLeadModal}>
 							Cancelar
@@ -705,11 +724,23 @@
 		grid-column: 1 / -1;
 	}
 
-	.manual-lead-checkbox {
-		flex-direction: row !important;
+	.manual-lead-checkbox-group {
+		grid-column: 1 / -1;
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+		padding: 0.65rem 0.75rem;
+		border: 1px solid var(--color-border-subtle, var(--color-border-default));
+		border-radius: 0.45rem;
+		background: color-mix(in srgb, var(--color-bg-contrast) 70%, transparent);
+	}
+
+	.manual-lead-form .manual-lead-checkbox {
+		display: flex;
+		flex-direction: row;
 		align-items: center;
-		gap: 0.45rem !important;
-		color: var(--color-text-primary) !important;
+		gap: 0.45rem;
+		color: var(--color-text-primary);
 	}
 
 	.manual-lead-checkbox input {
