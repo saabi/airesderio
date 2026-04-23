@@ -90,9 +90,13 @@
 	});
 
 	function handleVideoEnd() {
-		videoNotEnded = false;
+		// Desktop and mobile each mount a <video> on slide 0; both can fire `onended`, which would
+		// advance 0→1 and then 1→2. Only act once from the current video slide, and only the
+		// visible carousel should fire (see onVideoEnd on each <Slide>).
+		if (currentIndex !== 0) return;
 		const len = $verticalViewport ? CAROUSEL_ITEMS_MOBILE.length : CAROUSEL_ITEMS.length;
 		currentIndex = (currentIndex + 1) % len;
+		videoNotEnded = false;
 	}
 
 </script>
@@ -137,7 +141,7 @@
 						src={item.src}
 						alt={item.type === 'image' ? item.alt : undefined}
 						autoplay={item.type === 'video'}
-						onVideoEnd={item.type === 'video' ? handleVideoEnd : undefined}
+						onVideoEnd={item.type === 'video' && !$verticalViewport ? handleVideoEnd : undefined}
 						isActive={index === currentIndex}
 					/>
 				{/snippet}
@@ -172,7 +176,7 @@
 						src={item.src}
 						alt={item.type === 'image' ? item.alt : undefined}
 						autoplay={item.type === 'video'}
-						onVideoEnd={item.type === 'video' ? handleVideoEnd : undefined}
+						onVideoEnd={item.type === 'video' && $verticalViewport ? handleVideoEnd : undefined}
 						isActive={index === mobileIndex}
 					/>
 				{/snippet}

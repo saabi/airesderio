@@ -152,12 +152,13 @@
 		if (pauseAutoRotate || navButtonsHovered) {
 			stopCarousel();
 		} else if (autoRotate && slideCount > 1) {
-			startCarousel();
+			// Full interval from resume (same as after manual navigation)
+			restartCarouselTimer();
 		}
 	});
 
 	// Restart auto-rotate timer whenever the visible slide changes (including controlled usage)
-	let lastIndex = $state(currentImageIndex);
+	let lastIndex = $state(0);
 	$effect(() => {
 		if (!autoRotate || slideCount <= 1) return;
 		if (currentImageIndex !== lastIndex) {
