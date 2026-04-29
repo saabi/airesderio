@@ -87,6 +87,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
  *   "message"?: string | null,
  *   "intent": string,
  *   "allowDuplicate"?: boolean
+ *   "createdAt"?: string (ISO) — if omitted, existing timestamp is kept
  * }
  */
 export const PUT: RequestHandler = async ({ params, request, cookies }) => {
@@ -135,6 +136,27 @@ export const PUT: RequestHandler = async ({ params, request, cookies }) => {
 		return json({ error: 'Ingresá teléfono para leads de WhatsApp.' }, { status: 400 });
 	}
 
+	let createdAt: Date | undefined;
+	if (Object.hasOwn(obj, 'createdAt')) {
+		const v = obj.createdAt;
+		if (v === null) {
+			createdAt = new Date();
+		} else if (typeof v === 'string') {
+			const t = v.trim();
+			if (t === '') {
+				createdAt = new Date();
+			} else {
+				const d = new Date(t);
+				if (Number.isNaN(d.getTime())) {
+					return json({ error: 'Fecha/hora de alta inválida.' }, { status: 400 });
+				}
+				createdAt = d;
+			}
+		} else {
+			return json({ error: 'Fecha/hora de alta inválida.' }, { status: 400 });
+		}
+	}
+
 	try {
 		const db = getDb();
 		if (!allowDuplicate) {
@@ -156,7 +178,8 @@ export const PUT: RequestHandler = async ({ params, request, cookies }) => {
 				email,
 				phone,
 				message,
-				intent
+				intent,
+				...(createdAt !== undefined ? { createdAt } : {})
 			})
 			.where(eq(leads.id, id))
 			.returning();

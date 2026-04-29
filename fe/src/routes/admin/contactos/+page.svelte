@@ -62,6 +62,9 @@
 	let editSubmitLoading = $state(false);
 	let editSubmitStatus = $state<{ type: 'success' | 'error'; text: string } | null>(null);
 	let editPreventDuplicate = $state(true);
+	/** `datetime-local` (opcional al crear: vacío = hora del servidor al guardar) */
+	let manualCreatedAt = $state('');
+	let editCreatedAt = $state('');
 	let editLeadRestoreTriggerId = $state<string | null>(null);
 	const editLeadTriggerButtons = new SvelteMap<string, HTMLButtonElement>();
 
@@ -196,6 +199,14 @@
 		});
 	}
 
+	/** For `<input type="datetime-local" />` in the browser's local offset. */
+	function isoToDatetimeLocalValue(iso: string): string {
+		const d = new Date(iso);
+		if (Number.isNaN(d.getTime())) return '';
+		const pad = (n: number) => n.toString().padStart(2, '0');
+		return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+	}
+
 	function downloadsFor(lead: { downloadCount: number | null }) {
 		return lead.downloadCount ?? 0;
 	}
@@ -265,6 +276,7 @@
 		editPhone = lead.phone ?? '';
 		editIntent = lead.intent;
 		editMessage = lead.message ?? '';
+		editCreatedAt = isoToDatetimeLocalValue(lead.createdAt);
 		editPreventDuplicate = !isEmailDuplicatedForOtherLead(lead.id, lead.email);
 		editLeadRestoreTriggerId = lead.id;
 		editSubmitStatus = null;
@@ -289,6 +301,7 @@
 
 	function openManualLeadModal() {
 		manualSubmitStatus = null;
+		manualCreatedAt = '';
 		showManualLeadModal = true;
 	}
 
@@ -363,6 +376,16 @@
 			return;
 		}
 
+		if (!editCreatedAt.trim()) {
+			editSubmitStatus = { type: 'error', text: 'Completá la fecha/hora de alta.' };
+			return;
+		}
+		const createdAtDate = new Date(editCreatedAt);
+		if (Number.isNaN(createdAtDate.getTime())) {
+			editSubmitStatus = { type: 'error', text: 'Fecha/hora de alta inválida.' };
+			return;
+		}
+
 		editSubmitLoading = true;
 		try {
 			const res = await fetch(`/api/admin/leads/${encodeURIComponent(editLeadId)}`, {
@@ -375,7 +398,8 @@
 					phone,
 					message,
 					intent,
-					allowDuplicate: !editPreventDuplicate
+					allowDuplicate: !editPreventDuplicate,
+					createdAt: createdAtDate.toISOString()
 				})
 			});
 			const data = await res.json().catch(() => ({}));
@@ -420,23 +444,35 @@
 			return;
 		}
 
+		if (manualCreatedAt.trim() !== '') {
+			const t = new Date(manualCreatedAt);
+			if (Number.isNaN(t.getTime())) {
+				manualSubmitStatus = { type: 'error', text: 'Fecha/hora de alta inválida.' };
+				return;
+			}
+		}
+
 		manualSubmitLoading = true;
 		try {
+			const payload: Record<string, unknown> = {
+				nombre,
+				apellido,
+				correo,
+				telefono,
+				mensaje,
+				reason,
+				sendPdfEmail,
+				notifyInfoEmail,
+				dontInviteToWhatsapp,
+				allowDuplicate
+			};
+			if (manualCreatedAt.trim() !== '') {
+				payload.createdAt = new Date(manualCreatedAt).toISOString();
+			}
 			const res = await fetch('/api/admin/leads', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					nombre,
-					apellido,
-					correo,
-					telefono,
-					mensaje,
-					reason,
-					sendPdfEmail,
-					notifyInfoEmail,
-					dontInviteToWhatsapp,
-					allowDuplicate
-				})
+				body: JSON.stringify(payload)
 			});
 			const data = await res.json().catch(() => ({}));
 			if (!res.ok) {
@@ -450,6 +486,7 @@
 			manualCorreo = '';
 			manualTelefono = '';
 			manualMensaje = '';
+			manualCreatedAt = '';
 			manualReason = 'whatsapp-lead';
 			sendPdfEmail = true;
 			notifyInfoEmail = false;
@@ -721,6 +758,14 @@
 							<option value="whatsapp-lead">whatsapp-lead</option>
 						</select>
 					</label>
+					<label>
+						<span>Fecha y hora de alta (opcional)</span>
+						<input
+							type="datetime-local"
+							bind:value={manualCreatedAt}
+							disabled={manualSubmitLoading}
+						/>
+					</label>
 					<label class="manual-lead-message">
 						<span>Mensaje</span>
 						<textarea rows="3" bind:value={manualMensaje} disabled={manualSubmitLoading}></textarea>
@@ -831,6 +876,15 @@
 					<label>
 						<span>Intención</span>
 						<input type="text" bind:value={editIntent} required disabled={editSubmitLoading} />
+					</label>
+					<label>
+						<span>Fecha y hora de alta *</span>
+						<input
+							type="datetime-local"
+							bind:value={editCreatedAt}
+							required
+							disabled={editSubmitLoading}
+						/>
 					</label>
 					<label class="manual-lead-message">
 						<span>Mensaje</span>
@@ -1186,6 +1240,8 @@
 	}
 
 	.leads-table {
+		width: max-content;
+		min-width: 100%;
 		border-collapse: collapse;
 		font-size: 0.9rem;
 	}

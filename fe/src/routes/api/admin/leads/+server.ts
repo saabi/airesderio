@@ -40,6 +40,27 @@ function isManualReason(value: string): value is ManualReason {
 	return MANUAL_REASONS.includes(value as ManualReason);
 }
 
+/** If admin sends a non-empty `createdAt` (ISO), use it; otherwise leave undefined so the DB default applies. */
+function parseOptionalCreatedAtForInsert(
+	value: unknown
+): { ok: true; date: Date } | { ok: false; error: string } | { ok: true; date: null } {
+	if (value === undefined || value === null) {
+		return { ok: true, date: null };
+	}
+	if (typeof value !== 'string') {
+		return { ok: false, error: 'Fecha inválida.' };
+	}
+	const trimmed = value.trim();
+	if (trimmed === '') {
+		return { ok: true, date: null };
+	}
+	const d = new Date(trimmed);
+	if (Number.isNaN(d.getTime())) {
+		return { ok: false, error: 'Fecha/hora de alta inválida.' };
+	}
+	return { ok: true, date: d };
+}
+
 function requireAdmin(cookies: Cookies): ReturnType<typeof verifySessionCookie> | null {
 	const cookieVal = cookies.get(getSessionCookieName());
 	return cookieVal ? verifySessionCookie(cookieVal) : null;
@@ -75,6 +96,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
  *   "dontInviteToWhatsapp"?: boolean,
  *   "notifyInfoEmail"?: boolean,
  *   "allowDuplicate"?: boolean
+ *   "createdAt"?: string (ISO) — if omitted, server uses time of insert
  * }
  */
 export const POST: RequestHandler = async ({ request, cookies }) => {
@@ -112,6 +134,10 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	const dontInviteToWhatsapp = obj.dontInviteToWhatsapp === true;
 	const notifyInfoEmail = obj.notifyInfoEmail === true;
 	const allowDuplicate = obj.allowDuplicate === true;
+	const createdAtParsed = parseOptionalCreatedAtForInsert(obj.createdAt);
+	if (createdAtParsed.ok === false) {
+		return json({ error: createdAtParsed.error }, { status: 400 });
+	}
 
 	if (!correo || !reasonRaw) {
 		return json({ error: 'Completá correo y razón.' }, { status: 400 });
@@ -150,7 +176,8 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 				phone: telefono,
 				message: mensaje,
 				intent: reasonRaw,
-				ipAddress: 'admin-manual'
+				ipAddress: 'admin-manual',
+				...(createdAtParsed.date != null ? { createdAt: createdAtParsed.date } : {})
 			})
 			.returning();
 
