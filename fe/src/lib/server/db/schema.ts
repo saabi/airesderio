@@ -15,7 +15,8 @@ export const leads = pgTable(
 		id: uuid('id').primaryKey().defaultRandom(),
 		firstName: varchar('first_name', { length: 255 }).notNull(),
 		lastName: varchar('last_name', { length: 255 }).notNull(),
-		email: varchar('email', { length: 255 }).notNull(),
+		/** Nullable for admin WhatsApp leads entered without an address. */
+		email: varchar('email', { length: 255 }),
 		phone: varchar('phone', { length: 50 }),
 		message: text('message'),
 		intent: varchar('intent', { length: 50 }).notNull(),

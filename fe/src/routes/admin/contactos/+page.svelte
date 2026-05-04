@@ -6,7 +6,7 @@
 		id: string;
 		firstName: string;
 		lastName: string;
-		email: string;
+		email: string | null;
 		phone: string | null;
 		message: string | null;
 		intent: string;
@@ -62,6 +62,9 @@
 	let editSubmitLoading = $state(false);
 	let editSubmitStatus = $state<{ type: 'success' | 'error'; text: string } | null>(null);
 	let editPreventDuplicate = $state(true);
+	let editInitialEmailNormalized = $state('');
+	let editSendPdfEmail = $state(false);
+	let editDontInviteToWhatsapp = $state(true);
 	/** `datetime-local` (opcional al crear: vacío = hora del servidor al guardar) */
 	let manualCreatedAt = $state('');
 	let editCreatedAt = $state('');
@@ -107,9 +110,49 @@
 		void loadLeads();
 	});
 
+	function normalizeEmailForLead(value: string | null | undefined): string {
+		if (value == null) return '';
+		return value.trim().toLowerCase();
+	}
+
+	/** WhatsApp sin correo: no enviar PDF ni notificación. */
+	const manualDisableEmailOptions = $derived(
+		manualReason === 'whatsapp-lead' && manualCorreo.trim() === ''
+	);
+
+	$effect(() => {
+		if (manualDisableEmailOptions) {
+			sendPdfEmail = false;
+			notifyInfoEmail = false;
+		}
+	});
+
 	const canToggleDontInviteToWhatsapp = $derived(
 		manualReason === 'whatsapp-lead' && sendPdfEmail
 	);
+
+	const editCanSendPdfCheckbox = $derived(
+		editEmail.trim() !== '' &&
+			manualEmailRegex.test(editEmail.trim()) &&
+			editEmail.trim().toLowerCase() !== editInitialEmailNormalized
+	);
+
+	const editCanToggleDontInviteToWhatsapp = $derived(
+		editIntent === 'whatsapp-lead' && editSendPdfEmail
+	);
+
+	const editShowSameEmailPdfHint = $derived(
+		editInitialEmailNormalized !== '' &&
+			editEmail.trim() !== '' &&
+			manualEmailRegex.test(editEmail.trim()) &&
+			editEmail.trim().toLowerCase() === editInitialEmailNormalized
+	);
+
+	$effect(() => {
+		if (!editCanSendPdfCheckbox) {
+			editSendPdfEmail = false;
+		}
+	});
 
 	const visibleLeads = $derived(starredFirst ? sortLeadsStarredFirst(leads) : leads);
 
@@ -265,19 +308,25 @@
 	function isEmailDuplicatedForOtherLead(leadId: string, email: string): boolean {
 		const normalized = email.trim().toLowerCase();
 		if (!normalized) return false;
-		return leads.some((row) => row.id !== leadId && row.email.trim().toLowerCase() === normalized);
+		return leads.some(
+			(row) =>
+				row.id !== leadId && (row.email?.trim().toLowerCase() ?? '') === normalized
+		);
 	}
 
 	function openEditLeadModal(lead: LeadRow) {
 		editLeadId = lead.id;
 		editFirstName = lead.firstName;
 		editLastName = lead.lastName;
-		editEmail = lead.email;
+		editInitialEmailNormalized = normalizeEmailForLead(lead.email);
+		editEmail = lead.email ?? '';
 		editPhone = lead.phone ?? '';
 		editIntent = lead.intent;
 		editMessage = lead.message ?? '';
 		editCreatedAt = isoToDatetimeLocalValue(lead.createdAt);
-		editPreventDuplicate = !isEmailDuplicatedForOtherLead(lead.id, lead.email);
+		editPreventDuplicate = !isEmailDuplicatedForOtherLead(lead.id, lead.email ?? '');
+		editSendPdfEmail = false;
+		editDontInviteToWhatsapp = lead.intent === 'whatsapp-lead';
 		editLeadRestoreTriggerId = lead.id;
 		editSubmitStatus = null;
 		showEditLeadModal = true;
@@ -348,14 +397,20 @@
 		const intent = editIntent.trim();
 		const message = editMessage.trim();
 
-		if (!email) {
-			editSubmitStatus = { type: 'error', text: 'Completá el correo.' };
-			return;
-		}
-
-		if (!manualEmailRegex.test(email)) {
-			editSubmitStatus = { type: 'error', text: 'Ingresá un correo válido.' };
-			return;
+		if (intent === 'whatsapp-lead') {
+			if (email !== '' && !manualEmailRegex.test(email)) {
+				editSubmitStatus = { type: 'error', text: 'Ingresá un correo válido.' };
+				return;
+			}
+		} else {
+			if (!email) {
+				editSubmitStatus = { type: 'error', text: 'Completá el correo.' };
+				return;
+			}
+			if (!manualEmailRegex.test(email)) {
+				editSubmitStatus = { type: 'error', text: 'Ingresá un correo válido.' };
+				return;
+			}
 		}
 
 		if (!intent) {
@@ -399,7 +454,9 @@
 					message,
 					intent,
 					allowDuplicate: !editPreventDuplicate,
-					createdAt: createdAtDate.toISOString()
+					createdAt: createdAtDate.toISOString(),
+					sendPdfEmail: editSendPdfEmail,
+					dontInviteToWhatsapp: editDontInviteToWhatsapp
 				})
 			});
 			const data = await res.json().catch(() => ({}));
@@ -429,12 +486,21 @@
 		const mensaje = manualMensaje.trim();
 		const reason = manualReason;
 
-		if (!correo || !reason) {
-			manualSubmitStatus = { type: 'error', text: 'Completá correo y razón.' };
+		if (!reason) {
+			manualSubmitStatus = { type: 'error', text: 'Completá la razón.' };
 			return;
 		}
 
-		if (!manualEmailRegex.test(correo)) {
+		if (reason === 'manual-entry') {
+			if (!correo) {
+				manualSubmitStatus = { type: 'error', text: 'Completá el correo.' };
+				return;
+			}
+			if (!manualEmailRegex.test(correo)) {
+				manualSubmitStatus = { type: 'error', text: 'Ingresá un correo válido.' };
+				return;
+			}
+		} else if (correo !== '' && !manualEmailRegex.test(correo)) {
 			manualSubmitStatus = { type: 'error', text: 'Ingresá un correo válido.' };
 			return;
 		}
@@ -645,7 +711,13 @@
 						<td>{formatDate(lead.createdAt)}</td>
 						<td>{lead.firstName}</td>
 						<td>{lead.lastName}</td>
-						<td><a href="mailto:{lead.email}">{lead.email}</a></td>
+						<td>
+							{#if lead.email?.trim()}
+								<a href="mailto:{lead.email}">{lead.email}</a>
+							{:else}
+								—
+							{/if}
+						</td>
 						<td>{lead.phone ?? '—'}</td>
 						<td>{lead.intent}</td>
 						<td>{downloadsFor(lead) > 0 ? 'Sí' : 'No'}</td>
@@ -733,8 +805,17 @@
 						<input type="text" bind:value={manualApellido} disabled={manualSubmitLoading} />
 					</label>
 					<label>
-						<span>Correo *</span>
-						<input type="email" bind:value={manualCorreo} required disabled={manualSubmitLoading} />
+						<span
+							>Correo{manualReason === 'whatsapp-lead'
+								? ' (opcional)'
+								: ' *'}</span
+						>
+						<input
+							type="email"
+							bind:value={manualCorreo}
+							required={manualReason !== 'whatsapp-lead'}
+							disabled={manualSubmitLoading}
+						/>
 					</label>
 					<label>
 						<span>Teléfono{manualReason === 'whatsapp-lead' ? ' *' : ''}</span>
@@ -775,7 +856,7 @@
 							<input
 								type="checkbox"
 								bind:checked={notifyInfoEmail}
-								disabled={manualSubmitLoading}
+								disabled={manualSubmitLoading || manualDisableEmailOptions}
 							/>
 							<span>Notificar a info@airesderio.com</span>
 						</label>
@@ -783,7 +864,7 @@
 							<input
 								type="checkbox"
 								checked={sendPdfEmail}
-								disabled={manualSubmitLoading}
+								disabled={manualSubmitLoading || manualDisableEmailOptions}
 								onchange={(event) => handleSendPdfEmailChange(event.currentTarget.checked)}
 							/>
 							<span>Enviar email con ficha PDF</span>
@@ -861,8 +942,15 @@
 						<input type="text" bind:value={editLastName} disabled={editSubmitLoading} />
 					</label>
 					<label>
-						<span>Correo *</span>
-						<input type="email" bind:value={editEmail} required disabled={editSubmitLoading} />
+						<span
+							>Correo{editIntent === 'whatsapp-lead' ? ' (opcional)' : ' *'}</span
+						>
+						<input
+							type="email"
+							bind:value={editEmail}
+							required={editIntent !== 'whatsapp-lead'}
+							disabled={editSubmitLoading}
+						/>
 					</label>
 					<label>
 						<span>Teléfono{editIntent === 'whatsapp-lead' ? ' *' : ''}</span>
@@ -894,8 +982,33 @@
 						<label class="manual-lead-checkbox">
 							<input
 								type="checkbox"
+								checked={editSendPdfEmail}
+								disabled={editSubmitLoading || !editCanSendPdfCheckbox}
+								onchange={(event) => {
+									editSendPdfEmail = event.currentTarget.checked;
+								}}
+							/>
+							<span>Enviar email con ficha PDF al guardar</span>
+						</label>
+						{#if editShowSameEmailPdfHint}
+							<p class="edit-lead-email-hint">
+								Mismo correo que antes; el envío ya se hizo con este contacto.
+							</p>
+						{/if}
+						<label class="manual-lead-checkbox">
+							<input
+								type="checkbox"
+								bind:checked={editDontInviteToWhatsapp}
+								disabled={editSubmitLoading || !editCanToggleDontInviteToWhatsapp}
+							/>
+							<span>No invitar a WhatsApp en el email</span>
+						</label>
+						<label class="manual-lead-checkbox">
+							<input
+								type="checkbox"
 								bind:checked={editPreventDuplicate}
-								disabled={editSubmitLoading}
+								disabled={editSubmitLoading ||
+									(editIntent === 'whatsapp-lead' && editEmail.trim() === '')}
 							/>
 							<span>No permitir correo duplicado</span>
 						</label>
@@ -1040,6 +1153,13 @@
 		width: 1rem;
 		height: 1rem;
 		accent-color: var(--color-accent-primary, #4497b9);
+	}
+
+	.edit-lead-email-hint {
+		margin: -0.15rem 0 0.15rem;
+		font-size: 0.82rem;
+		color: var(--color-text-muted, #666);
+		line-height: 1.35;
 	}
 
 	.manual-lead-actions {

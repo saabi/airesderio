@@ -3,20 +3,15 @@ import type { Cookies, RequestHandler } from '@sveltejs/kit';
 import { verifySessionCookie, getSessionCookieName } from '$lib/server/admin-auth.js';
 import { getDb } from '$lib/server/db/index.js';
 import { leads, pdfAccessTokens, emailOutboundJobs } from '$lib/server/db/schema.js';
-import {
-	sendContactNotification,
-	sendDirectContactThankYou,
-	sendWhatsappLeadThankYou
-} from '$lib/server/email.js';
+import { sendContactNotification } from '$lib/server/email.js';
 import { enqueueOutboundEmailJob } from '$lib/server/emailRetryQueue.js';
+import { issuePdfTokenAndSendThankYou } from '$lib/server/adminLeadPdfThankYou.js';
 import { desc, inArray, sql } from 'drizzle-orm';
-import { randomBytes } from 'crypto';
 
 const UUID_RE =
 	/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const EMAIL_RE =
 	/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
-const TOKEN_EXPIRY_HOURS = 24;
 const MANUAL_REASONS = ['manual-entry', 'whatsapp-lead'] as const;
 type ManualReason = (typeof MANUAL_REASONS)[number];
 
@@ -30,10 +25,6 @@ function isValidEmail(value: string): boolean {
 
 function sanitizeInput(value: string, maxLength = 1000): string {
 	return value.trim().slice(0, maxLength);
-}
-
-function generateToken(): string {
-	return randomBytes(32).toString('hex');
 }
 
 function isManualReason(value: string): value is ManualReason {
@@ -88,7 +79,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
  * {
  *   "nombre": string,
  *   "apellido": string,
- *   "correo": string,
+ *   "correo"?: string (required for manual-entry; optional for whatsapp-lead → NULL if empty),
  *   "telefono"?: string,
  *   "mensaje"?: string,
  *   "reason": "manual-entry" | "whatsapp-lead",
@@ -120,7 +111,9 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	const obj = body as Record<string, unknown>;
 	const nombre = typeof obj.nombre === 'string' ? sanitizeInput(obj.nombre, 255) : '';
 	const apellido = typeof obj.apellido === 'string' ? sanitizeInput(obj.apellido, 255) : '';
-	const correo = typeof obj.correo === 'string' ? sanitizeInput(obj.correo, 255) : '';
+	const correoRaw = typeof obj.correo === 'string' ? sanitizeInput(obj.correo, 255) : '';
+	const trimmedCorreo = correoRaw.trim();
+	const emailForDb: string | null = trimmedCorreo === '' ? null : trimmedCorreo;
 	const telefono =
 		typeof obj.telefono === 'string' && obj.telefono.trim().length > 0
 			? sanitizeInput(obj.telefono, 50)
@@ -139,29 +132,39 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		return json({ error: createdAtParsed.error }, { status: 400 });
 	}
 
-	if (!correo || !reasonRaw) {
-		return json({ error: 'Completá correo y razón.' }, { status: 400 });
+	if (!reasonRaw) {
+		return json({ error: 'Completá la razón.' }, { status: 400 });
 	}
 
 	if (!isManualReason(reasonRaw)) {
 		return json({ error: 'Razón inválida.' }, { status: 400 });
 	}
 
-	if (!isValidEmail(correo)) {
-		return json({ error: 'Ingresá un correo electrónico válido.' }, { status: 400 });
+	if (reasonRaw === 'manual-entry') {
+		if (!emailForDb || !isValidEmail(emailForDb)) {
+			return json({ error: 'Ingresá un correo electrónico válido.' }, { status: 400 });
+		}
+	} else {
+		if (!telefono) {
+			return json({ error: 'Ingresá teléfono para leads de WhatsApp.' }, { status: 400 });
+		}
+		if (emailForDb !== null && !isValidEmail(emailForDb)) {
+			return json({ error: 'Ingresá un correo electrónico válido.' }, { status: 400 });
+		}
 	}
 
-	if (reasonRaw === 'whatsapp-lead' && !telefono) {
-		return json({ error: 'Ingresá teléfono para leads de WhatsApp.' }, { status: 400 });
-	}
+	const effectiveSendPdf =
+		sendPdfEmail && emailForDb !== null && isValidEmail(emailForDb);
+	const effectiveNotify =
+		notifyInfoEmail && emailForDb !== null && isValidEmail(emailForDb);
 
 	try {
 		const db = getDb();
-		if (!allowDuplicate) {
+		if (!allowDuplicate && emailForDb !== null) {
 			const existing = await db
 				.select({ id: leads.id })
 				.from(leads)
-				.where(sql`lower(${leads.email}) = lower(${correo})`)
+				.where(sql`lower(${leads.email}) = lower(${emailForDb})`)
 				.limit(1);
 			if (existing.length > 0) {
 				return json({ error: 'Ya existe un lead con ese correo.' }, { status: 409 });
@@ -172,7 +175,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			.values({
 				firstName: nombre,
 				lastName: apellido,
-				email: correo,
+				email: emailForDb,
 				phone: telefono,
 				message: mensaje,
 				intent: reasonRaw,
@@ -186,25 +189,12 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		}
 
 		const leadName = `${nombre} ${apellido}`.trim();
-		let token: string | null = null;
-		const pdfType = 'departamentos';
 
-		if (sendPdfEmail) {
-			const expiresAt = new Date(Date.now() + TOKEN_EXPIRY_HOURS * 60 * 60 * 1000);
-			token = generateToken();
-			await db.insert(pdfAccessTokens).values({
-				leadId: lead.id,
-				token,
-				pdfType,
-				expiresAt
-			});
-		}
-
-		if (notifyInfoEmail) {
+		if (effectiveNotify && emailForDb) {
 			try {
 				await sendContactNotification({
 					leadName,
-					leadEmail: correo,
+					leadEmail: emailForDb,
 					leadPhone: telefono ?? undefined,
 					leadMessage: mensaje ?? undefined,
 					intent: reasonRaw
@@ -214,40 +204,21 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 				await enqueueOutboundEmailJob(db, lead.id, 'team_notification', {
 					intent: reasonRaw,
 					leadName,
-					leadEmail: correo,
+					leadEmail: emailForDb,
 					leadPhone: telefono ?? undefined,
 					leadMessage: mensaje ?? undefined
 				});
 			}
 		}
 
-		if (sendPdfEmail && token) {
-			const useWhatsappTemplate = reasonRaw === 'whatsapp-lead' && dontInviteToWhatsapp;
-			try {
-				if (useWhatsappTemplate) {
-					await sendWhatsappLeadThankYou({
-						leadName: nombre,
-						leadEmail: correo,
-						pdfType,
-						token
-					});
-				} else {
-					await sendDirectContactThankYou({
-						leadName: nombre,
-						leadEmail: correo,
-						pdfType,
-						token
-					});
-				}
-			} catch (emailErr) {
-				console.error('SMTP error (manual lead email):', emailErr);
-				await enqueueOutboundEmailJob(db, lead.id, useWhatsappTemplate ? 'lead_whatsapp' : 'lead_thankyou', {
-					leadName: nombre,
-					leadEmail: correo,
-					pdfType,
-					token
-				});
-			}
+		if (effectiveSendPdf && emailForDb) {
+			await issuePdfTokenAndSendThankYou(db, {
+				leadId: lead.id,
+				thankYouLeadName: nombre,
+				leadEmail: emailForDb,
+				intent: reasonRaw,
+				dontInviteToWhatsapp
+			});
 		}
 
 		return json({ success: true, leadId: lead.id });

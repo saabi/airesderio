@@ -3,6 +3,10 @@ import type { Cookies, RequestHandler } from '@sveltejs/kit';
 import { verifySessionCookie, getSessionCookieName } from '$lib/server/admin-auth.js';
 import { getDb } from '$lib/server/db/index.js';
 import { leads } from '$lib/server/db/schema.js';
+import {
+	issuePdfTokenAndSendThankYou,
+	normalizeLeadEmail
+} from '$lib/server/adminLeadPdfThankYou.js';
 import { and, eq, ne, sql } from 'drizzle-orm';
 
 const UUID_RE =
@@ -82,12 +86,14 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
  * {
  *   "firstName": string,
  *   "lastName": string,
- *   "email": string,
+ *   "email": string (empty → null for whatsapp-lead only),
  *   "phone"?: string | null,
  *   "message"?: string | null,
  *   "intent": string,
- *   "allowDuplicate"?: boolean
- *   "createdAt"?: string (ISO) — if omitted, existing timestamp is kept
+ *   "allowDuplicate"?: boolean,
+ *   "createdAt"?: string (ISO) — if omitted, existing timestamp is kept,
+ *   "sendPdfEmail"?: boolean — thank-you only if email changed vs row before update,
+ *   "dontInviteToWhatsapp"?: boolean
  * }
  */
 export const PUT: RequestHandler = async ({ params, request, cookies }) => {
@@ -116,24 +122,40 @@ export const PUT: RequestHandler = async ({ params, request, cookies }) => {
 	const obj = body as Record<string, unknown>;
 	const firstName = typeof obj.firstName === 'string' ? sanitizeInput(obj.firstName, 255) : '';
 	const lastName = typeof obj.lastName === 'string' ? sanitizeInput(obj.lastName, 255) : '';
-	const email = typeof obj.email === 'string' ? sanitizeInput(obj.email, 255) : '';
+	const emailRaw = typeof obj.email === 'string' ? sanitizeInput(obj.email, 255) : '';
+	const trimmedEmail = emailRaw.trim();
+	const emailForDb: string | null = trimmedEmail === '' ? null : trimmedEmail;
 	const phone =
 		typeof obj.phone === 'string' && obj.phone.trim().length > 0 ? sanitizeInput(obj.phone, 50) : null;
 	const message =
 		typeof obj.message === 'string' && obj.message.trim().length > 0 ? sanitizeInput(obj.message) : null;
 	const intent = typeof obj.intent === 'string' ? sanitizeInput(obj.intent, 50) : '';
 	const allowDuplicate = obj.allowDuplicate === true;
+	const wantSendPdf = obj.sendPdfEmail === true;
+	const dontInviteToWhatsapp = obj.dontInviteToWhatsapp === true;
 
-	if (!email || !intent) {
-		return json({ error: 'Completá correo e intención.' }, { status: 400 });
+	if (!intent) {
+		return json({ error: 'Completá la intención.' }, { status: 400 });
 	}
 
-	if (!isValidEmail(email)) {
-		return json({ error: 'Ingresá un correo electrónico válido.' }, { status: 400 });
+	if (intent === 'whatsapp-lead') {
+		if (!phone) {
+			return json({ error: 'Ingresá teléfono para leads de WhatsApp.' }, { status: 400 });
+		}
+		if (emailForDb !== null && !isValidEmail(emailForDb)) {
+			return json({ error: 'Ingresá un correo electrónico válido.' }, { status: 400 });
+		}
+	} else {
+		if (!emailForDb || !isValidEmail(emailForDb)) {
+			return json({ error: 'Completá un correo electrónico válido.' }, { status: 400 });
+		}
 	}
 
-	if (intent === 'whatsapp-lead' && !phone) {
-		return json({ error: 'Ingresá teléfono para leads de WhatsApp.' }, { status: 400 });
+	if (wantSendPdf && (!emailForDb || !isValidEmail(emailForDb))) {
+		return json(
+			{ error: 'Para enviar la ficha PDF necesitá un correo electrónico válido.' },
+			{ status: 400 }
+		);
 	}
 
 	let createdAt: Date | undefined;
@@ -159,11 +181,23 @@ export const PUT: RequestHandler = async ({ params, request, cookies }) => {
 
 	try {
 		const db = getDb();
-		if (!allowDuplicate) {
+		const existingRows = await db
+			.select({ id: leads.id, email: leads.email })
+			.from(leads)
+			.where(eq(leads.id, id))
+			.limit(1);
+
+		if (existingRows.length === 0) {
+			return json({ error: 'No encontrado' }, { status: 404 });
+		}
+
+		const previousEmail = existingRows[0].email;
+
+		if (!allowDuplicate && emailForDb) {
 			const duplicate = await db
 				.select({ id: leads.id })
 				.from(leads)
-				.where(and(sql`lower(${leads.email}) = lower(${email})`, ne(leads.id, id)))
+				.where(and(sql`lower(${leads.email}) = lower(${emailForDb})`, ne(leads.id, id)))
 				.limit(1);
 			if (duplicate.length > 0) {
 				return json({ error: 'Ya existe otro lead con ese correo.' }, { status: 409 });
@@ -175,7 +209,7 @@ export const PUT: RequestHandler = async ({ params, request, cookies }) => {
 			.set({
 				firstName,
 				lastName,
-				email,
+				email: emailForDb,
 				phone,
 				message,
 				intent,
@@ -186,6 +220,19 @@ export const PUT: RequestHandler = async ({ params, request, cookies }) => {
 
 		if (updated.length === 0) {
 			return json({ error: 'No encontrado' }, { status: 404 });
+		}
+
+		const emailChanged =
+			normalizeLeadEmail(previousEmail) !== normalizeLeadEmail(emailForDb);
+
+		if (wantSendPdf && emailForDb && isValidEmail(emailForDb) && emailChanged) {
+			await issuePdfTokenAndSendThankYou(db, {
+				leadId: id,
+				thankYouLeadName: firstName,
+				leadEmail: emailForDb,
+				intent,
+				dontInviteToWhatsapp
+			});
 		}
 
 		return json({ success: true, lead: updated[0] });
