@@ -2,6 +2,7 @@
 	// ===== IMPORTS =====
 	import HabitatPrimeLogo from '$lib/components/ui/HabitatPrimeLogo.svelte';
 	import AiresDeRioLogo from '$lib/components/ui/AiresDeRioLogo.svelte';
+	import DbArquitectosLogo from '$lib/components/ui/DbArquitectosLogo.svelte';
 	import { siteNavLinks } from '$lib/data/site-nav-links';
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 </script>
@@ -58,9 +59,6 @@
 						</li>
 					{/each}
 				</ul>
-				<div class='footer-logo'>
-					<HabitatPrimeLogo theme='dark' width='12rem' />
-				</div>
 			</section>
 
 			<section class='footer-column' aria-label='Navegación de secciones'>
@@ -114,6 +112,31 @@
 			</section>
 		</div>
 
+		<div class='footer-grid footer-grid--row2' aria-label='Créditos y marcas'>
+			<section class='footer-column footer-row2-db' aria-label='Diseño e interiorismo'>
+				<p class='footer-row2-column-heading'>DISEÑO e INTERIORISMO</p>
+				<a
+					class='footer-partner-logo'
+					href='https://www.instagram.com/db_arquitectos'
+					rel='noopener noreferrer'
+					target='_blank'
+					aria-label='Ver D+B Arquitectos Asociados en Instagram'
+				>
+					<DbArquitectosLogo fillColor='currentColor' width='13rem' />
+				</a>
+			</section>
+			<section class='footer-column footer-row2-direccion' aria-label='Dirección técnica'>
+				<p class='footer-row2-line footer-row2-line--label'>Dirección Tecnica</p>
+				<p class='footer-row2-line footer-row2-line--name'>Ing. Ricardo Mattera</p>
+			</section>
+			<section class='footer-column footer-row2-habitat' aria-label='Habitat Prime'>
+				<p class='footer-row2-column-heading'>CONSTRUYE</p>
+				<div class='footer-habitat-logo-wrap'>
+					<HabitatPrimeLogo theme='dark' width='30rem' />
+				</div>
+			</section>
+		</div>
+
 		<div class='footer-bottom'>
 			<p class='footer-copyright'>
 				© {year} Habitat Prime SAS · <AiresDeRioLogo class='logo-inline' height='1em' theme='dark' showIsotype={false} fitViewBox={true} showDepartamentos={false} /> es una marca registrada.
@@ -160,8 +183,19 @@
 	.footer-grid {
 		/* Layout */
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, max-content);
 		gap: 2rem;
+	}
+
+	.footer-grid--row2 {
+		margin-top: 2rem;
+		padding-top: 2rem;
+		border-top: 1px solid var(--color-border-subtle);
+	}
+
+	.footer-column {
+		padding: 1.25rem 1rem;
+		padding-top: 0;
 	}
 
 	.footer-column h3 {
@@ -179,29 +213,107 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
-		padding: 1.25rem 1rem;
-		padding-top: 0;
-		border-radius: 0.5rem;
-		background: #0a2a35;
 	}
 
-	.footer-logo {
-		display: inline-flex;
-		align-items: center;
-		justify-content: flex-start;
-		align-self: flex-start;
-		width: fit-content;
-		max-width: 100%;
-		box-sizing: border-box;
-		padding: 0.65rem 1rem;
-		border-radius: 0.5rem;
-		background: #b84c44;
-	}
-
-	.footer-logo :global(svg) {
+	.footer-partner-logo :global(svg),
+	.footer-habitat-logo-wrap :global(svg) {
 		display: block;
 		height: auto;
 		max-width: 100%;
+	}
+
+	.footer-row2-db {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: flex-start;
+		gap: 0.65rem;
+	}
+
+	.footer-row2-column-heading {
+		margin: 0;
+		font-size: 1.5rem;
+		font-weight: var(--font-weight-semibold);
+		letter-spacing: 0.1em;
+		line-height: 1.25;
+		text-transform: uppercase;
+		color: #f06c5e;
+	}
+
+	.footer-row2-direccion {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		gap: 0.4rem;
+	}
+
+	.footer-row2-line {
+		margin: 0;
+		line-height: 1.35;
+	}
+
+	.footer-row2-line--label {
+		font-size: 1.5rem;
+		font-weight: var(--font-weight-semibold);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: #f06c5e;
+	}
+
+	.footer-row2-line--name {
+		font-size: 2rem;
+		font-weight: var(--font-weight-semibold);
+		color: var(--color-text-inverse);
+	}
+
+	.footer-row2-habitat {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: flex-start;
+		gap: 0.65rem;
+	}
+
+	.footer-habitat-logo-wrap {
+		display: inline-flex;
+		max-width: 100%;
+	}
+
+	/* Full white Habitat mark on footer background (no fill box) */
+	.footer-habitat-logo-wrap :global(svg .habitat-logo-fil0),
+	.footer-habitat-logo-wrap :global(svg .habitat-logo-fil1),
+	.footer-habitat-logo-wrap :global(svg .habitat-logo-fil2) {
+		fill: #ffffff;
+	}
+
+	.footer-habitat-logo-wrap :global(svg stop.habitat-logo-stop0),
+	.footer-habitat-logo-wrap :global(svg stop.habitat-logo-stop1),
+	.footer-habitat-logo-wrap :global(svg stop.habitat-logo-stop2),
+	.footer-habitat-logo-wrap :global(svg stop.habitat-logo-stop3),
+	.footer-habitat-logo-wrap :global(svg stop.habitat-logo-stop4),
+	.footer-habitat-logo-wrap :global(svg stop.habitat-logo-stop5) {
+		stop-color: #ffffff;
+	}
+
+	.footer-partner-logo {
+		display: inline-flex;
+		align-items: center;
+		width: fit-content;
+		max-width: 100%;
+		box-sizing: border-box;
+		color: color-mix(in oklch, var(--ref-cream) 92%, var(--ref-brand-gold) 8%);
+		text-decoration: none;
+		transition: color 160ms ease;
+	}
+
+	.footer-partner-logo:hover {
+		color: var(--color-accent-primary);
+	}
+
+	.footer-partner-logo:focus-visible {
+		outline: 2px solid var(--color-accent-primary);
+		outline-offset: 4px;
+		border-radius: 2px;
 	}
 
 	.project-highlights {
@@ -352,11 +464,20 @@
 		.footer-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
+
+		.footer-grid--row2 .footer-row2-habitat {
+			grid-column: 1 / -1;
+			align-items: flex-start;
+		}
 	}
 
 	@media (max-width: 640px) {
 		.footer-grid {
 			grid-template-columns: 1fr;
+		}
+
+		.footer-row2-habitat {
+			align-items: flex-start;
 		}
 
 		.footer-bottom {
