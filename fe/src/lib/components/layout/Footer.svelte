@@ -122,17 +122,17 @@
 					target='_blank'
 					aria-label='Ver D+B Arquitectos Asociados en Instagram'
 				>
-					<DbArquitectosLogo fillColor='currentColor' width='13rem' />
+					<DbArquitectosLogo fillColor='currentColor' width='10rem' />
 				</a>
 			</section>
 			<section class='footer-column footer-row2-direccion' aria-label='Dirección técnica'>
-				<p class='footer-row2-line footer-row2-line--label'>Dirección Tecnica</p>
+				<p class='footer-row2-column-heading'>Dirección Tecnica</p>
 				<p class='footer-row2-line footer-row2-line--name'>Ing. Ricardo Mattera</p>
 			</section>
 			<section class='footer-column footer-row2-habitat' aria-label='Habitat Prime'>
 				<p class='footer-row2-column-heading'>CONSTRUYE</p>
 				<div class='footer-habitat-logo-wrap'>
-					<HabitatPrimeLogo theme='dark' width='30rem' />
+					<HabitatPrimeLogo theme='dark' width='20rem' />
 				</div>
 			</section>
 		</div>
@@ -232,7 +232,7 @@
 
 	.footer-row2-column-heading {
 		margin: 0;
-		font-size: 1.5rem;
+		font-size: 1rem;
 		font-weight: var(--font-weight-semibold);
 		letter-spacing: 0.1em;
 		line-height: 1.25;
@@ -252,16 +252,8 @@
 		line-height: 1.35;
 	}
 
-	.footer-row2-line--label {
-		font-size: 1.5rem;
-		font-weight: var(--font-weight-semibold);
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: #f06c5e;
-	}
-
 	.footer-row2-line--name {
-		font-size: 2rem;
+		font-size: 1.5rem;
 		font-weight: var(--font-weight-semibold);
 		color: var(--color-text-inverse);
 	}
