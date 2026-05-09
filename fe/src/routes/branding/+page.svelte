@@ -297,12 +297,6 @@
 		justify-content: flex-start;
 	}
 
-	/* Improve Habitat wordmark visibility on light background within branding page */
-	#branding-logo-habitat-full svg[data-theme='light'] .habitat-logo-fil0,
-	#branding-logo-habitat-wordmark svg[data-theme='light'] .habitat-logo-fil0 {
-		fill: #0f172a;
-	}
-
 	.branding-theme-toggle {
 		margin-top: 0.25rem;
 		font-size: 0.8rem;
@@ -319,39 +313,6 @@
 	.branding-export-button {
 		align-self: flex-start;
 		margin-top: 0.5rem;
-	}
-
-	.branding-export-button .export-button {
-		padding: 0.375rem 0.9rem;
-		border-radius: 999px;
-		border: 1px solid rgba(15, 23, 42, 0.16);
-		background: #ffffff;
-		color: #0f172a;
-		font-size: 0.8rem;
-		font-weight: 500;
-		letter-spacing: 0.03em;
-		text-transform: uppercase;
-		cursor: pointer;
-		transition:
-			background-color 0.15s ease,
-			color 0.15s ease,
-			box-shadow 0.15s ease,
-			transform 0.15s ease,
-			border-color 0.15s ease;
-	}
-
-	.branding-export-button .export-button:hover:enabled {
-		background: #0f172a;
-		color: #ffffff;
-		border-color: rgba(15, 23, 42, 0.6);
-		box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
-		transform: translateY(-1px);
-	}
-
-	.branding-export-button .export-button:disabled {
-		opacity: 0.6;
-		cursor: default;
-		box-shadow: none;
 	}
 
 	@media (min-width: 768px) {

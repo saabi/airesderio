@@ -173,21 +173,6 @@
 		/* border: 1px solid var(--color-border-subtle); */
 	}
 
-	.bf-header {
-		display: grid;
-		grid-template-columns: 1fr auto;
-		gap: 1.5rem 2rem;
-		align-items: start;
-		margin-bottom: 2rem;
-	}
-
-	@media (max-width: 900px) {
-		.bf-header {
-			grid-template-columns: 1fr;
-			margin-bottom: 1.5rem;
-		}
-	}
-
 	@media (max-width: 640px) {
 		.bf-frame {
 			padding: 1.25rem;
@@ -205,47 +190,6 @@
 		.bf-columns {
 			grid-template-columns: 1fr;
 		}
-	}
-
-	.bf-heading {
-		margin: 0 0 0.25rem;
-		font-size: clamp(1.75rem, 4vw, 2.25rem);
-		font-weight: 700;
-		color: var(--ref-ink, var(--color-contrast-low));
-	}
-
-	.bf-subheading {
-		margin: 0 0 1rem;
-		font-size: 1.25rem;
-		font-weight: 600;
-		color: var(--ref-ink, var(--color-contrast-low));
-	}
-
-	.bf-brand {
-		margin: 0;
-		font-size: 1.1rem;
-		font-weight: 600;
-		color: var(--color-contrast-low);
-		letter-spacing: 0.02em;
-	}
-
-	.bf-brand-line {
-		margin: 0;
-		font-size: 1.1rem;
-		font-weight: 600;
-		color: var(--ref-ink, var(--color-contrast-low));
-		letter-spacing: 0.02em;
-	}
-
-	.bf-brand-line .bf-brand {
-		display: inline;
-		color: var(--color-contrast-low);
-	}
-
-	.bf-brand-departamentos {
-		margin: 0.25rem 0 1.5rem;
-		font-size: 0.95rem;
-		color: var(--color-contrast-low);
 	}
 
 	.bf-bullets {

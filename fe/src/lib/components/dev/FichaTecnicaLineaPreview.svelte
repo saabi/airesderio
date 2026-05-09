@@ -156,8 +156,7 @@
 	}
 
 	h1,
-	h2,
-	h3 {
+	h2 {
 		margin-left: 1.8cm !important;
 	}
 	h1 {
@@ -166,10 +165,6 @@
 	}
 	h2 {
 		font-size: 0.9cm !important;
-		font-weight: normal !important;
-	}
-	h3 {
-		font-size: 1cm !important;
 		font-weight: normal !important;
 	}
 </style>

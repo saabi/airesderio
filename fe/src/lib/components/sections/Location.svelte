@@ -302,49 +302,6 @@
 		font-size: 0.95em;
 	}
 
-	.location-help {
-		margin: 1rem 0 0.75rem;
-		padding: 0.75rem 1rem;
-		background: color-mix(in oklch, var(--color-accent-primary, var(--ref-brand-primary)) 12%, var(--ref-cream));
-		border-radius: 0.375rem;
-		border-left: 3px solid var(--color-accent-primary, var(--ref-brand-primary));
-		font-size: 0.78em;
-		line-height: 1.35;
-		color: var(--color-text-on-light);
-	}
-
-	.location-help dt {
-		display: inline-flex;
-		align-items: center;
-		vertical-align: middle;
-	}
-
-	.location-help-icon {
-		display: inline-flex;
-		align-items: center;
-		margin-right: 0.35em;
-	}
-
-	.location-help-icon-arrows {
-		gap: 0.15em;
-	}
-
-	.location-help dd {
-		display: inline;
-		margin: 0 0 0.25rem 0;
-	}
-
-	.location-help dd::after {
-		content: '';
-		display: block;
-	}
-
-	:global([data-theme='dark']) .location-help {
-		background: color-mix(in oklch, var(--color-accent-primary) 25%, oklch(0.2 0 0deg));
-		border-left-color: var(--color-accent-primary);
-		color: var(--color-text-primary);
-	}
-
 	.map-navigation {
 		/* Layout */
 		flex-shrink: 0;
