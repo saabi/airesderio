@@ -125,10 +125,6 @@
 					<DbArquitectosLogo fillColor='currentColor' width='10rem' />
 				</a>
 			</section>
-			<section class='footer-column footer-row2-direccion' aria-label='Dirección técnica'>
-				<p class='footer-row2-column-heading'>Dirección Tecnica</p>
-				<p class='footer-row2-line footer-row2-line--name'>Ing. Ricardo Mattera</p>
-			</section>
 			<section class='footer-column footer-row2-habitat' aria-label='Habitat Prime'>
 				<p class='footer-row2-column-heading'>CONSTRUYE</p>
 				<div class='footer-habitat-logo-wrap'>
@@ -188,6 +184,7 @@
 	}
 
 	.footer-grid--row2 {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		margin-top: 2rem;
 		padding-top: 2rem;
 		border-top: 1px solid var(--color-border-subtle);
@@ -225,8 +222,9 @@
 	.footer-row2-db {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: flex-start;
+		text-align: center;
 		gap: 0.65rem;
 	}
 
@@ -240,29 +238,12 @@
 		color: #f06c5e;
 	}
 
-	.footer-row2-direccion {
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		gap: 0.4rem;
-	}
-
-	.footer-row2-line {
-		margin: 0;
-		line-height: 1.35;
-	}
-
-	.footer-row2-line--name {
-		font-size: 1.5rem;
-		font-weight: var(--font-weight-semibold);
-		color: var(--color-text-inverse);
-	}
-
 	.footer-row2-habitat {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: flex-start;
+		text-align: center;
 		gap: 0.65rem;
 	}
 
@@ -456,11 +437,6 @@
 		.footer-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
-
-		.footer-grid--row2 .footer-row2-habitat {
-			grid-column: 1 / -1;
-			align-items: flex-start;
-		}
 	}
 
 	@media (max-width: 640px) {
@@ -468,8 +444,8 @@
 			grid-template-columns: 1fr;
 		}
 
-		.footer-row2-habitat {
-			align-items: flex-start;
+		.footer-grid--row2 {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 
 		.footer-bottom {
