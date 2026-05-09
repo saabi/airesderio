@@ -14,6 +14,7 @@ import {
 	type OutboundJobKind
 } from '$lib/server/emailRetryQueue.js';
 import { randomBytes } from 'crypto';
+import { isLeadPhoneFilled } from '$lib/utils/leadPhone.js';
 
 /** All PDF CTAs use one file: `static/pdf/Aires de Río - Ficha técnica.pdf` */
 const VALID_PDF_INTENTS = ['departamentos'] as const;
@@ -96,12 +97,28 @@ export const POST: RequestHandler = async ({ request }) => {
 			return json({ error: 'Por favor ingresa un correo electrónico válido.' }, { status: 400 });
 		}
 
+		const phoneRaw = telefono != null ? String(telefono).trim() : '';
+		if (!isLeadPhoneFilled(phoneRaw)) {
+			return json(
+				{ error: 'Por favor ingresá un número de teléfono completo con código de país.' },
+				{ status: 400 }
+			);
+		}
+
 		const intent = rawIntent ? sanitizeInput(String(rawIntent)) : 'direct-contact';
 		const firstName = sanitizeInput(nombre);
 		const lastName = sanitizeInput(apellido);
 		const email = sanitizeInput(correo);
-		const phone = telefono ? sanitizeInput(telefono) : null;
-		const message = mensaje ? sanitizeInput(mensaje) : null;
+		const phone = sanitizeInput(phoneRaw);
+
+		const messageTrimmed = mensaje != null ? String(mensaje).trim() : '';
+		if (intent === 'direct-contact' && !messageTrimmed) {
+			return json(
+				{ error: 'Por favor escribí tu mensaje o consulta.' },
+				{ status: 400 }
+			);
+		}
+		const message = messageTrimmed ? sanitizeInput(messageTrimmed) : null;
 
 		const db = getDb();
 

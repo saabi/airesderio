@@ -509,6 +509,13 @@ a.btn-cta-primary:focus-visible {
 	cursor: not-allowed;
 }
 
+/* Required field marker — same convention as admin manual lead labels (Nombre *, etc.) */
+.field-required-indicator {
+	font-weight: var(--font-weight-semibold);
+	color: var(--color-danger-strong);
+	white-space: nowrap;
+}
+
 /* Focus indicators for keyboard navigation */
 *:focus-visible {
 	outline: 2px solid var(--color-accent-primary);

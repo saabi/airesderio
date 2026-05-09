@@ -4,6 +4,7 @@
 	import PhoneNumberInput from '$lib/components/forms/PhoneNumberInput.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
 	import { formToastStore } from '$lib/stores/formToast';
+	import { isLeadPhoneFilled } from '$lib/utils/leadPhone.js';
 
 	// ===== TYPES =====
 	interface Props {
@@ -21,9 +22,40 @@
 	// ===== STATE =====
 	let formElement: HTMLFormElement | null = $state(null);
 	let errorMessage = $state<string | null>(null);
+	let canSubmit = $state(false);
 
 	const optimisticContactSuccessMessage =
 		'Formulario enviado correctamente. Nos pondremos en contacto contigo pronto.';
+
+	function isFooterFormComplete(form: HTMLFormElement): boolean {
+		const fd = new FormData(form);
+		const nombre = String(fd.get('nombre') ?? '').trim();
+		const apellido = String(fd.get('apellido') ?? '').trim();
+		const correo = String(fd.get('correo') ?? '').trim();
+		const telefono = String(fd.get('telefono') ?? '');
+		const mensaje = String(fd.get('mensaje') ?? '').trim();
+		return (
+			nombre.length > 0 &&
+			apellido.length > 0 &&
+			correo.length > 0 &&
+			EMAIL_REGEX.test(correo) &&
+			isLeadPhoneFilled(telefono) &&
+			mensaje.length > 0
+		);
+	}
+
+	function syncSubmitEnabled() {
+		if (!formElement) {
+			canSubmit = false;
+			return;
+		}
+		canSubmit = isFooterFormComplete(formElement);
+	}
+
+	$effect(() => {
+		void formElement;
+		syncSubmitEnabled();
+	});
 
 	// ===== EVENT HANDLERS =====
 	function handleSubmit(event: Event) {
@@ -62,7 +94,19 @@
 			return;
 		}
 
+		if (!isLeadPhoneFilled(payload.telefono)) {
+			errorMessage =
+				'Por favor ingresá un número de teléfono completo con código de país.';
+			return;
+		}
+
+		if (!payload.mensaje.trim()) {
+			errorMessage = 'Por favor escribí tu mensaje o consulta.';
+			return;
+		}
+
 		formElement.reset();
+		syncSubmitEnabled();
 		formToastStore.show(optimisticContactSuccessMessage, 'success');
 
 		void fetch('/api/contact', {
@@ -96,7 +140,15 @@
 	}
 </script>
 
-<form bind:this={formElement} action='#' method='POST' onsubmit={handleSubmit} novalidate>
+<form
+	bind:this={formElement}
+	action='#'
+	method='POST'
+	onsubmit={handleSubmit}
+	oninput={syncSubmitEnabled}
+	onchange={syncSubmitEnabled}
+	novalidate
+>
 	<!-- Honeypot field for spam protection -->
 	<input
 		type='text'
@@ -115,7 +167,9 @@
 
 	<div class='form-row'>
 		<div class='form-group'>
-			<label for='nombre'>Nombre</label>
+			<label for='nombre'>
+				Nombre<span class='field-required-indicator' aria-hidden='true'> *</span>
+			</label>
 			<Input
 				type='text'
 				id='nombre'
@@ -125,7 +179,9 @@
 			/>
 		</div>
 		<div class='form-group'>
-			<label for='apellido'>Apellido</label>
+			<label for='apellido'>
+				Apellido<span class='field-required-indicator' aria-hidden='true'> *</span>
+			</label>
 			<Input
 				type='text'
 				id='apellido'
@@ -136,7 +192,9 @@
 		</div>
 	</div>
 	<div class='form-group'>
-		<label for='correo'>Correo</label>
+		<label for='correo'>
+			Correo<span class='field-required-indicator' aria-hidden='true'> *</span>
+		</label>
 		<Input
 			type='email'
 			id='correo'
@@ -145,13 +203,22 @@
 			ariaLabel='Correo electrónico'
 		/>
 	</div>
-	<PhoneNumberInput id='telefono' name='telefono' label='Contacto de WhatsApp' />
+	<PhoneNumberInput
+		id='telefono'
+		name='telefono'
+		label='Contacto de WhatsApp'
+		required
+		onPhoneValueChange={syncSubmitEnabled}
+	/>
 	<div class='form-group'>
-		<label for='mensaje'>Mensaje</label>
+		<label for='mensaje'>
+			Mensaje<span class='field-required-indicator' aria-hidden='true'> *</span>
+		</label>
 		<Textarea
 			id='mensaje'
 			name='mensaje'
 			rows={4}
+			required
 			ariaLabel='Mensaje o consulta'
 		/>
 	</div>
@@ -161,6 +228,7 @@
 			type='submit'
 			class='btn-cta-primary'
 			aria-label='Enviar formulario de contacto'
+			disabled={!canSubmit}
 		>
 			ENVIAR
 		</button>

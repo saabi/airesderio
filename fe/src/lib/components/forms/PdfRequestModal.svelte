@@ -10,6 +10,7 @@
 <script lang='ts'>
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 	import { formToastStore } from '$lib/stores/formToast';
+	import { isLeadPhoneFilled } from '$lib/utils/leadPhone.js';
 
 	let { intent, source }: { intent: PdfIntent; source: PdfRequestSource } = $props();
 
@@ -24,9 +25,38 @@
 	// ===== STATE =====
 	let formElement: HTMLFormElement | null = $state(null);
 	let errorMessage = $state<string | null>(null);
+	let canSubmit = $state(false);
 
 	const optimisticPdfSuccessMessage =
 		'Formulario enviado correctamente. Revisá tu correo electrónico para descargar el archivo.';
+
+	function isPdfRequestFormComplete(form: HTMLFormElement): boolean {
+		const fd = new FormData(form);
+		const nombre = String(fd.get('nombre') ?? '').trim();
+		const apellido = String(fd.get('apellido') ?? '').trim();
+		const correo = String(fd.get('correo') ?? '').trim();
+		const telefono = String(fd.get('telefono') ?? '');
+		return (
+			nombre.length > 0 &&
+			apellido.length > 0 &&
+			correo.length > 0 &&
+			EMAIL_REGEX.test(correo) &&
+			isLeadPhoneFilled(telefono)
+		);
+	}
+
+	function syncSubmitEnabled() {
+		if (!formElement) {
+			canSubmit = false;
+			return;
+		}
+		canSubmit = isPdfRequestFormComplete(formElement);
+	}
+
+	$effect(() => {
+		void formElement;
+		syncSubmitEnabled();
+	});
 
 	// ===== HANDLERS =====
 	function handleClose() {
@@ -71,7 +101,14 @@
 			return;
 		}
 
+		if (!isLeadPhoneFilled(payload.telefono)) {
+			errorMessage =
+				'Por favor ingresá un número de teléfono completo con código de país.';
+			return;
+		}
+
 		formElement.reset();
+		syncSubmitEnabled();
 		formToastStore.show(optimisticPdfSuccessMessage, 'success');
 		pdfRequestModalStore.close();
 
@@ -119,7 +156,15 @@
 		<h2 id='pdf-modal-title'>Solicitar Ficha Técnica</h2>
 		<p id='pdf-modal-desc'>Completá tus datos y te enviaremos el PDF del proyecto a tu correo.</p>
 
-		<form bind:this={formElement} action='#' method='POST' onsubmit={handleSubmit} novalidate>
+		<form
+			bind:this={formElement}
+			action='#'
+			method='POST'
+			onsubmit={handleSubmit}
+			oninput={syncSubmitEnabled}
+			onchange={syncSubmitEnabled}
+			novalidate
+		>
 			<input
 				type='text'
 				name='website'
@@ -135,7 +180,9 @@
 
 			<div class='form-row'>
 				<div class='form-group'>
-					<label for='pdf-nombre'>Nombre</label>
+					<label for='pdf-nombre'>
+						Nombre<span class='field-required-indicator' aria-hidden='true'> *</span>
+					</label>
 					<Input
 						type='text'
 						id='pdf-nombre'
@@ -145,7 +192,9 @@
 					/>
 				</div>
 				<div class='form-group'>
-					<label for='pdf-apellido'>Apellido</label>
+					<label for='pdf-apellido'>
+						Apellido<span class='field-required-indicator' aria-hidden='true'> *</span>
+					</label>
 					<Input
 						type='text'
 						id='pdf-apellido'
@@ -156,7 +205,9 @@
 				</div>
 			</div>
 			<div class='form-group'>
-				<label for='pdf-correo'>Correo</label>
+				<label for='pdf-correo'>
+					Correo<span class='field-required-indicator' aria-hidden='true'> *</span>
+				</label>
 				<Input
 					type='email'
 					id='pdf-correo'
@@ -165,7 +216,13 @@
 					ariaLabel='Correo electrónico'
 				/>
 			</div>
-			<PhoneNumberInput id='pdf-telefono' name='telefono' label='Contacto de WhatsApp' />
+			<PhoneNumberInput
+				id='pdf-telefono'
+				name='telefono'
+				label='Contacto de WhatsApp'
+				required
+				onPhoneValueChange={syncSubmitEnabled}
+			/>
 			<div class='form-group'>
 				<label for='pdf-mensaje'>Mensaje (opcional)</label>
 				<Textarea
@@ -181,6 +238,7 @@
 					type='submit'
 					class='btn-cta-primary'
 					aria-label='Solicitar ficha técnica'
+					disabled={!canSubmit}
 				>
 					SOLICITAR FICHA TÉCNICA
 				</button>

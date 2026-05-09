@@ -19,6 +19,10 @@
 		id?: string;
 		label?: string;
 		showHint?: boolean;
+		/** Required for public contact / PDF flows; admin may omit */
+		required?: boolean;
+		/** Hidden `telefono` value updates without bubbling `input`; use to sync submit UX */
+		onPhoneValueChange?: () => void;
 	}
 
 	// ===== STATIC CONSTANTS =====
@@ -42,7 +46,14 @@
 
 <script lang='ts'>
 	// ===== PROPS =====
-	let { name = 'telefono', id = 'telefono', label = 'Número de teléfono', showHint = false }: Props = $props();
+	let {
+		name = 'telefono',
+		id = 'telefono',
+		label = 'Número de teléfono',
+		showHint = false,
+		required = false,
+		onPhoneValueChange
+	}: Props = $props();
 
 	// ===== STATE =====
 	let selectedCountry = $state<Country>(countries.find((c) => c.code === 'AR') || countries[0]);
@@ -126,6 +137,11 @@
 	// Computed full phone number for form submission (raw digits only)
 	let fullPhoneNumber = $derived.by(() => {
 		return currentDialCode + phoneNumberDigits;
+	});
+
+	$effect(() => {
+		void fullPhoneNumber;
+		onPhoneValueChange?.();
 	});
 
 	// Validate phone number using multiCountryPhone utility
@@ -297,7 +313,12 @@
 </script>
 
 <div class='group'>
-	<label for={id}>{label}</label>
+	<label for={id} aria-required={required ? 'true' : undefined}>
+		{label}
+		{#if required}
+			<span class='field-required-indicator' aria-hidden='true'> *</span>
+		{/if}
+	</label>
 	{#if showHint}
 		<p class='hint'>Con código de área. Ej: +54 3512334353</p>
 	{/if}
@@ -336,6 +357,7 @@
 				type='tel'
 				class='number-input'
 				class:invalid={showValidationError}
+				{id}
 				bind:this={phoneInputRef}
 				value={formattedPhoneNumber}
 				oninput={handlePhoneInput}
@@ -347,10 +369,11 @@
 						: '3512-3343-53'}
 				aria-label='Phone number'
 				aria-invalid={showValidationError}
+				aria-required={required ? 'true' : undefined}
 				inputmode='numeric'
 			/>
 			<!-- Hidden input for form submission with full phone number -->
-			<input type='hidden' {id} {name} value={fullPhoneNumber} />
+			<input type='hidden' {name} value={fullPhoneNumber} />
 		</div>
 	</div>
 </div>
