@@ -141,11 +141,11 @@
 				Sitio web —
 				<a
 					class='footer-credits-link'
-					href='https://ferreyrapons.com'
+					href='https://infomerx.co'
 					rel='noopener noreferrer'
 					target='_blank'
 				>
-					Sebastian Ferreyra Pons
+					Infomerx Engineering Solutions L.L.C.
 				</a>
 			</p>
 		</div>
