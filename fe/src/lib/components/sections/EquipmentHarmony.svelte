@@ -1,6 +1,7 @@
 <script module lang="ts">
 	// ===== IMPORTS =====
 	import Title from '$lib/components/ui/Title.svelte';
+	import Subtitle from '$lib/components/ui/Subtitle.svelte';
 	import IconTextRow from '$lib/components/ui/IconTextRow.svelte';
 	import SvgViewport from '$lib/components/ui/SvgViewport.svelte';
 	import Banos from '$lib/components/icons/Banos.svelte';
@@ -85,7 +86,15 @@
 		use:scrollReveal
 		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
 	>
-		<Title eyebrow="EQUIPAMIENTO EN" big="INTERIORES" bigSize="small" below="" />
+		<Title eyebrow="EQUIPAMIENTO DE" big="INTERIORES" bigSize="small" below="" />
+	</div>
+
+	<div
+		class="scroll-animate"
+		use:scrollReveal
+		style={`--scroll-animate-offset: ${animationOffset('text')}; --scroll-animate-duration: ${animationDuration()};`}
+	>
+		<Subtitle eyebrow="" big="Harmony Style" bigSize="big" align="center" />
 	</div>
 
 	<div class="equip-column">
