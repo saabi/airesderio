@@ -1,21 +1,38 @@
-<script lang='ts'>
+<script lang="ts">
 	import { formToastStore } from '$lib/stores/formToast';
 </script>
 
 {#if $formToastStore}
 	<div
 		id={$formToastStore.variant === 'success' ? 'form-success-message' : undefined}
-		class='form-toast'
+		class="form-toast"
 		class:form-toast--success={$formToastStore.variant === 'success'}
 		class:form-toast--error={$formToastStore.variant === 'error'}
-		role='alert'
-		aria-live='polite'
+		role="alert"
+		aria-live="polite"
 	>
-		<p class='form-toast__text'>{$formToastStore.message}</p>
+		<div class="form-toast__body">
+			<p class="form-toast__text">{$formToastStore.message}</p>
+			{#if $formToastStore.actions && $formToastStore.actions.length > 0}
+				<div class="form-toast__actions">
+					{#each $formToastStore.actions as action, i (action.href + action.label)}
+						<a
+							href={action.href}
+							class="form-toast__action"
+							class:form-toast__action--primary={i === 0}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							{action.label}
+						</a>
+					{/each}
+				</div>
+			{/if}
+		</div>
 		<button
-			type='button'
-			class='form-toast__dismiss'
-			aria-label='Cerrar notificación'
+			type="button"
+			class="form-toast__dismiss"
+			aria-label="Cerrar notificación"
 			onclick={() => formToastStore.dismiss()}
 		>
 			×
@@ -52,10 +69,48 @@
 		border: 1px solid rgba(255, 255, 255, 0.18);
 	}
 
-	.form-toast__text {
-		margin: 0;
+	.form-toast__body {
 		flex: 1;
 		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
+
+	.form-toast__text {
+		margin: 0;
+	}
+
+	.form-toast__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.form-toast__action {
+		display: inline-block;
+		padding: 0.45rem 0.85rem;
+		border-radius: 0.25rem;
+		font-size: 0.875rem;
+		font-weight: 600;
+		text-decoration: none;
+		border: 1px solid rgba(255, 255, 255, 0.35);
+		color: #fff;
+		background: transparent;
+	}
+
+	.form-toast__action:hover {
+		background: rgba(255, 255, 255, 0.1);
+	}
+
+	.form-toast__action--primary {
+		background: var(--color-accent-primary, #b63f3c);
+		border-color: transparent;
+	}
+
+	.form-toast__action--primary:hover {
+		filter: brightness(1.08);
+		background: var(--color-accent-primary, #b63f3c);
 	}
 
 	.form-toast__dismiss {

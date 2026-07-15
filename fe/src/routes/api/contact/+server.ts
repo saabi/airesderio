@@ -225,10 +225,19 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const responseMessage =
 			intent === 'direct-contact'
-				? 'Formulario enviado correctamente. Te enviamos un correo con un enlace para descargar la ficha técnica; un asesor se pondrá en contacto a la brevedad.'
-				: 'Formulario enviado correctamente. Revisá tu correo electrónico para descargar el archivo.';
+				? 'Formulario enviado correctamente. Te enviamos un correo con un enlace para ver la ficha técnica; un asesor se pondrá en contacto a la brevedad.'
+				: '¡Listo! Ya podés abrir la ficha técnica. También te enviamos el enlace por correo para que la tengas a mano.';
 
-		return json({ success: true, message: responseMessage });
+		const pdfUrl =
+			isPdfIntent(intent) && leadPdfToken && leadPdfType
+				? `/api/pdf/${encodeURIComponent(leadPdfType)}?token=${encodeURIComponent(leadPdfToken)}`
+				: undefined;
+
+		return json({
+			success: true,
+			message: responseMessage,
+			...(pdfUrl ? { pdfUrl } : {})
+		});
 	} catch (error) {
 		console.error('Form submission error:', error);
 		return json(

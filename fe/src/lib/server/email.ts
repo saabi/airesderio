@@ -206,7 +206,7 @@ export function buildPdfDownloadEmail(params: SendPdfLinkParams): EmailPreviewPa
 	const body = `
 		<h2 style="margin:0 0 8px; font-size:20px; color:${EMAIL_HEADER_BG};">${greeting}</h2>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
-			Gracias por tu interés en <strong>Aires de Río</strong>. Hacé clic en el botón para descargar la ficha técnica del proyecto.
+			Gracias por tu interés en <strong>Aires de Río</strong>. Si aún no abriste la ficha en el sitio, podés verla con el botón de abajo. Este correo es un respaldo para que la tengas a mano.
 		</p>
 		<table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:24px 0;">
 			<tr>
@@ -215,7 +215,7 @@ export function buildPdfDownloadEmail(params: SendPdfLinkParams): EmailPreviewPa
 						<tr>
 							<td align="center" style="background:${EMAIL_CTA_BUTTON_BG}; border:2px solid ${EMAIL_CTA_BUTTON_BORDER}; border-radius:6px;">
 								<a href="${downloadUrl}" style="display:inline-block; padding:14px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
-									Descargar ficha técnica
+									Abrir ficha técnica
 								</a>
 							</td>
 						</tr>
@@ -272,7 +272,7 @@ export function buildDirectContactThankYouEmail(
 			Gracias por tu interés en <strong>Aires de Río</strong>. Recibimos tu consulta y un asesor de nuestro equipo se pondrá en contacto con vos a la brevedad para brindarte información personalizada.
 		</p>
 		<p style="margin:0 0 16px; font-size:15px; color:#333; line-height:1.6;">
-			Mientras tanto, podés descargar la ficha técnica del proyecto y de las unidades disponibles para conocer en detalle sus características, terminaciones, superficies y equipamiento.
+			Mientras tanto, podés abrir la ficha técnica del proyecto y de las unidades disponibles para conocer en detalle sus características, terminaciones, superficies y equipamiento.
 		</p>
 		<table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:24px 0;">
 			<tr>
@@ -281,7 +281,7 @@ export function buildDirectContactThankYouEmail(
 						<tr>
 							<td align="center" style="background:${EMAIL_CTA_BUTTON_BG}; border:2px solid ${EMAIL_CTA_BUTTON_BORDER}; border-radius:6px;">
 								<a href="${downloadUrl}" style="display:inline-block; padding:14px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
-									Descargar ficha técnica
+									Abrir ficha técnica
 								</a>
 							</td>
 						</tr>
@@ -338,7 +338,7 @@ export function buildWhatsappLeadThankYouEmail(
 						<tr>
 							<td align="center" style="background:${EMAIL_CTA_BUTTON_BG}; border:2px solid ${EMAIL_CTA_BUTTON_BORDER}; border-radius:6px;">
 								<a href="${downloadUrl}" style="display:inline-block; padding:14px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:0.03em;">
-									Descargar ficha técnica
+									Abrir ficha técnica
 								</a>
 							</td>
 						</tr>

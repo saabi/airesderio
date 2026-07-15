@@ -5,6 +5,7 @@
 	import Textarea from '$lib/components/forms/Textarea.svelte';
 	import { formToastStore } from '$lib/stores/formToast';
 	import { isLeadPhoneFilled } from '$lib/utils/leadPhone.js';
+	import { suggestEmailCorrection } from '$lib/utils/emailSuggest.js';
 
 	// ===== TYPES =====
 	interface Props {
@@ -23,6 +24,8 @@
 	let formElement: HTMLFormElement | null = $state(null);
 	let errorMessage = $state<string | null>(null);
 	let canSubmit = $state(false);
+	let correo = $state('');
+	let emailSuggestion = $state<string | null>(null);
 
 	const optimisticContactSuccessMessage =
 		'Formulario enviado correctamente. Nos pondremos en contacto contigo pronto.';
@@ -31,14 +34,14 @@
 		const fd = new FormData(form);
 		const nombre = String(fd.get('nombre') ?? '').trim();
 		const apellido = String(fd.get('apellido') ?? '').trim();
-		const correo = String(fd.get('correo') ?? '').trim();
+		const correoVal = String(fd.get('correo') ?? '').trim();
 		const telefono = String(fd.get('telefono') ?? '');
 		const mensaje = String(fd.get('mensaje') ?? '').trim();
 		return (
 			nombre.length > 0 &&
 			apellido.length > 0 &&
-			correo.length > 0 &&
-			EMAIL_REGEX.test(correo) &&
+			correoVal.length > 0 &&
+			EMAIL_REGEX.test(correoVal) &&
 			isLeadPhoneFilled(telefono) &&
 			mensaje.length > 0
 		);
@@ -50,6 +53,19 @@
 			return;
 		}
 		canSubmit = isFooterFormComplete(formElement);
+	}
+
+	function updateEmailSuggestion(value: string) {
+		correo = value;
+		emailSuggestion = suggestEmailCorrection(value);
+		syncSubmitEnabled();
+	}
+
+	function applyEmailSuggestion() {
+		if (!emailSuggestion) return;
+		correo = emailSuggestion;
+		emailSuggestion = null;
+		syncSubmitEnabled();
 	}
 
 	$effect(() => {
@@ -76,7 +92,7 @@
 		const payload = {
 			nombre: formData.get('nombre') as string,
 			apellido: formData.get('apellido') as string,
-			correo: formData.get('correo') as string,
+			correo: (formData.get('correo') as string) || correo,
 			telefono: (formData.get('telefono') as string) || '',
 			mensaje: (formData.get('mensaje') as string) || '',
 			intent: 'direct-contact' as const,
@@ -106,6 +122,8 @@
 		}
 
 		formElement.reset();
+		correo = '';
+		emailSuggestion = null;
 		syncSubmitEnabled();
 		formToastStore.show(optimisticContactSuccessMessage, 'success');
 
@@ -199,9 +217,17 @@
 			type='email'
 			id='correo'
 			name='correo'
+			value={correo}
 			required
 			ariaLabel='Correo electrónico'
+			oninput={(e) => updateEmailSuggestion((e.currentTarget as HTMLInputElement).value)}
+			onblur={(e) => updateEmailSuggestion((e.currentTarget as HTMLInputElement).value)}
 		/>
+		{#if emailSuggestion}
+			<button type='button' class='email-suggest' onclick={applyEmailSuggestion}>
+				¿Quisiste decir <strong>{emailSuggestion}</strong>?
+			</button>
+		{/if}
 	</div>
 	<PhoneNumberInput
 		id='telefono'
@@ -263,7 +289,7 @@
 	}
 
 	/* Colors: global .btn-cta-primary (matches Location nav) */
-	.form-group button {
+	.form-group button.btn-cta-primary {
 		width: 100%;
 		padding: 0.75rem;
 		border-radius: 0.25rem;
@@ -272,12 +298,29 @@
 		cursor: pointer;
 	}
 
-	.form-group button:disabled {
+	.form-group button.btn-cta-primary:disabled {
 		/* Box/Visual */
 		opacity: 0.6;
 
 		/* Misc/Overrides */
 		cursor: not-allowed;
+	}
+
+	.email-suggest {
+		display: block;
+		margin-top: 0.35rem;
+		padding: 0;
+		border: none;
+		background: transparent;
+		font-family: var(--font-body);
+		font-size: 0.8rem;
+		color: var(--color-text-link, var(--color-accent-primary));
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.email-suggest:hover {
+		text-decoration: underline;
 	}
 
 	.form-message {

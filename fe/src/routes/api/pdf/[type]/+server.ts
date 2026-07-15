@@ -85,7 +85,9 @@ export const GET: import('@sveltejs/kit').RequestHandler = async ({ params, url 
 		})
 		.where(eq(leads.id, row.leadId));
 
-	const disposition = `attachment; filename="${UNIFIED_PDF_FILENAME_ASCII_FALLBACK}"; filename*=UTF-8''${encodeURIComponent(UNIFIED_PDF_FILENAME)}`;
+	const forceDownload = url.searchParams.get('download') === '1';
+	const dispositionType = forceDownload ? 'attachment' : 'inline';
+	const disposition = `${dispositionType}; filename="${UNIFIED_PDF_FILENAME_ASCII_FALLBACK}"; filename*=UTF-8''${encodeURIComponent(UNIFIED_PDF_FILENAME)}`;
 
 	return new Response(new Uint8Array(buffer), {
 		headers: {

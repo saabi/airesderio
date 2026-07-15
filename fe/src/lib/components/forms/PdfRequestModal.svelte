@@ -1,16 +1,18 @@
-<script module lang='ts'>
+<script module lang="ts">
 	import Input from '$lib/components/forms/Input.svelte';
 	import PhoneNumberInput from '$lib/components/forms/PhoneNumberInput.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
 	import type { PdfIntent, PdfRequestSource } from '$lib/stores/pdfRequestModal';
 
-	const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+	const EMAIL_REGEX =
+		/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 </script>
 
-<script lang='ts'>
+<script lang="ts">
 	import { pdfRequestModalStore } from '$lib/stores/pdfRequestModal';
 	import { formToastStore } from '$lib/stores/formToast';
 	import { isLeadPhoneFilled } from '$lib/utils/leadPhone.js';
+	import { suggestEmailCorrection } from '$lib/utils/emailSuggest.js';
 
 	let { intent, source }: { intent: PdfIntent; source: PdfRequestSource } = $props();
 
@@ -22,25 +24,24 @@
 				: 'submit-ficha-basica'
 	);
 
-	// ===== STATE =====
 	let formElement: HTMLFormElement | null = $state(null);
 	let errorMessage = $state<string | null>(null);
 	let canSubmit = $state(false);
-
-	const optimisticPdfSuccessMessage =
-		'Formulario enviado correctamente. Revisá tu correo electrónico para descargar el archivo.';
+	let submitting = $state(false);
+	let correo = $state('');
+	let emailSuggestion = $state<string | null>(null);
 
 	function isPdfRequestFormComplete(form: HTMLFormElement): boolean {
 		const fd = new FormData(form);
 		const nombre = String(fd.get('nombre') ?? '').trim();
 		const apellido = String(fd.get('apellido') ?? '').trim();
-		const correo = String(fd.get('correo') ?? '').trim();
+		const correoVal = String(fd.get('correo') ?? '').trim();
 		const telefono = String(fd.get('telefono') ?? '');
 		return (
 			nombre.length > 0 &&
 			apellido.length > 0 &&
-			correo.length > 0 &&
-			EMAIL_REGEX.test(correo) &&
+			correoVal.length > 0 &&
+			EMAIL_REGEX.test(correoVal) &&
 			isLeadPhoneFilled(telefono)
 		);
 	}
@@ -53,13 +54,26 @@
 		canSubmit = isPdfRequestFormComplete(formElement);
 	}
 
+	function updateEmailSuggestion(value: string) {
+		correo = value;
+		emailSuggestion = suggestEmailCorrection(value);
+		syncSubmitEnabled();
+	}
+
+	function applyEmailSuggestion() {
+		if (!emailSuggestion) return;
+		correo = emailSuggestion;
+		emailSuggestion = null;
+		syncSubmitEnabled();
+	}
+
 	$effect(() => {
 		void formElement;
 		syncSubmitEnabled();
 	});
 
-	// ===== HANDLERS =====
 	function handleClose() {
+		if (submitting) return;
 		pdfRequestModalStore.close();
 	}
 
@@ -69,9 +83,9 @@
 		}
 	}
 
-	function handleSubmit(event: Event) {
+	async function handleSubmit(event: Event) {
 		event.preventDefault();
-		if (!formElement) return;
+		if (!formElement || submitting) return;
 
 		errorMessage = null;
 
@@ -84,7 +98,7 @@
 		const payload = {
 			nombre: formData.get('nombre') as string,
 			apellido: formData.get('apellido') as string,
-			correo: formData.get('correo') as string,
+			correo: (formData.get('correo') as string) || correo,
 			telefono: (formData.get('telefono') as string) || '',
 			mensaje: (formData.get('mensaje') as string) || '',
 			intent,
@@ -107,140 +121,158 @@
 			return;
 		}
 
-		formElement.reset();
-		syncSubmitEnabled();
-		formToastStore.show(optimisticPdfSuccessMessage, 'success');
-		pdfRequestModalStore.close();
-
-		void fetch('/api/contact', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(payload)
-		})
-			.then(async (response) => {
-				let result: { error?: string } = {};
-				try {
-					result = await response.json();
-				} catch {
-					/* non-JSON body */
-				}
-				if (!response.ok) {
-					formToastStore.show(
-						result.error || 'Error al enviar el formulario. Por favor, intenta de nuevo.',
-						'error'
-					);
-				}
-			})
-			.catch((error) => {
-				console.error('Form submission error:', error);
-				formToastStore.show(
-					'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.',
-					'error'
-				);
+		submitting = true;
+		try {
+			const response = await fetch('/api/contact', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload)
 			});
+
+			let result: { error?: string; message?: string; pdfUrl?: string } = {};
+			try {
+				result = await response.json();
+			} catch {
+				/* non-JSON body */
+			}
+
+			if (!response.ok) {
+				errorMessage =
+					result.error || 'Error al enviar el formulario. Por favor, intenta de nuevo.';
+				formToastStore.show(errorMessage, 'error');
+				return;
+			}
+
+			const pdfUrl = result.pdfUrl;
+			const message =
+				result.message ||
+				'¡Listo! Ya podés abrir la ficha técnica. También te enviamos el enlace por correo para que la tengas a mano.';
+
+			formElement.reset();
+			correo = '';
+			emailSuggestion = null;
+			syncSubmitEnabled();
+			pdfRequestModalStore.close();
+
+			if (pdfUrl) {
+				try {
+					window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+				} catch {
+					/* popup may be blocked */
+				}
+				formToastStore.show(message, 'success', [
+					{ label: 'Abrir ficha técnica', href: pdfUrl },
+					{ label: 'Descargar', href: `${pdfUrl}&download=1` }
+				]);
+			} else {
+				formToastStore.show(message, 'success');
+			}
+		} catch (error) {
+			console.error('Form submission error:', error);
+			const msg =
+				'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.';
+			errorMessage = msg;
+			formToastStore.show(msg, 'error');
+		} finally {
+			submitting = false;
+		}
 	}
 </script>
 
 <div
-	class='modal-backdrop'
-	role='dialog'
-	aria-modal='true'
-	aria-labelledby='pdf-modal-title'
-	aria-describedby='pdf-modal-desc'
-	tabindex='-1'
+	class="modal-backdrop"
+	role="dialog"
+	aria-modal="true"
+	aria-labelledby="pdf-modal-title"
+	aria-describedby="pdf-modal-desc"
+	tabindex="-1"
 	onclick={handleBackdropClick}
 	onkeydown={(e) => e.key === 'Escape' && handleClose()}
 >
-	<div class='modal-content'>
-		<button type='button' class='modal-close' aria-label='Cerrar' onclick={handleClose}>×</button>
-		<h2 id='pdf-modal-title'>Solicitar Ficha Técnica</h2>
-		<p id='pdf-modal-desc'>Completá tus datos y te enviaremos el PDF del proyecto a tu correo.</p>
+	<div class="modal-content">
+		<button type="button" class="modal-close" aria-label="Cerrar" onclick={handleClose}>×</button>
+		<h2 id="pdf-modal-title">Solicitar Ficha Técnica</h2>
+		<p id="pdf-modal-desc">
+			Completá tus datos y te damos acceso a la ficha al instante. También te la enviamos por
+			correo para que la tengas a mano.
+		</p>
 
 		<form
 			bind:this={formElement}
-			action='#'
-			method='POST'
+			action="#"
+			method="POST"
 			onsubmit={handleSubmit}
 			oninput={syncSubmitEnabled}
 			onchange={syncSubmitEnabled}
 			novalidate
 		>
 			<input
-				type='text'
-				name='website'
-				autocomplete='off'
-				tabindex='-1'
-				aria-hidden='true'
-				style='position: absolute; left: -9999px;'
+				type="text"
+				name="website"
+				autocomplete="off"
+				tabindex="-1"
+				aria-hidden="true"
+				style="position: absolute; left: -9999px;"
 			/>
 
 			{#if errorMessage}
-				<div class='form-message form-message--error' role='alert'>{errorMessage}</div>
+				<div class="form-message form-message--error" role="alert">{errorMessage}</div>
 			{/if}
 
-			<div class='form-row'>
-				<div class='form-group'>
-					<label for='pdf-nombre'>
-						Nombre<span class='field-required-indicator' aria-hidden='true'> *</span>
+			<div class="form-row">
+				<div class="form-group">
+					<label for="pdf-nombre">
+						Nombre<span class="field-required-indicator" aria-hidden="true"> *</span>
 					</label>
-					<Input
-						type='text'
-						id='pdf-nombre'
-						name='nombre'
-						required
-						ariaLabel='Nombre'
-					/>
+					<Input type="text" id="pdf-nombre" name="nombre" required ariaLabel="Nombre" />
 				</div>
-				<div class='form-group'>
-					<label for='pdf-apellido'>
-						Apellido<span class='field-required-indicator' aria-hidden='true'> *</span>
+				<div class="form-group">
+					<label for="pdf-apellido">
+						Apellido<span class="field-required-indicator" aria-hidden="true"> *</span>
 					</label>
-					<Input
-						type='text'
-						id='pdf-apellido'
-						name='apellido'
-						required
-						ariaLabel='Apellido'
-					/>
+					<Input type="text" id="pdf-apellido" name="apellido" required ariaLabel="Apellido" />
 				</div>
 			</div>
-			<div class='form-group'>
-				<label for='pdf-correo'>
-					Correo<span class='field-required-indicator' aria-hidden='true'> *</span>
+			<div class="form-group">
+				<label for="pdf-correo">
+					Correo<span class="field-required-indicator" aria-hidden="true"> *</span>
 				</label>
 				<Input
-					type='email'
-					id='pdf-correo'
-					name='correo'
+					type="email"
+					id="pdf-correo"
+					name="correo"
+					value={correo}
 					required
-					ariaLabel='Correo electrónico'
+					ariaLabel="Correo electrónico"
+					oninput={(e) => updateEmailSuggestion((e.currentTarget as HTMLInputElement).value)}
+					onblur={(e) => updateEmailSuggestion((e.currentTarget as HTMLInputElement).value)}
 				/>
+				{#if emailSuggestion}
+					<button type="button" class="email-suggest" onclick={applyEmailSuggestion}>
+						¿Quisiste decir <strong>{emailSuggestion}</strong>?
+					</button>
+				{/if}
 			</div>
 			<PhoneNumberInput
-				id='pdf-telefono'
-				name='telefono'
-				label='Contacto de WhatsApp'
+				id="pdf-telefono"
+				name="telefono"
+				label="Contacto de WhatsApp"
 				required
 				onPhoneValueChange={syncSubmitEnabled}
 			/>
-			<div class='form-group'>
-				<label for='pdf-mensaje'>Mensaje (opcional)</label>
-				<Textarea
-					id='pdf-mensaje'
-					name='mensaje'
-					rows={3}
-					ariaLabel='Mensaje'
-				/>
+			<div class="form-group">
+				<label for="pdf-mensaje">Mensaje (opcional)</label>
+				<Textarea id="pdf-mensaje" name="mensaje" rows={3} ariaLabel="Mensaje" />
 			</div>
-			<div class='form-group'>
+			<div class="form-group">
 				<button
 					id={submitButtonId}
-					type='submit'
-					class='btn-cta-primary'
-					aria-label='Solicitar ficha técnica'
-					disabled={!canSubmit}
+					type="submit"
+					class="btn-cta-primary"
+					aria-label="Solicitar ficha técnica"
+					disabled={!canSubmit || submitting}
 				>
-					SOLICITAR FICHA TÉCNICA
+					{submitting ? 'ENVIANDO…' : 'SOLICITAR FICHA TÉCNICA'}
 				</button>
 			</div>
 		</form>
@@ -326,8 +358,7 @@
 		color: var(--color-text-primary);
 	}
 
-	/* Colors: global .btn-cta-primary (matches Location nav) */
-	.form-group button {
+	.form-group button.btn-cta-primary {
 		width: 100%;
 		padding: 0.75rem;
 		border-radius: 0.25rem;
@@ -336,9 +367,26 @@
 		cursor: pointer;
 	}
 
-	.form-group button:disabled {
+	.form-group button.btn-cta-primary:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
+	}
+
+	.email-suggest {
+		display: block;
+		margin-top: 0.35rem;
+		padding: 0;
+		border: none;
+		background: transparent;
+		font-family: var(--font-body);
+		font-size: 0.8rem;
+		color: var(--color-text-link, var(--color-accent-primary));
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.email-suggest:hover {
+		text-decoration: underline;
 	}
 
 	.form-message {
