@@ -304,7 +304,7 @@
 	}
 
 	.swatch.downloads {
-		background: var(--color-accent-secondary);
+		background: var(--color-info);
 	}
 
 	.bar.leads {
@@ -312,7 +312,7 @@
 	}
 
 	.bar.downloads {
-		fill: var(--color-accent-secondary);
+		fill: var(--color-info);
 	}
 
 	.empty {
