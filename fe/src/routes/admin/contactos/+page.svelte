@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
+	import LeadsPerDayChart from '$lib/components/admin/LeadsPerDayChart.svelte';
 
 	type LeadRow = {
 		id: string;
@@ -614,6 +615,10 @@
 	<title>Contactos - Admin | Aires de Río</title>
 </svelte:head>
 <svelte:window onkeydown={handleManualLeadModalKeydown} />
+
+{#if !loading && !error}
+	<LeadsPerDayChart {leads} />
+{/if}
 
 <h1>Contactos</h1>
 
