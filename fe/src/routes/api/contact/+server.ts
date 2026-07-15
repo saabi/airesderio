@@ -4,6 +4,7 @@
  * Stores leads in PostgreSQL, sends notification via SMTP (DreamHost),
  * and stores PDF access tokens for PDF intents and for direct-contact (ficha en el mail de agradecimiento).
  * On SMTP failure after persistence, enqueues retry jobs and still returns success.
+ * Email is sent in the background so the client is not blocked on SMTP RTT.
  */
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { getDb } from '$lib/server/db/index.js';
@@ -169,60 +170,6 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const fullName = `${firstName} ${lastName}`;
 
-		try {
-			await sendContactNotification({
-				leadName: fullName,
-				leadEmail: email,
-				leadPhone: phone ?? undefined,
-				leadMessage: message ?? undefined,
-				intent
-			});
-		} catch (emailErr) {
-			console.error('SMTP error (team notification):', emailErr);
-			await safeEnqueue(db, lead.id, 'team_notification', {
-				intent,
-				leadName: fullName,
-				leadEmail: email,
-				leadPhone: phone ?? undefined,
-				leadMessage: message ?? undefined
-			}, emailErr);
-		}
-
-		try {
-			if (isPdfIntent(intent) && leadPdfToken && leadPdfType) {
-				await sendPdfDownloadLink({
-					leadName: firstName,
-					leadEmail: email,
-					pdfType: leadPdfType,
-					token: leadPdfToken
-				});
-			} else if (intent === 'direct-contact' && leadPdfToken && leadPdfType) {
-				await sendDirectContactThankYou({
-					leadName: firstName,
-					leadEmail: email,
-					pdfType: leadPdfType,
-					token: leadPdfToken
-				});
-			}
-		} catch (emailErr) {
-			console.error('SMTP error (lead email):', emailErr);
-			if (isPdfIntent(intent) && leadPdfToken && leadPdfType) {
-				await safeEnqueue(db, lead.id, 'lead_pdf', {
-					leadName: firstName,
-					leadEmail: email,
-					pdfType: leadPdfType,
-					token: leadPdfToken
-				}, emailErr);
-			} else if (intent === 'direct-contact' && leadPdfToken && leadPdfType) {
-				await safeEnqueue(db, lead.id, 'lead_thankyou', {
-					leadName: firstName,
-					leadEmail: email,
-					pdfType: leadPdfType,
-					token: leadPdfToken
-				}, emailErr);
-			}
-		}
-
 		const responseMessage =
 			intent === 'direct-contact'
 				? 'Formulario enviado correctamente. Te enviamos un correo con un enlace para ver la ficha técnica; un asesor se pondrá en contacto a la brevedad.'
@@ -232,6 +179,81 @@ export const POST: RequestHandler = async ({ request }) => {
 			isPdfIntent(intent) && leadPdfToken && leadPdfType
 				? `/api/pdf/${encodeURIComponent(leadPdfType)}?token=${encodeURIComponent(leadPdfToken)}`
 				: undefined;
+
+		// SMTP after persist — do not block the client response on mail RTT.
+		void (async () => {
+			try {
+				await sendContactNotification({
+					leadName: fullName,
+					leadEmail: email,
+					leadPhone: phone ?? undefined,
+					leadMessage: message ?? undefined,
+					intent
+				});
+			} catch (emailErr) {
+				console.error('SMTP error (team notification):', emailErr);
+				await safeEnqueue(
+					db,
+					lead.id,
+					'team_notification',
+					{
+						intent,
+						leadName: fullName,
+						leadEmail: email,
+						leadPhone: phone ?? undefined,
+						leadMessage: message ?? undefined
+					},
+					emailErr
+				);
+			}
+
+			try {
+				if (isPdfIntent(intent) && leadPdfToken && leadPdfType) {
+					await sendPdfDownloadLink({
+						leadName: firstName,
+						leadEmail: email,
+						pdfType: leadPdfType,
+						token: leadPdfToken
+					});
+				} else if (intent === 'direct-contact' && leadPdfToken && leadPdfType) {
+					await sendDirectContactThankYou({
+						leadName: firstName,
+						leadEmail: email,
+						pdfType: leadPdfType,
+						token: leadPdfToken
+					});
+				}
+			} catch (emailErr) {
+				console.error('SMTP error (lead email):', emailErr);
+				if (isPdfIntent(intent) && leadPdfToken && leadPdfType) {
+					await safeEnqueue(
+						db,
+						lead.id,
+						'lead_pdf',
+						{
+							leadName: firstName,
+							leadEmail: email,
+							pdfType: leadPdfType,
+							token: leadPdfToken
+						},
+						emailErr
+					);
+				} else if (intent === 'direct-contact' && leadPdfToken && leadPdfType) {
+					await safeEnqueue(
+						db,
+						lead.id,
+						'lead_thankyou',
+						{
+							leadName: firstName,
+							leadEmail: email,
+							pdfType: leadPdfType,
+							token: leadPdfToken
+						},
+						emailErr
+					);
+				}
+			}
+		})();
 
 		return json({
 			success: true,

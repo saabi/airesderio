@@ -27,9 +27,11 @@
 	let formElement: HTMLFormElement | null = $state(null);
 	let errorMessage = $state<string | null>(null);
 	let canSubmit = $state(false);
-	let submitting = $state(false);
 	let correo = $state('');
 	let emailSuggestion = $state<string | null>(null);
+
+	const optimisticPdfSuccessMessage =
+		'¡Listo! Ya podés abrir la ficha técnica. También te enviamos el enlace por correo para que la tengas a mano.';
 
 	function isPdfRequestFormComplete(form: HTMLFormElement): boolean {
 		const fd = new FormData(form);
@@ -73,7 +75,6 @@
 	});
 
 	function handleClose() {
-		if (submitting) return;
 		pdfRequestModalStore.close();
 	}
 
@@ -83,9 +84,9 @@
 		}
 	}
 
-	async function handleSubmit(event: Event) {
+	function handleSubmit(event: Event) {
 		event.preventDefault();
-		if (!formElement || submitting) return;
+		if (!formElement) return;
 
 		errorMessage = null;
 
@@ -121,61 +122,54 @@
 			return;
 		}
 
-		submitting = true;
-		try {
-			const response = await fetch('/api/contact', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(payload)
-			});
+		formElement.reset();
+		correo = '';
+		emailSuggestion = null;
+		syncSubmitEnabled();
+		formToastStore.show(optimisticPdfSuccessMessage, 'success');
+		pdfRequestModalStore.close();
 
-			let result: { error?: string; message?: string; pdfUrl?: string } = {};
-			try {
-				result = await response.json();
-			} catch {
-				/* non-JSON body */
-			}
-
-			if (!response.ok) {
-				errorMessage =
-					result.error || 'Error al enviar el formulario. Por favor, intenta de nuevo.';
-				formToastStore.show(errorMessage, 'error');
-				return;
-			}
-
-			const pdfUrl = result.pdfUrl;
-			const message =
-				result.message ||
-				'¡Listo! Ya podés abrir la ficha técnica. También te enviamos el enlace por correo para que la tengas a mano.';
-
-			formElement.reset();
-			correo = '';
-			emailSuggestion = null;
-			syncSubmitEnabled();
-			pdfRequestModalStore.close();
-
-			if (pdfUrl) {
+		void fetch('/api/contact', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload)
+		})
+			.then(async (response) => {
+				let result: { error?: string; message?: string; pdfUrl?: string } = {};
 				try {
-					window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+					result = await response.json();
 				} catch {
-					/* popup may be blocked */
+					/* non-JSON body */
 				}
-				formToastStore.show(message, 'success', [
-					{ label: 'Abrir ficha técnica', href: pdfUrl },
-					{ label: 'Descargar', href: `${pdfUrl}&download=1` }
-				]);
-			} else {
-				formToastStore.show(message, 'success');
-			}
-		} catch (error) {
-			console.error('Form submission error:', error);
-			const msg =
-				'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.';
-			errorMessage = msg;
-			formToastStore.show(msg, 'error');
-		} finally {
-			submitting = false;
-		}
+				if (!response.ok) {
+					formToastStore.show(
+						result.error || 'Error al enviar el formulario. Por favor, intenta de nuevo.',
+						'error'
+					);
+					return;
+				}
+
+				const pdfUrl = result.pdfUrl;
+				const message = result.message || optimisticPdfSuccessMessage;
+				if (pdfUrl) {
+					try {
+						window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+					} catch {
+						/* popup may be blocked */
+					}
+					formToastStore.show(message, 'success', [
+						{ label: 'Abrir ficha técnica', href: pdfUrl },
+						{ label: 'Descargar', href: `${pdfUrl}&download=1` }
+					]);
+				}
+			})
+			.catch((error) => {
+				console.error('Form submission error:', error);
+				formToastStore.show(
+					'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.',
+					'error'
+				);
+			});
 	}
 </script>
 
@@ -270,9 +264,9 @@
 					type="submit"
 					class="btn-cta-primary"
 					aria-label="Solicitar ficha técnica"
-					disabled={!canSubmit || submitting}
+					disabled={!canSubmit}
 				>
-					{submitting ? 'ENVIANDO…' : 'SOLICITAR FICHA TÉCNICA'}
+					SOLICITAR FICHA TÉCNICA
 				</button>
 			</div>
 		</form>
