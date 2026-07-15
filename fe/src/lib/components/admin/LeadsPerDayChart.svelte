@@ -1,6 +1,7 @@
 <script lang="ts">
 	type LeadDate = { createdAt: string; downloadCount?: number | null };
 	type RangeMode = '30d' | 'all';
+	type DownloadMode = 'unique' | 'total';
 	type DayMetrics = { date: string; leads: number; downloads: number };
 
 	const TZ = 'America/Argentina/Buenos_Aires';
@@ -13,6 +14,7 @@
 	let { leads }: { leads: LeadDate[] } = $props();
 
 	let range = $state<RangeMode>('30d');
+	let downloadMode = $state<DownloadMode>('unique');
 
 	function toDayKey(iso: string | Date): string {
 		const d = typeof iso === 'string' ? new Date(iso) : iso;
@@ -46,6 +48,12 @@
 		});
 	}
 
+	function downloadValue(raw: number | null | undefined): number {
+		const n = Math.max(0, Number(raw) || 0);
+		if (downloadMode === 'unique') return n > 0 ? 1 : 0;
+		return n;
+	}
+
 	const series = $derived.by((): DayMetrics[] => {
 		const leadCounts: Record<string, number> = {};
 		const downloadCounts: Record<string, number> = {};
@@ -53,7 +61,7 @@
 			if (!lead.createdAt) continue;
 			const key = toDayKey(lead.createdAt);
 			leadCounts[key] = (leadCounts[key] ?? 0) + 1;
-			downloadCounts[key] = (downloadCounts[key] ?? 0) + Math.max(0, Number(lead.downloadCount) || 0);
+			downloadCounts[key] = (downloadCounts[key] ?? 0) + downloadValue(lead.downloadCount);
 		}
 
 		const today = toDayKey(new Date());
@@ -82,6 +90,14 @@
 
 	const totalLeads = $derived(series.reduce((sum, d) => sum + d.leads, 0));
 	const totalDownloads = $derived(series.reduce((sum, d) => sum + d.downloads, 0));
+	const downloadsLabel = $derived(
+		downloadMode === 'unique' ? 'leads con descarga' : 'descargas'
+	);
+	const downloadsNote = $derived(
+		downloadMode === 'unique'
+			? 'Descargas = 1 por lead si descargó al menos una vez (día de alta).'
+			: 'Descargas = suma del contador real por lead (día de alta).'
+	);
 	const maxCount = $derived(
 		Math.max(1, ...series.map((d) => Math.max(d.leads, d.downloads)))
 	);
@@ -139,30 +155,48 @@
 			<h2 id="leads-per-day-heading">Leads y descargas por día</h2>
 			{#if leads.length > 0 && series.length > 0}
 				<p class="chart-summary">
-					{totalLeads} leads · {totalDownloads} descargas en el período
+					{totalLeads} leads · {totalDownloads} {downloadsLabel} en el período
 				</p>
-				<p class="chart-note">
-					Las descargas se atribuyen al día de alta del lead (contador actual).
-				</p>
+				<p class="chart-note">{downloadsNote}</p>
 			{/if}
 		</div>
-		<div class="range-toggle" role="group" aria-label="Rango del gráfico">
-			<button
-				type="button"
-				class:active={range === '30d'}
-				aria-pressed={range === '30d'}
-				onclick={() => (range = '30d')}
-			>
-				Últimos 30 días
-			</button>
-			<button
-				type="button"
-				class:active={range === 'all'}
-				aria-pressed={range === 'all'}
-				onclick={() => (range = 'all')}
-			>
-				Todo el tiempo
-			</button>
+		<div class="chart-controls">
+			<div class="range-toggle" role="group" aria-label="Rango del gráfico">
+				<button
+					type="button"
+					class:active={range === '30d'}
+					aria-pressed={range === '30d'}
+					onclick={() => (range = '30d')}
+				>
+					Últimos 30 días
+				</button>
+				<button
+					type="button"
+					class:active={range === 'all'}
+					aria-pressed={range === 'all'}
+					onclick={() => (range = 'all')}
+				>
+					Todo el tiempo
+				</button>
+			</div>
+			<div class="range-toggle" role="group" aria-label="Modo de descargas">
+				<button
+					type="button"
+					class:active={downloadMode === 'unique'}
+					aria-pressed={downloadMode === 'unique'}
+					onclick={() => (downloadMode = 'unique')}
+				>
+					1 por lead
+				</button>
+				<button
+					type="button"
+					class:active={downloadMode === 'total'}
+					aria-pressed={downloadMode === 'total'}
+					onclick={() => (downloadMode = 'total')}
+				>
+					Todas
+				</button>
+			</div>
 		</div>
 	</div>
 
@@ -171,17 +205,20 @@
 	{:else}
 		<div class="legend" aria-hidden="true">
 			<span class="legend-item"><span class="swatch leads"></span> Leads</span>
-			<span class="legend-item"><span class="swatch downloads"></span> Descargas</span>
+			<span class="legend-item">
+				<span class="swatch downloads"></span>
+				{downloadMode === 'unique' ? 'Con descarga' : 'Descargas'}
+			</span>
 		</div>
 		<svg
 			class="chart-svg"
 			viewBox="0 0 {CHART_W} {CHART_H}"
 			role="img"
-			aria-label="Gráfico de barras: {totalLeads} leads y {totalDownloads} descargas en el período seleccionado"
+			aria-label="Gráfico de barras: {totalLeads} leads y {totalDownloads} {downloadsLabel} en el período seleccionado"
 		>
 			{#each bars as bar (bar.date)}
 				<g>
-					<title>{formatLabel(bar.date)}: {bar.leads} leads, {bar.downloads} descargas</title>
+					<title>{`${formatLabel(bar.date)}: ${bar.leads} leads, ${bar.downloads} ${downloadMode === 'unique' ? 'con descarga' : 'descargas'}`}</title>
 					<rect
 						class="bar leads"
 						x={bar.leadsBar.x}
@@ -245,6 +282,13 @@
 		margin: 0.15rem 0 0;
 		font-size: 0.75rem;
 		color: var(--color-text-tertiary);
+	}
+
+	.chart-controls {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 0.5rem;
 	}
 
 	.range-toggle {
