@@ -17,6 +17,8 @@
 			</form>
 		</nav>
 		<main
+			id="main-content"
+			tabindex="-1"
 			class="admin-main"
 			class:admin-main-full-width={$page.url.pathname.startsWith('/admin/contactos')}
 		>

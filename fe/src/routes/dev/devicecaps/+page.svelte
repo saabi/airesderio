@@ -127,7 +127,7 @@
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<main class="devicecaps-route">
+<main id="main-content" tabindex="-1" class="devicecaps-route">
 	<div class="devicecaps-shell">
 		<h1>Device capabilities</h1>
 		<p class="description">

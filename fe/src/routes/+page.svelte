@@ -119,7 +119,7 @@
 	{@html `<script type="application/ld+json">${JSON.stringify(structuredData)}</script>`}
 </svelte:head>
 
-<main>
+<main id="main-content" tabindex="-1">
 	<Hero />
 	<SlideGestureHint />
 	<FloatingCTA />

@@ -6,7 +6,7 @@
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<main class="ficha-tecnica-route">
+<main id="main-content" tabindex="-1" class="ficha-tecnica-route">
 	<FichaTecnicaLineaPreview variant="luxury" />
 </main>
 

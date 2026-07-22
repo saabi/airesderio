@@ -49,7 +49,7 @@
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
-<main class="page-shell theme-page">
+<main id="main-content" tabindex="-1" class="page-shell theme-page">
 	<header class="theme-page__header">
 		<h1>Tema y tokens de color</h1>
 		<p class="theme-page__lede">

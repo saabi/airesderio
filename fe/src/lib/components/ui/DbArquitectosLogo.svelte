@@ -7,6 +7,8 @@
 		height?: string;
 		fillColor?: string;
 		title?: string;
+		/** When true, hide from AT (use when parent link already names the brand). Default false. */
+		decorative?: boolean;
 	}
 </script>
 
@@ -18,7 +20,8 @@
 		width = '100%',
 		height = 'auto',
 		fillColor = 'currentColor',
-		title = 'D+B Arquitectos Asociados'
+		title = 'D+B Arquitectos Asociados',
+		decorative = false
 	}: Props = $props();
 </script>
 
@@ -29,11 +32,14 @@
 	width={width}
 	height={height}
 	viewBox='0 0 2346.41 991.09'
-	role='img'
-	aria-label={title}
+	role={decorative ? undefined : 'img'}
+	aria-label={decorative ? undefined : title}
+	aria-hidden={decorative ? 'true' : undefined}
 	style:--db-logo-fill={fillColor}
 >
-	<title>{title}</title>
+	{#if !decorative}
+		<title>{title}</title>
+	{/if}
 	<g class='logo-shapes'>
 		<path d='M129.93 945.75l15.89 0 -65.2 -166.85 -15.42 0 -65.2 166.85 15.19 0 19.16 -50.24 76.42 0 19.16 50.24zm-23.84 -62.86l0 0 -67.07 0 33.66 -87.87 33.41 87.87z' />
 		<path d='M166.15 945.75l13.55 0 0 -72.91c0,-5.92 0.7,-10.59 2.11,-14.02 1.4,-3.43 3.5,-6.62 6.31,-9.58 4.05,-4.52 8.49,-7.83 13.32,-9.93 4.82,-2.11 9.96,-3.16 15.42,-3.16 1.71,0 3.27,0.08 4.67,0.24 1.4,0.15 2.88,0.39 4.44,0.7l1.64 -12.62c-1.56,-0.31 -3.16,-0.54 -4.79,-0.7 -1.64,-0.16 -3.31,-0.24 -5.03,-0.24 -15.73,0 -28.43,7.25 -38.09,21.74l0 -19.63 -13.55 0 0 120.11z' />

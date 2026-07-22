@@ -38,7 +38,7 @@
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<main class="email-preview-route">
+<main id="main-content" tabindex="-1" class="email-preview-route">
 	<div class="email-preview-shell">
 		<h1>Email preview</h1>
 		<p class="description">Inspect the generated email templates used by contact and download flows.</p>

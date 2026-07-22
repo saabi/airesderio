@@ -122,7 +122,7 @@
 					target='_blank'
 					aria-label='Ver D+B Arquitectos Asociados en Instagram'
 				>
-					<DbArquitectosLogo fillColor='currentColor' width='10rem' />
+					<DbArquitectosLogo fillColor='currentColor' width='10rem' decorative />
 				</a>
 			</section>
 			<section class='footer-column footer-row2-habitat' aria-label='Habitat Prime'>

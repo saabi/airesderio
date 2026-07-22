@@ -129,7 +129,15 @@
 
 <header class='site'>
 	<div class='bar'>
-		<AiresDeRioLogo class='logo' loading='eager' height='2.2em' theme='dark' />
+		<a
+			href='/'
+			class='logo-home'
+			aria-label='Aires de Río — Inicio'
+			aria-current={activeLinkId === 'top' ? 'page' : undefined}
+			onclick={(e) => handleNavClick(e, '/')}
+		>
+			<AiresDeRioLogo class='logo' height='2.2em' theme='dark' decorative />
+		</a>
 		<nav
 			id='main-nav'
 			class='main-nav'
@@ -167,6 +175,7 @@
 					id='color-editor-toggle'
 					class='color-editor-toggle'
 					onclick={() => (colorEditorOpen = !colorEditorOpen)}
+					aria-label='Editor de colores'
 					aria-expanded={colorEditorOpen}
 					type='button'
 				>
@@ -177,7 +186,7 @@
 				id='nav-toggle'
 				class='nav-toggle'
 				class:is-open={$menuStore}
-				aria-label='Abrir menú'
+				aria-label={$menuStore ? 'Cerrar menú' : 'Abrir menú'}
 				aria-expanded={$menuStore}
 				aria-controls='main-nav'
 				onclick={toggleMenu}
@@ -230,6 +239,13 @@
 
 		/* Box/Visual */
 		background: var(--header-bg) !important;
+	}
+
+	.logo-home {
+		display: inline-flex;
+		align-items: center;
+		text-decoration: none;
+		color: inherit;
 	}
 
 	:global(.logo) {

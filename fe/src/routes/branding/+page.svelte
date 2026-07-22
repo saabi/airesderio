@@ -20,7 +20,7 @@
 	/>
 </svelte:head>
 
-<main class="branding-page">
+<main id="main-content" tabindex="-1" class="branding-page">
 	<section class="branding-intro">
 		<h1>Branding assets</h1>
 		<p>

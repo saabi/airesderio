@@ -10,6 +10,8 @@
 		showIsotype?: boolean;
 		/** When true, show the wordmark portion of the logo. */
 		showWordmark?: boolean;
+		/** When true, hide from AT (use when parent link already names the brand). Default false. */
+		decorative?: boolean;
 	}
 </script>
 
@@ -22,7 +24,8 @@
 		height,
 		theme = 'light',
 		showIsotype = true,
-		showWordmark = true
+		showWordmark = true,
+		decorative = false
 	}: Props = $props();
 
 	// ===== DOM REFS =====
@@ -80,7 +83,9 @@
 	viewBox={viewBox}
 	xmlns='http://www.w3.org/2000/svg'
 	xmlns:xlink='http://www.w3.org/1999/xlink'
-	aria-label='Habitat Prime SAS'
+	role={decorative ? undefined : 'img'}
+	aria-label={decorative ? undefined : 'Habitat Prime SAS'}
+	aria-hidden={decorative ? 'true' : undefined}
 >
 	<defs>
 		<linearGradient
