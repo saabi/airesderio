@@ -22,6 +22,8 @@
 		title: string;
 		titleMobile?: string;
 		subtitle: string;
+		/** Approximate private area (rounded), e.g. "~54 m² propios" */
+		area: string;
 	}
 
 	// ===== STATIC CONSTANTS =====
@@ -30,17 +32,20 @@
 			image: '/planos/1hab-frente.png',
 			title: 'Departamento de 2 ambientes con balcón',
 			titleMobile: 'Dto. de 2 ambientes con balcón',
-			subtitle: 'FRENTE'
+			subtitle: 'FRENTE',
+			area: '~54 m² propios'
 		},
 		{
 			image: '/planos/1hab-contrafrente.png',
 			title: 'Departamento de 2 ambientes',
-			subtitle: 'CONTRAFRENTE'
+			subtitle: 'CONTRAFRENTE',
+			area: '~52 m² propios'
 		},
 		{
 			image: '/planos/2hab-contrafrente.png',
 			title: 'Departamento de 4 ambientes',
-			subtitle: 'CONTRAFRENTE'
+			subtitle: 'CONTRAFRENTE',
+			area: '~108 m² propios'
 		}
 	];
 
@@ -147,7 +152,8 @@
 				<ImageCarousel
 					class="floor-plans-carousel"
 					slideCount={activePlans.length}
-					slideAriaLabel={(index) => `Plano ${index + 1}: ${activePlans[index].title}`}
+					slideAriaLabel={(index) =>
+						`Plano ${index + 1}: ${activePlans[index].title}, ${activePlans[index].area}`}
 					bind:currentIndex={currentPlanIndex}
 					onIndexChange={handleIndexChange}
 					autoRotate={false}
@@ -174,7 +180,9 @@
 							</figcaption>
 
 							{#if currentPlan.subtitle}
-								<p class="floor-plan-subtitle">{currentPlan.subtitle}</p>
+								<p class="floor-plan-subtitle">
+									{currentPlan.subtitle}<span class="floor-plan-area"> · {currentPlan.area}</span>
+								</p>
 							{/if}
 						</figure>
 					{/snippet}
@@ -183,7 +191,7 @@
 							type="image"
 							src={activePlans[index].image}
 							logicalSrc={activePlans[index].image}
-							alt={activePlans[index].title}
+							alt={`${activePlans[index].title}, ${activePlans[index].area}`}
 							useAutoAlternateSrc={false}
 							webpSrcset={FLOOR_PLAN_WEBP_SRCSETS[index]}
 							imgSrcset={FLOOR_PLAN_IMG_SRCSETS[index]}
@@ -284,6 +292,13 @@
 		line-height: 1;
 		text-transform: uppercase;
 		color: #ef4444;
+	}
+
+	.floor-plan-area {
+		font-weight: var(--font-weight-bold);
+		letter-spacing: normal;
+		text-transform: none;
+		color: #374151;
 	}
 
 	.floor-plan-download-wrap {
