@@ -8,7 +8,7 @@
 - **§2 Modo oscuro:** artefactos visuales, menú y contraste; revisión de paleta (cian como acento, etc.). El sitio pasó a **tema claro por defecto** y se quitó el toggle del header (abr 2026); el modo oscuro sigue sin revisión completa.
 - **§3 Navegación:** enlaces footer/header alineados a títulos de sección (incl. “Equipamiento e Interiores”, “Planos y Distribución”).
 - **§4 Mapa:** **pan y zoom** libres (arrastre, rueda / gestos); algoritmo de **etiquetas siempre arriba del pin** (salvo excepción Aires de Río); **ícono de galería pequeño** dentro de la caja de etiqueta (hoy la galería va por pin/botones de navegación). Hubo mejoras de pins/galería/zoom bbox (abr), pero sin pan/zoom libre.
-- **§5 Formularios:** **cron en producción** con `CRON_SECRET` para reintentos SMTP. Avances (jul 2026): entrega inmediata de ficha en pantalla + email de respaldo; sugerencias de typo de dominio; submit optimista sin bloquear en SMTP.
+- **§5 Formularios:** **cron en producción** con `CRON_SECRET` para reintentos SMTP. Avances (jul 2026): entrega inmediata de ficha en pantalla + email de respaldo; sugerencias de typo de dominio; submit optimista sin bloquear en SMTP; **preferencia de tipología** (2 amb. / semipisos 4 amb.) en contacto y modal de ficha (texto en mensaje del lead y en email al equipo; sin columna nueva en DB).
 - **§6 Scroll y responsive:** scroll suave a anclas sin saltos bruscos; más ancho útil en móvil; formulario que no desplace el centrado ni genere scroll horizontal. Avance: **scroll-reveal** por bloque e hint de scroll en landing (abr).
 - **§7 Galerías por lugar:** curación pendiente o incompleta en varios puntos (Plaza Vea, Tribunales, Rivadavia, Bicentenario, Roca, etc.); reemplazos de calidad donde se pidió.
 - **§8 Interiores:** texto puente sobre **dos diseños a elegir**; diferenciación visual Luxury (marca de agua triquetra); verificación foto por estilo; estructura “Looks Freestyle” vs. copy. Avance (jul): título **EQUIPAMIENTO DE / INTERIORES** + subtítulo **Harmony Style**.
@@ -18,6 +18,7 @@
 
 ### Leads, PDF gated y emails (abr–jul)
 
+- **Preferencia de unidad (jul):** Select obligatorio en formulario de contacto y modal de ficha (`Departamento de 2 ambientes` / `Semipisos de 4 ambientes`; placeholder “Elegir preferencia…”). Se appenda a `leads.message` y aparece como línea **Interés en unidad** en el email al equipo (sin migración de esquema).
 - **Entrega inmediata de ficha (jul):** Tras “Solicitar ficha técnica”, el API devuelve el mismo link tokenizado que el email; el PDF se sirve `inline` por defecto y `attachment` con `?download=1`. Toast con CTAs **Abrir** / **Descargar**; email como respaldo. Submit **optimista** otra vez: respuesta tras persistir lead/token; SMTP en background (sin bloquear al usuario).
 - **Typos de email (jul):** Sugerencia suave de dominio (`emailSuggest`: p. ej. gmial → gmail) en modal de ficha y formulario de contacto.
 - **Emails transaccionales (abr):** Builders reutilizables, preview en `/dev`, logo CID/PNG, alineación al theme del sitio; token de ficha también en flujo de contacto directo; copy de CTA “Abrir ficha técnica”.
@@ -36,7 +37,8 @@
 
 - **Theme tokens** y ruta `/theme`; CTAs alineados a nav del mapa; bandas de sección; tema claro por defecto.
 - **Mapa:** pins/galería, zoom bbox, zonas opcionales, tooltips en nav de ubicación, ajustes de palette.
-- **Planos y carouseles:** WebP/srcset, subtítulos, navegación outside-sides, dots por tamaño, hint de scroll/gesto, revelado al scroll.
+- **Planos y carouseles:** WebP/srcset, subtítulos FRENTE/CONTRAFRENTE, navegación outside-sides, dots por tamaño, hint de scroll/gesto, revelado al scroll.
+- **Accesibilidad logos / header (jul):** Logos con un solo nombre accesible (`role=img` / `decorative` dentro de links); logo del header como enlace a inicio; menú móvil Abrir/Cerrar; skip link con `id="main-content"` en las rutas con `<main>`.
 - **Footer:** créditos web, partners (D+B), logos, mailto/WhatsApp, ajuste de columnas.
 - **WhatsApp flotante** y GTM en el template.
 - **Interiores (jul):** `EQUIPAMIENTO DE` / `INTERIORES` + subtítulo Harmony Style.
