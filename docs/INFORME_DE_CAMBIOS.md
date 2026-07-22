@@ -1,18 +1,53 @@
 # Informe de cambios
 
-*Actualizado: 28 de marzo de 2026.*
+*Actualizado: 22 de julio de 2026.*
 
 ### Pendientes principales de **mas-cambios.md** (aún no cubiertos o solo parcialmente)
 
 - **§1 Imágenes y video:** compresión/lazy load, caché, objetivo de carga en móvil bajo 3 s; estrategia de video (foto estática 3 s antes del autoplay, etc.).
-- **§2 Modo oscuro:** artefactos visuales, menú y contraste; revisión de paleta (cian como acento, etc.).
+- **§2 Modo oscuro:** artefactos visuales, menú y contraste; revisión de paleta (cian como acento, etc.). El sitio pasó a **tema claro por defecto** y se quitó el toggle del header (abr 2026); el modo oscuro sigue sin revisión completa.
 - **§3 Navegación:** enlaces footer/header alineados a títulos de sección (incl. “Equipamiento e Interiores”, “Planos y Distribución”).
-- **§4 Mapa:** **pan y zoom** libres (arrastre, rueda / gestos); algoritmo de **etiquetas siempre arriba del pin** (salvo excepción Aires de Río); **ícono de galería pequeño** dentro de la caja de etiqueta (hoy la galería va por pin/botones de navegación).
-- **§5 Formularios:** texto explícito tipo “Revisa tu correo…” en toast (si se exige literal de la propuesta); **cron en producción** que llame al endpoint de reintentos con `CRON_SECRET`; intervalo de reintento documentado vs “cada 5 minutos” de la reunión.
-- **§6 Scroll y responsive:** scroll suave a anclas sin saltos bruscos; más ancho útil en móvil; formulario que no desplace el centrado ni genere scroll horizontal; **umbrales de animación al scroll** más tempranos.
+- **§4 Mapa:** **pan y zoom** libres (arrastre, rueda / gestos); algoritmo de **etiquetas siempre arriba del pin** (salvo excepción Aires de Río); **ícono de galería pequeño** dentro de la caja de etiqueta (hoy la galería va por pin/botones de navegación). Hubo mejoras de pins/galería/zoom bbox (abr), pero sin pan/zoom libre.
+- **§5 Formularios:** **cron en producción** con `CRON_SECRET` para reintentos SMTP. Avances (jul 2026): entrega inmediata de ficha en pantalla + email de respaldo; sugerencias de typo de dominio; submit optimista sin bloquear en SMTP.
+- **§6 Scroll y responsive:** scroll suave a anclas sin saltos bruscos; más ancho útil en móvil; formulario que no desplace el centrado ni genere scroll horizontal. Avance: **scroll-reveal** por bloque e hint de scroll en landing (abr).
 - **§7 Galerías por lugar:** curación pendiente o incompleta en varios puntos (Plaza Vea, Tribunales, Rivadavia, Bicentenario, Roca, etc.); reemplazos de calidad donde se pidió.
-- **§8 Interiores:** texto puente sobre **dos diseños a elegir**; diferenciación visual Luxury (marca de agua triquetra); verificación foto por estilo; **§8.5:** en la reunión el párrafo largo de terminaciones debía ir **después** de “Equipamiento opcional” y “Looks Freestyle” y **antes** del botón de ficha — hoy el párrafo está **antes** de la lista Luxury y no hay bloque explícito “Looks Freestyle” en el sitio; conviene cerrar estructura vs. copy.
+- **§8 Interiores:** texto puente sobre **dos diseños a elegir**; diferenciación visual Luxury (marca de agua triquetra); verificación foto por estilo; estructura “Looks Freestyle” vs. copy. Avance (jul): título **EQUIPAMIENTO DE / INTERIORES** + subtítulo **Harmony Style**.
 - **§9 Texto ubicación (mas-cambios):** redacción alternativa más larga sobre convenciones / Parque Aguirre / Puente / Plaza Vea — el sitio ya tiene el texto del 18 mar; conviene cruzar con §9 si se quiere unificar criterios.
+
+## Cambios del 29 de marzo al 22 de julio de 2026
+
+### Leads, PDF gated y emails (abr–jul)
+
+- **Entrega inmediata de ficha (jul):** Tras “Solicitar ficha técnica”, el API devuelve el mismo link tokenizado que el email; el PDF se sirve `inline` por defecto y `attachment` con `?download=1`. Toast con CTAs **Abrir** / **Descargar**; email como respaldo. Submit **optimista** otra vez: respuesta tras persistir lead/token; SMTP en background (sin bloquear al usuario).
+- **Typos de email (jul):** Sugerencia suave de dominio (`emailSuggest`: p. ej. gmial → gmail) en modal de ficha y formulario de contacto.
+- **Emails transaccionales (abr):** Builders reutilizables, preview en `/dev`, logo CID/PNG, alineación al theme del sitio; token de ficha también en flujo de contacto directo; copy de CTA “Abrir ficha técnica”.
+- **Contador de descargas:** Incremento por uso del endpoint PDF; admin muestra conteos; migraciones/ajustes de tipo de `download_count`.
+- **Formularios públicos (may):** Validación más estricta, UI de campos requeridos y gate de submit.
+- **Asset PDF:** Varias actualizaciones de `Aires de Río - Ficha técnica.pdf` (abr–jul); unificación previa hacia un solo archivo de departamentos.
+
+### Admin / contactos (abr–jul)
+
+- Leads manuales (modal), flujo WhatsApp, estrellas, borrado masivo, edición con override de email duplicado, `createdAt` opcional en alta/edición.
+- Purge de leads con password; backup/restore de DB en scripts.
+- Layout full-width de la tabla; popout de mensaje completo; notificaciones opcionales al equipo.
+- **Gráfico leads/descargas por día (jul):** Barras SVG en `/admin/contactos` (últimos 30 días / todo el tiempo); toggle **1 por lead** vs **Todas** para el conteo de descargas atribuidas al día de alta.
+
+### Sitio público — UI, mapa, planos y motion (abr–may)
+
+- **Theme tokens** y ruta `/theme`; CTAs alineados a nav del mapa; bandas de sección; tema claro por defecto.
+- **Mapa:** pins/galería, zoom bbox, zonas opcionales, tooltips en nav de ubicación, ajustes de palette.
+- **Planos y carouseles:** WebP/srcset, subtítulos, navegación outside-sides, dots por tamaño, hint de scroll/gesto, revelado al scroll.
+- **Footer:** créditos web, partners (D+B), logos, mailto/WhatsApp, ajuste de columnas.
+- **WhatsApp flotante** y GTM en el template.
+- **Interiores (jul):** `EQUIPAMIENTO DE` / `INTERIORES` + subtítulo Harmony Style.
+- **Ficha printable:** ruta `ficha-tecnica-con-planos` y previews Harmony/Luxury en dev.
+- Branding: exports de logo/isotype y variantes.
+
+### Operación / tooling
+
+- Scripts de deploy/update, `db:push`/`backup`, ruta `/dev/devicecaps`, allowlist de host en admin.
+
+---
 
 ## Cambios del 4 al 28 de marzo de 2026
 
