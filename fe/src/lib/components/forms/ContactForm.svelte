@@ -2,7 +2,12 @@
 	// ===== IMPORTS =====
 	import Input from '$lib/components/forms/Input.svelte';
 	import PhoneNumberInput from '$lib/components/forms/PhoneNumberInput.svelte';
+	import Select from '$lib/components/forms/Select.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
+	import {
+		APARTMENT_INTEREST_OPTIONS,
+		APARTMENT_INTEREST_PLACEHOLDER
+	} from '$lib/data/apartment-interest-options';
 	import { formToastStore } from '$lib/stores/formToast';
 	import { isLeadPhoneFilled } from '$lib/utils/leadPhone.js';
 	import { suggestEmailCorrection } from '$lib/utils/emailSuggest.js';
@@ -26,6 +31,7 @@
 	let canSubmit = $state(false);
 	let correo = $state('');
 	let emailSuggestion = $state<string | null>(null);
+	let interesUnidad = $state('');
 
 	const optimisticContactSuccessMessage =
 		'Formulario enviado correctamente. Nos pondremos en contacto contigo pronto.';
@@ -36,6 +42,7 @@
 		const apellido = String(fd.get('apellido') ?? '').trim();
 		const correoVal = String(fd.get('correo') ?? '').trim();
 		const telefono = String(fd.get('telefono') ?? '');
+		const interes = String(fd.get('interesUnidad') ?? '').trim();
 		const mensaje = String(fd.get('mensaje') ?? '').trim();
 		return (
 			nombre.length > 0 &&
@@ -43,6 +50,7 @@
 			correoVal.length > 0 &&
 			EMAIL_REGEX.test(correoVal) &&
 			isLeadPhoneFilled(telefono) &&
+			interes.length > 0 &&
 			mensaje.length > 0
 		);
 	}
@@ -95,6 +103,7 @@
 			correo: (formData.get('correo') as string) || correo,
 			telefono: (formData.get('telefono') as string) || '',
 			mensaje: (formData.get('mensaje') as string) || '',
+			interesUnidad: (formData.get('interesUnidad') as string) || interesUnidad,
 			intent: 'direct-contact' as const,
 			website: (formData.get('website') as string) || ''
 		};
@@ -116,6 +125,11 @@
 			return;
 		}
 
+		if (!payload.interesUnidad.trim()) {
+			errorMessage = 'Por favor seleccioná un tipo de departamento.';
+			return;
+		}
+
 		if (!payload.mensaje.trim()) {
 			errorMessage = 'Por favor escribí tu mensaje o consulta.';
 			return;
@@ -124,6 +138,7 @@
 		formElement.reset();
 		correo = '';
 		emailSuggestion = null;
+		interesUnidad = '';
 		syncSubmitEnabled();
 		formToastStore.show(optimisticContactSuccessMessage, 'success');
 
@@ -236,6 +251,27 @@
 		required
 		onPhoneValueChange={syncSubmitEnabled}
 	/>
+	<div class='form-group'>
+		<label for='interesUnidad'>
+			Tipo de departamento<span class='field-required-indicator' aria-hidden='true'> *</span>
+		</label>
+		<Select
+			id='interesUnidad'
+			name='interesUnidad'
+			value={interesUnidad}
+			placeholder={APARTMENT_INTEREST_PLACEHOLDER}
+			required
+			ariaLabel='Tipo de departamento de interés'
+			onchange={(e) => {
+				interesUnidad = (e.currentTarget as HTMLSelectElement).value;
+				syncSubmitEnabled();
+			}}
+		>
+			{#each APARTMENT_INTEREST_OPTIONS as option (option)}
+				<option value={option}>{option}</option>
+			{/each}
+		</Select>
+	</div>
 	<div class='form-group'>
 		<label for='mensaje'>
 			Mensaje<span class='field-required-indicator' aria-hidden='true'> *</span>

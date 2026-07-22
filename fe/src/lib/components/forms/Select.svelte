@@ -13,6 +13,7 @@
 		class?: string;
 		ariaLabel?: string;
 		disabled?: boolean;
+		required?: boolean;
 	}
 
 	// ===== STATIC CONSTANTS =====
@@ -30,7 +31,8 @@
 		children,
 		class: className = '',
 		ariaLabel,
-		disabled = false
+		disabled = false,
+		required = false
 	}: Props = $props();
 
 	// ===== REFS =====
@@ -73,6 +75,7 @@
 	onblur={handleBlur}
 	aria-label={ariaLabel}
 	{disabled}
+	{required}
 >
 	{#if placeholder}
 		<option value="" disabled hidden>{placeholder}</option>

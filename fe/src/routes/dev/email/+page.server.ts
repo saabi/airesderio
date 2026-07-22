@@ -19,6 +19,7 @@ export const load: PageServerLoad = async () => {
 		leadEmail: 'maria@example.com',
 		leadPhone: '+54 9 385 612 3456',
 		leadMessage: 'Hola, me interesa conocer opciones de financiación.',
+		leadApartmentInterest: 'Departamento de 2 ambientes',
 		intent: 'direct-contact'
 	});
 

@@ -148,6 +148,8 @@ export interface SendContactNotificationParams {
 	leadEmail: string;
 	leadPhone?: string;
 	leadMessage?: string;
+	/** Typology interest; shown as its own line (not duplicated in leadMessage). */
+	leadApartmentInterest?: string;
 	intent: string;
 }
 
@@ -159,7 +161,7 @@ export interface EmailPreviewPayload {
 export function buildContactNotificationEmail(
 	params: SendContactNotificationParams
 ): EmailPreviewPayload {
-	const { leadName, leadEmail, leadPhone, leadMessage, intent } = params;
+	const { leadName, leadEmail, leadPhone, leadMessage, leadApartmentInterest, intent } = params;
 	const subject = `${intent === 'direct-contact' ? 'RESPONDER! -' : 'Nuevo contacto:'} ${intent} - Aires de Río`;
 	const html = `
 		<h2>Nueva consulta desde el sitio web</h2>
@@ -167,6 +169,7 @@ export function buildContactNotificationEmail(
 		<p><strong>Correo:</strong> ${leadEmail}</p>
 		${leadPhone ? `<p><strong>Teléfono:</strong> ${leadPhone}</p>` : ''}
 		<p><strong>Intención:</strong> ${intent}</p>
+		${leadApartmentInterest ? `<p><strong>Interés en unidad:</strong> ${leadApartmentInterest}</p>` : ''}
 		${leadMessage ? `<p><strong>Mensaje:</strong></p><p>${leadMessage.replace(/\n/g, '<br>')}</p>` : ''}
 		<hr>
 		<p><small>Enviado desde el formulario de contacto de Aires de Río</small></p>

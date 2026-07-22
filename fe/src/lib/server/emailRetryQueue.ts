@@ -62,6 +62,7 @@ export async function processDueEmailOutboundJobs(
 						leadEmail: payload.leadEmail ?? '',
 						leadPhone: payload.leadPhone,
 						leadMessage: payload.leadMessage,
+						leadApartmentInterest: payload.leadApartmentInterest,
 						intent: payload.intent ?? 'direct-contact'
 					});
 					break;

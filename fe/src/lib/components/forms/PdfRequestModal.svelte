@@ -1,7 +1,12 @@
 <script module lang="ts">
 	import Input from '$lib/components/forms/Input.svelte';
 	import PhoneNumberInput from '$lib/components/forms/PhoneNumberInput.svelte';
+	import Select from '$lib/components/forms/Select.svelte';
 	import Textarea from '$lib/components/forms/Textarea.svelte';
+	import {
+		APARTMENT_INTEREST_OPTIONS,
+		APARTMENT_INTEREST_PLACEHOLDER
+	} from '$lib/data/apartment-interest-options';
 	import type { PdfIntent, PdfRequestSource } from '$lib/stores/pdfRequestModal';
 
 	const EMAIL_REGEX =
@@ -29,6 +34,7 @@
 	let canSubmit = $state(false);
 	let correo = $state('');
 	let emailSuggestion = $state<string | null>(null);
+	let interesUnidad = $state('');
 
 	const optimisticPdfSuccessMessage =
 		'¡Listo! Ya podés abrir la ficha técnica. También te enviamos el enlace por correo para que la tengas a mano.';
@@ -39,12 +45,14 @@
 		const apellido = String(fd.get('apellido') ?? '').trim();
 		const correoVal = String(fd.get('correo') ?? '').trim();
 		const telefono = String(fd.get('telefono') ?? '');
+		const interes = String(fd.get('interesUnidad') ?? '').trim();
 		return (
 			nombre.length > 0 &&
 			apellido.length > 0 &&
 			correoVal.length > 0 &&
 			EMAIL_REGEX.test(correoVal) &&
-			isLeadPhoneFilled(telefono)
+			isLeadPhoneFilled(telefono) &&
+			interes.length > 0
 		);
 	}
 
@@ -102,6 +110,7 @@
 			correo: (formData.get('correo') as string) || correo,
 			telefono: (formData.get('telefono') as string) || '',
 			mensaje: (formData.get('mensaje') as string) || '',
+			interesUnidad: (formData.get('interesUnidad') as string) || interesUnidad,
 			intent,
 			website: (formData.get('website') as string) || ''
 		};
@@ -122,9 +131,15 @@
 			return;
 		}
 
+		if (!payload.interesUnidad.trim()) {
+			errorMessage = 'Por favor seleccioná un tipo de departamento.';
+			return;
+		}
+
 		formElement.reset();
 		correo = '';
 		emailSuggestion = null;
+		interesUnidad = '';
 		syncSubmitEnabled();
 		formToastStore.show(optimisticPdfSuccessMessage, 'success');
 		pdfRequestModalStore.close();
@@ -254,6 +269,27 @@
 				required
 				onPhoneValueChange={syncSubmitEnabled}
 			/>
+			<div class="form-group">
+				<label for="pdf-interesUnidad">
+					Tipo de departamento<span class="field-required-indicator" aria-hidden="true"> *</span>
+				</label>
+				<Select
+					id="pdf-interesUnidad"
+					name="interesUnidad"
+					value={interesUnidad}
+					placeholder={APARTMENT_INTEREST_PLACEHOLDER}
+					required
+					ariaLabel="Tipo de departamento de interés"
+					onchange={(e) => {
+						interesUnidad = (e.currentTarget as HTMLSelectElement).value;
+						syncSubmitEnabled();
+					}}
+				>
+					{#each APARTMENT_INTEREST_OPTIONS as option (option)}
+						<option value={option}>{option}</option>
+					{/each}
+				</Select>
+			</div>
 			<div class="form-group">
 				<label for="pdf-mensaje">Mensaje (opcional)</label>
 				<Textarea id="pdf-mensaje" name="mensaje" rows={3} ariaLabel="Mensaje" />

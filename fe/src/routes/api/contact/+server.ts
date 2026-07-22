@@ -16,6 +16,9 @@ import {
 } from '$lib/server/emailRetryQueue.js';
 import { randomBytes } from 'crypto';
 import { isLeadPhoneFilled } from '$lib/utils/leadPhone.js';
+import {
+	resolveApartmentInterest
+} from '$lib/data/apartment-interest-options.js';
 
 /** All PDF CTAs use one file: `static/pdf/Aires de Río - Ficha técnica.pdf` */
 const VALID_PDF_INTENTS = ['departamentos'] as const;
@@ -88,7 +91,8 @@ export const POST: RequestHandler = async ({ request }) => {
 			);
 		}
 
-		const { nombre, apellido, correo, telefono, mensaje, intent: rawIntent } = data;
+		const { nombre, apellido, correo, telefono, mensaje, interesUnidad, intent: rawIntent } =
+			data;
 
 		if (!nombre || !apellido || !correo) {
 			return json({ error: 'Por favor completa todos los campos requeridos.' }, { status: 400 });
@@ -106,6 +110,11 @@ export const POST: RequestHandler = async ({ request }) => {
 			);
 		}
 
+		const apartmentInterest = resolveApartmentInterest(interesUnidad);
+		if (!apartmentInterest) {
+			return json({ error: 'Por favor seleccioná un tipo de departamento válido.' }, { status: 400 });
+		}
+
 		const intent = rawIntent ? sanitizeInput(String(rawIntent)) : 'direct-contact';
 		const firstName = sanitizeInput(nombre);
 		const lastName = sanitizeInput(apellido);
@@ -119,7 +128,9 @@ export const POST: RequestHandler = async ({ request }) => {
 				{ status: 400 }
 			);
 		}
-		const message = messageTrimmed ? sanitizeInput(messageTrimmed) : null;
+		const interestLine = `Interés en unidad: ${apartmentInterest}`;
+		const userMessage = messageTrimmed ? sanitizeInput(messageTrimmed) : null;
+		const message = userMessage ? `${userMessage}\n\n${interestLine}` : interestLine;
 
 		const db = getDb();
 
@@ -187,7 +198,8 @@ export const POST: RequestHandler = async ({ request }) => {
 					leadName: fullName,
 					leadEmail: email,
 					leadPhone: phone ?? undefined,
-					leadMessage: message ?? undefined,
+					leadMessage: userMessage ?? undefined,
+					leadApartmentInterest: apartmentInterest,
 					intent
 				});
 			} catch (emailErr) {
@@ -201,7 +213,8 @@ export const POST: RequestHandler = async ({ request }) => {
 						leadName: fullName,
 						leadEmail: email,
 						leadPhone: phone ?? undefined,
-						leadMessage: message ?? undefined
+						leadMessage: userMessage ?? undefined,
+						leadApartmentInterest: apartmentInterest
 					},
 					emailErr
 				);
