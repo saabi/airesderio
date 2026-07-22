@@ -2,6 +2,18 @@
 
 *Actualizado: 28 de marzo de 2026.*
 
+### Pendientes principales de **mas-cambios.md** (aún no cubiertos o solo parcialmente)
+
+- **§1 Imágenes y video:** compresión/lazy load, caché, objetivo de carga en móvil bajo 3 s; estrategia de video (foto estática 3 s antes del autoplay, etc.).
+- **§2 Modo oscuro:** artefactos visuales, menú y contraste; revisión de paleta (cian como acento, etc.).
+- **§3 Navegación:** enlaces footer/header alineados a títulos de sección (incl. “Equipamiento e Interiores”, “Planos y Distribución”).
+- **§4 Mapa:** **pan y zoom** libres (arrastre, rueda / gestos); algoritmo de **etiquetas siempre arriba del pin** (salvo excepción Aires de Río); **ícono de galería pequeño** dentro de la caja de etiqueta (hoy la galería va por pin/botones de navegación).
+- **§5 Formularios:** texto explícito tipo “Revisa tu correo…” en toast (si se exige literal de la propuesta); **cron en producción** que llame al endpoint de reintentos con `CRON_SECRET`; intervalo de reintento documentado vs “cada 5 minutos” de la reunión.
+- **§6 Scroll y responsive:** scroll suave a anclas sin saltos bruscos; más ancho útil en móvil; formulario que no desplace el centrado ni genere scroll horizontal; **umbrales de animación al scroll** más tempranos.
+- **§7 Galerías por lugar:** curación pendiente o incompleta en varios puntos (Plaza Vea, Tribunales, Rivadavia, Bicentenario, Roca, etc.); reemplazos de calidad donde se pidió.
+- **§8 Interiores:** texto puente sobre **dos diseños a elegir**; diferenciación visual Luxury (marca de agua triquetra); verificación foto por estilo; **§8.5:** en la reunión el párrafo largo de terminaciones debía ir **después** de “Equipamiento opcional” y “Looks Freestyle” y **antes** del botón de ficha — hoy el párrafo está **antes** de la lista Luxury y no hay bloque explícito “Looks Freestyle” en el sitio; conviene cerrar estructura vs. copy.
+- **§9 Texto ubicación (mas-cambios):** redacción alternativa más larga sobre convenciones / Parque Aguirre / Puente / Plaza Vea — el sitio ya tiene el texto del 18 mar; conviene cruzar con §9 si se quiere unificar criterios.
+
 ## Cambios del 4 al 28 de marzo de 2026
 
 ### Copy y ubicación (propuesta 18 de marzo)
@@ -39,17 +51,6 @@ Referencias: [Cambios de copy sitio web - 18_Marzo.md](proposals/Cambios%20de%20
 | Título de sección: copy propone **“E INTERIORES”**; implementado **“e interiores”** en `Title` | Detalle de mayúsculas |
 | Galería: sigue mostrando el **nombre del lugar** en el encabezado del modal (coherente con UX; si se quisiera solo fotos sin título, habría que acotarlo explícitamente) | Opcional |
 
-### Pendientes principales de **mas-cambios.md** (aún no cubiertos o solo parcialmente)
-
-- **§1 Imágenes y video:** compresión/lazy load, caché, objetivo de carga en móvil bajo 3 s; estrategia de video (foto estática 3 s antes del autoplay, etc.).
-- **§2 Modo oscuro:** artefactos visuales, menú y contraste; revisión de paleta (cian como acento, etc.).
-- **§3 Navegación:** enlaces footer/header alineados a títulos de sección (incl. “Equipamiento e Interiores”, “Planos y Distribución”).
-- **§4 Mapa:** **pan y zoom** libres (arrastre, rueda / gestos); algoritmo de **etiquetas siempre arriba del pin** (salvo excepción Aires de Río); **ícono de galería pequeño** dentro de la caja de etiqueta (hoy la galería va por pin/botones de navegación).
-- **§5 Formularios:** texto explícito tipo “Revisa tu correo…” en toast (si se exige literal de la propuesta); **cron en producción** que llame al endpoint de reintentos con `CRON_SECRET`; intervalo de reintento documentado vs “cada 5 minutos” de la reunión.
-- **§6 Scroll y responsive:** scroll suave a anclas sin saltos bruscos; más ancho útil en móvil; formulario que no desplace el centrado ni genere scroll horizontal; **umbrales de animación al scroll** más tempranos.
-- **§7 Galerías por lugar:** curación pendiente o incompleta en varios puntos (Plaza Vea, Tribunales, Rivadavia, Bicentenario, Roca, etc.); reemplazos de calidad donde se pidió.
-- **§8 Interiores:** texto puente sobre **dos diseños a elegir**; diferenciación visual Luxury (marca de agua triquetra); verificación foto por estilo; **§8.5:** en la reunión el párrafo largo de terminaciones debía ir **después** de “Equipamiento opcional” y “Looks Freestyle” y **antes** del botón de ficha — hoy el párrafo está **antes** de la lista Luxury y no hay bloque explícito “Looks Freestyle” en el sitio; conviene cerrar estructura vs. copy.
-- **§9 Texto ubicación (mas-cambios):** redacción alternativa más larga sobre convenciones / Parque Aguirre / Puente / Plaza Vea — el sitio ya tiene el texto del 18 mar; conviene cruzar con §9 si se quiere unificar criterios.
 
 ### Operación
 
